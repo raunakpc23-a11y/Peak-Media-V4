@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 760" width="512" height="512" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#071022"/>
+      <stop offset="55%"  stop-color="#050811"/>
+      <stop offset="100%" stop-color="#081832"/>
+    </linearGradient>
+    <linearGradient id="skyMain" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#F0F9FF"/>
+      <stop offset="30%"  stop-color="#7DD3FC"/>
+      <stop offset="65%"  stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0EA5E9"/>
+    </linearGradient>
+    <linearGradient id="skySun" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#7DD3FC" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#0EA5E9" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect x="14" y="14" width="732" height="732" rx="164"
+        fill="url(#bg)" stroke="#38BDF8" stroke-opacity="0.55" stroke-width="14"/>
+
+  <!-- Glow halo -->
+  <circle cx="462" cy="240" r="220" fill="#38BDF8" fill-opacity="0.14"/>
+
+  <!-- PEAK MEDIA lettering + mountain peak -->
+  <g transform="translate(-25, 150)">
+
+    <!-- Letterforms -->
+    <g stroke="#FFFFFF" stroke-width="8" stroke-linejoin="miter" fill="#060A14">
+      <!-- P -->
+      <path d="M135 130 H205 C230 130 245 144 245 168 C245 192 230 206 205 206
+               H168 V250 H135 Z M168 156 V180 H200 C210 180 215 175 215 168
+               C215 161 210 156 200 156 Z" fill-rule="evenodd"/>
+      <!-- E -->
+      <path d="M272 130 H365 V156 H305 V177 H355 V202 H305 V224 H365 V250 H272 Z"/>
+      <!-- A -->
+      <path d="M438 130 H468 L520 250 H484 L473 222 H432 L421 250 H385 Z
+               M441 196 H464 L452.5 164 Z" fill-rule="evenodd"/>
+      <!-- K -->
+      <path d="M538 130 H572 V182 L626 130 H668 L608 186 L672 250 H628 L572 194 V250 H538 Z"/>
+      <!-- M -->
+      <path d="M135 282 H172 L196.5 344 L221 282 H258 V402 H227 V334
+               L203 392 H190 L166 334 V402 H135 Z"/>
+      <!-- E -->
+      <path d="M278 282 H368 V308 H311 V329 H358 V354 H311 V376 H368 V402 H278 Z"/>
+      <!-- D -->
+      <path d="M388 282 H440 C472 282 492 304 492 342 C492 380 472 402 440 402
+               H388 Z M421 308 V376 H438 C453 376 461 364 461 342
+               C461 320 453 308 438 308 Z" fill-rule="evenodd"/>
+      <!-- I -->
+      <path d="M512 282 H552 V402 H512 Z"/>
+      <!-- A -->
+      <path d="M618 282 H648 L698 402 H663 L652 374 H612 L601 402 H566 Z
+               M621 348 H643 L632 316 Z" fill-rule="evenodd"/>
+    </g>
+
+    <!-- Shadow fill for left slope -->
+    <polygon points="482,56 385,186 288,248 195,304 78,356 238,326 332,294 424,268 460,138"
+             fill="#071020" fill-opacity="0.86"/>
+    <!-- Glow fill for right slope -->
+    <polygon points="482,56 516,118 558,188 610,256 674,328 736,362 612,332 518,286 485,142"
+             fill="url(#skySun)"/>
+
+    <!-- Peak ridge lines -->
+    <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M78 356 L195 304 L288 248 L385 186 L435 126 L468 82 L482 56"
+            stroke="url(#skyMain)" stroke-width="11.5"/>
+      <path d="M482 56 L516 118 L558 188 L610 256 L674 328 L736 362"
+            stroke="url(#skyMain)" stroke-width="11.5"/>
+      <path d="M468 82 L476 112 L450 172 L418 214"
+            stroke="#BAE6FD" stroke-width="7.5"/>
+      <path d="M482 56 L485 142 L500 188 L522 232"
+            stroke="#E0F2FE" stroke-width="7.5"/>
+      <path d="M482 56 L460 138 L428 210 L376 286 L312 348"
+            stroke="#0EA5E9" stroke-width="6.5"/>
+      <path d="M482 56 L504 134 L542 216 L588 296 L640 356"
+            stroke="#0EA5E9" stroke-width="6.5"/>
+      <path d="M108 346 L168 312 L208 318 L246 298 L310 262"
+            stroke="#38BDF8" stroke-width="6.8"/>
+      <path d="M568 206 L608 242 L626 254 L648 294 L678 330"
+            stroke="#38BDF8" stroke-width="6.8"/>
+      <path d="M150 366 L238 326 L332 294 L424 268 L518 286 L612 332 L706 368"
+            stroke="#60A5FA" stroke-width="5.5" opacity="0.92"/>
+    </g>
+  </g>
+</svg>

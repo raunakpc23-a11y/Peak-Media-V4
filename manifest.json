@@ -1,0 +1,51 @@
+{
+  "name": "Peak Media",
+  "short_name": "Peak Media",
+  "description": "Your Summit of Film, Shows & Music — 2,900+ titles, 3,069 songs across 42 playlists.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "background_color": "#050811",
+  "theme_color": "#38bdf8",
+  "lang": "en-IN",
+  "categories": ["entertainment", "lifestyle", "music"],
+  "icons": [
+    {
+      "src": "icons/peak-media.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/peak-media.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Movies",
+      "short_name": "Movies",
+      "description": "Jump straight to the movie browser",
+      "url": "./index.html",
+      "icons": [{ "src": "icons/peak-media.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Music",
+      "short_name": "Music",
+      "description": "Open the music player",
+      "url": "./index.html",
+      "icons": [{ "src": "icons/peak-media.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Watch Duel",
+      "short_name": "Duel",
+      "description": "Head-to-head movie picker",
+      "url": "./index.html",
+      "icons": [{ "src": "icons/peak-media.svg", "sizes": "any" }]
+    }
+  ]
+}

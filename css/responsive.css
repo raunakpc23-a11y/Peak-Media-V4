@@ -1,0 +1,263 @@
+﻿  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  #subNav {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    gap: 0.4rem;
+    max-width: 100%;
+  }
+  #subNav::-webkit-scrollbar { display: none; }
+  /* Explicit Dark Theme Select & Option Styling */
+  select.dark-select, #tab-movies select, #tab-shows select, #tab-music select, #tab-marathon select, #tab-web select {
+    background-color: #0d111a !important;
+    color: #f3f4f6 !important;
+  }
+  select.dark-select option, #tab-movies select option, #tab-shows select option, #tab-music select option, #tab-marathon select option, #tab-web select option {
+    background-color: #0d111a !important;
+    color: #f3f4f6 !important;
+  }
+  /* Hide weather report & redundant library badge */
+  #wxCard, #wxCardHost, #navWishlistBadge { display: none !important; }
+  /* Compact mood pills */
+  #moodPills {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0.35rem;
+    padding-bottom: 2px;
+  }
+  #moodPills::-webkit-scrollbar { display: none; }
+  /* Strict Mobile Box & Text Overflow Prevention Across Play, Search & Library */
+  .tab-pane, .glass-card, #duelPresetGrid > button, #tab-marathon button, #tab-hub > div {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  #duelPresetGrid > button, #tab-marathon .grid > button {
+    overflow: hidden;
+    word-break: break-word;
+  }
+
+  /* JioCinema / Disney+ Hotstar Inspired Mobile App Experience (< 768px) */
+  @media (max-width: 767px) {
+    body {
+      padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+    }
+    header > div:first-child {
+      height: 3.4rem !important;
+      padding-left: 0.65rem !important;
+      padding-right: 0.65rem !important;
+    }
+    main {
+      padding-left: 0.75rem !important;
+      padding-right: 0.75rem !important;
+      padding-top: 0.65rem !important;
+      padding-bottom: 5.5rem !important;
+    }
+    #tab-discover {
+      gap: 1.25rem !important;
+    }
+    #heroBanner {
+      min-height: 240px !important;
+      padding: 1rem !important;
+      border-radius: 1.15rem !important;
+    }
+    /* Crisp, compact 3-across horizontal poster rails on phones */
+    .hscroll {
+      gap: 0.6rem !important;
+      padding-bottom: 0.4rem !important;
+    }
+    .hscroll .card-hover h3 {
+      font-size: 11px !important;
+    }
+    .hscroll .card-hover > div:last-child {
+      padding: 0.45rem 0.5rem !important;
+    }
+    /* Always show quick-action buttons on touch cards without needing hover */
+    .card-hover .opacity-0 {
+      opacity: 1 !important;
+    }
+    .card-hover [data-wish-btn],
+    .card-hover [data-watched-btn],
+    .card-hover [data-fav-btn] {
+      width: 1.75rem !important;
+      height: 1.75rem !important;
+    }
+    #duelStage {
+      flex-direction: row !important;
+      gap: 0.5rem !important;
+      min-height: 240px !important;
+    }
+    .duel-card {
+      width: 43vw !important;
+      max-width: 170px !important;
+    }
+    .vs-flash {
+      font-size: 24px !important;
+    }
+    #rcCv {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+    #musicMiniPlayer {
+      bottom: calc(3.85rem + env(safe-area-inset-bottom, 0px)) !important;
+    }
+    #musicVideoDock {
+      bottom: calc(8.3rem + env(safe-area-inset-bottom, 0px)) !important;
+      right: 0.5rem !important;
+      left: 0.5rem !important;
+      width: auto !important;
+    }
+    #musicQueueDrawer {
+      bottom: calc(8.3rem + env(safe-area-inset-bottom, 0px)) !important;
+      right: 0.5rem !important;
+      left: 0.5rem !important;
+      width: auto !important;
+    }
+    #toastContainer {
+      bottom: calc(4.4rem + env(safe-area-inset-bottom, 0px)) !important;
+    }
+    #tab-movies h1, #tab-shows h1, #tab-categories h1, #tab-universes h1,
+    #tab-duel h1, #tab-match h1, #tab-ricochet h1, #tab-marathon h1, #tab-compat h1, #tab-admin h2, #tab-admin h3 {
+      font-size: 1.35rem !important;
+      line-height: 1.2 !important;
+    }
+    #duelPresetGrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 0.4rem !important;
+    }
+    #duelPresetGrid button {
+      padding: 0.5rem 0.6rem !important;
+      min-width: 0 !important;
+    }
+    /* Strict Mobile Sub-Tab Fit (Duel · Matchmaker · Ricochet · Marathon · Compatibility) */
+    #subNav:not(.hidden) {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      align-items: stretch !important;
+      justify-content: space-between !important;
+      gap: 0.22rem !important;
+      width: 100% !important;
+      overflow: hidden !important;
+      padding-bottom: 0 !important;
+    }
+    #subNav .sub-pill {
+      flex: 1 1 auto !important;
+      width: auto !important;
+      padding: 0.42rem 0.28rem !important;
+      font-size: clamp(9.5px, 2.45vw, 12px) !important;
+      gap: 0.2rem !important;
+      border-radius: 0.65rem !important;
+      justify-content: center !important;
+      align-items: center !important;
+      text-align: center !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      white-space: nowrap !important;
+      line-height: 1.15 !important;
+      letter-spacing: -0.02em !important;
+    }
+    #subNav .sub-pill i {
+      font-size: clamp(8.5px, 2.1vw, 11px) !important;
+      flex-shrink: 0 !important;
+    }
+    @media (max-width: 390px) {
+      #subNav .sub-pill i {
+        display: none !important;
+      }
+    }
+    /* Dynamic Font Scaling Inside All Play, Search & Library Boxes on Mobile */
+    #duelPresetGrid button,
+    #tab-marathon .grid > button {
+      padding: 0.55rem 0.65rem !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      overflow: hidden !important;
+    }
+    #duelPresetGrid button div:first-child,
+    #tab-marathon .grid > button div:first-child {
+      font-size: clamp(10.5px, 2.85vw, 12.5px) !important;
+      line-height: 1.25 !important;
+      white-space: normal !important;
+      overflow-wrap: break-word !important;
+    }
+    #duelPresetGrid button div:last-child,
+    #tab-marathon .grid > button div:last-child {
+      font-size: clamp(9.5px, 2.5vw, 11px) !important;
+      line-height: 1.3 !important;
+      white-space: normal !important;
+      overflow-wrap: break-word !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 2 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+    }
+    #duelSize button, #duelSrc button,
+    #rcBallCountGroup button, #rcGravGroup button, #rcBumperLayoutGroup button {
+      font-size: clamp(10px, 2.7vw, 12px) !important;
+      padding: 0.4rem 0.25rem !important;
+      min-width: 0 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    #duelArena .flex-wrap button,
+    #recSection button,
+    #compatLab button,
+    #tab-lists button,
+    #tab-profile button,
+    #tab-admin button {
+      font-size: clamp(10.5px, 2.8vw, 12.5px) !important;
+      max-width: 100% !important;
+      overflow-wrap: anywhere !important;
+    }
+  }
+
+  /* Universal Anti-Overflow Guard for Text Boxes Across All Screen Sizes */
+  .sub-pill, #duelPresetGrid button, #tab-marathon button, #recCardsContainer > div,
+  #compatLab > div, #tab-profile .glass-card, #tab-admin .glass-card, #tab-lists .glass-card {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+  }
+
+  /* Animal Avatar Badge & Dynamic Category Icon Animations */
+  @keyframes avatarFloat3D {
+    0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+    50% { transform: translateY(-3px) rotate(1.5deg) scale(1.03); }
+  }
+  @keyframes catIconPulse {
+    0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 6px currentColor); }
+    50% { transform: translateY(-2px) scale(1.14); filter: drop-shadow(0 0 12px currentColor); }
+  }
+  .avatar-3d-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    animation: avatarFloat3D 3.6s ease-in-out infinite;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.55));
+  }
+  .avatar-3d-wrap svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .cat-icon-anim {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    animation: catIconPulse 3.2s ease-in-out infinite;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  button:hover .cat-icon-anim, h2:hover .cat-icon-anim {
+    transform: scale(1.25) rotate(-6deg) !important;
+  }

@@ -1,0 +1,64 @@
+﻿  #onboardingOverlay {
+    background: radial-gradient(ellipse at 50% 0%, rgba(245, 197, 24, 0.16), rgba(8, 10, 15, 0.96) 65%), rgba(5, 7, 11, 0.95);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+  }
+  .ob-step-enter {
+    animation: obStepIn 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes obStepIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .ob-poster-card {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: #0c0f16;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+  }
+  .ob-poster-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+  .ob-poster-card.selected {
+    border-color: var(--gold-hex);
+    box-shadow: 0 0 0 2px rgb(var(--gold) / 0.45), 0 12px 28px -6px rgb(var(--gold) / 0.35);
+    transform: translateY(-4px) scale(1.02);
+  }
+  .ob-genre-btn {
+    transition: all 0.2s ease;
+  }
+  .ob-genre-btn.selected {
+    border-color: var(--gold-hex) !important;
+    background: rgb(var(--gold) / 0.18) !important;
+    box-shadow: 0 0 22px rgb(var(--gold) / 0.25);
+    transform: translateY(-2px);
+  }
+  .ob-duel-pick {
+    width: min(40vw, 215px);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    background: #0c0f16;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+  }
+  .ob-duel-pick:hover {
+    transform: translateY(-6px) scale(1.03);
+    border-color: var(--gold-hex);
+    box-shadow: 0 0 32px rgb(var(--gold) / 0.35);
+  }
+  .ob-duel-pick.chosen {
+    border-color: var(--gold-hex);
+    transform: scale(1.07);
+    box-shadow: 0 0 42px rgb(var(--gold) / 0.65);
+  }
+  .ob-duel-pick.not-chosen {
+    opacity: 0.25;
+    filter: grayscale(1);
+    transform: scale(0.92);
+  }
