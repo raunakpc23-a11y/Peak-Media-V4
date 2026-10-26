@@ -2,6 +2,8 @@
 *.bak
 *.tmp
 *~
+songs.js
+peak_music_expansion.json
 
 # Operating System files
 .DS_Store
