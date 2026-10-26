@@ -1,4 +1,4 @@
-﻿// ======================================================
+// ======================================================
 // UI RESTRUCTURE (4 tabs) + WEATHER & MOOD THEMES
 // ======================================================
 (function () {
@@ -66,7 +66,7 @@
   const AUTO = { 'Sci-Fi': 'space', Drama: 'noir', Crime: 'noir', Thriller: 'neon', Horror: 'blood', Fantasy: 'aurora', Comedy: 'clear', Romance: 'golden', Action: 'neon', Animation: 'aurora', Western: 'golden', War: 'noir', Documentary: 'clear' };
   const SHIFT = { 'Sci-Fi': 'Romance', Drama: 'Comedy', Crime: 'Comedy', Thriller: 'Animation', Horror: 'Comedy', Fantasy: 'Action', Comedy: 'Drama', Romance: 'Sci-Fi', Action: 'Fantasy', Animation: 'Drama', Western: 'Sci-Fi', War: 'Comedy', Documentary: 'Fantasy' };
   let pin = ls.get('cs_theme_v2', 'space');            // 'auto' or a theme id
-  let reduce = ls.get('cs_reduce', true); // Effects off by default
+  let reduce = ls.get('cs_reduce', false); // Calm Mode Off by default, visual effects active
   let current = 'space', forecast = null;
 
   // forecast from the ~10 most recent actions (watched, wishlist, favourites)

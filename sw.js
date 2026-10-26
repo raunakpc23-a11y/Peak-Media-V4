@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v1.4';
+const CACHE_NAME = 'peak-media-v1.5';
 
 // All local files to pre-cache the moment the SW installs
 const PRE_CACHE = [
@@ -26,6 +26,7 @@ const PRE_CACHE = [
   './js/features.js',
   './js/marathon.js',
   './js/universes.js',
+  './js/mood_dial.js',
   './js/main.js',
   './js/pwa.js',
 ];

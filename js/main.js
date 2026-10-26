@@ -74,50 +74,62 @@
     // ---------------------------------------------------------
     // 2. IMMERSIVE FIRST-RUN TASTE SETUP & ANIMAL AVATARS
     // ---------------------------------------------------------
-    const AVATAR_PRESETS = ['beaver', 'summit', 'clapper', 'headphones', 'popcorn', 'bolt', 'moon', 'rocket'];
+    const AVATAR_PRESETS = ['cinephile', 'director', 'nightowl', 'detective', 'voyager', 'dreamer', 'maverick', 'maestro'];
     const AVATAR_META = {
-      beaver: {
-        name: 'Capybara',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="anBg1" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#38BDF8"/><stop offset="100%" stop-color="#0F172A"/></radialGradient><radialGradient id="cpFur" cx="38%" cy="30%" r="70%"><stop offset="0%" stop-color="#D99B66"/><stop offset="60%" stop-color="#A66838"/><stop offset="100%" stop-color="#6E3F1D"/></radialGradient><radialGradient id="cpSnout" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#8C522B"/><stop offset="100%" stop-color="#4A2810"/></radialGradient></defs><circle cx="32" cy="32" r="28" fill="url(#anBg1)"/><ellipse cx="18" cy="19" rx="5" ry="6" transform="rotate(-18 18 19)" fill="#6E3F1D"/><ellipse cx="18" cy="19" rx="3" ry="3.8" transform="rotate(-18 18 19)" fill="#D99B66"/><ellipse cx="46" cy="19" rx="5" ry="6" transform="rotate(18 46 19)" fill="#6E3F1D"/><ellipse cx="46" cy="19" rx="3" ry="3.8" transform="rotate(18 46 19)" fill="#D99B66"/><ellipse cx="32" cy="36" rx="20" ry="18" fill="url(#cpFur)"/><circle cx="32" cy="15" r="4.5" fill="#F97316"/><ellipse cx="34.5" cy="11.5" rx="2.5" ry="1.2" transform="rotate(-20 34.5 11.5)" fill="#22C55E"/><ellipse cx="32" cy="40" rx="11.5" ry="9.5" fill="url(#cpSnout)"/><ellipse cx="28" cy="37" rx="2" ry="1.3" fill="#1E1B18"/><ellipse cx="36" cy="37" rx="2" ry="1.3" fill="#1E1B18"/><path d="M32 39 V44 M28.5 45.5 Q32 48 35.5 45.5" stroke="#FDE68A" stroke-width="1.8" stroke-linecap="round"/><ellipse cx="21" cy="31" rx="3.2" ry="2.4" fill="#0F172A"/><ellipse cx="43" cy="31" rx="3.2" ry="2.4" fill="#0F172A"/><circle cx="20.2" cy="30.2" r="1" fill="#FFF"/><circle cx="42.2" cy="30.2" r="1" fill="#FFF"/><ellipse cx="18" cy="36" rx="3" ry="1.6" fill="#FB7185" fill-opacity="0.35"/><ellipse cx="46" cy="36" rx="3" ry="1.6" fill="#FB7185" fill-opacity="0.35"/></svg>`
+      cinephile: {
+        name: 'Cinephile',
+        role: 'Movie Buff',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg1" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#451a03"/></radialGradient><linearGradient id="hSkin1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffd7ba"/><stop offset="100%" stop-color="#fec89a"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg1)"/><path d="M18 56 C18 45 23 43 32 43 C41 43 46 45 46 56 Z" fill="#1e293b"/><path d="M25 43 L32 52 L39 43 Z" fill="#f8fafc"/><circle cx="32" cy="31" r="13" fill="url(#hSkin1)"/><path d="M19 28 C19 17 26 15 32 15 C39 15 45 18 45 25 C45 27 43 27 42 24 C40 20 37 18 32 18 C26 18 21 21 20 28 Z" fill="#331800"/><path d="M21 29 H30 V35 H21 Z" fill="#ef4444" rx="2"/><path d="M34 29 H43 V35 H34 Z" fill="#38bdf8" rx="2"/><rect x="20" y="28" width="11" height="8" rx="2" stroke="#fff" stroke-width="1.6" fill="none"/><rect x="33" y="28" width="11" height="8" rx="2" stroke="#fff" stroke-width="1.6" fill="none"/><line x1="31" y1="31" x2="33" y2="31" stroke="#fff" stroke-width="2"/><path d="M29 39 Q32 41.5 35 39" stroke="#9a3412" stroke-width="1.6" stroke-linecap="round"/></svg>`
       },
-      summit: {
-        name: 'Cat',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="anBg2" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#818CF8"/><stop offset="100%" stop-color="#1E1B4B"/></radialGradient><radialGradient id="ctFur" cx="35%" cy="28%" r="70%"><stop offset="0%" stop-color="#FDBA74"/><stop offset="60%" stop-color="#EA580C"/><stop offset="100%" stop-color="#9A3412"/></radialGradient></defs><circle cx="32" cy="32" r="28" fill="url(#anBg2)"/><polygon points="14,30 13,12 27,21" fill="#9A3412"/><polygon points="15.5,27 15,15 24.5,21.5" fill="#FDA4AF"/><polygon points="50,30 51,12 37,21" fill="#9A3412"/><polygon points="48.5,27 49,15 39.5,21.5" fill="#FDA4AF"/><ellipse cx="32" cy="36" rx="19.5" ry="17" fill="url(#ctFur)"/><path d="M29 19V25 M32 18V26 M35 19V25" stroke="#7C2D12" stroke-width="2" stroke-linecap="round"/><ellipse cx="32" cy="41" rx="9.5" ry="7" fill="#FFF7ED"/><circle cx="23.5" cy="33" r="3.8" fill="#0F172A"/><circle cx="40.5" cy="33" r="3.8" fill="#0F172A"/><circle cx="22.3" cy="31.8" r="1.3" fill="#FFF"/><circle cx="39.3" cy="31.8" r="1.3" fill="#FFF"/><polygon points="32,39.5 29.5,36.8 34.5,36.8" fill="#FB7185"/><path d="M32 39.5 V42.5 M28 43 Q30 45 32 42.5 Q34 45 36 43" stroke="#431407" stroke-width="1.8" stroke-linecap="round"/><path d="M11 37L20 38.5 M10 41L20 41 M53 37L44 38.5 M54 41L44 41" stroke="#FFF" stroke-width="1.5" stroke-linecap="round"/></svg>`
+      director: {
+        name: 'Director',
+        role: 'Auteur',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg2" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#1e1b4b"/></radialGradient><linearGradient id="hSkin2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffedd5"/><stop offset="100%" stop-color="#fed7aa"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg2)"/><path d="M18 56 C18 46 24 43 32 43 C40 43 46 46 46 56 Z" fill="#0f172a"/><circle cx="32" cy="31" r="12.5" fill="url(#hSkin2)"/><ellipse cx="32" cy="19" rx="16" ry="6" transform="rotate(-6 32 19)" fill="#18181b"/><circle cx="28" cy="15" r="2" fill="#27272a"/><circle cx="27" cy="29" r="2" fill="#1e293b"/><circle cx="37" cy="29" r="2" fill="#1e293b"/><circle cx="27" cy="29" r="4.2" stroke="#e5a93c" stroke-width="1.5" fill="none"/><circle cx="37" cy="29" r="4.2" stroke="#e5a93c" stroke-width="1.5" fill="none"/><line x1="31.2" y1="29" x2="32.8" y2="29" stroke="#e5a93c" stroke-width="1.5"/><path d="M27 36 C29 37.5 35 37.5 37 36 C35 39.5 29 39.5 27 36 Z" fill="#451a03"/></svg>`
       },
-      clapper: {
-        name: 'Dog',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="anBg3" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#34D399"/><stop offset="100%" stop-color="#064E3B"/></radialGradient><radialGradient id="dgFur" cx="38%" cy="30%" r="70%"><stop offset="0%" stop-color="#FDE68A"/><stop offset="60%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#B45309"/></radialGradient></defs><circle cx="32" cy="32" r="28" fill="url(#anBg3)"/><ellipse cx="13.5" cy="33" rx="5.5" ry="12" transform="rotate(14 13.5 33)" fill="#92400E"/><ellipse cx="50.5" cy="33" rx="5.5" ry="12" transform="rotate(-14 50.5 33)" fill="#92400E"/><ellipse cx="32" cy="35" rx="18.5" ry="17.5" fill="url(#dgFur)"/><ellipse cx="25" cy="26" rx="3" ry="2" fill="#FEF3C7"/><ellipse cx="39" cy="26" rx="3" ry="2" fill="#FEF3C7"/><ellipse cx="32" cy="40.5" rx="11" ry="8.5" fill="#FFFBEB"/><path d="M29 44.5 Q32 50.5 35 44.5 Z" fill="#FB7185"/><circle cx="24" cy="31.5" r="3.5" fill="#0F172A"/><circle cx="40" cy="31.5" r="3.5" fill="#0F172A"/><circle cx="22.8" cy="30.3" r="1.2" fill="#FFF"/><circle cx="38.8" cy="30.3" r="1.2" fill="#FFF"/><ellipse cx="32" cy="37" rx="4.2" ry="3" fill="#1E293B"/><ellipse cx="30.8" cy="36.2" rx="1.3" ry="0.7" fill="#FFF" fill-opacity="0.65"/><path d="M27 42.5 Q32 45.8 37 42.5" stroke="#451A03" stroke-width="2" stroke-linecap="round"/></svg>`
+      nightowl: {
+        name: 'Night Owl',
+        role: 'Binger',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg3" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#2e1065"/></radialGradient><linearGradient id="hSkin3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fae8ff"/><stop offset="100%" stop-color="#f5d0fe"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg3)"/><path d="M17 56 C17 44 23 42 32 42 C41 42 47 44 47 56 Z" fill="#3b0764"/><path d="M19 32 C17 44 22 47 32 47 C42 47 47 44 45 32 C43 21 39 17 32 17 C25 17 21 21 19 32 Z" fill="#4c1d95"/><circle cx="32" cy="32" r="11.5" fill="url(#hSkin3)"/><path d="M22 25 C25 21 39 21 42 25 C39 24 25 24 22 25 Z" fill="#2e1065"/><circle cx="28" cy="30" r="1.8" fill="#1e1b4b"/><circle cx="36" cy="30" r="1.8" fill="#1e1b4b"/><path d="M29 36 Q32 38 35 36" stroke="#a21caf" stroke-width="1.6" stroke-linecap="round"/><circle cx="21" cy="48" r="3.5" fill="#f59e0b"/><path d="M21 43 Q22 41 21 39" stroke="#f59e0b" stroke-width="1.2" stroke-linecap="round"/></svg>`
       },
-      headphones: {
-        name: 'Sea Lion',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="anBg4" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#083344"/></radialGradient><radialGradient id="slFur" cx="35%" cy="28%" r="72%"><stop offset="0%" stop-color="#94A3B8"/><stop offset="58%" stop-color="#475569"/><stop offset="100%" stop-color="#1E293B"/></radialGradient><radialGradient id="slMuz" cx="45%" cy="35%" r="65%"><stop offset="0%" stop-color="#E2E8F0"/><stop offset="100%" stop-color="#94A3B8"/></radialGradient></defs><circle cx="32" cy="32" r="28" fill="url(#anBg4)"/><ellipse cx="14" cy="32" rx="2.5" ry="4.5" transform="rotate(-15 14 32)" fill="#334155"/><ellipse cx="50" cy="32" rx="2.5" ry="4.5" transform="rotate(15 50 32)" fill="#334155"/><ellipse cx="32" cy="35" rx="18" ry="17.5" fill="url(#slFur)"/><ellipse cx="32" cy="40.5" rx="11.5" ry="8" fill="url(#slMuz)"/><circle cx="23.5" cy="30.5" r="3.8" fill="#090D16"/><circle cx="40.5" cy="30.5" r="3.8" fill="#090D16"/><circle cx="22.3" cy="29.3" r="1.3" fill="#FFF"/><circle cx="39.3" cy="29.3" r="1.3" fill="#FFF"/><ellipse cx="19" cy="36" rx="3" ry="1.6" fill="#F43F5E" fill-opacity="0.35"/><ellipse cx="45" cy="36" rx="3" ry="1.6" fill="#F43F5E" fill-opacity="0.35"/><ellipse cx="32" cy="36.2" rx="3.8" ry="2.6" fill="#0F172A"/><path d="M32 38.8 V42.5 M28 43 Q32 46 36 43" stroke="#1E293B" stroke-width="2" stroke-linecap="round"/><path d="M14 39L23 39.5 M13 42.5L23 41.5 M50 39L41 39.5 M51 42.5L41 41.5" stroke="#F8FAFC" stroke-width="1.6" stroke-linecap="round"/></svg>`
+      detective: {
+        name: 'Detective',
+        role: 'Noir Critic',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg4" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#64748b"/><stop offset="100%" stop-color="#090d16"/></radialGradient><linearGradient id="hSkin4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="100%" stop-color="#fcd34d"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg4)"/><path d="M17 56 C17 45 22 43 32 43 C42 43 47 45 47 56 Z" fill="#1e293b"/><path d="M23 43 L32 53 L41 43 Z" fill="#0f172a"/><circle cx="32" cy="32" r="12" fill="url(#hSkin4)"/><path d="M14 25 C18 20 46 20 50 25 L45 24 C41 15 23 15 19 24 Z" fill="#0f172a"/><path d="M20 23 C22 17 42 17 44 23 Z" fill="#334155"/><rect x="22" y="21" width="20" height="2.5" fill="#e5a93c"/><path d="M24 28 L30 29 M40 28 L34 29" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/><circle cx="28" cy="32" r="1.8" fill="#0f172a"/><circle cx="36" cy="32" r="1.8" fill="#0f172a"/><line x1="28" y1="37" x2="36" y2="37" stroke="#78350f" stroke-width="1.8" stroke-linecap="round"/></svg>`
       },
-      popcorn: {
-        name: 'Red Panda',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="anBg5" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#4C0519"/></radialGradient><radialGradient id="rpFur" cx="38%" cy="30%" r="70%"><stop offset="0%" stop-color="#FB923C"/><stop offset="60%" stop-color="#C2410C"/><stop offset="100%" stop-color="#7C2D12"/></radialGradient></defs><circle cx="32" cy="32" r="28" fill="url(#anBg5)"/><circle cx="16" cy="20" r="7" fill="#FFF7ED"/><circle cx="16" cy="20" r="4" fill="#431407"/><circle cx="48" cy="20" r="7" fill="#FFF7ED"/><circle cx="48" cy="20" r="4" fill="#431407"/><ellipse cx="32" cy="36" rx="19.5" ry="17" fill="url(#rpFur)"/><ellipse cx="21" cy="38" rx="6.5" ry="5" fill="#FFF7ED"/><ellipse cx="43" cy="38" rx="6.5" ry="5" fill="#FFF7ED"/><ellipse cx="25" cy="27" rx="3.2" ry="2" transform="rotate(-12 25 27)" fill="#FFF7ED"/><ellipse cx="39" cy="27" rx="3.2" ry="2" transform="rotate(12 39 27)" fill="#FFF7ED"/><ellipse cx="32" cy="40.5" rx="8.5" ry="6.5" fill="#FFF7ED"/><circle cx="24.5" cy="32.5" r="3.3" fill="#1C1917"/><circle cx="39.5" cy="32.5" r="3.3" fill="#1C1917"/><circle cx="23.5" cy="31.5" r="1.1" fill="#FFF"/><circle cx="38.5" cy="31.5" r="1.1" fill="#FFF"/><ellipse cx="32" cy="37.8" rx="3.2" ry="2.3" fill="#1C1917"/><path d="M29 42 Q32 44.5 35 42" stroke="#431407" stroke-width="1.8" stroke-linecap="round"/></svg>`
+      voyager: {
+        name: 'Voyager',
+        role: 'Sci-Fi Dreamer',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg5" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#082f49"/></radialGradient><linearGradient id="hSkin5" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#cffafe"/><stop offset="100%" stop-color="#a5f3fc"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg5)"/><path d="M18 56 C18 44 24 42 32 42 C40 42 46 44 46 56 Z" fill="#083344"/><circle cx="32" cy="31" r="12.5" fill="url(#hSkin5)"/><path d="M20 26 C20 16 44 16 44 26 C40 22 24 22 20 26 Z" fill="#0e7490"/><path d="M21 27 C23 26 41 26 43 27 C44 31 43 33 41 33 H23 C21 33 20 31 21 27 Z" fill="#06b6d4" fill-opacity="0.85" stroke="#ec4899" stroke-width="1.5"/><line x1="24" y1="30" x2="40" y2="30" stroke="#fff" stroke-width="1" stroke-dasharray="2 1"/><path d="M29 38 H35" stroke="#0e7490" stroke-width="1.8" stroke-linecap="round"/><circle cx="18" cy="32" r="2" fill="#ec4899"/><circle cx="46" cy="32" r="2" fill="#ec4899"/></svg>`
       },
-      bolt: {
-        name: 'Fox',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="anBg6" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#451A03"/></radialGradient><linearGradient id="fxFur" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FB923C"/><stop offset="100%" stop-color="#EA580C"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#anBg6)"/><polygon points="14,29 12,10 27,20" fill="#1E293B"/><polygon points="16,27 14.5,14 25,21" fill="#FDE68A"/><polygon points="50,29 52,10 37,20" fill="#1E293B"/><polygon points="48,27 49.5,14 39,21" fill="#FDE68A"/><path d="M12 35 C12 22 21 17 32 17 C43 17 52 22 52 35 C52 44 41 51 32 51 C23 51 12 44 12 35 Z" fill="url(#fxFur)"/><path d="M13 36 C19 36 26 42 32 51 C21 50 13 43 13 36 Z M51 36 C45 36 38 42 32 51 C43 50 51 43 51 36 Z" fill="#FFF7ED"/><circle cx="24" cy="32" r="3.3" fill="#0F172A"/><circle cx="40" cy="32" r="3.3" fill="#0F172A"/><circle cx="23" cy="31" r="1.1" fill="#FFF"/><circle cx="39" cy="31" r="1.1" fill="#FFF"/><circle cx="32" cy="43" r="3.2" fill="#0F172A"/></svg>`
+      dreamer: {
+        name: 'Dreamer',
+        role: 'Indie & Romance',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg6" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#f43f5e"/><stop offset="100%" stop-color="#4c0519"/></radialGradient><linearGradient id="hSkin6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffe4e6"/><stop offset="100%" stop-color="#fecdd3"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg6)"/><path d="M18 56 C18 45 23 43 32 43 C41 43 46 45 46 56 Z" fill="#be123c"/><circle cx="32" cy="31" r="12.5" fill="url(#hSkin6)"/><path d="M18 28 C17 19 23 16 32 16 C41 16 47 19 46 28 C44 23 41 21 32 21 C23 21 20 23 18 28 Z" fill="#581c87"/><circle cx="27" cy="29" r="2" fill="#4c0519"/><circle cx="37" cy="29" r="2" fill="#4c0519"/><circle cx="26.3" cy="28.3" r="0.7" fill="#fff"/><circle cx="36.3" cy="28.3" r="0.7" fill="#fff"/><ellipse cx="23" cy="34" rx="2.5" ry="1.4" fill="#fb7185" fill-opacity="0.5"/><ellipse cx="41" cy="34" rx="2.5" ry="1.4" fill="#fb7185" fill-opacity="0.5"/><path d="M29 36 Q32 39 35 36" stroke="#be123c" stroke-width="1.8" stroke-linecap="round"/></svg>`
       },
-      moon: {
-        name: 'Owl',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="anBg7" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#A855F7"/><stop offset="100%" stop-color="#2E1065"/></radialGradient><radialGradient id="owFur" cx="38%" cy="30%" r="70%"><stop offset="0%" stop-color="#A78BFA"/><stop offset="60%" stop-color="#6D28D9"/><stop offset="100%" stop-color="#3B0764"/></radialGradient></defs><circle cx="32" cy="32" r="28" fill="url(#anBg7)"/><ellipse cx="32" cy="36" rx="19" ry="18" fill="url(#owFur)"/><polygon points="15,22 11,12 24,18" fill="#4C1D95"/><polygon points="49,22 53,12 40,18" fill="#4C1D95"/><circle cx="23.5" cy="31" r="8.5" fill="#FEF3C7" stroke="#4C1D95" stroke-width="2"/><circle cx="40.5" cy="31" r="8.5" fill="#FEF3C7" stroke="#4C1D95" stroke-width="2"/><circle cx="23.5" cy="31" r="5" fill="#0F172A"/><circle cx="40.5" cy="31" r="5" fill="#0F172A"/><circle cx="22" cy="29.5" r="1.6" fill="#FFF"/><circle cx="39" cy="29.5" r="1.6" fill="#FFF"/><polygon points="32,40 28.5,34 35.5,34" fill="#F59E0B"/><path d="M25 46 Q28 48 31 46 M33 46 Q36 48 39 46" stroke="#DDD6FE" stroke-width="1.8" stroke-linecap="round"/></svg>`
+      maverick: {
+        name: 'Maverick',
+        role: 'Action Hero',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg7" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#450a0a"/></radialGradient><linearGradient id="hSkin7" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffedd5"/><stop offset="100%" stop-color="#fed7aa"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg7)"/><path d="M17 56 C17 44 22 42 32 42 C42 42 47 44 47 56 Z" fill="#27272a"/><path d="M27 42 L32 49 L37 42 Z" fill="#e5a93c"/><circle cx="32" cy="31" r="12.5" fill="url(#hSkin7)"/><path d="M20 25 C23 17 41 17 44 25 C41 21 23 21 20 25 Z" fill="#1c1917"/><path d="M22 28 H30 L29 33 H23 Z" fill="#18181b" stroke="#e5a93c" stroke-width="1.2"/><path d="M34 28 H42 L41 33 H35 Z" fill="#18181b" stroke="#e5a93c" stroke-width="1.2"/><line x1="30" y1="29" x2="34" y2="29" stroke="#e5a93c" stroke-width="1.4"/><path d="M28 37 Q32 39 36 37" stroke="#78350f" stroke-width="1.8" stroke-linecap="round"/></svg>`
       },
-      rocket: {
-        name: 'Penguin',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="anBg8" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#38BDF8"/><stop offset="100%" stop-color="#1E3A8A"/></radialGradient><radialGradient id="pgBody" cx="35%" cy="25%" r="75%"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#090D16"/></radialGradient></defs><circle cx="32" cy="32" r="28" fill="url(#anBg8)"/><ellipse cx="32" cy="36" rx="18.5" ry="18.5" fill="url(#pgBody)"/><path d="M19 34 C19 25 25 22 32 22 C39 22 45 25 45 34 C45 45 39 51 32 51 C25 51 19 45 19 34 Z" fill="#F8FAFC"/><circle cx="25" cy="30.5" r="3.2" fill="#0F172A"/><circle cx="39" cy="30.5" r="3.2" fill="#0F172A"/><circle cx="24" cy="29.5" r="1.1" fill="#FFF"/><circle cx="38" cy="29.5" r="1.1" fill="#FFF"/><ellipse cx="20.5" cy="35" rx="2.8" ry="1.5" fill="#FB7185" fill-opacity="0.45"/><ellipse cx="43.5" cy="35" rx="2.8" ry="1.5" fill="#FB7185" fill-opacity="0.45"/><polygon points="32,39 27,34 37,34" fill="#F59E0B"/><rect x="17" y="45" width="30" height="5.5" rx="2.7" fill="#EF4444"/><rect x="36" y="46" width="5" height="9" rx="2" fill="#EF4444"/></svg>`
+      maestro: {
+        name: 'Maestro',
+        role: 'Soundtrack & Score',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg8" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#022c22"/></radialGradient><linearGradient id="hSkin8" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fef3c7"/><stop offset="100%" stop-color="#fde68a"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg8)"/><path d="M18 56 C18 45 23 43 32 43 C41 43 46 45 46 56 Z" fill="#064e3b"/><circle cx="32" cy="31" r="12" fill="url(#hSkin8)"/><path d="M20 26 C22 18 42 18 44 26 C40 22 24 22 20 26 Z" fill="#1e293b"/><path d="M16 28 C16 16 48 16 48 28" stroke="#10b981" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="15" y="27" width="5.5" height="10" rx="2.5" fill="#10b981"/><rect x="43.5" y="27" width="5.5" height="10" rx="2.5" fill="#10b981"/><circle cx="28" cy="30" r="1.8" fill="#064e3b"/><circle cx="36" cy="30" r="1.8" fill="#064e3b"/><path d="M28 36 Q32 39 36 36" stroke="#064e3b" stroke-width="1.8" stroke-linecap="round"/></svg>`
       }
     };
-    const LEGACY_EMOJI_MAP = {'🦫':'beaver','🏔️':'summit','🎬':'clapper','🎧':'headphones','🍿':'popcorn','⚡':'bolt','🌙':'moon','🚀':'rocket'};
+    const LEGACY_EMOJI_MAP = {
+      'beaver':'cinephile','summit':'director','clapper':'maverick','headphones':'maestro',
+      'popcorn':'dreamer','bolt':'voyager','moon':'nightowl','rocket':'detective',
+      '🦫':'cinephile','🏔️':'director','🎬':'maverick','🎧':'maestro','🍿':'dreamer','⚡':'voyager','🌙':'nightowl','🚀':'detective'
+    };
     window.getAvatar3CHTML = function(avKey) {
-      const k = LEGACY_EMOJI_MAP[avKey] || (AVATAR_META[avKey] ? avKey : 'beaver');
+      const k = LEGACY_EMOJI_MAP[avKey] || (AVATAR_META[avKey] ? avKey : 'cinephile');
       return `<span class="avatar-3d-wrap" title="${AVATAR_META[k].name}">${AVATAR_META[k].svg}</span>`;
     };
 
     const defaultProfile = {
       username: 'Cinephile',
-      avatar: 'beaver',
+      avatar: 'cinephile',
       favoriteGenre: 'Sci-Fi',
       secondaryGenres: ['Thriller', 'Drama'],
       language: 'All',
@@ -128,7 +140,7 @@
     };
     let obProfile = Object.assign({}, defaultProfile, getLS('cs_profile_v1', {}));
     if (LEGACY_EMOJI_MAP[obProfile.avatar]) obProfile.avatar = LEGACY_EMOJI_MAP[obProfile.avatar];
-    if (!AVATAR_META[obProfile.avatar]) obProfile.avatar = 'beaver';
+    if (!AVATAR_META[obProfile.avatar]) obProfile.avatar = 'cinephile';
 
     let obStep = 1;
     const TOTAL_OB_STEPS = 6;
@@ -196,10 +208,10 @@
             <div class="space-y-1.5 text-center">
               <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Your Screening Pass</span>
               <h2 class="text-2xl sm:text-4xl font-display font-extrabold text-white">Who's watching tonight?</h2>
-              <p class="text-xs sm:text-sm text-gray-400">Pick an animal avatar and set your display name to personalize your shelves, recommendations, and playlists.</p>
+              <p class="text-xs sm:text-sm text-gray-400">Choose your cinema persona and set your display name to personalize your shelves, recommendations, and playlists.</p>
             </div>
             <div class="space-y-2.5">
-              <label class="text-xs font-bold uppercase tracking-wider text-gray-300">Choose Your Avatar</label>
+              <label class="text-xs font-bold uppercase tracking-wider text-gray-300">Choose Your Cinema Persona</label>
               <div id="obAvatarRow" class="grid grid-cols-4 sm:grid-cols-8 gap-2.5">
                 ${AVATAR_PRESETS.map(k => `
                   <button type="button" data-av="${k}" class="p-2 rounded-2xl border flex flex-col items-center justify-center gap-1 transition-all ${obProfile.avatar === k ? 'border-brand-gold bg-brand-gold/20 scale-105 shadow-lg' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
@@ -785,6 +797,7 @@
               </div>
             </div>
             <div class="flex items-center gap-1 shrink-0">
+              <button type="button" onclick="playNextSongById('${s.id}')" title="Play Next" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-gray-300 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-arrow-turn-down"></i></button>
               <button type="button" onclick="queueSongById('${s.id}')" title="Add to Queue" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-brand-gold hover:text-black text-gray-300 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-plus"></i></button>
               <button type="button" onclick="toggleSongFav('${s.id}')" title="Favorite Song" class="w-8 h-8 rounded-lg ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-heart"></i></button>
             </div>
@@ -846,6 +859,15 @@
                 isPlayingMusic = false;
                 updateMiniPlayerUI();
               } else if (e.data === YT.PlayerState.ENDED) {
+                if (musicSleepEndTrack) {
+                  musicSleepEndTrack = false;
+                  if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+                  isPlayingMusic = false;
+                  updateMiniPlayerUI();
+                  cancelMusicSleepTimer();
+                  showToast('Sleep timer reached end of track. Pausing music. Goodnight! 🌙', 'fa-moon', 'text-indigo-400');
+                  return;
+                }
                 if (musicRepeat === 'one') {
                   ytPlayer.seekTo(0);
                   ytPlayer.playVideo();
@@ -919,13 +941,28 @@
       const s = musicCatalog.find(x => x.id === vid);
       if (!s) return;
       musicQueue.push(s);
-      $('musicQueueCountLbl').textContent = musicQueue.length;
+      if ($('musicQueueCountLbl')) $('musicQueueCountLbl').textContent = musicQueue.length;
       renderMusicQueueList();
       showToast(`Added "${s.t.slice(0, 36)}" to queue`, 'fa-list-ol', 'text-brand-gold');
       if (musicQueue.length === 1) {
         musicQueueIdx = 0;
         startTrackFromQueue();
       }
+    };
+
+    window.playNextSongById = function(vid) {
+      ensureMusicLoaded();
+      const s = musicCatalog.find(x => x.id === vid);
+      if (!s) return;
+      if (musicQueueIdx >= 0 && musicQueueIdx < musicQueue.length) {
+        musicQueue.splice(musicQueueIdx + 1, 0, s);
+      } else {
+        musicQueue.unshift(s);
+        musicQueueIdx = 0;
+      }
+      if ($('musicQueueCountLbl')) $('musicQueueCountLbl').textContent = musicQueue.length;
+      renderMusicQueueList();
+      showToast(`Playing next: "${s.t.slice(0, 32)}"`, 'fa-arrow-turn-down', 'text-brand-gold');
     };
 
     window.playEntirePlaylist = function(pid) {
@@ -1067,18 +1104,192 @@
       $('musicQueueDrawer').classList.add('hidden');
     };
 
+    // Easy Queue Management: Move Up/Down, Remove, Shuffle
+    window.moveQueueItem = function(idx, dir, e) {
+      if (e) e.stopPropagation();
+      const targetIdx = idx + dir;
+      if (targetIdx < 0 || targetIdx >= musicQueue.length) return;
+      const [item] = musicQueue.splice(idx, 1);
+      musicQueue.splice(targetIdx, 0, item);
+      if (musicQueueIdx === idx) musicQueueIdx = targetIdx;
+      else if (musicQueueIdx === targetIdx) musicQueueIdx = idx;
+      renderMusicQueueList();
+    };
+
+    window.removeQueueItem = function(idx, e) {
+      if (e) e.stopPropagation();
+      if (idx < 0 || idx >= musicQueue.length) return;
+      musicQueue.splice(idx, 1);
+      if (musicQueueIdx === idx) {
+        if (musicQueue.length) {
+          musicQueueIdx = musicQueueIdx % musicQueue.length;
+          startTrackFromQueue();
+        } else {
+          musicQueueIdx = -1;
+          if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+          isPlayingMusic = false;
+          updateMiniPlayerUI();
+        }
+      } else if (musicQueueIdx > idx) {
+        musicQueueIdx--;
+      }
+      if ($('musicQueueCountLbl')) $('musicQueueCountLbl').textContent = musicQueue.length;
+      renderMusicQueueList();
+    };
+
+    window.shuffleMusicQueue = function() {
+      if (musicQueue.length <= 1) return;
+      const current = musicQueueIdx >= 0 ? musicQueue[musicQueueIdx] : null;
+      const others = musicQueue.filter((_, i) => i !== musicQueueIdx);
+      for (let i = others.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [others[i], others[j]] = [others[j], others[i]];
+      }
+      if (current) {
+        musicQueue = [current, ...others];
+        musicQueueIdx = 0;
+      } else {
+        musicQueue = others;
+      }
+      renderMusicQueueList();
+      showToast('Queue shuffled!', 'fa-shuffle', 'text-brand-gold');
+    };
+
     function renderMusicQueueList() {
       const box = $('musicQueueList');
       if (!box) return;
+      const countBadge = $('musicQueueBadgeCount');
+      if (countBadge) countBadge.textContent = musicQueue.length;
+      if ($('musicQueueCountLbl')) $('musicQueueCountLbl').textContent = musicQueue.length;
+
       if (!musicQueue.length) {
-        box.innerHTML = '<div class="p-4 text-center text-gray-500">Queue is empty. Click any song to play!</div>';
+        box.innerHTML = '<div class="p-6 text-center text-gray-400 space-y-1"><i class="fa-solid fa-list-ol text-xl opacity-40"></i><p>Your queue is empty</p><span class="text-[10px] text-gray-500">Click any song or tap + Queue to stack tracks</span></div>';
         return;
       }
-      box.innerHTML = musicQueue.slice(0, 60).map((s, idx) => `
-        <div onclick="musicQueueIdx=${idx}; startTrackFromQueue();" class="p-2 rounded-xl flex items-center justify-between gap-2 cursor-pointer ${idx === musicQueueIdx ? 'bg-brand-gold/20 text-brand-gold font-bold' : 'hover:bg-white/5 text-gray-300'}">
-          <span class="truncate">${idx + 1}. ${esc(s.t)}</span>
-          <span class="text-[10px] text-gray-500 shrink-0">${esc(s.a)}</span>
-        </div>`).join('');
+      box.innerHTML = musicQueue.slice(0, 75).map((s, idx) => {
+        const isCurrent = idx === musicQueueIdx;
+        return `
+          <div onclick="musicQueueIdx=${idx}; startTrackFromQueue();" class="p-2 rounded-xl flex items-center justify-between gap-2 cursor-pointer transition-all ${isCurrent ? 'bg-brand-gold/20 border border-brand-gold/40 text-brand-gold font-bold shadow-sm' : 'hover:bg-white/5 text-gray-300 border border-transparent'}">
+            <div class="flex items-center gap-2 min-w-0 flex-1">
+              <span class="w-5 text-center text-[10px] opacity-70 shrink-0">${isCurrent && isPlayingMusic ? '<i class="fa-solid fa-volume-high fa-beat-fade"></i>' : idx + 1}</span>
+              <div class="min-w-0 flex-1">
+                <div class="truncate text-xs ${isCurrent ? 'text-brand-gold font-black' : 'text-white'}>${esc(s.t)}</div>
+                <div class="text-[10px] text-gray-400 truncate">${esc(s.a)}</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0" onclick="event.stopPropagation()">
+              ${idx > 0 ? `<button type="button" onclick="moveQueueItem(${idx}, -1, event)" class="w-6 h-6 rounded bg-white/5 hover:bg-white/15 text-gray-400 flex items-center justify-center text-[10px]" title="Move Up"><i class="fa-solid fa-chevron-up"></i></button>` : ''}
+              ${idx < musicQueue.length - 1 ? `<button type="button" onclick="moveQueueItem(${idx}, 1, event)" class="w-6 h-6 rounded bg-white/5 hover:bg-white/15 text-gray-400 flex items-center justify-center text-[10px]" title="Move Down"><i class="fa-solid fa-chevron-down"></i></button>` : ''}
+              <button type="button" onclick="removeQueueItem(${idx}, event)" class="w-6 h-6 rounded bg-white/5 hover:bg-rose-500 hover:text-white text-gray-400 flex items-center justify-center text-[10px] transition-colors" title="Remove"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ---------------------------------------------------------
+    // MUSIC SLEEP TIMER CONTROLLER
+    // ---------------------------------------------------------
+    let musicSleepEndTime = 0;
+    let musicSleepEndTrack = false;
+    let musicSleepTimerInterval = null;
+
+    window.openMusicSleepModal = function() {
+      const m = $('musicSleepModal');
+      if (m) m.classList.remove('hidden');
+      updateSleepModalStatus();
+    };
+
+    window.closeMusicSleepModal = function() {
+      const m = $('musicSleepModal');
+      if (m) m.classList.add('hidden');
+    };
+
+    window.setMusicSleepTimer = function(minutes) {
+      clearInterval(musicSleepTimerInterval);
+      if (minutes === 'end') {
+        musicSleepEndTrack = true;
+        musicSleepEndTime = 0;
+        updateSleepTimerBadge('End of Track');
+        showToast('Music will pause after current track finishes 🌙', 'fa-moon', 'text-indigo-400');
+      } else {
+        const mins = parseInt(minutes, 10);
+        if (mins > 0) {
+          musicSleepEndTrack = false;
+          musicSleepEndTime = Date.now() + mins * 60 * 1000;
+          musicSleepTimerInterval = setInterval(checkMusicSleepTimerTick, 1000);
+          checkMusicSleepTimerTick();
+          showToast(`Sleep timer set for ${mins} minutes 🌙`, 'fa-moon', 'text-indigo-400');
+        }
+      }
+      window.closeMusicSleepModal();
+    };
+
+    window.setCustomMusicSleepTimer = function() {
+      const inp = $('musicSleepCustomInp');
+      const val = inp ? parseInt(inp.value, 10) : 0;
+      if (val > 0 && val <= 360) {
+        setMusicSleepTimer(val);
+        if (inp) inp.value = '';
+      } else {
+        showToast('Enter valid minutes between 1 and 360', 'fa-triangle-exclamation', 'text-amber-400');
+      }
+    };
+
+    window.cancelMusicSleepTimer = function() {
+      clearInterval(musicSleepTimerInterval);
+      musicSleepTimerInterval = null;
+      musicSleepEndTime = 0;
+      musicSleepEndTrack = false;
+      const lbl = $('mpSleepLbl');
+      if (lbl) lbl.textContent = 'Sleep';
+      const btn = $('mpSleepBtn');
+      if (btn) btn.className = 'px-2.5 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 text-[11px] font-semibold flex items-center gap-1 transition-colors';
+      updateSleepModalStatus();
+      showToast('Sleep timer cancelled', 'fa-rotate-left', 'text-gray-300');
+    };
+
+    function checkMusicSleepTimerTick() {
+      if (!musicSleepEndTime) return;
+      const remainingMs = musicSleepEndTime - Date.now();
+      if (remainingMs <= 0) {
+        clearInterval(musicSleepTimerInterval);
+        musicSleepTimerInterval = null;
+        musicSleepEndTime = 0;
+        if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+        isPlayingMusic = false;
+        updateMiniPlayerUI();
+        cancelMusicSleepTimer();
+        showToast('Sleep timer ended. Pausing music. Goodnight! 🌙', 'fa-moon', 'text-indigo-400');
+        return;
+      }
+      const remMins = Math.floor(remainingMs / 60000);
+      const remSecs = Math.floor((remainingMs % 60000) / 1000);
+      const formatted = remMins + ':' + (remSecs < 10 ? '0' : '') + remSecs;
+      updateSleepTimerBadge(formatted);
+      const cVal = $('musicSleepCountdownVal');
+      if (cVal) cVal.textContent = formatted;
+    }
+
+    function updateSleepTimerBadge(str) {
+      const lbl = $('mpSleepLbl');
+      if (lbl) lbl.textContent = str;
+      const btn = $('mpSleepBtn');
+      if (btn) btn.className = 'px-2.5 h-8 rounded-lg bg-indigo-600/30 border border-indigo-400/50 text-indigo-300 text-[11px] font-extrabold flex items-center gap-1 shadow-sm';
+      updateSleepModalStatus();
+    }
+
+    function updateSleepModalStatus() {
+      const st = $('musicSleepActiveStatus');
+      if (!st) return;
+      if (musicSleepEndTrack) {
+        st.classList.remove('hidden');
+        const cVal = $('musicSleepCountdownVal');
+        if (cVal) cVal.textContent = 'End of current track';
+      } else if (musicSleepEndTime > Date.now()) {
+        st.classList.remove('hidden');
+      } else {
+        st.classList.add('hidden');
+      }
     }
 
     // ---------------------------------------------------------
@@ -1503,7 +1714,11 @@
       const grid = $('profileThemeSwatchGrid');
       if (grid) grid.innerHTML = PROFILE_THEMES_LIST.map(buildThemeCard).join('');
       const hubGrid = $('hubQuickThemeSwatches');
-      if (hubGrid) hubGrid.innerHTML = PROFILE_THEMES_LIST.map(buildThemeCard).join('');
+      if (hubGrid) {
+        // Show only the 6 core themes that fit neatly in the box without overflowing
+        const fitThemes = showAllAtmosphereThemes ? PROFILE_THEMES_LIST : PROFILE_THEMES_LIST.slice(0, 6);
+        hubGrid.innerHTML = fitThemes.map(buildThemeCard).join('');
+      }
 
       const modesGrid = $('hubAtmosphereModesGrid');
       if (modesGrid) {
@@ -1514,13 +1729,13 @@
         const modes = [
           { label: isCalm ? 'Particles: Off' : 'Particles: On', sub: 'Ambient Canvas', active: !isCalm, fn: "toggleReduce(); syncProfileThemeStudio();", ic: 'fa-wand-magic-sparkles', vis: 'flex' },
           { label: 'Film Grain', sub: '35mm Texture', active: hasGrain, fn: "toggleBodyLensMode('tm-grain')", ic: 'fa-film', vis: 'flex' },
-          { label: 'Deep Frosted Glass', sub: 'High Blur Lens', active: hasGlass, fn: "toggleBodyLensMode('tm-glass')", ic: 'fa-layer-group', vis: 'hidden sm:flex' },
-          { label: 'Vintage Sepia', sub: 'Classic Warmth', active: hasSepia, fn: "toggleBodyLensMode('tm-sepia')", ic: 'fa-camera-retro', vis: 'hidden lg:flex' },
-          { label: 'Cyber Saturation', sub: 'Vivid Contrast', active: hasNeon, fn: "toggleBodyLensMode('tm-neon')", ic: 'fa-bolt', vis: 'hidden lg:flex' },
-          { label: 'Time Machine', sub: 'Era Filter', active: false, fn: "tmOpen()", ic: 'fa-clock-rotate-left', vis: 'hidden lg:flex' }
+          { label: 'Frosted Glass', sub: 'Blur Lens', active: hasGlass, fn: "toggleBodyLensMode('tm-glass')", ic: 'fa-layer-group', vis: 'hidden sm:flex' },
+          { label: 'Vintage Warm', sub: 'Classic Tone', active: hasSepia, fn: "toggleBodyLensMode('tm-sepia')", ic: 'fa-camera-retro', vis: 'hidden lg:flex' },
+          { label: 'Cyber Glow', sub: 'Vivid Saturation', active: hasNeon, fn: "toggleBodyLensMode('tm-neon')", ic: 'fa-bolt', vis: 'hidden lg:flex' },
+          { label: 'Time Machine', sub: 'Era Matrix', active: false, fn: "tmOpen()", ic: 'fa-clock-rotate-left', vis: 'hidden lg:flex' }
         ];
         modesGrid.innerHTML = modes.map(m => `
-          <button type="button" onclick="${m.fn}" class="${showAllAtmosphereThemes ? 'flex' : m.vis} p-2 rounded-xl border text-left items-center gap-2 transition-all w-full ${m.active ? 'border-brand-gold bg-brand-gold/15 text-white' : 'border-white/10 bg-black/40 text-gray-300 hover:bg-white/5'}">
+          <button type="button" onclick="${m.fn}" class="${showAllAtmosphereThemes ? 'flex' : m.vis} p-1.5 sm:p-2 rounded-xl border text-left items-center gap-2 transition-all w-full ${m.active ? 'border-brand-gold bg-brand-gold/15 text-white' : 'border-white/10 bg-black/40 text-gray-300 hover:bg-white/5'}">
             <i class="fa-solid ${m.ic} text-brand-gold text-xs shrink-0"></i>
             <div class="min-w-0">
               <div class="text-[11px] font-bold truncate">${m.label}</div>
@@ -1532,11 +1747,11 @@
 
       const lbl = $('profileActiveThemeLabel');
       const found = PROFILE_THEMES_LIST.find(x => x[0] === curTheme);
-      if (lbl && found) lbl.textContent = `Active Theme: ${found[1]} (${found[3]}) · Effects ${isCalm ? 'Off (Calm)' : 'On (Animated)'}`;
+      if (lbl && found) lbl.textContent = `Active Theme: ${found[1]} (${found[3]}) · Effects ${isCalm ? 'Off' : 'On'}`;
       const fxTxt = $('profileFxStateText');
-      if (fxTxt) fxTxt.textContent = isCalm ? 'Visual Effects: Off (Calm Mode)' : 'Visual Effects: On (Particles Active)';
+      if (fxTxt) fxTxt.textContent = isCalm ? 'Visual Effects: Off' : 'Visual Effects: On';
       const hubFx = $('hubFxQuickText');
-      if (hubFx) hubFx.textContent = isCalm ? 'Effects: Off (Calm)' : 'Effects: On (Animated)';
+      if (hubFx) hubFx.textContent = isCalm ? 'Effects: Off' : 'Effects: On';
     };
     setTimeout(() => { if (window.syncProfileThemeStudio) window.syncProfileThemeStudio(); }, 200);
 
@@ -1633,6 +1848,15 @@
     // FMHY TOP-3 STREAMING PORTALS ("WATCH NOW") ENGINE
     // ---------------------------------------------------------
     const DEFAULT_FMHY_PORTALS = [
+      {
+        id: 'cinejoy',
+        name: 'Cinejoy',
+        badge: 'Top 100 Synced · HD Stream',
+        color: 'from-amber-500/25 to-yellow-500/15 border-amber-400/50 text-amber-200',
+        movieTpl: 'https://cinejoy.to/search?keyword={q}',
+        tvTpl: 'https://cinejoy.to/search?keyword={q}',
+        searchTpl: 'https://cinejoy.to/search?keyword={q}'
+      },
       {
         id: 'cineby',
         name: 'Cineby',

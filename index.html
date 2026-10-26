@@ -241,26 +241,72 @@
         </div>
       </div>
 
-      <!-- Mood Vibe Selector -->
+      <!-- Interactive Cinema Mood Dial & Vibe Engine -->
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-masks-theater text-rose-400"></i> What's Your Mood Tonight?
+            <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Haptic Rotary Vibe Engine</span>
+            <h2 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2 mt-0.5">
+              <i class="fa-solid fa-compass text-brand-gold"></i> Cinema Mood Dial
             </h2>
-            <p class="text-xs sm:text-sm text-gray-400">Instant mood-based curations tailored to your language filter</p>
+            <p class="text-xs sm:text-sm text-gray-400">Spin the rotary dial or drag with touch/mouse to calibrate tonight's cinematic mood</p>
           </div>
-          <button type="button" onclick="switchTab('categories')" class="text-xs sm:text-sm text-brand-gold hover:underline font-semibold flex items-center gap-1 shrink-0">
-            See all <i class="fa-solid fa-arrow-right text-xs"></i>
+          <button type="button" onclick="spinMoodDialRoulette()" id="moodDialSpinBtn" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-gold to-amber-400 text-black font-extrabold text-xs flex items-center gap-1.5 shadow-lg shadow-brand-gold/20 hover:scale-[1.02] transition-all">
+            <i class="fa-solid fa-dice"></i> <span>Spin Mood</span>
           </button>
         </div>
-        <div id="moodPills" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
+
+        <!-- Rotary Dial & Active Mood Card Deck -->
+        <div class="glass-card rounded-3xl p-4 sm:p-6 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <!-- Circular Interactive Dial -->
+          <div class="relative flex items-center justify-center shrink-0">
+            <svg id="moodDialSvg" width="280" height="280" class="select-none cursor-grab active:cursor-grabbing touch-none transition-transform"></svg>
+            <div class="absolute -bottom-2 text-[10px] text-gray-500 font-bold uppercase tracking-wider select-none pointer-events-none">
+              <i class="fa-solid fa-arrows-rotate mr-1 text-brand-gold"></i> Drag or Click Wedge to Rotate
+            </div>
+          </div>
+
+          <!-- Active Sector Info & Intensity Calibration -->
+          <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-4 p-5 rounded-2xl bg-black/40 border border-white/15 transition-all w-full">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span id="moodDialActiveIcon" class="text-2xl">🌌</span>
+                  <h3 id="moodDialActiveName" class="text-xl sm:text-2xl font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
+                </div>
+                <p id="moodDialActiveDesc" class="text-xs sm:text-sm text-gray-300 leading-relaxed">Reality-bending paradoxes, space odysseys, and psychological twists</p>
+              </div>
+            </div>
+
+            <!-- Intensity Calibration Slider -->
+            <div class="space-y-1.5 pt-3 border-t border-white/10">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-gray-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-sliders text-brand-gold"></i> Intensity Calibration:</span>
+                <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold">⚖️ Deep &amp; Immersive</span>
+              </div>
+              <input id="moodDialIntensitySlider" type="range" min="1" max="3" step="1" value="2" oninput="setMoodDialIntensity(this.value)" class="w-full accent-brand-gold cursor-pointer">
+              <div class="flex justify-between text-[10px] text-gray-500 font-semibold px-0.5">
+                <span>Gentle / Chill</span>
+                <span>Balanced</span>
+                <span>Peak / Hardcore</span>
+              </div>
+            </div>
+
+            <!-- Quick Mood Sector Pills -->
+            <div class="space-y-1.5 pt-2 border-t border-white/10">
+              <div class="text-[11px] font-bold text-gray-400">Quick Mood Jump:</div>
+              <div id="moodDialPillsBox" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Curated Recommendations Track -->
         <div class="has-arrows">
           <div id="moodRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
         </div>
       </div>
 
-      <!-- Curated Row 1: The 9.0+ Pantheon -->
+            <!-- Curated Row 1: The 9.0+ Pantheon -->
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <div>
@@ -367,12 +413,19 @@
       </div>
 
       <!-- Collapsible Filter Trigger Bar (Hidden by Default on All Screens Until Clicked) -->
-      <div class="flex items-center justify-between gap-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2.5">
         <button type="button" id="moviesFilterToggleBtn" onclick="toggleCatalogFilterPanel('movies')" class="px-4 py-2.5 rounded-xl glass-card border border-brand-gold/35 hover:border-brand-gold text-xs sm:text-sm font-bold text-brand-gold flex items-center gap-2.5 shadow-md transition-all">
           <i class="fa-solid fa-sliders"></i>
           <span>Filters &amp; Sort</span>
           <span class="px-2 py-0.5 rounded-full bg-brand-gold/15 text-[10px] text-white font-semibold">Search · Genre · Decade · Platform</span>
           <i id="moviesFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+        </button>
+
+        <!-- Cinejoy Top 100 Sync Toggle Button -->
+        <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()" class="px-4 py-2.5 rounded-xl glass-card border border-amber-400/40 hover:border-amber-400 text-xs sm:text-sm font-extrabold text-amber-300 flex items-center gap-2 shadow-lg shadow-amber-500/10 hover:scale-[1.02] transition-all">
+          <i class="fa-solid fa-bolt text-amber-400"></i>
+          <span>🍿 Cinejoy Sync (Top 100)</span>
+          <span id="cinejoySyncStateBadge" class="px-2 py-0.5 rounded-full bg-white/10 text-[10px] text-gray-300">Off</span>
         </button>
       </div>
       <div id="moviesFilterGrid" class="hidden grid glass-card p-3.5 sm:p-4 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 sm:gap-3 border border-brand-gold/25 animate-fadeIn" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.07), rgba(17, 21, 32, 0.85))">
@@ -694,69 +747,199 @@
     </section>
 
     <!-- TAB: MARATHON ARCHITECT -->
+    <!-- TAB: MARATHON ARCHITECT & BINGE CALCULATOR -->
     <section id="tab-marathon" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Paced Binge Scheduler</span>
+          <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Binge Intelligence &amp; Watch Time Planner</span>
           <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-3 mt-0.5"><i class="fa-solid fa-hourglass-half text-brand-gold"></i> Marathon Architect</h1>
-          <p class="text-sm text-gray-400 mt-1">Pick a 1-click marathon template below or customize your hours, start time, and mood. Complete with an energy curve and snack breaks.</p>
+          <p class="text-sm text-gray-400 mt-1">Design single-session movie marathons with curated energy curves, or calculate day-by-day binge schedules and completion ETAs for multi-season TV shows and sagas.</p>
         </div>
-      </div>
-
-      <!-- 1-Click Ready-Made Marathon Templates (Makes Marathon Fuller & Instant) -->
-      <div class="space-y-2">
-        <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400"><i class="fa-solid fa-wand-magic-sparkles text-brand-gold mr-1.5"></i>1-Click Marathon Blueprints</div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
-          <button type="button" onclick="applyMarathonPreset(6, '19:00', 'cosy', 'Horror')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-            <div class="text-xs font-extrabold text-brand-gold">🌧️ Cozy Sunday</div>
-            <div class="text-[11px] text-gray-300">6 hrs · Starts 19:00 · Warm &amp; Feel-Good</div>
+        <!-- Dual Mode Switcher -->
+        <div class="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.05] border border-white/10 shrink-0">
+          <button id="mhModeSessionBtn" type="button" onclick="switchMarathonMode('session')" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-2 bg-brand-gold text-black shadow-md transition-all">
+            <i class="fa-solid fa-stopwatch"></i> <span>Session Architect</span>
           </button>
-          <button type="button" onclick="applyMarathonPreset(9, '18:00', 'epic', '')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-cyan-400/50 text-left space-y-1 transition-all">
-            <div class="text-xs font-extrabold text-cyan-300">🚀 Sci-Fi Odyssey</div>
-            <div class="text-[11px] text-gray-300">9 hrs · Starts 18:00 · Epic World-Building</div>
-          </button>
-          <button type="button" onclick="applyMarathonPreset(8, '20:00', 'thrilling', 'Comedy')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-rose-400/50 text-left space-y-1 transition-all">
-            <div class="text-xs font-extrabold text-rose-300">🔪 Late-Night Thrills</div>
-            <div class="text-[11px] text-gray-300">8 hrs · Starts 20:00 · High-Tension Arc</div>
-          </button>
-          <button type="button" onclick="applyMarathonPreset(7, '17:00', 'funny', 'Horror')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-emerald-400/50 text-left space-y-1 transition-all">
-            <div class="text-xs font-extrabold text-emerald-300">😂 Comedy Fiesta</div>
-            <div class="text-[11px] text-gray-300">7 hrs · Starts 17:00 · Pure Laughs</div>
-          </button>
-          <button type="button" onclick="applyMarathonPreset(10, '16:00', 'thoughtful', '')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-purple-400/50 text-left space-y-1 transition-all">
-            <div class="text-xs font-extrabold text-purple-300">🎭 Prestige All-Day</div>
-            <div class="text-[11px] text-gray-300">10 hrs · Starts 16:00 · Deep Cinema</div>
+          <button id="mhModeBingeBtn" type="button" onclick="switchMarathonMode('binge')" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-2 text-gray-300 hover:text-white transition-all">
+            <i class="fa-solid fa-calendar-days text-brand-gold"></i> <span>Binge Calculator</span>
           </button>
         </div>
       </div>
 
-      <div class="glass-card rounded-3xl p-5 border border-white/10 space-y-4">
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 items-end">
-          <label class="text-xs text-gray-400 font-bold">Total Hours<input id="mhHours" type="number" min="2" max="16" value="8" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
-          <label class="text-xs text-gray-400 font-bold">Start Time<input id="mhStart" type="time" value="18:00" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
-          <label class="text-xs text-gray-400 font-bold">Core Vibe<select id="mhMood" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="cosy">Cosy &amp; Warm</option><option value="thrilling">Thrilling &amp; Tense</option><option value="thoughtful">Thoughtful &amp; Deep</option><option value="epic" selected>Epic &amp; Grand</option><option value="funny">Pure Comedy</option></select></label>
-          <label class="text-xs text-gray-400 font-bold">Energy Timeline Arc<select id="mhArcShape" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="wave" selected>Classic Wave (Warm-up → Peak → Chill)</option><option value="escalate">Escalator (Steady Climb to Climax)</option><option value="frontload">Front-Loaded (Peak First → Wind-Down)</option><option value="coaster">Rollercoaster (Alternating High/Chill)</option><option value="latepeak">Midnight Adrenaline (Late Peak)</option></select></label>
-          <label class="text-xs text-gray-400 font-bold">Intermission Breaks<select id="mhBreakLen" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="0">0 min (Back-to-Back)</option><option value="10">10 min (Quick Stretch)</option><option value="15" selected>15 min (Snack &amp; Refill)</option><option value="25">25 min (Meal Break)</option></select></label>
-          <label class="text-xs text-gray-400 font-bold">Exclude Genre<select id="mhNo" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="">Nothing</option><option>Horror</option><option>Thriller</option><option>Crime</option><option>Romance</option><option>Animation</option><option>Action</option><option>Sci-Fi</option><option>Drama</option><option>Comedy</option><option>Fantasy</option><option>Western</option><option>War</option><option>Documentary</option></select></label>
-          <button id="mhBuild" class="col-span-2 sm:col-span-4 lg:col-span-1 px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm shadow-lg hover:opacity-95 transition-all"><i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>Build Timeline</button>
-        </div>
-        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10 text-[11px] text-gray-400">
-          <span><i class="fa-solid fa-sliders text-brand-gold mr-1.5"></i><strong>Timeline Sculptor:</strong> Adjust any slot's energy slider below (Chill ↔ Peak) to raise or lower that moment's intensity, swap individual titles, or add/remove slots.</span>
-          <div class="flex items-center gap-1.5">
-            <button type="button" onclick="mhAddSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-brand-gold"><i class="fa-solid fa-plus mr-1"></i>Add Slot</button>
-            <button type="button" onclick="mhRemoveSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-300"><i class="fa-solid fa-minus mr-1"></i>Remove Last</button>
+      <!-- MODE 1: SINGLE-SESSION MARATHON ARCHITECT -->
+      <div id="mhSessionSection" class="space-y-6">
+        <!-- 1-Click Ready-Made Marathon Templates (Makes Marathon Fuller & Instant) -->
+        <div class="space-y-2">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400"><i class="fa-solid fa-wand-magic-sparkles text-brand-gold mr-1.5"></i>1-Click Marathon Blueprints</div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+            <button type="button" onclick="applyMarathonPreset(6, '19:00', 'cosy', 'Horror')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-brand-gold">🌧️ Cozy Sunday</div>
+              <div class="text-[11px] text-gray-300">6 hrs · Starts 19:00 · Warm &amp; Feel-Good</div>
+            </button>
+            <button type="button" onclick="applyMarathonPreset(9, '18:00', 'epic', '')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-cyan-400/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-cyan-300">🚀 Sci-Fi Odyssey</div>
+              <div class="text-[11px] text-gray-300">9 hrs · Starts 18:00 · Epic World-Building</div>
+            </button>
+            <button type="button" onclick="applyMarathonPreset(8, '20:00', 'thrilling', 'Comedy')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-rose-400/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-rose-300">🔪 Late-Night Thrills</div>
+              <div class="text-[11px] text-gray-300">8 hrs · Starts 20:00 · High-Tension Arc</div>
+            </button>
+            <button type="button" onclick="applyMarathonPreset(7, '17:00', 'funny', 'Horror')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-emerald-400/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-emerald-300">😂 Comedy Fiesta</div>
+              <div class="text-[11px] text-gray-300">7 hrs · Starts 17:00 · Pure Laughs</div>
+            </button>
+            <button type="button" onclick="applyMarathonPreset(10, '16:00', 'thoughtful', '')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-purple-400/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-purple-300">🎭 Prestige All-Day</div>
+              <div class="text-[11px] text-gray-300">10 hrs · Starts 16:00 · Deep Cinema</div>
+            </button>
           </div>
         </div>
+
+        <div class="glass-card rounded-3xl p-5 border border-white/10 space-y-4">
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 items-end">
+            <label class="text-xs text-gray-400 font-bold">Total Hours<input id="mhHours" type="number" min="2" max="16" value="8" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
+            <label class="text-xs text-gray-400 font-bold">Start Time<input id="mhStart" type="time" value="18:00" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
+            <label class="text-xs text-gray-400 font-bold">Core Vibe<select id="mhMood" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="cosy">Cosy &amp; Warm</option><option value="thrilling">Thrilling &amp; Tense</option><option value="thoughtful">Thoughtful &amp; Deep</option><option value="epic" selected>Epic &amp; Grand</option><option value="funny">Pure Comedy</option></select></label>
+            <label class="text-xs text-gray-400 font-bold">Energy Timeline Arc<select id="mhArcShape" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="wave" selected>Classic Wave (Warm-up → Peak → Chill)</option><option value="escalate">Escalator (Steady Climb to Climax)</option><option value="frontload">Front-Loaded (Peak First → Wind-Down)</option><option value="coaster">Rollercoaster (Alternating High/Chill)</option><option value="latepeak">Midnight Adrenaline (Late Peak)</option></select></label>
+            <label class="text-xs text-gray-400 font-bold">Intermission Breaks<select id="mhBreakLen" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="0">0 min (Back-to-Back)</option><option value="10">10 min (Quick Stretch)</option><option value="15" selected>15 min (Snack &amp; Refill)</option><option value="25">25 min (Meal Break)</option></select></label>
+            <label class="text-xs text-gray-400 font-bold">Exclude Genre<select id="mhNo" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="">Nothing</option><option>Horror</option><option>Thriller</option><option>Crime</option><option>Romance</option><option>Animation</option><option>Action</option><option>Sci-Fi</option><option>Drama</option><option>Comedy</option><option>Fantasy</option><option>Western</option><option>War</option><option>Documentary</option></select></label>
+            <button id="mhBuild" class="col-span-2 sm:col-span-4 lg:col-span-1 px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm shadow-lg hover:opacity-95 transition-all"><i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>Build Timeline</button>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10 text-[11px] text-gray-400">
+            <span><i class="fa-solid fa-sliders text-brand-gold mr-1.5"></i><strong>Timeline Sculptor:</strong> Adjust any slot's energy slider below (Chill ↔ Peak) to raise or lower that moment's intensity, swap individual titles, or add/remove slots.</span>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="mhAddSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-brand-gold"><i class="fa-solid fa-plus mr-1"></i>Add Slot</button>
+              <button type="button" onclick="mhRemoveSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-300"><i class="fa-solid fa-minus mr-1"></i>Remove Last</button>
+            </div>
+          </div>
+        </div>
+        <div id="mhOut" class="space-y-4">
+          <div id="mhCurve" class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3"></div>
+          <div id="mhList" class="space-y-2.5"></div>
+          <div class="flex gap-2 flex-wrap">
+            <button id="mhCopy" class="px-4 py-2 rounded-xl border border-white/15 text-xs sm:text-sm font-bold text-gray-200"><i class="fa-solid fa-copy mr-1.5"></i>Copy plan</button>
+            <button id="mhWish" class="px-4 py-2 rounded-xl bg-rose-500 text-white text-xs sm:text-sm font-bold"><i class="fa-solid fa-heart mr-1.5"></i>Add to watchlist in order</button>
+          </div>
+          <p class="text-[11px] text-gray-500">Use each slot's Energy Slider or Chill / Peak buttons to sculpt which moment hits hardest, or click ↻ Swap to roll a different title for that exact slot.</p>
+        </div>
       </div>
-      <div id="mhOut" class="space-y-4">
-        <div id="mhCurve" class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3"></div>
-        <div id="mhList" class="space-y-2.5"></div>
-        <div class="flex gap-2 flex-wrap"><button id="mhCopy" class="px-4 py-2 rounded-xl border border-white/15 text-xs sm:text-sm font-bold text-gray-200"><i class="fa-solid fa-copy mr-1.5"></i>Copy plan</button><button id="mhWish" class="px-4 py-2 rounded-xl bg-rose-500 text-white text-xs sm:text-sm font-bold"><i class="fa-solid fa-heart mr-1.5"></i>Add to watchlist in order</button></div>
-        <p class="text-[11px] text-gray-500">Use each slot's Energy Slider or Chill / Peak buttons to sculpt which moment hits hardest, or click ↻ Swap to roll a different title for that exact slot.</p>
+
+      <!-- MODE 2: SERIES BINGE CALCULATOR & ETA PLANNER -->
+      <div id="mhBingeSection" class="hidden space-y-6">
+        <!-- Quick Preset Badges -->
+        <div class="space-y-2">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400"><i class="fa-solid fa-fire text-amber-400 mr-1.5"></i>Popular Binge Targets (1-Click)</div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+            <button type="button" onclick="selectBingePresetCard('breaking-bad')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-brand-gold">🧪 Breaking Bad</div>
+              <div class="text-[11px] text-gray-400">5 Seasons · 62 Eps</div>
+            </button>
+            <button type="button" onclick="selectBingePresetCard('game-of-thrones')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-amber-300">👑 Game of Thrones</div>
+              <div class="text-[11px] text-gray-400">8 Seasons · 73 Eps</div>
+            </button>
+            <button type="button" onclick="selectBingePresetCard('stranger-things')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-rose-300">🧇 Stranger Things</div>
+              <div class="text-[11px] text-gray-400">4 Seasons · 34 Eps</div>
+            </button>
+            <button type="button" onclick="selectBingePresetCard('ramayan-1987')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-yellow-300">🏹 Ramayan (1987)</div>
+              <div class="text-[11px] text-gray-400">1 Season · 78 Eps</div>
+            </button>
+            <button type="button" onclick="selectBingePresetCard('mcu-infinity')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-red-400">🛡️ MCU Infinity Saga</div>
+              <div class="text-[11px] text-gray-400">23 Films · Epic Arc</div>
+            </button>
+            <button type="button" onclick="selectBingePresetCard('harry-potter')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-extrabold text-cyan-300">⚡ Harry Potter</div>
+              <div class="text-[11px] text-gray-400">8 Films · Wizarding</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Binge Configuration Form -->
+        <div class="glass-card rounded-3xl p-5 border border-white/10 space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="sm:col-span-2 space-y-1.5">
+              <label class="text-xs text-gray-400 font-bold flex items-center justify-between">
+                <span>Select Series or Saga</span>
+                <span class="text-[11px] text-brand-gold font-normal">Choose from top presets or entire TV shows vault</span>
+              </label>
+              <select id="bingeShowSelect" onchange="onBingeShowSelected()" class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-semibold text-sm"></select>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="text-xs text-gray-400 font-bold">Start Date
+                <input id="bingeStartDate" type="date" onchange="calculateBingeSchedule()" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs">
+              </label>
+              <label class="text-xs text-gray-400 font-bold">Daily Start Time
+                <input id="bingeStartTime" type="time" value="20:00" onchange="calculateBingeSchedule()" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs">
+              </label>
+            </div>
+          </div>
+
+          <!-- Pace Presets -->
+          <div class="space-y-2 pt-2 border-t border-white/10">
+            <div class="text-xs text-gray-400 font-bold flex items-center justify-between">
+              <span>Viewing Pace Presets</span>
+              <span class="text-[11px] text-gray-500">Pick your daily schedule commitment</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+              <button type="button" data-pace="casual" onclick="setBingePace('casual')" class="binge-pace-btn p-3 rounded-2xl bg-brand-gold text-black font-extrabold text-left border border-brand-gold shadow-md transition-all">
+                <div class="text-xs font-black">🛋️ Casual Evenings</div>
+                <div class="text-[11px] opacity-80 mt-0.5">2.0 hrs / day after work</div>
+              </button>
+              <button type="button" data-pace="speedrun" onclick="setBingePace('speedrun')" class="binge-pace-btn p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                <div class="text-xs font-black text-rose-300">⚡ Speedrun Mode</div>
+                <div class="text-[11px] opacity-80 mt-0.5">5.0 hrs / day sprint</div>
+              </button>
+              <button type="button" data-pace="weekend" onclick="setBingePace('weekend')" class="binge-pace-btn p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                <div class="text-xs font-black text-cyan-300">🍿 Weekend Warrior</div>
+                <div class="text-[11px] opacity-80 mt-0.5">6h Sat/Sun · 1.5h Weekdays</div>
+              </button>
+              <button type="button" data-pace="bite" onclick="setBingePace('bite')" class="binge-pace-btn p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                <div class="text-xs font-black text-emerald-300">☕ 1 Episode / Day</div>
+                <div class="text-[11px] opacity-80 mt-0.5">Bite-sized daily habit</div>
+              </button>
+              <button type="button" data-pace="custom" onclick="setBingePace('custom')" class="binge-pace-btn p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                <div class="text-xs font-black text-purple-300">🎯 Custom Hours</div>
+                <div class="text-[11px] opacity-80 mt-0.5">Slider fine-tuning</div>
+              </button>
+            </div>
+
+            <div id="bingeCustomHoursRow" class="hidden pt-2 flex items-center gap-4">
+              <span class="text-xs text-gray-400 font-bold shrink-0">Custom Daily Hours:</span>
+              <input id="bingeCustomHoursSlider" type="range" min="0.5" max="10" step="0.5" value="2.5" oninput="onBingeCustomHoursChange(this.value)" class="flex-1 accent-brand-gold cursor-pointer">
+              <span id="bingeCustomHoursLbl" class="text-xs font-extrabold text-brand-gold w-24 text-right">2.5 hrs/day</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculated KPI Cards -->
+        <div id="bingeKpiGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
+
+        <!-- Day-by-Day Interactive Schedule & Episode Checklist -->
+        <div class="space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="text-base font-display font-extrabold text-white flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-brand-gold"></i> Day-by-Day Schedule &amp; Episode Checklist
+              </div>
+              <div class="text-xs text-gray-400">Tick episodes as you finish watching to keep real-time progress saved in your browser</div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="copyBingeSchedule()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-gray-200 text-xs font-bold transition-all"><i class="fa-solid fa-copy mr-1.5"></i>Copy Schedule</button>
+              <button type="button" onclick="exportBingeICal()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-brand-gold text-xs font-bold transition-all"><i class="fa-solid fa-calendar-arrow-down mr-1.5"></i>Add to Calendar (.ics)</button>
+              <button type="button" onclick="addBingeSeriesToWatchlist()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 text-xs font-bold transition-all"><i class="fa-solid fa-heart mr-1.5"></i>Add to Watchlist</button>
+              <button type="button" onclick="resetBingeProgress()" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-gray-200 text-xs transition-all" title="Reset Episode Checks"><i class="fa-solid fa-rotate-left"></i></button>
+            </div>
+          </div>
+
+          <div id="bingeScheduleList" class="space-y-3 max-h-[600px] overflow-y-auto pr-1"></div>
+        </div>
       </div>
     </section>
 
-    <section id="tab-compat" class="tab-pane hidden fade-in space-y-6"></section>
+        <section id="tab-compat" class="tab-pane hidden fade-in space-y-6"></section>
 
     <section id="tab-universes" class="tab-pane hidden fade-in space-y-6">
       <div><h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-3"><i class="fa-solid fa-globe text-brand-gold"></i> Universes</h1>
@@ -794,34 +977,33 @@
         </div>
       </div>
 
-      <!-- Space-Filling Adaptive Theme & Atmosphere Cloud Studio inside Library -->
-      <div class="glass-card rounded-3xl p-4 sm:p-6 border border-brand-gold/35 bg-gradient-to-br from-sky-500/10 via-black/70 to-purple-500/10 space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center text-brand-gold shrink-0">
-              <i class="fa-solid fa-cloud-moon text-lg"></i>
+      <!-- Space-Filling Compact Adaptive Theme & Atmosphere Studio inside Library -->
+      <div class="glass-card rounded-2xl p-3 sm:p-4 border border-brand-gold/30 bg-gradient-to-br from-sky-500/10 via-black/70 to-purple-500/10 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2.5">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center text-brand-gold shrink-0">
+              <i class="fa-solid fa-cloud-moon text-sm"></i>
             </div>
             <div>
-              <div class="text-xs font-extrabold uppercase tracking-wider text-brand-gold">Theme &amp; Atmosphere Cloud</div>
-              <div class="text-xs text-gray-300">Adaptive palette &amp; visual atmosphere matrix — automatically scales to fill your screen cleanly.</div>
+              <div class="text-xs font-extrabold uppercase tracking-wider text-brand-gold">Theme &amp; Atmosphere Palette</div>
+              <div class="text-[11px] text-gray-300">Quick palette &amp; visual atmosphere toggles.</div>
             </div>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <button type="button" onclick="toggleMoreAtmosphereThemes()" id="hubMoreThemesBtn" class="xl:hidden px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200 flex items-center gap-1.5">
-              <i class="fa-solid fa-Sliders text-brand-gold"></i> <span>All 12 Themes</span>
+            <button type="button" onclick="openThemeEffectsModal(event)" id="hubMoreThemesBtn" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200 flex items-center gap-1.5">
+              <i class="fa-solid fa-sliders text-brand-gold"></i> <span>All Themes</span>
             </button>
             <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" class="px-3.5 py-1.5 rounded-xl bg-brand-gold/20 hover:bg-brand-gold/30 border border-brand-gold/45 text-xs font-extrabold text-white flex items-center gap-1.5">
               <i class="fa-solid fa-wand-magic-sparkles text-brand-gold"></i>
-              <span id="hubFxQuickText">Effects: Off (Calm)</span>
+              <span id="hubFxQuickText">Effects: On</span>
             </button>
           </div>
         </div>
-        <!-- Adaptive Full-Box Grid: 4 on mobile, 6 on sm, 8 on md, all 12 on xl so the entire cloud box is always 100% filled with zero orphan gaps -->
-        <div id="hubQuickThemeSwatches" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2.5 w-full"></div>
-        <!-- Atmosphere & Lens Effects Bar (Fills the bottom row of the cloud box evenly) -->
+        <!-- Compact Fitted Grid: Exactly 6 core themes that fit in a clean row without overflow -->
+        <div id="hubQuickThemeSwatches" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 w-full"></div>
+        <!-- Atmosphere & Lens Effects Bar -->
         <div id="hubAtmosphereModesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-2 border-t border-white/10"></div>
       </div>
-
       <!-- NEW: ANIMATED SHELVES -->
       <div id="hubShelves" class="glass-card rounded-3xl p-6 sm:p-8 space-y-5 border border-white/10">
         <div class="flex flex-wrap items-center justify-between gap-3">
@@ -1518,14 +1700,75 @@
 
   <!-- MUSIC QUEUE DRAWER -->
   <div id="musicQueueDrawer" class="fixed right-3 bottom-36 md:bottom-24 z-50 hidden w-[min(92vw,22rem)] max-h-96 rounded-2xl glass-card border border-white/20 shadow-2xl flex flex-col overflow-hidden">
-    <div class="px-4 py-3 bg-black/70 border-b border-white/10 flex items-center justify-between">
-      <span class="text-xs font-extrabold uppercase tracking-wider text-brand-gold">Up Next in Queue</span>
+    <div class="px-4 py-3 bg-black/75 border-b border-white/10 flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <button type="button" onclick="clearMusicQueue()" class="text-[11px] text-gray-400 hover:text-rose-400">Clear</button>
-        <button type="button" onclick="toggleMusicQueueDrawer(false)" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-brand-gold"><i class="fa-solid fa-list-ol mr-1"></i>Queue</span>
+        <span id="musicQueueBadgeCount" class="px-1.5 py-0.2 rounded-full bg-white/10 text-[10px] text-gray-300 font-bold">0</span>
+      </div>
+      <div class="flex items-center gap-2 text-xs">
+        <button type="button" onclick="shuffleMusicQueue()" class="text-[11px] text-gray-400 hover:text-brand-gold transition-colors" title="Shuffle remaining songs"><i class="fa-solid fa-shuffle mr-1"></i>Shuffle</button>
+        <button type="button" onclick="clearMusicQueue()" class="text-[11px] text-gray-400 hover:text-rose-400 transition-colors">Clear</button>
+        <button type="button" onclick="toggleMusicQueueDrawer(false)" class="text-gray-400 hover:text-white ml-1"><i class="fa-solid fa-xmark"></i></button>
       </div>
     </div>
     <div id="musicQueueList" class="flex-1 overflow-y-auto divide-y divide-white/5 p-2 text-xs"></div>
+  </div>
+
+  
+  <!-- MUSIC SLEEP TIMER MODAL -->
+  <div id="musicSleepModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+    <div class="glass-card rounded-3xl border border-white/20 p-5 w-full max-w-sm space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-moon text-indigo-400 text-lg"></i>
+          <div>
+            <h3 class="text-sm font-bold text-white">Music Sleep Timer</h3>
+            <p class="text-[11px] text-gray-400">Audio will gently pause when timer ends</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeMusicSleepModal()" class="text-gray-400 hover:text-white p-1"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div id="musicSleepActiveStatus" class="hidden p-3 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2 text-indigo-200">
+          <i class="fa-solid fa-hourglass-half fa-spin text-indigo-400"></i>
+          <span>Active: <b id="musicSleepCountdownVal" class="text-white">--</b> remaining</span>
+        </div>
+        <button type="button" onclick="cancelMusicSleepTimer()" class="text-xs font-bold text-rose-400 hover:underline">Cancel</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
+        <button type="button" onclick="setMusicSleepTimer(15)" class="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-indigo-400/50 text-left transition-all">
+          <div class="font-bold text-white">⏱️ 15 Minutes</div>
+          <div class="text-[10px] text-gray-400">Quick nap</div>
+        </button>
+        <button type="button" onclick="setMusicSleepTimer(30)" class="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-indigo-400/50 text-left transition-all">
+          <div class="font-bold text-white">⏱️ 30 Minutes</div>
+          <div class="text-[10px] text-gray-400">Standard rest</div>
+        </button>
+        <button type="button" onclick="setMusicSleepTimer(45)" class="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-indigo-400/50 text-left transition-all">
+          <div class="font-bold text-white">⏱️ 45 Minutes</div>
+          <div class="text-[10px] text-gray-400">Deep relaxation</div>
+        </button>
+        <button type="button" onclick="setMusicSleepTimer(60)" class="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-indigo-400/50 text-left transition-all">
+          <div class="font-bold text-white">⏱️ 60 Minutes</div>
+          <div class="text-[10px] text-gray-400">1 full hour</div>
+        </button>
+        <button type="button" onclick="setMusicSleepTimer('end')" class="col-span-2 p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-indigo-400/50 text-left transition-all flex items-center justify-between">
+          <div>
+            <div class="font-bold text-white">🎵 End of this Track</div>
+            <div class="text-[10px] text-gray-400">Finish current playing song then pause</div>
+          </div>
+          <i class="fa-solid fa-forward-step text-indigo-400"></i>
+        </button>
+      </div>
+
+      <div class="pt-2 border-t border-white/10 flex items-center gap-2">
+        <label class="text-[11px] text-gray-400 font-bold shrink-0">Custom Mins:</label>
+        <input id="musicSleepCustomInp" type="number" min="1" max="360" placeholder="e.g. 20" class="flex-1 px-3 py-1.5 rounded-xl bg-black/60 border border-white/20 text-white text-xs">
+        <button type="button" onclick="setCustomMusicSleepTimer()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">Set</button>
+      </div>
+    </div>
   </div>
 
   <!-- PERSISTENT MINI-PLAYER BAR (2-Row Mobile-First Layout so Zero Controls Are Ever Cut Off + Prominent Cut Button) -->
@@ -1561,6 +1804,7 @@
         </div>
         <div class="flex items-center gap-1.5">
           <button type="button" onclick="toggleMusicVideoDock()" id="mpVideoBtn" title="Show/Hide Official Video Player" class="px-2.5 h-8 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-bold text-brand-gold flex items-center gap-1"><i class="fa-solid fa-tv"></i><span>Video</span></button>
+          <button type="button" onclick="openMusicSleepModal()" id="mpSleepBtn" title="Sleep Timer" class="px-2.5 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 text-[11px] font-semibold flex items-center gap-1 transition-colors"><i class="fa-solid fa-moon text-indigo-400"></i><span id="mpSleepLbl">Sleep</span></button>
           <button type="button" onclick="toggleMusicQueueDrawer()" title="Queue" class="px-2.5 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 text-[11px] font-semibold flex items-center gap-1"><i class="fa-solid fa-list-ol"></i><span>Queue</span></button>
           <a id="mpYtLink" href="https://www.youtube.com" target="_blank" rel="noopener" title="Open on YouTube" class="w-8 h-8 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 flex items-center justify-center text-xs"><i class="fa-brands fa-youtube"></i></a>
         </div>
@@ -1735,6 +1979,7 @@
   <script src="js/features.js"></script>
   <script src="js/marathon.js"></script>
   <script src="js/universes.js"></script>
+    <script src="js/mood_dial.js"></script>
     <script src="js/main.js"></script>
   <script src="js/pwa.js"></script>
 </body>

@@ -9573,7 +9573,7 @@ Odd Taxi|2021|87
           platform: plat,
           platformName: plat,
           type,
-          thumb: thumb !== 0 // false = long-tail title, uses stylized poster only (no network fetch)
+          thumb: true // all titles eligible for real artwork
         };
         globalDatabase[title] = item;
         allTitles.push(title);
@@ -9658,10 +9658,29 @@ Odd Taxi|2021|87
     const inFlightFetches = {};
     let saveTimeout = null;
 
+
+    const KNOWN_POSTER_OVERRIDES = {
+      'show:Ramayan (1987)': 'https://upload.wikimedia.org/wikipedia/en/a/ac/Ramayan_poster.jpg',
+      'show:Ramayan': 'https://upload.wikimedia.org/wikipedia/en/a/ac/Ramayan_poster.jpg',
+      'show:Mahabharat (1988)': 'https://upload.wikimedia.org/wikipedia/en/e/ef/Mahabharat_%281988%29_title_logo_screenshot.jpg',
+      'show:Mahabharat': 'https://upload.wikimedia.org/wikipedia/en/e/ef/Mahabharat_%281988%29_title_logo_screenshot.jpg',
+      'show:Malgudi Days': 'https://upload.wikimedia.org/wikipedia/en/9/91/Malgudi_Days_%28TV_series%29.jpg',
+      'show:Byomkesh Bakshi': 'https://upload.wikimedia.org/wikipedia/en/e/e0/Byomkesh_Bakshi_%28TV_series%29_Title_Card.jpg',
+      'show:CID': 'https://upload.wikimedia.org/wikipedia/en/8/8c/CID_Sony_TV_Show_Poster.jpg',
+      'show:Taarak Mehta Ka Ooltah Chashmah': 'https://upload.wikimedia.org/wikipedia/en/2/23/Taarak_Mehta_Ka_Ooltah_Chashmah_logo.jpg',
+      'show:Koffee with Karan': 'https://upload.wikimedia.org/wikipedia/en/5/52/Koffee_With_Karan_logo.jpg',
+      'show:The Kapil Sharma Show': 'https://upload.wikimedia.org/wikipedia/en/2/24/The_Kapil_Sharma_Show_poster.jpg',
+      'show:Kaun Banega Crorepati': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Kaun_Banega_Crorepati_Title.jpg'
+    };
+
     async function fetchPoster(item, forceSynopsis = false) {
       if (!item) return null;
       const cacheKey = item.type + ':' + item.title;
-      if (!item.thumb && !forceSynopsis) return null; // long-tail: skip grid network fetches unless modal requests synopsis
+      if (KNOWN_POSTER_OVERRIDES[cacheKey]) {
+        posterCache[cacheKey] = KNOWN_POSTER_OVERRIDES[cacheKey];
+        return KNOWN_POSTER_OVERRIDES[cacheKey];
+      }
+      // All titles are eligible for poster resolution
       if (posterCache[cacheKey] !== undefined && (!forceSynopsis || summaryCache[cacheKey])) return posterCache[cacheKey];
       if (inFlightFetches[cacheKey]) return inFlightFetches[cacheKey];
 
@@ -9673,7 +9692,8 @@ Odd Taxi|2021|87
         activeFetches++;
 
         try {
-          const queryName = item.rawName || (item.cleanName || item.title).replace(/\s*\(Series\)$/i, '');
+          const rawQuery = item.rawName || (item.cleanName || item.title).replace(/\s*\(Series\)$/i, '');
+          const queryName = rawQuery.replace(/\s*\(\d{4}\)$/, '').trim();
 
           // Pipeline 1: Movies -> Free iTunes Movie Search API (Ultra-crisp official posters 600x900)
           if (item.type === 'movie') {
@@ -9725,9 +9745,12 @@ Odd Taxi|2021|87
         // Pipeline 3: Universal Fallback -> Wikipedia Summary API
         try {
           const wikiCandidates = [
+            `${queryName}_(${item.year}_TV_series)`,
             `${queryName}_(${item.year}_film)`,
-            `${queryName}_(film)`,
             `${queryName}_(TV_series)`,
+            `${queryName}_(film)`,
+            `${queryName}_(Indian_TV_series)`,
+            `${rawQuery.replace(/ /g, '_')}`,
             queryName
           ];
           for (const cand of wikiCandidates) {
@@ -10006,6 +10029,12 @@ Odd Taxi|2021|87
             <span>${item.year}</span>
             <span class="text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
           </div>
+          ${cinejoyTop100Active ? `
+          <div class="pt-2 mt-1 border-t border-white/10" onclick="event.stopPropagation()">
+            <a href="https://cinejoy.to/search?keyword=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:opacity-95 text-black font-black text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition-all">
+              <i class="fa-solid fa-circle-play text-xs"></i> <span>Watch Now on Cinejoy</span>
+            </a>
+          </div>` : ''}
         </div>
       </div>`;
     }
@@ -10302,6 +10331,39 @@ Odd Taxi|2021|87
       sSel.innerHTML = '<option value="All">All Genres</option>' + showGenres.map(g => `<option value="${g}">${g}</option>`).join('');
     }
 
+    
+    let cinejoyTop100Active = false;
+    window.getCinejoyTop100Titles = function() {
+      return movies.slice()
+        .sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0) || (parseInt(a.rank || 9999, 10) - parseInt(b.rank || 9999, 10)))
+        .slice(0, 100)
+        .map(m => m.title);
+    };
+
+    window.toggleCinejoyTop100 = function() {
+      cinejoyTop100Active = !cinejoyTop100Active;
+      const btn = document.getElementById('cinejoySyncToggleBtn');
+      const badge = document.getElementById('cinejoySyncStateBadge');
+      if (btn) {
+        if (cinejoyTop100Active) {
+          btn.className = 'px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-black border border-amber-300 text-xs sm:text-sm font-extrabold flex items-center gap-2 shadow-lg shadow-amber-500/25 transition-all';
+          if (badge) {
+            badge.textContent = '100 Synced ✓';
+            badge.className = 'px-2 py-0.5 rounded-full bg-black/25 text-[10px] text-black font-black';
+          }
+          if (window.showToast) showToast('Synced 100 most popular movies with Cinejoy!', 'fa-bolt', 'text-brand-gold');
+        } else {
+          btn.className = 'px-4 py-2.5 rounded-xl glass-card border border-amber-400/40 hover:border-amber-400 text-xs sm:text-sm font-extrabold text-amber-300 flex items-center gap-2 shadow-lg shadow-amber-500/10 hover:scale-[1.02] transition-all';
+          if (badge) {
+            badge.textContent = 'Off';
+            badge.className = 'px-2 py-0.5 rounded-full bg-white/10 text-[10px] text-gray-300';
+          }
+          if (window.showToast) showToast('Cinejoy Sync Filter turned off', 'fa-rotate-left', 'text-gray-300');
+        }
+      }
+      filterAndRenderMovies(true);
+    };
+
     function filterAndRenderMovies(resetPage = true) {
       if (resetPage) moviesPage = 1;
       const q = document.getElementById('searchMovies').value.toLowerCase().trim();
@@ -10324,6 +10386,10 @@ Odd Taxi|2021|87
         return matchQ && matchG && matchDec && matchPlat;
       });
 
+      if (cinejoyTop100Active) {
+        const top100Set = new Set(window.getCinejoyTop100Titles());
+        list = list.filter(item => top100Set.has(item.title));
+      }
       if (sort === 'popular') list.sort((a, b) => a.rank - b.rank);
       else if (sort === 'year_desc') list.sort((a, b) => b.year - a.year);
       else if (sort === 'year_asc') list.sort((a, b) => a.year - b.year);

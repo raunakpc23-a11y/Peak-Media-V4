@@ -1,0 +1,22 @@
+# Ensure consistent line endings across Windows, Mac, and Linux
+# Set default behavior to automatically normalize text files to LF
+* text=auto eol=lf
+
+# Web source files
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.svg text eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary

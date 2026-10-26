@@ -588,6 +588,16 @@
     if(sel!=null)info(sel);
   }
 
+  window.scrubUniverseToChapter = function(i) {
+    const card = document.querySelector('#uniTrack [data-i="' + i + '"]');
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      card.classList.add('ring-2', 'ring-brand-gold');
+      setTimeout(() => card.classList.remove('ring-2', 'ring-brand-gold'), 1200);
+    }
+    info(i);
+  };
+
   function info(i){
     sel=i;const u=cur,nd=u.N[i];if(!nd)return;
     const sn=isSeen(u,i),d=dbFind(nd[0],nd[5]);
