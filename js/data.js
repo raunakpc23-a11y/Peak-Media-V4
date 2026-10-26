@@ -5395,8 +5395,3666 @@ Odd Taxi|2021|87
     1
   ]
 ];
-    const baseMovies = dedupeList([...rawMoviesCore, ...rawMoviesExpanded, ...rawMoviesMore, ...extraMovieSeeds, ...expandedMovieVault]);
-    const baseShows = dedupeList([...rawShowsCore, ...rawShowsExpanded, ...rawShowsMore, ...extraShowSeeds, ...expandedShowVault]);
+    const expandedVaultBatch2Movies = [
+  [
+    "Blade Runner 2049",
+    "Sci-Fi",
+    8,
+    2017,
+    1
+  ],
+  [
+    "Mad Max 2: The Road Warrior",
+    "Action",
+    8.1,
+    1981,
+    1
+  ],
+  [
+    "The Thing (1982)",
+    "Horror",
+    8.2,
+    1982,
+    1
+  ],
+  [
+    "The Big Lebowski",
+    "Comedy",
+    8.1,
+    1998,
+    1
+  ],
+  [
+    "Fargo",
+    "Crime",
+    8.1,
+    1996,
+    1
+  ],
+  [
+    "No Country for Old Men",
+    "Crime",
+    8.2,
+    2007,
+    1
+  ],
+  [
+    "There Will Be Blood",
+    "Drama",
+    8.2,
+    2007,
+    1
+  ],
+  [
+    "Boogie Nights",
+    "Drama",
+    7.9,
+    1997,
+    1
+  ],
+  [
+    "Magnolia",
+    "Drama",
+    8,
+    1999,
+    1
+  ],
+  [
+    "Punch-Drunk Love",
+    "Comedy",
+    7.3,
+    2002,
+    1
+  ],
+  [
+    "The Master",
+    "Drama",
+    7.1,
+    2012,
+    1
+  ],
+  [
+    "Phantom Thread",
+    "Drama",
+    7.5,
+    2017,
+    1
+  ],
+  [
+    "Licorice Pizza",
+    "Comedy",
+    7.1,
+    2021,
+    1
+  ],
+  [
+    "Mulholland Drive",
+    "Mystery",
+    7.9,
+    2001,
+    1
+  ],
+  [
+    "Blue Velvet",
+    "Mystery",
+    7.7,
+    1986,
+    1
+  ],
+  [
+    "Eraserhead",
+    "Horror",
+    7.3,
+    1977,
+    1
+  ],
+  [
+    "Lost Highway",
+    "Mystery",
+    7.6,
+    1997,
+    1
+  ],
+  [
+    "The Elephant Man",
+    "Drama",
+    8.2,
+    1980,
+    1
+  ],
+  [
+    "Twin Peaks: Fire Walk with Me",
+    "Horror",
+    7.3,
+    1992,
+    1
+  ],
+  [
+    "Zodiac",
+    "Crime",
+    7.7,
+    2007,
+    1
+  ],
+  [
+    "The Social Network",
+    "Drama",
+    7.8,
+    2010,
+    1
+  ],
+  [
+    "The Girl with the Dragon Tattoo",
+    "Crime",
+    7.8,
+    2011,
+    1
+  ],
+  [
+    "Panic Room",
+    "Thriller",
+    6.8,
+    2002,
+    1
+  ],
+  [
+    "The Game",
+    "Thriller",
+    7.7,
+    1997,
+    1
+  ],
+  [
+    "Prisoners",
+    "Thriller",
+    8.1,
+    2013,
+    1
+  ],
+  [
+    "Enemy",
+    "Mystery",
+    6.9,
+    2013,
+    1
+  ],
+  [
+    "Sicario",
+    "Action",
+    7.7,
+    2015,
+    1
+  ],
+  [
+    "Arrival",
+    "Sci-Fi",
+    7.9,
+    2016,
+    1
+  ],
+  [
+    "Nightcrawler",
+    "Thriller",
+    7.8,
+    2014,
+    1
+  ],
+  [
+    "Drive",
+    "Crime",
+    7.8,
+    2011,
+    1
+  ],
+  [
+    "The Neon Demon",
+    "Horror",
+    6.1,
+    2016,
+    1
+  ],
+  [
+    "Ex Machina",
+    "Sci-Fi",
+    7.7,
+    2014,
+    1
+  ],
+  [
+    "Annihilation",
+    "Sci-Fi",
+    6.8,
+    2018,
+    1
+  ],
+  [
+    "Civil War (2024)",
+    "Action",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "Men",
+    "Horror",
+    6.1,
+    2022,
+    1
+  ],
+  [
+    "Under the Skin",
+    "Sci-Fi",
+    6.3,
+    2013,
+    1
+  ],
+  [
+    "Her",
+    "Romance",
+    8,
+    2013,
+    1
+  ],
+  [
+    "Being John Malkovich",
+    "Comedy",
+    7.7,
+    1999,
+    1
+  ],
+  [
+    "Adaptation.",
+    "Comedy",
+    7.7,
+    2002,
+    1
+  ],
+  [
+    "Eternal Sunshine of the Spotless Mind",
+    "Romance",
+    8.3,
+    2004,
+    1
+  ],
+  [
+    "Synecdoche, New York",
+    "Drama",
+    7.5,
+    2008,
+    1
+  ],
+  [
+    "I'm Thinking of Ending Things",
+    "Drama",
+    6.6,
+    2020,
+    1
+  ],
+  [
+    "Donnie Darko",
+    "Sci-Fi",
+    8,
+    2001,
+    1
+  ],
+  [
+    "Requiem for a Dream",
+    "Drama",
+    8.3,
+    2000,
+    1
+  ],
+  [
+    "Black Swan",
+    "Thriller",
+    8,
+    2010,
+    1
+  ],
+  [
+    "The Wrestler",
+    "Drama",
+    7.9,
+    2008,
+    1
+  ],
+  [
+    "Pi",
+    "Thriller",
+    7.3,
+    1998,
+    1
+  ],
+  [
+    "The Whale",
+    "Drama",
+    7.7,
+    2022,
+    1
+  ],
+  [
+    "Memento",
+    "Thriller",
+    8.4,
+    2000,
+    1
+  ],
+  [
+    "Insomnia",
+    "Thriller",
+    7.2,
+    2002,
+    1
+  ],
+  [
+    "The Prestige",
+    "Mystery",
+    8.5,
+    2006,
+    1
+  ],
+  [
+    "Inception",
+    "Sci-Fi",
+    8.8,
+    2010,
+    1
+  ],
+  [
+    "Interstellar",
+    "Sci-Fi",
+    8.7,
+    2014,
+    1
+  ],
+  [
+    "Dunkirk",
+    "War",
+    7.8,
+    2017,
+    1
+  ],
+  [
+    "Tenet",
+    "Sci-Fi",
+    7.3,
+    2020,
+    1
+  ],
+  [
+    "Fight Club",
+    "Drama",
+    8.8,
+    1999,
+    1
+  ],
+  [
+    "Se7en",
+    "Crime",
+    8.6,
+    1995,
+    1
+  ],
+  [
+    "Gone Girl",
+    "Thriller",
+    8.1,
+    2014,
+    1
+  ],
+  [
+    "Goodfellas",
+    "Crime",
+    8.7,
+    1990,
+    1
+  ],
+  [
+    "Casino",
+    "Crime",
+    8.2,
+    1995,
+    1
+  ],
+  [
+    "Taxi Driver",
+    "Crime",
+    8.2,
+    1976,
+    1
+  ],
+  [
+    "Raging Bull",
+    "Drama",
+    8.1,
+    1980,
+    1
+  ],
+  [
+    "The Departed",
+    "Crime",
+    8.5,
+    2006,
+    1
+  ],
+  [
+    "Shutter Island",
+    "Mystery",
+    8.2,
+    2010,
+    1
+  ],
+  [
+    "The Wolf of Wall Street",
+    "Comedy",
+    8.2,
+    2013,
+    1
+  ],
+  [
+    "The Irishman",
+    "Crime",
+    7.8,
+    2019,
+    1
+  ],
+  [
+    "Silence",
+    "Drama",
+    7.2,
+    2016,
+    1
+  ],
+  [
+    "After Hours",
+    "Comedy",
+    7.6,
+    1985,
+    1
+  ],
+  [
+    "The King of Comedy",
+    "Comedy",
+    7.8,
+    1982,
+    1
+  ],
+  [
+    "Mean Streets",
+    "Crime",
+    7.2,
+    1973,
+    1
+  ],
+  [
+    "Pulp Fiction",
+    "Crime",
+    8.9,
+    1994,
+    1
+  ],
+  [
+    "Reservoir Dogs",
+    "Crime",
+    8.3,
+    1992,
+    1
+  ],
+  [
+    "Jackie Brown",
+    "Crime",
+    7.5,
+    1997,
+    1
+  ],
+  [
+    "Kill Bill: Vol. 1",
+    "Action",
+    8.2,
+    2003,
+    1
+  ],
+  [
+    "Kill Bill: Vol. 2",
+    "Action",
+    8,
+    2004,
+    1
+  ],
+  [
+    "Inglourious Basterds",
+    "War",
+    8.4,
+    2009,
+    1
+  ],
+  [
+    "Django Unchained",
+    "Western",
+    8.5,
+    2012,
+    1
+  ],
+  [
+    "The Hateful Eight",
+    "Western",
+    7.8,
+    2015,
+    1
+  ],
+  [
+    "Once Upon a Time in Hollywood",
+    "Comedy",
+    7.6,
+    2019,
+    1
+  ],
+  [
+    "Heat",
+    "Crime",
+    8.3,
+    1995,
+    1
+  ],
+  [
+    "Collateral",
+    "Crime",
+    7.5,
+    2004,
+    1
+  ],
+  [
+    "Thief",
+    "Crime",
+    7.4,
+    1981,
+    1
+  ],
+  [
+    "Manhunter",
+    "Crime",
+    7.2,
+    1986,
+    1
+  ],
+  [
+    "The Insider",
+    "Drama",
+    7.8,
+    1999,
+    1
+  ],
+  [
+    "Miami Vice",
+    "Action",
+    6,
+    2006,
+    1
+  ],
+  [
+    "Ferrari",
+    "Drama",
+    6.4,
+    2023,
+    1
+  ],
+  [
+    "L.A. Confidential",
+    "Crime",
+    8.2,
+    1997,
+    1
+  ],
+  [
+    "Chinatown",
+    "Mystery",
+    8.1,
+    1974,
+    1
+  ],
+  [
+    "The Long Goodbye",
+    "Crime",
+    7.5,
+    1973,
+    1
+  ],
+  [
+    "The French Connection",
+    "Crime",
+    7.7,
+    1971,
+    1
+  ],
+  [
+    "Dog Day Afternoon",
+    "Crime",
+    8,
+    1975,
+    1
+  ],
+  [
+    "Serpico",
+    "Crime",
+    7.7,
+    1973,
+    1
+  ],
+  [
+    "Network",
+    "Drama",
+    8.1,
+    1976,
+    1
+  ],
+  [
+    "12 Angry Men",
+    "Drama",
+    9,
+    1957,
+    1
+  ],
+  [
+    "Fail Safe",
+    "Thriller",
+    8,
+    1964,
+    1
+  ],
+  [
+    "All the President's Men",
+    "Drama",
+    7.9,
+    1976,
+    1
+  ],
+  [
+    "Three Days of the Condor",
+    "Thriller",
+    7.4,
+    1975,
+    1
+  ],
+  [
+    "The Parallax View",
+    "Thriller",
+    7.1,
+    1974,
+    1
+  ],
+  [
+    "Klute",
+    "Mystery",
+    7.1,
+    1971,
+    1
+  ],
+  [
+    "Blow Out",
+    "Thriller",
+    7.4,
+    1981,
+    1
+  ],
+  [
+    "Scarface (1983)",
+    "Crime",
+    8.3,
+    1983,
+    1
+  ],
+  [
+    "Carlito's Way",
+    "Crime",
+    7.9,
+    1993,
+    1
+  ],
+  [
+    "The Untouchables",
+    "Crime",
+    7.8,
+    1987,
+    1
+  ],
+  [
+    "Carrie (1976)",
+    "Horror",
+    7.4,
+    1976,
+    1
+  ],
+  [
+    "Dressed to Kill",
+    "Thriller",
+    7.1,
+    1980,
+    1
+  ],
+  [
+    "Seven Samurai",
+    "Action",
+    8.6,
+    1954,
+    1
+  ],
+  [
+    "Rashomon",
+    "Crime",
+    8.2,
+    1950,
+    1
+  ],
+  [
+    "Ikiru",
+    "Drama",
+    8.3,
+    1952,
+    1
+  ],
+  [
+    "Yojimbo",
+    "Action",
+    8.2,
+    1961,
+    1
+  ],
+  [
+    "Sanjuro",
+    "Action",
+    8,
+    1962,
+    1
+  ],
+  [
+    "Throne of Blood",
+    "Drama",
+    8,
+    1957,
+    1
+  ],
+  [
+    "The Hidden Fortress",
+    "Action",
+    8.1,
+    1958,
+    1
+  ],
+  [
+    "Kagemusha",
+    "War",
+    8,
+    1980,
+    1
+  ],
+  [
+    "Tokyo Story",
+    "Drama",
+    8.1,
+    1953,
+    1
+  ],
+  [
+    "Late Spring",
+    "Drama",
+    8.2,
+    1949,
+    1
+  ],
+  [
+    "Early Summer",
+    "Drama",
+    8.1,
+    1951,
+    1
+  ],
+  [
+    "Ugetsu",
+    "Drama",
+    8.2,
+    1953,
+    1
+  ],
+  [
+    "Sansho the Bailiff",
+    "Drama",
+    8.3,
+    1954,
+    1
+  ],
+  [
+    "The 400 Blows",
+    "Drama",
+    8.1,
+    1959,
+    1
+  ],
+  [
+    "Breathless",
+    "Crime",
+    7.7,
+    1960,
+    1
+  ],
+  [
+    "Contempt",
+    "Drama",
+    7.5,
+    1963,
+    1
+  ],
+  [
+    "Band of Outsiders",
+    "Crime",
+    7.6,
+    1964,
+    1
+  ],
+  [
+    "Pierrot le Fou",
+    "Crime",
+    7.5,
+    1965,
+    1
+  ],
+  [
+    "Cleo from 5 to 7",
+    "Drama",
+    7.9,
+    1962,
+    1
+  ],
+  [
+    "Vagabond (1985)",
+    "Drama",
+    7.7,
+    1985,
+    1
+  ],
+  [
+    "The Seventh Seal",
+    "Fantasy",
+    8.1,
+    1957,
+    1
+  ],
+  [
+    "Wild Strawberries",
+    "Drama",
+    8.1,
+    1957,
+    1
+  ],
+  [
+    "Persona",
+    "Drama",
+    8.1,
+    1966,
+    1
+  ],
+  [
+    "Fanny and Alexander",
+    "Drama",
+    8.1,
+    1982,
+    1
+  ],
+  [
+    "Autumn Sonata",
+    "Drama",
+    8.1,
+    1978,
+    1
+  ],
+  [
+    "Cries and Whispers",
+    "Drama",
+    8.1,
+    1972,
+    1
+  ],
+  [
+    "Through a Glass Darkly",
+    "Drama",
+    7.9,
+    1961,
+    1
+  ],
+  [
+    "Winter Light",
+    "Drama",
+    8,
+    1963,
+    1
+  ],
+  [
+    "The Silence (1963)",
+    "Drama",
+    7.8,
+    1963,
+    1
+  ],
+  [
+    "The Virgin Spring",
+    "Drama",
+    8,
+    1960,
+    1
+  ],
+  [
+    "Bicycle Thieves",
+    "Drama",
+    8.3,
+    1948,
+    1
+  ],
+  [
+    "Rome, Open City",
+    "War",
+    8,
+    1945,
+    1
+  ],
+  [
+    "Paisan",
+    "War",
+    7.6,
+    1946,
+    1
+  ],
+  [
+    "La Strada",
+    "Drama",
+    8,
+    1954,
+    1
+  ],
+  [
+    "Nights of Cabiria",
+    "Drama",
+    8.1,
+    1957,
+    1
+  ],
+  [
+    "8 1/2",
+    "Drama",
+    8,
+    1963,
+    1
+  ],
+  [
+    "La Dolce Vita",
+    "Comedy",
+    8,
+    1960,
+    1
+  ],
+  [
+    "Amarcord",
+    "Comedy",
+    7.9,
+    1973,
+    1
+  ],
+  [
+    "L'Avventura",
+    "Mystery",
+    7.8,
+    1960,
+    1
+  ],
+  [
+    "La Notte",
+    "Drama",
+    8,
+    1961,
+    1
+  ],
+  [
+    "L'Eclisse",
+    "Romance",
+    7.8,
+    1962,
+    1
+  ],
+  [
+    "Red Desert",
+    "Drama",
+    7.6,
+    1964,
+    1
+  ],
+  [
+    "Blow-Up",
+    "Mystery",
+    7.5,
+    1966,
+    1
+  ],
+  [
+    "The Passenger",
+    "Mystery",
+    7.5,
+    1975,
+    1
+  ],
+  [
+    "Aguirre, the Wrath of God",
+    "Adventure",
+    7.8,
+    1972,
+    1
+  ],
+  [
+    "Fitzcarraldo",
+    "Adventure",
+    8,
+    1982,
+    1
+  ],
+  [
+    "Nosferatu the Vampyre",
+    "Horror",
+    7.4,
+    1979,
+    1
+  ],
+  [
+    "Stroszek",
+    "Comedy",
+    7.8,
+    1977,
+    1
+  ],
+  [
+    "Woyzeck",
+    "Drama",
+    7,
+    1979,
+    1
+  ],
+  [
+    "Wings of Desire",
+    "Fantasy",
+    7.9,
+    1987,
+    1
+  ],
+  [
+    "Paris, Texas",
+    "Drama",
+    8.1,
+    1984,
+    1
+  ],
+  [
+    "Alice in the Cities",
+    "Drama",
+    7.9,
+    1974,
+    1
+  ],
+  [
+    "The American Friend",
+    "Crime",
+    7.4,
+    1977,
+    1
+  ],
+  [
+    "The Double Life of Veronique",
+    "Mystery",
+    7.7,
+    1991,
+    1
+  ],
+  [
+    "Three Colours: Blue",
+    "Drama",
+    7.8,
+    1993,
+    1
+  ],
+  [
+    "Three Colours: White",
+    "Comedy",
+    7.6,
+    1994,
+    1
+  ],
+  [
+    "Three Colours: Red",
+    "Drama",
+    8.1,
+    1994,
+    1
+  ],
+  [
+    "A Short Film About Love",
+    "Romance",
+    8.1,
+    1988,
+    1
+  ],
+  [
+    "A Short Film About Killing",
+    "Crime",
+    8,
+    1988,
+    1
+  ],
+  [
+    "Solaris (1972)",
+    "Sci-Fi",
+    8,
+    1972,
+    1
+  ],
+  [
+    "Stalker",
+    "Sci-Fi",
+    8.1,
+    1979,
+    1
+  ],
+  [
+    "Mirror",
+    "Drama",
+    8,
+    1975,
+    1
+  ],
+  [
+    "Nostalghia",
+    "Drama",
+    8,
+    1983,
+    1
+  ],
+  [
+    "The Sacrifice",
+    "Drama",
+    7.9,
+    1986,
+    1
+  ],
+  [
+    "Andrei Rublev",
+    "Drama",
+    8.1,
+    1966,
+    1
+  ],
+  [
+    "Ivan's Childhood",
+    "War",
+    8,
+    1962,
+    1
+  ],
+  [
+    "Metropolis (1927)",
+    "Sci-Fi",
+    8.3,
+    1927,
+    1
+  ],
+  [
+    "M (1931)",
+    "Crime",
+    8.3,
+    1931,
+    1
+  ],
+  [
+    "The Cabinet of Dr. Caligari",
+    "Horror",
+    8,
+    1920,
+    1
+  ],
+  [
+    "Nosferatu (1922)",
+    "Horror",
+    7.9,
+    1922,
+    1
+  ],
+  [
+    "Sunrise: A Song of Two Humans",
+    "Romance",
+    8.1,
+    1927,
+    1
+  ],
+  [
+    "The Passion of Joan of Arc",
+    "Drama",
+    8.1,
+    1928,
+    1
+  ],
+  [
+    "Vampyr",
+    "Horror",
+    7.4,
+    1932,
+    1
+  ],
+  [
+    "Ordet",
+    "Drama",
+    8.3,
+    1955,
+    1
+  ],
+  [
+    "Gertrud",
+    "Drama",
+    7.6,
+    1964,
+    1
+  ],
+  [
+    "Battleship Potemkin",
+    "War",
+    7.9,
+    1925,
+    1
+  ],
+  [
+    "Pather Panchali",
+    "Drama",
+    8.5,
+    1955,
+    1
+  ],
+  [
+    "Aparajito",
+    "Drama",
+    8.4,
+    1956,
+    1
+  ],
+  [
+    "Apur Sansar",
+    "Drama",
+    8.5,
+    1959,
+    1
+  ],
+  [
+    "Charulata",
+    "Drama",
+    8.4,
+    1964,
+    1
+  ],
+  [
+    "Mahanagar",
+    "Drama",
+    8.2,
+    1963,
+    1
+  ],
+  [
+    "Nayak: The Hero",
+    "Drama",
+    8.2,
+    1966,
+    1
+  ],
+  [
+    "Goopy Gyne Bagha Byne",
+    "Fantasy",
+    8.8,
+    1969,
+    1
+  ],
+  [
+    "Hirak Rajar Deshe",
+    "Fantasy",
+    8.7,
+    1980,
+    1
+  ],
+  [
+    "Jalsaghar",
+    "Drama",
+    8,
+    1958,
+    1
+  ],
+  [
+    "Agantuk",
+    "Drama",
+    8.1,
+    1991,
+    1
+  ],
+  [
+    "Sonar Kella",
+    "Mystery",
+    8.3,
+    1974,
+    1
+  ],
+  [
+    "Joy Baba Felunath",
+    "Mystery",
+    8,
+    1979,
+    1
+  ],
+  [
+    "Meghe Dhaka Tara",
+    "Drama",
+    8.1,
+    1960,
+    1
+  ],
+  [
+    "Komal Gandhar",
+    "Drama",
+    7.8,
+    1961,
+    1
+  ],
+  [
+    "Subarnarekha",
+    "Drama",
+    8.1,
+    1965,
+    1
+  ],
+  [
+    "Bhuvan Shome",
+    "Comedy",
+    7.5,
+    1969,
+    1
+  ],
+  [
+    "Khandhar",
+    "Drama",
+    7.6,
+    1984,
+    1
+  ],
+  [
+    "Ghatashraddha",
+    "Drama",
+    8.1,
+    1977,
+    1
+  ],
+  [
+    "Samskara",
+    "Drama",
+    7.9,
+    1970,
+    1
+  ],
+  [
+    "Chomana Dudi",
+    "Drama",
+    8.1,
+    1975,
+    1
+  ],
+  [
+    "Tabarana Kathe",
+    "Drama",
+    8.4,
+    1987,
+    1
+  ],
+  [
+    "Elippathayam",
+    "Drama",
+    8,
+    1982,
+    1
+  ],
+  [
+    "Mukhamukham",
+    "Drama",
+    7.7,
+    1984,
+    1
+  ],
+  [
+    "Anantaram",
+    "Drama",
+    8.1,
+    1987,
+    1
+  ],
+  [
+    "Mathilukal",
+    "Drama",
+    8.4,
+    1990,
+    1
+  ],
+  [
+    "Vidheyan",
+    "Drama",
+    8.3,
+    1994,
+    1
+  ],
+  [
+    "Nizhalkkuthu",
+    "Drama",
+    7.5,
+    2002,
+    1
+  ],
+  [
+    "Oru Vadakkan Veeragatha",
+    "Action",
+    8.6,
+    1989,
+    1
+  ],
+  [
+    "Kireedam",
+    "Drama",
+    8.9,
+    1989,
+    1
+  ],
+  [
+    "Chenkol",
+    "Drama",
+    8.3,
+    1993,
+    1
+  ],
+  [
+    "Spadikam",
+    "Action",
+    8.5,
+    1995,
+    1
+  ],
+  [
+    "Manichitrathazhu",
+    "Horror",
+    8.8,
+    1993,
+    1
+  ],
+  [
+    "Devasuram",
+    "Action",
+    8.6,
+    1993,
+    1
+  ],
+  [
+    "Godfather (Malayalam)",
+    "Comedy",
+    8.6,
+    1991,
+    1
+  ],
+  [
+    "In Harihar Nagar",
+    "Comedy",
+    8.5,
+    1990,
+    1
+  ],
+  [
+    "Ramji Rao Speaking",
+    "Comedy",
+    8.7,
+    1989,
+    1
+  ],
+  [
+    "Nadodikkattu",
+    "Comedy",
+    8.8,
+    1987,
+    1
+  ],
+  [
+    "Pattanapravesham",
+    "Comedy",
+    8.4,
+    1988,
+    1
+  ],
+  [
+    "Sandhesam",
+    "Comedy",
+    8.9,
+    1991,
+    1
+  ],
+  [
+    "Thoovanathumbikal",
+    "Romance",
+    8.6,
+    1987,
+    1
+  ],
+  [
+    "Namukku Parkkan Munthirithoppukal",
+    "Romance",
+    8.4,
+    1986,
+    1
+  ],
+  [
+    "Yavanika",
+    "Mystery",
+    8.5,
+    1982,
+    1
+  ],
+  [
+    "Moonnam Pakkam",
+    "Drama",
+    8.3,
+    1988,
+    1
+  ],
+  [
+    "Perumthachan",
+    "Drama",
+    8.3,
+    1990,
+    1
+  ],
+  [
+    "Amaram",
+    "Drama",
+    8.3,
+    1991,
+    1
+  ],
+  [
+    "Bharatham",
+    "Drama",
+    8.3,
+    1991,
+    1
+  ],
+  [
+    "Sadayam",
+    "Thriller",
+    8.2,
+    1992,
+    1
+  ],
+  [
+    "Pranchiyettan & the Saint",
+    "Comedy",
+    8.2,
+    2010,
+    1
+  ],
+  [
+    "Traffic",
+    "Thriller",
+    8.1,
+    2011,
+    1
+  ],
+  [
+    "Chithram",
+    "Comedy",
+    8.4,
+    1988,
+    1
+  ],
+  [
+    "Kilukkam",
+    "Comedy",
+    8.6,
+    1991,
+    1
+  ],
+  [
+    "Meleparambil Anveedu",
+    "Comedy",
+    8.4,
+    1993,
+    1
+  ],
+  [
+    "Punjabi House",
+    "Comedy",
+    8.2,
+    1998,
+    1
+  ],
+  [
+    "C.I.D. Moosa",
+    "Comedy",
+    7.9,
+    2003,
+    1
+  ],
+  [
+    "Kalyanaraman",
+    "Comedy",
+    7.7,
+    2002,
+    1
+  ],
+  [
+    "Meesa Madhavan",
+    "Comedy",
+    7.8,
+    2002,
+    1
+  ],
+  [
+    "Chotta Mumbai",
+    "Action",
+    7.5,
+    2007,
+    1
+  ],
+  [
+    "Rajamanikyam",
+    "Comedy",
+    7.5,
+    2005,
+    1
+  ],
+  [
+    "Big B",
+    "Action",
+    7.8,
+    2007,
+    1
+  ],
+  [
+    "Anwar",
+    "Action",
+    6.8,
+    2010,
+    1
+  ],
+  [
+    "Amen",
+    "Musical",
+    7.7,
+    2013,
+    1
+  ],
+  [
+    "North 24 Kaatham",
+    "Drama",
+    7.7,
+    2013,
+    1
+  ],
+  [
+    "Guppy",
+    "Drama",
+    8,
+    2016,
+    1
+  ],
+  [
+    "Take Off",
+    "Drama",
+    8.1,
+    2017,
+    1
+  ],
+  [
+    "Joseph",
+    "Crime",
+    8,
+    2018,
+    1
+  ],
+  [
+    "Kuruthi",
+    "Thriller",
+    7.6,
+    2021,
+    1
+  ],
+  [
+    "Malik",
+    "Crime",
+    8,
+    2021,
+    1
+  ],
+  [
+    "Bheeshma Parvam",
+    "Action",
+    7.6,
+    2022,
+    1
+  ],
+  [
+    "Mukundan Unni Associates",
+    "Comedy",
+    7.9,
+    2022,
+    1
+  ],
+  [
+    "Thallumaala",
+    "Action",
+    7.2,
+    2022,
+    1
+  ],
+  [
+    "Purusha Pretham",
+    "Comedy",
+    7.4,
+    2023,
+    1
+  ],
+  [
+    "Abraham Ozler",
+    "Crime",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "Turbo",
+    "Action",
+    6.2,
+    2024,
+    1
+  ],
+  [
+    "Varshangalkku Shesham",
+    "Drama",
+    7.3,
+    2024,
+    1
+  ],
+  [
+    "ARM: Ajayante Randam Mokshanam",
+    "Fantasy",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "Veedu",
+    "Drama",
+    8.4,
+    1988,
+    1
+  ],
+  [
+    "Sandhya Raagam",
+    "Drama",
+    8.3,
+    1989,
+    1
+  ],
+  [
+    "Marupadiyum",
+    "Drama",
+    8.1,
+    1993,
+    1
+  ],
+  [
+    "Moondram Pirai",
+    "Romance",
+    8.5,
+    1982,
+    1
+  ],
+  [
+    "16 Vayathinile",
+    "Drama",
+    8,
+    1977,
+    1
+  ],
+  [
+    "Sigappu Rojakkal",
+    "Thriller",
+    7.9,
+    1978,
+    1
+  ],
+  [
+    "Johnny (1980)",
+    "Crime",
+    7.9,
+    1980,
+    1
+  ],
+  [
+    "Nenjathai Killathe",
+    "Romance",
+    8,
+    1980,
+    1
+  ],
+  [
+    "Mouna Ragam",
+    "Romance",
+    8.5,
+    1986,
+    1
+  ],
+  [
+    "Agni Natchathiram",
+    "Action",
+    7.8,
+    1988,
+    1
+  ],
+  [
+    "Anjali",
+    "Drama",
+    8.1,
+    1990,
+    1
+  ],
+  [
+    "Michael Madana Kama Rajan",
+    "Comedy",
+    8.5,
+    1990,
+    1
+  ],
+  [
+    "Gunaa",
+    "Romance",
+    8.2,
+    1991,
+    1
+  ],
+  [
+    "Thevar Magan",
+    "Drama",
+    8.7,
+    1992,
+    1
+  ],
+  [
+    "Mahanadhi",
+    "Drama",
+    8.5,
+    1994,
+    1
+  ],
+  [
+    "Nammavar",
+    "Drama",
+    8.2,
+    1994,
+    1
+  ],
+  [
+    "Sathi Leelavathi",
+    "Comedy",
+    8.1,
+    1995,
+    1
+  ],
+  [
+    "Avvai Shanmugi",
+    "Comedy",
+    8.2,
+    1996,
+    1
+  ],
+  [
+    "Indian (1996)",
+    "Action",
+    8.1,
+    1996,
+    1
+  ],
+  [
+    "Kadhalan",
+    "Romance",
+    7.4,
+    1994,
+    1
+  ],
+  [
+    "Jeans",
+    "Comedy",
+    7.2,
+    1998,
+    1
+  ],
+  [
+    "Mudhalvan",
+    "Action",
+    8.4,
+    1999,
+    1
+  ],
+  [
+    "Kandukondain Kandukondain",
+    "Romance",
+    7.7,
+    2000,
+    1
+  ],
+  [
+    "Minnale",
+    "Romance",
+    7.7,
+    2001,
+    1
+  ],
+  [
+    "Aalavandhan",
+    "Thriller",
+    7.3,
+    2001,
+    1
+  ],
+  [
+    "Kannathil Muthamittal",
+    "Drama",
+    8.4,
+    2002,
+    1
+  ],
+  [
+    "Panchatanthiram",
+    "Comedy",
+    8.4,
+    2002,
+    1
+  ],
+  [
+    "Anbe Sivam",
+    "Drama",
+    8.6,
+    2003,
+    1
+  ],
+  [
+    "Dhool",
+    "Action",
+    7.3,
+    2003,
+    1
+  ],
+  [
+    "Ghilli",
+    "Action",
+    8.1,
+    2004,
+    1
+  ],
+  [
+    "Virumaandi",
+    "Action",
+    8.3,
+    2004,
+    1
+  ],
+  [
+    "Autograph",
+    "Drama",
+    8.1,
+    2004,
+    1
+  ],
+  [
+    "Ayutha Ezhuthu",
+    "Drama",
+    8,
+    2004,
+    1
+  ],
+  [
+    "Anniyan",
+    "Action",
+    8.3,
+    2005,
+    1
+  ],
+  [
+    "Chandramukhi",
+    "Horror",
+    7.2,
+    2005,
+    1
+  ],
+  [
+    "Pudhupettai",
+    "Crime",
+    8.5,
+    2006,
+    1
+  ],
+  [
+    "Vettaiyaadu Vilaiyaadu",
+    "Crime",
+    7.9,
+    2006,
+    1
+  ],
+  [
+    "Paruthiveeran",
+    "Drama",
+    8.2,
+    2007,
+    1
+  ],
+  [
+    "Polladhavan",
+    "Action",
+    7.7,
+    2007,
+    1
+  ],
+  [
+    "Subramaniapuram",
+    "Crime",
+    8.2,
+    2008,
+    1
+  ],
+  [
+    "Vaaranam Aayiram",
+    "Drama",
+    8.2,
+    2008,
+    1
+  ],
+  [
+    "Dasavathaaram",
+    "Sci-Fi",
+    7.2,
+    2008,
+    1
+  ],
+  [
+    "Ayan",
+    "Action",
+    7.7,
+    2009,
+    1
+  ],
+  [
+    "Vinnaithaandi Varuvaayaa",
+    "Romance",
+    8.1,
+    2010,
+    1
+  ],
+  [
+    "Enthiran",
+    "Sci-Fi",
+    7.1,
+    2010,
+    1
+  ],
+  [
+    "Aadukalam",
+    "Drama",
+    8.1,
+    2011,
+    1
+  ],
+  [
+    "Mankatha",
+    "Crime",
+    7.7,
+    2011,
+    1
+  ],
+  [
+    "Pizza",
+    "Horror",
+    8,
+    2012,
+    1
+  ],
+  [
+    "Thuppakki",
+    "Action",
+    8.1,
+    2012,
+    1
+  ],
+  [
+    "Naduvula Konjam Pakkatha Kaanom",
+    "Comedy",
+    8.2,
+    2012,
+    1
+  ],
+  [
+    "Kalyana Samayal Saadham",
+    "Comedy",
+    7.5,
+    2013,
+    1
+  ],
+  [
+    "Kaththi",
+    "Action",
+    8.1,
+    2014,
+    1
+  ],
+  [
+    "Jigarthanda",
+    "Crime",
+    8.3,
+    2014,
+    1
+  ],
+  [
+    "Madras",
+    "Drama",
+    8,
+    2014,
+    1
+  ],
+  [
+    "Kaaka Muttai",
+    "Comedy",
+    8.3,
+    2014,
+    1
+  ],
+  [
+    "I (2015)",
+    "Action",
+    7.4,
+    2015,
+    1
+  ],
+  [
+    "Irudhi Suttru",
+    "Drama",
+    7.6,
+    2016,
+    1
+  ],
+  [
+    "24 (2016)",
+    "Sci-Fi",
+    7.9,
+    2016,
+    1
+  ],
+  [
+    "Aruvi",
+    "Drama",
+    8.4,
+    2016,
+    1
+  ],
+  [
+    "Vikram Vedha",
+    "Action",
+    8.2,
+    2017,
+    1
+  ],
+  [
+    "Mersal",
+    "Action",
+    7.5,
+    2017,
+    1
+  ],
+  [
+    "Pyaar Prema Kaadhal",
+    "Romance",
+    7.1,
+    2018,
+    1
+  ],
+  [
+    "Kolamaavu Kokila",
+    "Comedy",
+    7.3,
+    2018,
+    1
+  ],
+  [
+    "Peranbu",
+    "Drama",
+    8.7,
+    2018,
+    1
+  ],
+  [
+    "Petta",
+    "Action",
+    7.1,
+    2019,
+    1
+  ],
+  [
+    "Viswasam",
+    "Action",
+    6.7,
+    2019,
+    1
+  ],
+  [
+    "Master (2021)",
+    "Action",
+    7.8,
+    2021,
+    1
+  ],
+  [
+    "Doctor",
+    "Comedy",
+    7.4,
+    2021,
+    1
+  ],
+  [
+    "Maanaadu",
+    "Sci-Fi",
+    8.3,
+    2021,
+    1
+  ],
+  [
+    "Love Today",
+    "Comedy",
+    8,
+    2022,
+    1
+  ],
+  [
+    "Thiruchitrambalam",
+    "Comedy",
+    7.9,
+    2022,
+    1
+  ],
+  [
+    "Leo",
+    "Action",
+    7.2,
+    2023,
+    1
+  ],
+  [
+    "Por Thozhil",
+    "Crime",
+    8,
+    2023,
+    1
+  ],
+  [
+    "Good Night",
+    "Comedy",
+    7.7,
+    2023,
+    1
+  ],
+  [
+    "Ayalaan",
+    "Sci-Fi",
+    6.2,
+    2024,
+    1
+  ],
+  [
+    "Captain Miller",
+    "Action",
+    6.6,
+    2024,
+    1
+  ],
+  [
+    "Garudan",
+    "Action",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Raayan",
+    "Action",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "Vaazhai",
+    "Drama",
+    8.2,
+    2024,
+    1
+  ],
+  [
+    "Kottukkaali",
+    "Drama",
+    7.7,
+    2024,
+    1
+  ],
+  [
+    "Lubber Pandhu",
+    "Comedy",
+    8.3,
+    2024,
+    1
+  ],
+  [
+    "Amaran",
+    "War",
+    8.4,
+    2024,
+    1
+  ],
+  [
+    "Gundamma Katha",
+    "Comedy",
+    8.6,
+    1962,
+    1
+  ],
+  [
+    "Missamma",
+    "Comedy",
+    8.4,
+    1955,
+    1
+  ],
+  [
+    "Pathala Bhairavi",
+    "Fantasy",
+    8.5,
+    1951,
+    1
+  ],
+  [
+    "Devadasu (1953)",
+    "Drama",
+    8.4,
+    1953,
+    1
+  ],
+  [
+    "Mooga Manasulu",
+    "Romance",
+    8.2,
+    1964,
+    1
+  ],
+  [
+    "Maro Charitra",
+    "Romance",
+    8.2,
+    1978,
+    1
+  ],
+  [
+    "Siri Siri Muvva",
+    "Drama",
+    8.3,
+    1976,
+    1
+  ],
+  [
+    "Subhalekha",
+    "Comedy",
+    8.2,
+    1982,
+    1
+  ],
+  [
+    "Khaidi",
+    "Action",
+    8,
+    1983,
+    1
+  ],
+  [
+    "Anveshana",
+    "Mystery",
+    8.3,
+    1985,
+    1
+  ],
+  [
+    "Chantabbai",
+    "Comedy",
+    8.4,
+    1986,
+    1
+  ],
+  [
+    "Rudraveena",
+    "Drama",
+    8.7,
+    1988,
+    1
+  ],
+  [
+    "Aakhari Poratam",
+    "Action",
+    7.8,
+    1988,
+    1
+  ],
+  [
+    "Geethanjali (1989)",
+    "Romance",
+    8.3,
+    1989,
+    1
+  ],
+  [
+    "Siva",
+    "Crime",
+    8.2,
+    1989,
+    1
+  ],
+  [
+    "Jagadeka Veerudu Athiloka Sundari",
+    "Fantasy",
+    7.9,
+    1990,
+    1
+  ],
+  [
+    "Kshana Kshanam",
+    "Comedy",
+    8.3,
+    1991,
+    1
+  ],
+  [
+    "Aditya 369",
+    "Sci-Fi",
+    8.4,
+    1991,
+    1
+  ],
+  [
+    "Money (1993)",
+    "Comedy",
+    8.1,
+    1993,
+    1
+  ],
+  [
+    "Gaayam",
+    "Crime",
+    7.8,
+    1993,
+    1
+  ],
+  [
+    "Aha Naa Pellanta",
+    "Comedy",
+    8.6,
+    1987,
+    1
+  ],
+  [
+    "Appula Appa Rao",
+    "Comedy",
+    8.1,
+    1991,
+    1
+  ],
+  [
+    "Jambalakidi Pamba",
+    "Comedy",
+    8.1,
+    1993,
+    1
+  ],
+  [
+    "Sindhooram",
+    "Action",
+    7.8,
+    1997,
+    1
+  ],
+  [
+    "Tholi Prema",
+    "Romance",
+    8.3,
+    1998,
+    1
+  ],
+  [
+    "Kushi",
+    "Romance",
+    8.1,
+    2001,
+    1
+  ],
+  [
+    "Manasantha Nuvve",
+    "Romance",
+    7.4,
+    2001,
+    1
+  ],
+  [
+    "Nuvvu Nenu",
+    "Romance",
+    7.2,
+    2001,
+    1
+  ],
+  [
+    "Jayam",
+    "Romance",
+    6.8,
+    2002,
+    1
+  ],
+  [
+    "Okkadu",
+    "Action",
+    8.1,
+    2003,
+    1
+  ],
+  [
+    "Simhadri",
+    "Action",
+    7.4,
+    2003,
+    1
+  ],
+  [
+    "Varsham",
+    "Romance",
+    7.3,
+    2004,
+    1
+  ],
+  [
+    "Arya",
+    "Romance",
+    7.8,
+    2004,
+    1
+  ],
+  [
+    "Chatrapathi",
+    "Action",
+    7.7,
+    2005,
+    1
+  ],
+  [
+    "Anukokunda Oka Roju",
+    "Mystery",
+    8.1,
+    2005,
+    1
+  ],
+  [
+    "Bommarillu",
+    "Comedy",
+    8.2,
+    2006,
+    1
+  ],
+  [
+    "Happy Days",
+    "Drama",
+    7.9,
+    2007,
+    1
+  ],
+  [
+    "Gamyam",
+    "Drama",
+    8.2,
+    2008,
+    1
+  ],
+  [
+    "Arundhati",
+    "Horror",
+    7.4,
+    2009,
+    1
+  ],
+  [
+    "Kick (2009)",
+    "Comedy",
+    7.7,
+    2009,
+    1
+  ],
+  [
+    "Prasthanam",
+    "Crime",
+    8.1,
+    2010,
+    1
+  ],
+  [
+    "Vedam",
+    "Drama",
+    8.1,
+    2010,
+    1
+  ],
+  [
+    "Leader",
+    "Drama",
+    8,
+    2010,
+    1
+  ],
+  [
+    "Dookudu",
+    "Action",
+    7.5,
+    2011,
+    1
+  ],
+  [
+    "Ala Modalaindi",
+    "Comedy",
+    7.6,
+    2011,
+    1
+  ],
+  [
+    "Gabbar Singh",
+    "Action",
+    7.1,
+    2012,
+    1
+  ],
+  [
+    "Julayi",
+    "Action",
+    7.2,
+    2012,
+    1
+  ],
+  [
+    "Seethamma Vakitlo Sirimalle Chettu",
+    "Drama",
+    7.5,
+    2013,
+    1
+  ],
+  [
+    "Attarintiki Daredi",
+    "Comedy",
+    7.3,
+    2013,
+    1
+  ],
+  [
+    "1: Nenokkadine",
+    "Thriller",
+    8.1,
+    2014,
+    1
+  ],
+  [
+    "Race Gurram",
+    "Comedy",
+    7.3,
+    2014,
+    1
+  ],
+  [
+    "Manam",
+    "Fantasy",
+    8,
+    2014,
+    1
+  ],
+  [
+    "Srimanthudu",
+    "Drama",
+    7.5,
+    2015,
+    1
+  ],
+  [
+    "Bhale Bhale Magadivoy",
+    "Comedy",
+    7.7,
+    2015,
+    1
+  ],
+  [
+    "Kshanam",
+    "Mystery",
+    8.2,
+    2016,
+    1
+  ],
+  [
+    "Oopiri",
+    "Comedy",
+    8,
+    2016,
+    1
+  ],
+  [
+    "Fidaa",
+    "Romance",
+    7.5,
+    2017,
+    1
+  ],
+  [
+    "Goodachari",
+    "Action",
+    7.8,
+    2018,
+    1
+  ],
+  [
+    "Awe!",
+    "Mystery",
+    7.7,
+    2018,
+    1
+  ],
+  [
+    "Brochevarevarura",
+    "Comedy",
+    8,
+    2019,
+    1
+  ],
+  [
+    "Ala Vaikunthapurramuloo",
+    "Action",
+    7.3,
+    2020,
+    1
+  ],
+  [
+    "Sarileru Neekevvaru",
+    "Action",
+    6,
+    2020,
+    1
+  ],
+  [
+    "Jathi Ratnalu",
+    "Comedy",
+    7.3,
+    2021,
+    1
+  ],
+  [
+    "Love Story (2021)",
+    "Romance",
+    7.4,
+    2021,
+    1
+  ],
+  [
+    "DJ Tillu",
+    "Comedy",
+    7.2,
+    2022,
+    1
+  ],
+  [
+    "Tillu Square",
+    "Comedy",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "Bimbisara",
+    "Fantasy",
+    7.3,
+    2022,
+    1
+  ],
+  [
+    "Karthikeya 2",
+    "Mystery",
+    7.8,
+    2022,
+    1
+  ],
+  [
+    "Dasara",
+    "Action",
+    6.7,
+    2023,
+    1
+  ],
+  [
+    "Virupaksha",
+    "Mystery",
+    7.3,
+    2023,
+    1
+  ],
+  [
+    "Miss Shetty Mr Polishetty",
+    "Comedy",
+    7,
+    2023,
+    1
+  ],
+  [
+    "MAD (2023)",
+    "Comedy",
+    7.1,
+    2023,
+    1
+  ],
+  [
+    "Mangalavaaram",
+    "Horror",
+    6.8,
+    2023,
+    1
+  ],
+  [
+    "Guntur Kaaram",
+    "Action",
+    5.4,
+    2024,
+    1
+  ],
+  [
+    "Gaami",
+    "Sci-Fi",
+    7,
+    2024,
+    1
+  ],
+  [
+    "Saripodhaa Sanivaaram",
+    "Action",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "Committee Kurrollu",
+    "Drama",
+    7.6,
+    2024,
+    1
+  ],
+  [
+    "Akira",
+    "Animation",
+    8,
+    1988,
+    1
+  ],
+  [
+    "Ghost in the Shell",
+    "Animation",
+    7.9,
+    1995,
+    1
+  ],
+  [
+    "Perfect Blue",
+    "Animation",
+    8,
+    1997,
+    1
+  ],
+  [
+    "Millennium Actress",
+    "Animation",
+    7.8,
+    2001,
+    1
+  ],
+  [
+    "Tokyo Godfathers",
+    "Animation",
+    7.8,
+    2003,
+    1
+  ],
+  [
+    "Paprika",
+    "Animation",
+    7.7,
+    2006,
+    1
+  ],
+  [
+    "Princess Mononoke",
+    "Animation",
+    8.4,
+    1997,
+    1
+  ],
+  [
+    "Spirited Away",
+    "Animation",
+    8.6,
+    2001,
+    1
+  ],
+  [
+    "My Neighbor Totoro",
+    "Animation",
+    8.1,
+    1988,
+    1
+  ],
+  [
+    "Howl's Moving Castle",
+    "Animation",
+    8.2,
+    2004,
+    1
+  ],
+  [
+    "Kiki's Delivery Service",
+    "Animation",
+    7.8,
+    1989,
+    1
+  ],
+  [
+    "Nausicaa of the Valley of the Wind",
+    "Animation",
+    8,
+    1984,
+    1
+  ],
+  [
+    "Castle in the Sky",
+    "Animation",
+    8,
+    1986,
+    1
+  ],
+  [
+    "Porco Rosso",
+    "Animation",
+    7.7,
+    1992,
+    1
+  ],
+  [
+    "Whisper of the Heart",
+    "Animation",
+    7.9,
+    1995,
+    1
+  ],
+  [
+    "The Secret World of Arrietty",
+    "Animation",
+    7.6,
+    2010,
+    1
+  ],
+  [
+    "When Marnie Was There",
+    "Animation",
+    7.7,
+    2014,
+    1
+  ],
+  [
+    "Grave of the Fireflies",
+    "Animation",
+    8.5,
+    1988,
+    1
+  ],
+  [
+    "Your Name.",
+    "Animation",
+    8.4,
+    2016,
+    1
+  ],
+  [
+    "A Silent Voice",
+    "Animation",
+    8.1,
+    2016,
+    1
+  ],
+  [
+    "I Want to Eat Your Pancreas",
+    "Animation",
+    8,
+    2018,
+    1
+  ],
+  [
+    "Josee, the Tiger and the Fish",
+    "Animation",
+    7.6,
+    2020,
+    1
+  ],
+  [
+    "In This Corner of the World",
+    "Animation",
+    7.8,
+    2016,
+    1
+  ],
+  [
+    "The Girl Who Leapt Through Time",
+    "Animation",
+    7.7,
+    2006,
+    1
+  ],
+  [
+    "Summer Wars",
+    "Animation",
+    7.4,
+    2009,
+    1
+  ],
+  [
+    "Wolf Children",
+    "Animation",
+    8.1,
+    2012,
+    1
+  ],
+  [
+    "The Boy and the Beast",
+    "Animation",
+    7.6,
+    2015,
+    1
+  ],
+  [
+    "Mirai",
+    "Animation",
+    7,
+    2018,
+    1
+  ],
+  [
+    "Belle",
+    "Animation",
+    7.1,
+    2021,
+    1
+  ],
+  [
+    "Redline",
+    "Animation",
+    7.5,
+    2009,
+    1
+  ],
+  [
+    "Promare",
+    "Animation",
+    7,
+    2019,
+    1
+  ],
+  [
+    "Sword of the Stranger",
+    "Animation",
+    7.8,
+    2007,
+    1
+  ],
+  [
+    "Ninja Scroll",
+    "Animation",
+    7.8,
+    1993,
+    1
+  ],
+  [
+    "Vampire Hunter D: Bloodlust",
+    "Animation",
+    7.6,
+    2000,
+    1
+  ],
+  [
+    "The Disappearance of Haruhi Suzumiya",
+    "Animation",
+    8,
+    2010,
+    1
+  ],
+  [
+    "Kizumonogatari I: Tekketsu",
+    "Animation",
+    7.5,
+    2016,
+    1
+  ],
+  [
+    "Kizumonogatari II: Nekketsu",
+    "Animation",
+    7.8,
+    2016,
+    1
+  ],
+  [
+    "Kizumonogatari III: Reiketsu",
+    "Animation",
+    8,
+    2017,
+    1
+  ],
+  [
+    "Evangelion: 1.0 You Are (Not) Alone",
+    "Animation",
+    7.6,
+    2007,
+    1
+  ],
+  [
+    "Evangelion: 2.0 You Can (Not) Advance",
+    "Animation",
+    7.9,
+    2009,
+    1
+  ],
+  [
+    "Evangelion: 3.0 You Can (Not) Redo",
+    "Animation",
+    6.9,
+    2012,
+    1
+  ],
+  [
+    "Evangelion: 3.0+1.0 Thrice Upon a Time",
+    "Animation",
+    8,
+    2021,
+    1
+  ],
+  [
+    "The End of Evangelion",
+    "Animation",
+    8.2,
+    1997,
+    1
+  ],
+  [
+    "Cowboy Bebop: The Movie",
+    "Animation",
+    7.8,
+    2001,
+    1
+  ],
+  [
+    "Demon Slayer: Mugen Train",
+    "Animation",
+    8.2,
+    2020,
+    1
+  ],
+  [
+    "Jujutsu Kaisen 0",
+    "Animation",
+    7.8,
+    2021,
+    1
+  ],
+  [
+    "One Piece Film: Red",
+    "Animation",
+    6.8,
+    2022,
+    1
+  ],
+  [
+    "Dragon Ball Super: Broly",
+    "Animation",
+    7.7,
+    2018,
+    1
+  ],
+  [
+    "Dragon Ball Super: Super Hero",
+    "Animation",
+    7.1,
+    2022,
+    1
+  ],
+  [
+    "Haikyu!! The Dumpster Battle",
+    "Animation",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Blue Giant",
+    "Animation",
+    8.2,
+    2023,
+    1
+  ],
+  [
+    "The First Slam Dunk",
+    "Animation",
+    8.2,
+    2022,
+    1
+  ]
+];
+    const expandedVaultBatch2Shows = [
+  [
+    "Dekalog",
+    "Drama",
+    8.9,
+    1989,
+    1
+  ],
+  [
+    "Rome",
+    "Drama",
+    8.7,
+    2005,
+    1
+  ],
+  [
+    "Deadwood",
+    "Western",
+    8.6,
+    2004,
+    1
+  ],
+  [
+    "Six Feet Under",
+    "Drama",
+    8.7,
+    2001,
+    1
+  ],
+  [
+    "The Leftovers",
+    "Mystery",
+    8.3,
+    2014,
+    1
+  ],
+  [
+    "Watchmen (Series)",
+    "Sci-Fi",
+    8.2,
+    2019,
+    1
+  ],
+  [
+    "Station Eleven",
+    "Sci-Fi",
+    7.7,
+    2021,
+    1
+  ],
+  [
+    "Maniac",
+    "Comedy",
+    7.7,
+    2018,
+    1
+  ],
+  [
+    "Severance",
+    "Sci-Fi",
+    8.7,
+    2022,
+    1
+  ],
+  [
+    "The White Lotus",
+    "Comedy",
+    8,
+    2021,
+    1
+  ],
+  [
+    "Hacks",
+    "Comedy",
+    8.2,
+    2021,
+    1
+  ],
+  [
+    "Barry",
+    "Comedy",
+    8.4,
+    2018,
+    1
+  ],
+  [
+    "Atlanta",
+    "Comedy",
+    8.6,
+    2016,
+    1
+  ],
+  [
+    "Silicon Valley",
+    "Comedy",
+    8.5,
+    2014,
+    1
+  ],
+  [
+    "Veep",
+    "Comedy",
+    8.4,
+    2012,
+    1
+  ],
+  [
+    "Curb Your Enthusiasm",
+    "Comedy",
+    8.8,
+    2000,
+    1
+  ],
+  [
+    "Broadchurch",
+    "Crime",
+    8.4,
+    2013,
+    1
+  ],
+  [
+    "Happy Valley",
+    "Crime",
+    8.5,
+    2014,
+    1
+  ],
+  [
+    "Unforgotten",
+    "Crime",
+    8.3,
+    2015,
+    1
+  ],
+  [
+    "The Fall",
+    "Crime",
+    8.1,
+    2013,
+    1
+  ],
+  [
+    "Luther",
+    "Crime",
+    8.4,
+    2010,
+    1
+  ],
+  [
+    "Sherlock",
+    "Mystery",
+    9.1,
+    2010,
+    1
+  ],
+  [
+    "Endeavour",
+    "Crime",
+    8.6,
+    2012,
+    1
+  ],
+  [
+    "Gomorrah",
+    "Crime",
+    8.7,
+    2014,
+    1
+  ],
+  [
+    "Suburra: Blood on Rome",
+    "Crime",
+    7.9,
+    2017,
+    1
+  ],
+  [
+    "Babylon Berlin",
+    "Crime",
+    8.4,
+    2017,
+    1
+  ],
+  [
+    "Dark",
+    "Sci-Fi",
+    8.7,
+    2017,
+    1
+  ],
+  [
+    "Borgen",
+    "Drama",
+    8.5,
+    2010,
+    1
+  ],
+  [
+    "The Bridge (Bron/Broen)",
+    "Crime",
+    8.6,
+    2011,
+    1
+  ],
+  [
+    "The Killing (Forbrydelsen)",
+    "Crime",
+    8.4,
+    2007,
+    1
+  ],
+  [
+    "Trapped (Ófærð)",
+    "Crime",
+    8,
+    2015,
+    1
+  ],
+  [
+    "Young Pope",
+    "Drama",
+    8.3,
+    2016,
+    1
+  ],
+  [
+    "The New Pope",
+    "Drama",
+    8.1,
+    2020,
+    1
+  ],
+  [
+    "My Brilliant Friend",
+    "Drama",
+    8.6,
+    2018,
+    1
+  ],
+  [
+    "Caliphate",
+    "Thriller",
+    8.2,
+    2020,
+    1
+  ],
+  [
+    "Knutby",
+    "Crime",
+    7.3,
+    2021,
+    1
+  ],
+  [
+    "Snabba Cash",
+    "Crime",
+    7.6,
+    2021,
+    1
+  ],
+  [
+    "Fauda",
+    "Action",
+    8.3,
+    2015,
+    1
+  ],
+  [
+    "Tehran",
+    "Thriller",
+    7.6,
+    2020,
+    1
+  ],
+  [
+    "Shtisel",
+    "Drama",
+    8.3,
+    2013,
+    1
+  ],
+  [
+    "Our Boys",
+    "Drama",
+    7.6,
+    2019,
+    1
+  ],
+  [
+    "Valley of Tears",
+    "War",
+    7.9,
+    2020,
+    1
+  ],
+  [
+    "Lupin",
+    "Crime",
+    7.5,
+    2021,
+    1
+  ],
+  [
+    "Call My Agent! (Dix pour cent)",
+    "Comedy",
+    8.3,
+    2015,
+    1
+  ],
+  [
+    "The Bureau (Le Bureau des Legendes)",
+    "Thriller",
+    8.7,
+    2015,
+    1
+  ],
+  [
+    "Spiral (Engrenages)",
+    "Crime",
+    8.5,
+    2005,
+    1
+  ],
+  [
+    "Les Revenants",
+    "Drama",
+    8.1,
+    2012,
+    1
+  ],
+  [
+    "Black Spot (Zone Blanche)",
+    "Crime",
+    7.4,
+    2017,
+    1
+  ],
+  [
+    "Money Heist (La Casa de Papel)",
+    "Crime",
+    8.2,
+    2017,
+    1
+  ],
+  [
+    "Vis a Vis (Locked Up)",
+    "Crime",
+    8.2,
+    2015,
+    1
+  ],
+  [
+    "Elite",
+    "Drama",
+    7.4,
+    2018,
+    1
+  ],
+  [
+    "Patria",
+    "Drama",
+    8.2,
+    2020,
+    1
+  ],
+  [
+    "30 Coins",
+    "Horror",
+    7.1,
+    2020,
+    1
+  ],
+  [
+    "Riot Police (Antidisturbios)",
+    "Crime",
+    8.1,
+    2020,
+    1
+  ],
+  [
+    "Asunta",
+    "Crime",
+    7,
+    2024,
+    1
+  ]
+];
+    const baseMovies = dedupeList([...rawMoviesCore, ...rawMoviesExpanded, ...rawMoviesMore, ...extraMovieSeeds, ...expandedMovieVault, ...expandedVaultBatch2Movies]);
+    const baseShows = dedupeList([...rawShowsCore, ...rawShowsExpanded, ...rawShowsMore, ...extraShowSeeds, ...expandedShowVault, ...expandedVaultBatch2Shows]);
     const newMovies = dedupeAgainst(baseMovies, [...parseCompact(compactMoviesT1, 1), ...parseCompact(compactMoviesT3, 1), ...parseCompact(compactMoviesT2, 0)]);
     const newShows = dedupeAgainst(baseShows, [...parseCompact(compactShowsT1, 1), ...parseCompact(compactShowsT3, 1), ...parseCompact(compactShowsT2, 0)]);
 
@@ -5468,6 +9126,237 @@ Odd Taxi|2021|87
     }
 
     const KNOWN_INDIAN_TITLES_SET = new Set([
+      "pather panchali",
+      "aparajito",
+      "apur sansar",
+      "charulata",
+      "mahanagar",
+      "nayak: the hero",
+      "goopy gyne bagha byne",
+      "hirak rajar deshe",
+      "jalsaghar",
+      "agantuk",
+      "sonar kella",
+      "joy baba felunath",
+      "meghe dhaka tara",
+      "komal gandhar",
+      "subarnarekha",
+      "bhuvan shome",
+      "khandhar",
+      "ghatashraddha",
+      "samskara",
+      "chomana dudi",
+      "tabarana kathe",
+      "elippathayam",
+      "mukhamukham",
+      "anantaram",
+      "mathilukal",
+      "vidheyan",
+      "nizhalkkuthu",
+      "oru vadakkan veeragatha",
+      "kireedam",
+      "chenkol",
+      "spadikam",
+      "manichitrathazhu",
+      "devasuram",
+      "godfather (malayalam)",
+      "in harihar nagar",
+      "ramji rao speaking",
+      "nadodikkattu",
+      "pattanapravesham",
+      "sandhesam",
+      "thoovanathumbikal",
+      "namukku parkkan munthirithoppukal",
+      "yavanika",
+      "moonnam pakkam",
+      "perumthachan",
+      "amaram",
+      "bharatham",
+      "sadayam",
+      "pranchiyettan & the saint",
+      "traffic",
+      "chithram",
+      "kilukkam",
+      "meleparambil anveedu",
+      "punjabi house",
+      "c.i.d. moosa",
+      "kalyanaraman",
+      "meesa madhavan",
+      "chotta mumbai",
+      "rajamanikyam",
+      "big b",
+      "anwar",
+      "amen",
+      "north 24 kaatham",
+      "guppy",
+      "take off",
+      "joseph",
+      "kuruthi",
+      "malik",
+      "bheeshma parvam",
+      "mukundan unni associates",
+      "thallumaala",
+      "purusha pretham",
+      "abraham ozler",
+      "turbo",
+      "varshangalkku shesham",
+      "arm: ajayante randam mokshanam",
+      "veedu",
+      "sandhya raagam",
+      "marupadiyum",
+      "moondram pirai",
+      "16 vayathinile",
+      "sigappu rojakkal",
+      "johnny (1980)",
+      "nenjathai killathe",
+      "mouna ragam",
+      "agni natchathiram",
+      "anjali",
+      "michael madana kama rajan",
+      "gunaa",
+      "thevar magan",
+      "mahanadhi",
+      "nammavar",
+      "sathi leelavathi",
+      "avvai shanmugi",
+      "indian (1996)",
+      "kadhalan",
+      "jeans",
+      "mudhalvan",
+      "kandukondain kandukondain",
+      "minnale",
+      "aalavandhan",
+      "kannathil muthamittal",
+      "panchatanthiram",
+      "dhool",
+      "ghilli",
+      "virumaandi",
+      "autograph",
+      "ayutha ezhuthu",
+      "anniyan",
+      "chandramukhi",
+      "pudhupettai",
+      "vettaiyaadu vilaiyaadu",
+      "paruthiveeran",
+      "polladhavan",
+      "subramaniapuram",
+      "vaaranam aayiram",
+      "dasavathaaram",
+      "ayan",
+      "vinnaithaandi varuvaayaa",
+      "enthiran",
+      "aadukalam",
+      "mankatha",
+      "pizza",
+      "thuppakki",
+      "naduvula konjam pakkatha kaanom",
+      "kalyana samayal saadham",
+      "kaththi",
+      "kaaka muttai",
+      "i (2015)",
+      "irudhi suttru",
+      "24 (2016)",
+      "aruvi",
+      "vikram vedha",
+      "mersal",
+      "pyaar prema kaadhal",
+      "kolamaavu kokila",
+      "peranbu",
+      "petta",
+      "viswasam",
+      "master (2021)",
+      "doctor",
+      "maanaadu",
+      "love today",
+      "thiruchitrambalam",
+      "leo",
+      "por thozhil",
+      "good night",
+      "ayalaan",
+      "captain miller",
+      "garudan",
+      "raayan",
+      "vaazhai",
+      "kottukkaali",
+      "lubber pandhu",
+      "amaran",
+      "gundamma katha",
+      "missamma",
+      "pathala bhairavi",
+      "devadasu (1953)",
+      "mooga manasulu",
+      "maro charitra",
+      "siri siri muvva",
+      "subhalekha",
+      "khaidi",
+      "anveshana",
+      "chantabbai",
+      "rudraveena",
+      "aakhari poratam",
+      "geethanjali (1989)",
+      "siva",
+      "jagadeka veerudu athiloka sundari",
+      "kshana kshanam",
+      "aditya 369",
+      "money (1993)",
+      "gaayam",
+      "aha naa pellanta",
+      "appula appa rao",
+      "jambalakidi pamba",
+      "sindhooram",
+      "tholi prema",
+      "kushi",
+      "manasantha nuvve",
+      "nuvvu nenu",
+      "jayam",
+      "okkadu",
+      "simhadri",
+      "varsham",
+      "arya",
+      "chatrapathi",
+      "anukokunda oka roju",
+      "bommarillu",
+      "happy days",
+      "gamyam",
+      "arundhati",
+      "kick (2009)",
+      "prasthanam",
+      "vedam",
+      "leader",
+      "dookudu",
+      "ala modalaindi",
+      "gabbar singh",
+      "julayi",
+      "seethamma vakitlo sirimalle chettu",
+      "attarintiki daredi",
+      "1: nenokkadine",
+      "race gurram",
+      "manam",
+      "srimanthudu",
+      "bhale bhale magadivoy",
+      "kshanam",
+      "oopiri",
+      "fidaa",
+      "goodachari",
+      "awe!",
+      "brochevarevarura",
+      "ala vaikunthapurramuloo",
+      "sarileru neekevvaru",
+      "jathi ratnalu",
+      "love story (2021)",
+      "dj tillu",
+      "tillu square",
+      "bimbisara",
+      "karthikeya 2",
+      "dasara",
+      "virupaksha",
+      "miss shetty mr polishetty",
+      "mad (2023)",
+      "mangalavaaram",
+      "guntur kaaram",
+      "gaami",
+      "saripodhaa sanivaaram",
+      "committee kurrollu",
       "manjummel boys",
       "aavesham",
       "premalu",
