@@ -2598,8 +2598,2805 @@ Odd Taxi|2021|87
       ["Class", "Sci-Fi", 6.6, 2016, 1],
       ["Star Trek: Enterprise", "Sci-Fi", 7.5, 2001, 1]
     ];
-    const baseMovies = dedupeList([...rawMoviesCore, ...rawMoviesExpanded, ...rawMoviesMore, ...extraMovieSeeds]);
-    const baseShows = dedupeList([...rawShowsCore, ...rawShowsExpanded, ...rawShowsMore, ...extraShowSeeds]);
+    const expandedMovieVault = [
+  [
+    "Oppenheimer",
+    "Drama",
+    8.9,
+    2023,
+    1
+  ],
+  [
+    "Dune: Part Two",
+    "Sci-Fi",
+    8.5,
+    2024,
+    1
+  ],
+  [
+    "Barbie",
+    "Comedy",
+    6.8,
+    2023,
+    1
+  ],
+  [
+    "Poor Things",
+    "Comedy",
+    7.9,
+    2023,
+    1
+  ],
+  [
+    "Past Lives",
+    "Romance",
+    7.8,
+    2023,
+    1
+  ],
+  [
+    "The Zone of Interest",
+    "War",
+    7.4,
+    2023,
+    1
+  ],
+  [
+    "Anatomy of a Fall",
+    "Thriller",
+    7.7,
+    2023,
+    1
+  ],
+  [
+    "Killers of the Flower Moon",
+    "Crime",
+    7.6,
+    2023,
+    1
+  ],
+  [
+    "The Holdovers",
+    "Comedy",
+    7.9,
+    2023,
+    1
+  ],
+  [
+    "Spider-Man: Across the Spider-Verse",
+    "Animation",
+    8.6,
+    2023,
+    1
+  ],
+  [
+    "Godzilla Minus One",
+    "Sci-Fi",
+    8.3,
+    2023,
+    1
+  ],
+  [
+    "The Boy and the Heron",
+    "Animation",
+    7.5,
+    2023,
+    1
+  ],
+  [
+    "Perfect Days",
+    "Drama",
+    7.9,
+    2023,
+    1
+  ],
+  [
+    "Monster (2023)",
+    "Drama",
+    7.9,
+    2023,
+    1
+  ],
+  [
+    "Society of the Snow",
+    "Drama",
+    7.8,
+    2023,
+    1
+  ],
+  [
+    "All of Us Strangers",
+    "Drama",
+    7.6,
+    2023,
+    1
+  ],
+  [
+    "May December",
+    "Drama",
+    6.8,
+    2023,
+    1
+  ],
+  [
+    "Saltburn",
+    "Thriller",
+    7,
+    2023,
+    1
+  ],
+  [
+    "Iron Claw",
+    "Drama",
+    7.6,
+    2023,
+    1
+  ],
+  [
+    "American Fiction",
+    "Comedy",
+    7.5,
+    2023,
+    1
+  ],
+  [
+    "BlackBerry",
+    "Comedy",
+    7.4,
+    2023,
+    1
+  ],
+  [
+    "Late Night with the Devil",
+    "Horror",
+    7,
+    2024,
+    1
+  ],
+  [
+    "Love Lies Bleeding",
+    "Thriller",
+    6.6,
+    2024,
+    1
+  ],
+  [
+    "Monkey Man",
+    "Action",
+    6.9,
+    2024,
+    1
+  ],
+  [
+    "Hit Man",
+    "Comedy",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "Kneecap",
+    "Comedy",
+    7.7,
+    2024,
+    1
+  ],
+  [
+    "Sing Sing",
+    "Drama",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Flow",
+    "Animation",
+    8.1,
+    2024,
+    1
+  ],
+  [
+    "Memoir of a Snail",
+    "Animation",
+    7.9,
+    2024,
+    1
+  ],
+  [
+    "I'm Still Here",
+    "Drama",
+    8.1,
+    2024,
+    1
+  ],
+  [
+    "Emilia Perez",
+    "Crime",
+    7,
+    2024,
+    1
+  ],
+  [
+    "The Brutalist",
+    "Drama",
+    7.9,
+    2024,
+    1
+  ],
+  [
+    "The Seed of the Sacred Fig",
+    "Drama",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "All We Imagine as Light",
+    "Drama",
+    7.6,
+    2024,
+    1
+  ],
+  [
+    "Manjummel Boys",
+    "Thriller",
+    8.4,
+    2024,
+    1
+  ],
+  [
+    "Aavesham",
+    "Comedy",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Premalu",
+    "Romance",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Kumbalangi Nights",
+    "Drama",
+    8.5,
+    2019,
+    1
+  ],
+  [
+    "Premam",
+    "Romance",
+    8.3,
+    2015,
+    1
+  ],
+  [
+    "Bangalore Days",
+    "Drama",
+    8.3,
+    2014,
+    1
+  ],
+  [
+    "Drishyam (Malayalam)",
+    "Thriller",
+    8.3,
+    2013,
+    1
+  ],
+  [
+    "Drishyam 2 (Malayalam)",
+    "Thriller",
+    8.4,
+    2021,
+    1
+  ],
+  [
+    "Lucifer (Malayalam)",
+    "Action",
+    7.5,
+    2019,
+    1
+  ],
+  [
+    "Ustad Hotel",
+    "Drama",
+    8.2,
+    2012,
+    1
+  ],
+  [
+    "Minnal Murali",
+    "Action",
+    7.8,
+    2021,
+    1
+  ],
+  [
+    "Angamaly Diaries",
+    "Crime",
+    7.9,
+    2017,
+    1
+  ],
+  [
+    "Ee.Ma.Yau.",
+    "Drama",
+    8.2,
+    2018,
+    1
+  ],
+  [
+    "Virus",
+    "Thriller",
+    7.8,
+    2019,
+    1
+  ],
+  [
+    "Ayyappanum Koshiyum",
+    "Action",
+    8,
+    2020,
+    1
+  ],
+  [
+    "Nayattu",
+    "Thriller",
+    8.1,
+    2021,
+    1
+  ],
+  [
+    "Iratta",
+    "Crime",
+    7.7,
+    2023,
+    1
+  ],
+  [
+    "Kaathal - The Core",
+    "Drama",
+    8,
+    2023,
+    1
+  ],
+  [
+    "Kannur Squad",
+    "Crime",
+    7.6,
+    2023,
+    1
+  ],
+  [
+    "Nanpakal Nerathu Mayakkam",
+    "Drama",
+    7.7,
+    2022,
+    1
+  ],
+  [
+    "Rorschach",
+    "Thriller",
+    7.1,
+    2022,
+    1
+  ],
+  [
+    "Nna Thaan Case Kodu",
+    "Comedy",
+    7.7,
+    2022,
+    1
+  ],
+  [
+    "Hridayam",
+    "Romance",
+    8,
+    2022,
+    1
+  ],
+  [
+    "Chithha",
+    "Drama",
+    8.2,
+    2023,
+    1
+  ],
+  [
+    "Super Deluxe",
+    "Thriller",
+    8.3,
+    2019,
+    1
+  ],
+  [
+    "Vikram",
+    "Action",
+    8.3,
+    2022,
+    1
+  ],
+  [
+    "Kaithi",
+    "Action",
+    8.4,
+    2019,
+    1
+  ],
+  [
+    "Vikram Vedha (Tamil)",
+    "Action",
+    8.2,
+    2017,
+    1
+  ],
+  [
+    "Pariyerum Perumal",
+    "Drama",
+    8.7,
+    2018,
+    1
+  ],
+  [
+    "Karnan",
+    "Drama",
+    8,
+    2021,
+    1
+  ],
+  [
+    "Asuran",
+    "Action",
+    8.4,
+    2019,
+    1
+  ],
+  [
+    "Jai Bhim",
+    "Drama",
+    8.8,
+    2021,
+    1
+  ],
+  [
+    "Soorarai Pottru",
+    "Drama",
+    8.7,
+    2020,
+    1
+  ],
+  [
+    "Mahaaraaja",
+    "Thriller",
+    8.5,
+    2024,
+    1
+  ],
+  [
+    "Jailer",
+    "Action",
+    7.1,
+    2023,
+    1
+  ],
+  [
+    "Ponniyin Selvan: Part I",
+    "Fantasy",
+    7.6,
+    2022,
+    1
+  ],
+  [
+    "Ponniyin Selvan: Part II",
+    "Fantasy",
+    7.3,
+    2023,
+    1
+  ],
+  [
+    "96",
+    "Romance",
+    8.5,
+    2018,
+    1
+  ],
+  [
+    "Ratsasan",
+    "Thriller",
+    8.3,
+    2018,
+    1
+  ],
+  [
+    "Theeran Adhigaaram Ondru",
+    "Crime",
+    8.2,
+    2017,
+    1
+  ],
+  [
+    "Maanagaram",
+    "Thriller",
+    8.1,
+    2017,
+    1
+  ],
+  [
+    "Thani Oruvan",
+    "Action",
+    8.4,
+    2015,
+    1
+  ],
+  [
+    "Anbe Sivam",
+    "Drama",
+    8.6,
+    2003,
+    1
+  ],
+  [
+    "Nayakan",
+    "Crime",
+    8.7,
+    1987,
+    1
+  ],
+  [
+    "Thalapathi",
+    "Crime",
+    8.5,
+    1991,
+    1
+  ],
+  [
+    "Baashha",
+    "Action",
+    8.3,
+    1995,
+    1
+  ],
+  [
+    "Hey Ram",
+    "Drama",
+    8,
+    2000,
+    1
+  ],
+  [
+    "Kattradhu Thamizh",
+    "Drama",
+    8.4,
+    2007,
+    1
+  ],
+  [
+    "Pithamagan",
+    "Drama",
+    8.3,
+    2003,
+    1
+  ],
+  [
+    "Gargi",
+    "Drama",
+    8.1,
+    2022,
+    1
+  ],
+  [
+    "Kadaisi Vivasayi",
+    "Drama",
+    8.6,
+    2021,
+    1
+  ],
+  [
+    "Jigarthanda DoubleX",
+    "Action",
+    7.9,
+    2023,
+    1
+  ],
+  [
+    "Viduthalai Part 1",
+    "Crime",
+    8.2,
+    2023,
+    1
+  ],
+  [
+    "Lover",
+    "Romance",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Hanu-Man",
+    "Action",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Kalki 2898 AD",
+    "Sci-Fi",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "Devara: Part 1",
+    "Action",
+    6.4,
+    2024,
+    1
+  ],
+  [
+    "Pushpa: The Rise",
+    "Action",
+    7.6,
+    2021,
+    1
+  ],
+  [
+    "Pushpa 2: The Rule",
+    "Action",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "Salaar: Part 1 - Ceasefire",
+    "Action",
+    6.5,
+    2023,
+    1
+  ],
+  [
+    "Sita Ramam",
+    "Romance",
+    8.5,
+    2022,
+    1
+  ],
+  [
+    "Major",
+    "Action",
+    8.1,
+    2022,
+    1
+  ],
+  [
+    "Jersey",
+    "Drama",
+    8.5,
+    2019,
+    1
+  ],
+  [
+    "Mahanati",
+    "Drama",
+    8.4,
+    2018,
+    1
+  ],
+  [
+    "Rangasthalam",
+    "Action",
+    8.2,
+    2018,
+    1
+  ],
+  [
+    "Arjun Reddy",
+    "Drama",
+    7.9,
+    2017,
+    1
+  ],
+  [
+    "Eega",
+    "Fantasy",
+    7.7,
+    2012,
+    1
+  ],
+  [
+    "Magadheera",
+    "Fantasy",
+    7.7,
+    2009,
+    1
+  ],
+  [
+    "Athadu",
+    "Action",
+    8.2,
+    2005,
+    1
+  ],
+  [
+    "Pokiri",
+    "Action",
+    8,
+    2006,
+    1
+  ],
+  [
+    "Mayabazar",
+    "Fantasy",
+    9.1,
+    1957,
+    1
+  ],
+  [
+    "Sankarabharanam",
+    "Drama",
+    8.8,
+    1980,
+    1
+  ],
+  [
+    "Sagara Sangamam",
+    "Drama",
+    8.8,
+    1983,
+    1
+  ],
+  [
+    "Swathi Muthyam",
+    "Drama",
+    8.7,
+    1986,
+    1
+  ],
+  [
+    "Geetha Govindam",
+    "Romance",
+    7.7,
+    2018,
+    1
+  ],
+  [
+    "Mathu Vadalara",
+    "Comedy",
+    8.2,
+    2019,
+    1
+  ],
+  [
+    "Balagam",
+    "Drama",
+    8.1,
+    2023,
+    1
+  ],
+  [
+    "Hi Nanna",
+    "Drama",
+    8.2,
+    2023,
+    1
+  ],
+  [
+    "Keedaa Cola",
+    "Comedy",
+    7,
+    2023,
+    1
+  ],
+  [
+    "Kantara",
+    "Action",
+    8.2,
+    2022,
+    1
+  ],
+  [
+    "KGF: Chapter 1",
+    "Action",
+    8.2,
+    2018,
+    1
+  ],
+  [
+    "KGF: Chapter 2",
+    "Action",
+    8.3,
+    2022,
+    1
+  ],
+  [
+    "Sapta Sagaradaache Ello - Side A",
+    "Romance",
+    8.3,
+    2023,
+    1
+  ],
+  [
+    "Sapta Sagaradaache Ello - Side B",
+    "Romance",
+    8,
+    2023,
+    1
+  ],
+  [
+    "Kavaludaari",
+    "Crime",
+    7.9,
+    2019,
+    1
+  ],
+  [
+    "Bell Bottom",
+    "Comedy",
+    8.1,
+    2019,
+    1
+  ],
+  [
+    "Dia",
+    "Romance",
+    8.1,
+    2020,
+    1
+  ],
+  [
+    "Love Mocktail",
+    "Romance",
+    8.1,
+    2020,
+    1
+  ],
+  [
+    "Blink",
+    "Sci-Fi",
+    8.2,
+    2024,
+    1
+  ],
+  [
+    "Shakhahaari",
+    "Thriller",
+    8,
+    2024,
+    1
+  ],
+  [
+    "12th Fail",
+    "Drama",
+    8.8,
+    2023,
+    1
+  ],
+  [
+    "Animal",
+    "Action",
+    6.1,
+    2023,
+    1
+  ],
+  [
+    "Jawan",
+    "Action",
+    6.9,
+    2023,
+    1
+  ],
+  [
+    "Pathaan",
+    "Action",
+    5.9,
+    2023,
+    1
+  ],
+  [
+    "Dunki",
+    "Comedy",
+    6.6,
+    2023,
+    1
+  ],
+  [
+    "Stree 2",
+    "Comedy",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "Stree",
+    "Comedy",
+    7.5,
+    2018,
+    1
+  ],
+  [
+    "Bhediya",
+    "Comedy",
+    6.7,
+    2022,
+    1
+  ],
+  [
+    "Munjya",
+    "Horror",
+    6.9,
+    2024,
+    1
+  ],
+  [
+    "Kill",
+    "Action",
+    7.6,
+    2024,
+    1
+  ],
+  [
+    "Madgaon Express",
+    "Comedy",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Laapataa Ladies",
+    "Comedy",
+    8.4,
+    2024,
+    1
+  ],
+  [
+    "Chandu Champion",
+    "Drama",
+    8,
+    2024,
+    1
+  ],
+  [
+    "Sector 36",
+    "Crime",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Merry Christmas",
+    "Thriller",
+    6.9,
+    2024,
+    1
+  ],
+  [
+    "Article 370",
+    "Thriller",
+    7.9,
+    2024,
+    1
+  ],
+  [
+    "Shaitaan",
+    "Horror",
+    6.6,
+    2024,
+    1
+  ],
+  [
+    "Sam Bahadur",
+    "Drama",
+    7.8,
+    2023,
+    1
+  ],
+  [
+    "OMG 2",
+    "Comedy",
+    7.5,
+    2023,
+    1
+  ],
+  [
+    "Rocky Aur Rani Kii Prem Kahaani",
+    "Romance",
+    6.7,
+    2023,
+    1
+  ],
+  [
+    "Bhakshak",
+    "Crime",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Do Patti",
+    "Thriller",
+    6.1,
+    2024,
+    1
+  ],
+  [
+    "Amar Singh Chamkila",
+    "Drama",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Joram",
+    "Thriller",
+    7.2,
+    2023,
+    1
+  ],
+  [
+    "Bheed",
+    "Drama",
+    7.2,
+    2023,
+    1
+  ],
+  [
+    "Faraaz",
+    "Thriller",
+    7,
+    2023,
+    1
+  ],
+  [
+    "Iwanttothankyou",
+    "Drama",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "The Sabarmati Report",
+    "Drama",
+    7,
+    2024,
+    1
+  ],
+  [
+    "Bhool Bhulaiyaa 3",
+    "Comedy",
+    5.8,
+    2024,
+    1
+  ],
+  [
+    "Singham Again",
+    "Action",
+    5.4,
+    2024,
+    1
+  ],
+  [
+    "Decision to Leave",
+    "Mystery",
+    7.3,
+    2022,
+    1
+  ],
+  [
+    "Drive My Car",
+    "Drama",
+    7.6,
+    2021,
+    1
+  ],
+  [
+    "Burning",
+    "Mystery",
+    7.5,
+    2018,
+    1
+  ],
+  [
+    "The Handmaiden",
+    "Thriller",
+    8.1,
+    2016,
+    1
+  ],
+  [
+    "Shoplifters",
+    "Drama",
+    7.9,
+    2018,
+    1
+  ],
+  [
+    "Suzume",
+    "Animation",
+    7.6,
+    2022,
+    1
+  ],
+  [
+    "Weathering with You",
+    "Animation",
+    7.5,
+    2019,
+    1
+  ],
+  [
+    "The Tale of the Princess Kaguya",
+    "Animation",
+    8,
+    2013,
+    1
+  ],
+  [
+    "The Wind Rises",
+    "Animation",
+    7.7,
+    2013,
+    1
+  ],
+  [
+    "The Wailing",
+    "Horror",
+    7.4,
+    2016,
+    1
+  ],
+  [
+    "Train to Busan",
+    "Horror",
+    7.6,
+    2016,
+    1
+  ],
+  [
+    "I Saw the Devil",
+    "Thriller",
+    7.8,
+    2010,
+    1
+  ],
+  [
+    "The Chaser",
+    "Thriller",
+    7.8,
+    2008,
+    1
+  ],
+  [
+    "Mother (2009)",
+    "Crime",
+    7.8,
+    2009,
+    1
+  ],
+  [
+    "Joint Security Area",
+    "War",
+    7.7,
+    2000,
+    1
+  ],
+  [
+    "A Taxi Driver",
+    "Drama",
+    7.9,
+    2017,
+    1
+  ],
+  [
+    "Poetry",
+    "Drama",
+    7.8,
+    2010,
+    1
+  ],
+  [
+    "Secret Sunshine",
+    "Drama",
+    7.4,
+    2007,
+    1
+  ],
+  [
+    "Peppermint Candy",
+    "Drama",
+    7.8,
+    1999,
+    1
+  ],
+  [
+    "A Bittersweet Life",
+    "Action",
+    7.5,
+    2005,
+    1
+  ],
+  [
+    "The Man from Nowhere",
+    "Action",
+    7.7,
+    2010,
+    1
+  ],
+  [
+    "New World",
+    "Crime",
+    7.5,
+    2013,
+    1
+  ],
+  [
+    "1987: When the Day Comes",
+    "Drama",
+    7.8,
+    2017,
+    1
+  ],
+  [
+    "Exhuma",
+    "Horror",
+    7,
+    2024,
+    1
+  ],
+  [
+    "Pastoral: To Die in the Country",
+    "Drama",
+    7.7,
+    1974,
+    1
+  ],
+  [
+    "Harakiri",
+    "Action",
+    8.6,
+    1962,
+    1
+  ],
+  [
+    "High and Low",
+    "Crime",
+    8.4,
+    1963,
+    1
+  ],
+  [
+    "Ran",
+    "War",
+    8.2,
+    1985,
+    1
+  ],
+  [
+    "Cure",
+    "Horror",
+    7.5,
+    1997,
+    1
+  ],
+  [
+    "Audition",
+    "Horror",
+    7.1,
+    1999,
+    1
+  ],
+  [
+    "Love Letter",
+    "Romance",
+    7.9,
+    1995,
+    1
+  ],
+  [
+    "All About Lily Chou-Chou",
+    "Drama",
+    7.5,
+    2001,
+    1
+  ],
+  [
+    "Like Father, Like Son",
+    "Drama",
+    7.9,
+    2013,
+    1
+  ],
+  [
+    "Still Walking",
+    "Drama",
+    7.9,
+    2008,
+    1
+  ],
+  [
+    "Nobody Knows",
+    "Drama",
+    8,
+    2004,
+    1
+  ],
+  [
+    "Our Little Sister",
+    "Drama",
+    7.5,
+    2015,
+    1
+  ],
+  [
+    "After Life",
+    "Fantasy",
+    7.6,
+    1998,
+    1
+  ],
+  [
+    "A Scene at the Sea",
+    "Romance",
+    7.4,
+    1991,
+    1
+  ],
+  [
+    "Sonatine",
+    "Crime",
+    7.5,
+    1993,
+    1
+  ],
+  [
+    "Hana-bi",
+    "Crime",
+    7.7,
+    1997,
+    1
+  ],
+  [
+    "An Elephant Sitting Still",
+    "Drama",
+    7.8,
+    2018,
+    1
+  ],
+  [
+    "Kaili Blues",
+    "Drama",
+    7.2,
+    2015,
+    1
+  ],
+  [
+    "Long Day's Journey Into Night",
+    "Mystery",
+    7.1,
+    2018,
+    1
+  ],
+  [
+    "A Touch of Sin",
+    "Drama",
+    7.1,
+    2013,
+    1
+  ],
+  [
+    "Still Life (2006)",
+    "Drama",
+    7.3,
+    2006,
+    1
+  ],
+  [
+    "Platform",
+    "Drama",
+    7.5,
+    2000,
+    1
+  ],
+  [
+    "Raise the Red Lantern",
+    "Drama",
+    8.1,
+    1991,
+    1
+  ],
+  [
+    "To Live",
+    "Drama",
+    8.3,
+    1994,
+    1
+  ],
+  [
+    "Ju Dou",
+    "Drama",
+    7.6,
+    1990,
+    1
+  ],
+  [
+    "Hero",
+    "Action",
+    7.9,
+    2002,
+    1
+  ],
+  [
+    "House of Flying Daggers",
+    "Action",
+    7.5,
+    2004,
+    1
+  ],
+  [
+    "Crouching Tiger, Hidden Dragon",
+    "Action",
+    7.9,
+    2000,
+    1
+  ],
+  [
+    "Lust, Caution",
+    "Romance",
+    7.5,
+    2007,
+    1
+  ],
+  [
+    "Eat Drink Man Woman",
+    "Comedy",
+    7.8,
+    1994,
+    1
+  ],
+  [
+    "The Wedding Banquet",
+    "Comedy",
+    7.6,
+    1993,
+    1
+  ],
+  [
+    "Rebels of the Neon God",
+    "Drama",
+    7.6,
+    1992,
+    1
+  ],
+  [
+    "Vive L'Amour",
+    "Drama",
+    7.4,
+    1994,
+    1
+  ],
+  [
+    "The Hole",
+    "Drama",
+    7.4,
+    1998,
+    1
+  ],
+  [
+    "Goodbye, Dragon Inn",
+    "Drama",
+    7.1,
+    2003,
+    1
+  ],
+  [
+    "A Sun",
+    "Drama",
+    7.6,
+    2019,
+    1
+  ],
+  [
+    "God of Cookery",
+    "Comedy",
+    7.3,
+    1996,
+    1
+  ],
+  [
+    "Kung Fu Hustle",
+    "Comedy",
+    7.7,
+    2004,
+    1
+  ],
+  [
+    "Shaolin Soccer",
+    "Comedy",
+    7.3,
+    2001,
+    1
+  ],
+  [
+    "Hard Boiled",
+    "Action",
+    7.7,
+    1992,
+    1
+  ],
+  [
+    "The Killer",
+    "Action",
+    7.8,
+    1989,
+    1
+  ],
+  [
+    "A Better Tomorrow",
+    "Action",
+    7.4,
+    1986,
+    1
+  ],
+  [
+    "Police Story",
+    "Action",
+    7.5,
+    1985,
+    1
+  ],
+  [
+    "Drunken Master II",
+    "Action",
+    7.5,
+    1994,
+    1
+  ],
+  [
+    "Fallen Angels",
+    "Crime",
+    7.7,
+    1995,
+    1
+  ],
+  [
+    "Happy Together",
+    "Romance",
+    7.7,
+    1997,
+    1
+  ],
+  [
+    "2046",
+    "Drama",
+    7.4,
+    2004,
+    1
+  ],
+  [
+    "Days of Being Wild",
+    "Drama",
+    7.5,
+    1990,
+    1
+  ],
+  [
+    "La Chimera",
+    "Comedy",
+    7.3,
+    2023,
+    1
+  ],
+  [
+    "Tori and Lokita",
+    "Drama",
+    7.2,
+    2022,
+    1
+  ],
+  [
+    "EO",
+    "Drama",
+    6.7,
+    2022,
+    1
+  ],
+  [
+    "Close",
+    "Drama",
+    7.8,
+    2022,
+    1
+  ],
+  [
+    "The Worst Person in the World",
+    "Romance",
+    7.8,
+    2021,
+    1
+  ],
+  [
+    "Another Round",
+    "Comedy",
+    7.7,
+    2020,
+    1
+  ],
+  [
+    "Titane",
+    "Horror",
+    6.5,
+    2021,
+    1
+  ],
+  [
+    "Raw",
+    "Horror",
+    7,
+    2016,
+    1
+  ],
+  [
+    "Portrait of a Lady on Fire",
+    "Romance",
+    8.1,
+    2019,
+    1
+  ],
+  [
+    "Cold War",
+    "Romance",
+    7.5,
+    2018,
+    1
+  ],
+  [
+    "Ida",
+    "Drama",
+    7.4,
+    2013,
+    1
+  ],
+  [
+    "The Great Beauty",
+    "Drama",
+    7.7,
+    2013,
+    1
+  ],
+  [
+    "Youth",
+    "Drama",
+    7.3,
+    2015,
+    1
+  ],
+  [
+    "Hand of God",
+    "Drama",
+    7.3,
+    2021,
+    1
+  ],
+  [
+    "The Square",
+    "Comedy",
+    7.1,
+    2017,
+    1
+  ],
+  [
+    "Triangle of Sadness",
+    "Comedy",
+    7.3,
+    2022,
+    1
+  ],
+  [
+    "Force Majeure",
+    "Comedy",
+    7.2,
+    2014,
+    1
+  ],
+  [
+    "Climax",
+    "Horror",
+    6.9,
+    2018,
+    1
+  ],
+  [
+    "Enter the Void",
+    "Fantasy",
+    7.2,
+    2009,
+    1
+  ],
+  [
+    "Irreversible",
+    "Crime",
+    7.3,
+    2002,
+    1
+  ],
+  [
+    "Holy Motors",
+    "Fantasy",
+    7,
+    2012,
+    1
+  ],
+  [
+    "Blue Is the Warmest Colour",
+    "Romance",
+    7.7,
+    2013,
+    1
+  ],
+  [
+    "Amour",
+    "Drama",
+    7.9,
+    2012,
+    1
+  ],
+  [
+    "The White Ribbon",
+    "Mystery",
+    7.8,
+    2009,
+    1
+  ],
+  [
+    "Cache",
+    "Thriller",
+    7.3,
+    2005,
+    1
+  ],
+  [
+    "Funny Games (1997)",
+    "Horror",
+    7.5,
+    1997,
+    1
+  ],
+  [
+    "The Piano Teacher",
+    "Drama",
+    7.5,
+    2001,
+    1
+  ],
+  [
+    "Melancholia",
+    "Sci-Fi",
+    7.1,
+    2011,
+    1
+  ],
+  [
+    "Dogville",
+    "Drama",
+    8,
+    2003,
+    1
+  ],
+  [
+    "Dancer in the Dark",
+    "Drama",
+    7.9,
+    2000,
+    1
+  ],
+  [
+    "Breaking the Waves",
+    "Drama",
+    7.8,
+    1996,
+    1
+  ],
+  [
+    "The House That Jack Built",
+    "Horror",
+    6.8,
+    2018,
+    1
+  ],
+  [
+    "Stalker",
+    "Sci-Fi",
+    8.1,
+    1979,
+    1
+  ],
+  [
+    "Solaris (1972)",
+    "Sci-Fi",
+    8,
+    1972,
+    1
+  ],
+  [
+    "Mirror",
+    "Drama",
+    8,
+    1975,
+    1
+  ],
+  [
+    "Andrei Rublev",
+    "Drama",
+    8.1,
+    1966,
+    1
+  ],
+  [
+    "Ivan's Childhood",
+    "War",
+    8,
+    1962,
+    1
+  ],
+  [
+    "Come and See",
+    "War",
+    8.4,
+    1985,
+    1
+  ],
+  [
+    "The Cranes Are Flying",
+    "War",
+    8.3,
+    1957,
+    1
+  ],
+  [
+    "Ballad of a Soldier",
+    "War",
+    8.2,
+    1959,
+    1
+  ],
+  [
+    "Leviathan (2014)",
+    "Drama",
+    7.6,
+    2014,
+    1
+  ],
+  [
+    "Loveless",
+    "Drama",
+    7.6,
+    2017,
+    1
+  ],
+  [
+    "The Return (2003)",
+    "Drama",
+    7.9,
+    2003,
+    1
+  ],
+  [
+    "Cinema Paradiso",
+    "Drama",
+    8.5,
+    1988,
+    1
+  ],
+  [
+    "La Dolce Vita",
+    "Comedy",
+    8,
+    1960,
+    1
+  ],
+  [
+    "8 1/2",
+    "Drama",
+    8,
+    1963,
+    1
+  ],
+  [
+    "Bicycle Thieves",
+    "Drama",
+    8.3,
+    1948,
+    1
+  ],
+  [
+    "Umberto D.",
+    "Drama",
+    8.2,
+    1952,
+    1
+  ],
+  [
+    "L'Avventura",
+    "Mystery",
+    7.8,
+    1960,
+    1
+  ],
+  [
+    "Blow-Up",
+    "Mystery",
+    7.5,
+    1966,
+    1
+  ],
+  [
+    "The Conformist",
+    "Drama",
+    7.9,
+    1970,
+    1
+  ],
+  [
+    "Suspiria (1977)",
+    "Horror",
+    7.3,
+    1977,
+    1
+  ],
+  [
+    "Deep Red",
+    "Horror",
+    7.5,
+    1975,
+    1
+  ],
+  [
+    "The Secret in Their Eyes",
+    "Mystery",
+    8.2,
+    2009,
+    1
+  ],
+  [
+    "Wild Tales",
+    "Comedy",
+    8.1,
+    2014,
+    1
+  ],
+  [
+    "Nine Queens",
+    "Crime",
+    7.9,
+    2000,
+    1
+  ],
+  [
+    "City of God",
+    "Crime",
+    8.6,
+    2002,
+    1
+  ],
+  [
+    "Central Station",
+    "Drama",
+    8,
+    1998,
+    1
+  ],
+  [
+    "Elite Squad",
+    "Action",
+    8,
+    2007,
+    1
+  ],
+  [
+    "Elite Squad: The Enemy Within",
+    "Action",
+    8,
+    2010,
+    1
+  ],
+  [
+    "Bacurau",
+    "Mystery",
+    7.3,
+    2019,
+    1
+  ],
+  [
+    "Roma",
+    "Drama",
+    7.7,
+    2018,
+    1
+  ],
+  [
+    "Pan's Labyrinth",
+    "Fantasy",
+    8.2,
+    2006,
+    1
+  ],
+  [
+    "The Devil's Backbone",
+    "Horror",
+    7.4,
+    2001,
+    1
+  ],
+  [
+    "Cronos",
+    "Horror",
+    6.7,
+    1993,
+    1
+  ],
+  [
+    "Amores Perros",
+    "Drama",
+    8.1,
+    2000,
+    1
+  ],
+  [
+    "21 Grams",
+    "Drama",
+    7.6,
+    2003,
+    1
+  ],
+  [
+    "Babel",
+    "Drama",
+    7.5,
+    2006,
+    1
+  ],
+  [
+    "Biutiful",
+    "Drama",
+    7.5,
+    2010,
+    1
+  ],
+  [
+    "Birdman",
+    "Comedy",
+    7.7,
+    2014,
+    1
+  ],
+  [
+    "The Revenant",
+    "Western",
+    8,
+    2015,
+    1
+  ],
+  [
+    "Y Tu Mama Tambien",
+    "Drama",
+    7.7,
+    2001,
+    1
+  ],
+  [
+    "Children of Men",
+    "Sci-Fi",
+    7.9,
+    2006,
+    1
+  ],
+  [
+    "Gravity",
+    "Sci-Fi",
+    7.7,
+    2013,
+    1
+  ]
+];
+    const expandedShowVault = [
+  [
+    "Shogun",
+    "Drama",
+    8.7,
+    2024,
+    1
+  ],
+  [
+    "The Penguin",
+    "Crime",
+    8.7,
+    2024,
+    1
+  ],
+  [
+    "Fallout",
+    "Sci-Fi",
+    8.4,
+    2024,
+    1
+  ],
+  [
+    "Severance (Season 2)",
+    "Sci-Fi",
+    8.8,
+    2025,
+    1
+  ],
+  [
+    "The Last of Us (Season 2)",
+    "Drama",
+    8.8,
+    2025,
+    1
+  ],
+  [
+    "House of the Dragon (Season 2)",
+    "Fantasy",
+    8.4,
+    2024,
+    1
+  ],
+  [
+    "Silo (Season 2)",
+    "Sci-Fi",
+    8.2,
+    2024,
+    1
+  ],
+  [
+    "Slow Horses (Season 4)",
+    "Thriller",
+    8.5,
+    2024,
+    1
+  ],
+  [
+    "Industry",
+    "Drama",
+    7.5,
+    2020,
+    1
+  ],
+  [
+    "Baby Reindeer",
+    "Drama",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Ripley",
+    "Crime",
+    8.1,
+    2024,
+    1
+  ],
+  [
+    "Presumed Innocent",
+    "Crime",
+    7.7,
+    2024,
+    1
+  ],
+  [
+    "The Sympathizer",
+    "Drama",
+    7,
+    2024,
+    1
+  ],
+  [
+    "Sugar",
+    "Mystery",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Tokyo Vice",
+    "Crime",
+    8,
+    2022,
+    1
+  ],
+  [
+    "Bad Sisters",
+    "Comedy",
+    8.3,
+    2022,
+    1
+  ],
+  [
+    "Black Bird",
+    "Crime",
+    8.1,
+    2022,
+    1
+  ],
+  [
+    "Drops of God",
+    "Drama",
+    8,
+    2023,
+    1
+  ],
+  [
+    "Scavengers Reign",
+    "Animation",
+    8.7,
+    2023,
+    1
+  ],
+  [
+    "Pluto",
+    "Animation",
+    8.2,
+    2023,
+    1
+  ],
+  [
+    "Delicious in Dungeon",
+    "Animation",
+    8.6,
+    2024,
+    1
+  ],
+  [
+    "Dan Da Dan",
+    "Animation",
+    8.6,
+    2024,
+    1
+  ],
+  [
+    "Solo Leveling",
+    "Animation",
+    8.4,
+    2024,
+    1
+  ],
+  [
+    "Kaiju No. 8",
+    "Animation",
+    8.1,
+    2024,
+    1
+  ],
+  [
+    "Wind Breaker",
+    "Animation",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Look Back",
+    "Animation",
+    8.2,
+    2024,
+    1
+  ],
+  [
+    "Arcane: Season 2",
+    "Animation",
+    9.1,
+    2024,
+    1
+  ],
+  [
+    "Invincible (Season 2)",
+    "Animation",
+    8.7,
+    2024,
+    1
+  ],
+  [
+    "X-Men '97",
+    "Animation",
+    8.9,
+    2024,
+    1
+  ],
+  [
+    "Batman: Caped Crusader",
+    "Animation",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Creature Commandos",
+    "Animation",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Secret Level",
+    "Animation",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Panchayat (Season 3)",
+    "Comedy",
+    8.9,
+    2024,
+    1
+  ],
+  [
+    "Mirzapur (Season 3)",
+    "Crime",
+    8.4,
+    2024,
+    1
+  ],
+  [
+    "Kota Factory (Season 3)",
+    "Drama",
+    9,
+    2024,
+    1
+  ],
+  [
+    "Gullak (Season 4)",
+    "Comedy",
+    9.1,
+    2024,
+    1
+  ],
+  [
+    "Heeramandi: The Diamond Bazaar",
+    "Drama",
+    6.2,
+    2024,
+    1
+  ],
+  [
+    "The Railway Men",
+    "Drama",
+    8.5,
+    2023,
+    1
+  ],
+  [
+    "Kohrra",
+    "Crime",
+    7.6,
+    2023,
+    1
+  ],
+  [
+    "Jubilee",
+    "Drama",
+    8.4,
+    2023,
+    1
+  ],
+  [
+    "Farzi",
+    "Crime",
+    8.4,
+    2023,
+    1
+  ],
+  [
+    "Dahaad",
+    "Crime",
+    7.6,
+    2023,
+    1
+  ],
+  [
+    "Guns & Gulaabs",
+    "Comedy",
+    7.7,
+    2023,
+    1
+  ],
+  [
+    "Bambai Meri Jaan",
+    "Crime",
+    7.7,
+    2023,
+    1
+  ],
+  [
+    "Kaala Paani",
+    "Thriller",
+    8,
+    2023,
+    1
+  ],
+  [
+    "Rocket Boys",
+    "Drama",
+    8.9,
+    2022,
+    1
+  ],
+  [
+    "Aspirants",
+    "Drama",
+    9.2,
+    2021,
+    1
+  ],
+  [
+    "Sandwiched Forever",
+    "Comedy",
+    8.3,
+    2020,
+    1
+  ],
+  [
+    "Tathastu",
+    "Comedy",
+    8.7,
+    2022,
+    1
+  ],
+  [
+    "Chacha Vidhayak Hain Humare",
+    "Comedy",
+    8,
+    2018,
+    1
+  ],
+  [
+    "Hostel Daze",
+    "Comedy",
+    8.5,
+    2019,
+    1
+  ],
+  [
+    "College Romance",
+    "Comedy",
+    8.4,
+    2018,
+    1
+  ],
+  [
+    "Pitchers",
+    "Drama",
+    9.1,
+    2015,
+    1
+  ],
+  [
+    "Flames",
+    "Romance",
+    8.9,
+    2018,
+    1
+  ],
+  [
+    "Permanent Roommates",
+    "Comedy",
+    8.6,
+    2014,
+    1
+  ],
+  [
+    "Tripling",
+    "Comedy",
+    8.5,
+    2016,
+    1
+  ],
+  [
+    "Yeh Meri Family",
+    "Drama",
+    9,
+    2018,
+    1
+  ],
+  [
+    "Cubicles",
+    "Drama",
+    8.2,
+    2019,
+    1
+  ],
+  [
+    "ImMature",
+    "Comedy",
+    8.7,
+    2019,
+    1
+  ],
+  [
+    "Breathe",
+    "Thriller",
+    8.3,
+    2018,
+    1
+  ],
+  [
+    "Breathe: Into the Shadows",
+    "Thriller",
+    7.6,
+    2020,
+    1
+  ],
+  [
+    "Aarya",
+    "Crime",
+    7.8,
+    2020,
+    1
+  ],
+  [
+    "Criminal Justice",
+    "Crime",
+    8.1,
+    2019,
+    1
+  ],
+  [
+    "Undekhi",
+    "Crime",
+    7.9,
+    2020,
+    1
+  ],
+  [
+    "Tabbar",
+    "Crime",
+    8.1,
+    2021,
+    1
+  ],
+  [
+    "Suzhal - The Vortex",
+    "Crime",
+    8.2,
+    2022,
+    1
+  ],
+  [
+    "Viladhikolam",
+    "Crime",
+    7.9,
+    2022,
+    1
+  ],
+  [
+    "Ayali",
+    "Drama",
+    8.5,
+    2023,
+    1
+  ],
+  [
+    "Inspector Rishi",
+    "Horror",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Poacher",
+    "Crime",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Manvat Murders",
+    "Crime",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "IC 814: The Kandahar Hijack",
+    "Drama",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Tribhuvan Mishra CA Topper",
+    "Comedy",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Killer Soup",
+    "Comedy",
+    6.7,
+    2024,
+    1
+  ],
+  [
+    "Queen of Tears",
+    "Romance",
+    8.2,
+    2024,
+    1
+  ],
+  [
+    "Lovely Runner",
+    "Romance",
+    8.7,
+    2024,
+    1
+  ],
+  [
+    "A Killer Paradox",
+    "Thriller",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "The 8 Show",
+    "Thriller",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Death's Game",
+    "Fantasy",
+    8.5,
+    2023,
+    1
+  ],
+  [
+    "Moving",
+    "Fantasy",
+    8.5,
+    2023,
+    1
+  ],
+  [
+    "Twinkling Watermelon",
+    "Romance",
+    8.9,
+    2023,
+    1
+  ],
+  [
+    "Worst of Evil",
+    "Crime",
+    8.4,
+    2023,
+    1
+  ],
+  [
+    "Daily Dose of Sunshine",
+    "Drama",
+    8.3,
+    2023,
+    1
+  ],
+  [
+    "Castaway Diva",
+    "Drama",
+    7.9,
+    2023,
+    1
+  ],
+  [
+    "Celebrity",
+    "Drama",
+    7.4,
+    2023,
+    1
+  ],
+  [
+    "Bloodhounds",
+    "Action",
+    8.1,
+    2023,
+    1
+  ],
+  [
+    "See You in My 19th Life",
+    "Romance",
+    7.7,
+    2023,
+    1
+  ],
+  [
+    "The Glory (Part 2)",
+    "Drama",
+    8.2,
+    2023,
+    1
+  ],
+  [
+    "Weak Hero Class 1",
+    "Action",
+    8.4,
+    2022,
+    1
+  ],
+  [
+    "Alchemy of Souls",
+    "Fantasy",
+    8.7,
+    2022,
+    1
+  ],
+  [
+    "Our Blues",
+    "Drama",
+    8.6,
+    2022,
+    1
+  ],
+  [
+    "My Liberation Notes",
+    "Drama",
+    8.3,
+    2022,
+    1
+  ],
+  [
+    "Little Women (2022)",
+    "Drama",
+    7.9,
+    2022,
+    1
+  ],
+  [
+    "Business Proposal",
+    "Romance",
+    7.8,
+    2022,
+    1
+  ],
+  [
+    "Twenty-Five Twenty-One",
+    "Romance",
+    8.6,
+    2022,
+    1
+  ],
+  [
+    "Reborn Rich",
+    "Drama",
+    8.1,
+    2022,
+    1
+  ],
+  [
+    "Through the Darkness",
+    "Crime",
+    8,
+    2022,
+    1
+  ],
+  [
+    "D.P.",
+    "Action",
+    8.2,
+    2021,
+    1
+  ],
+  [
+    "Squid Game (Season 2)",
+    "Thriller",
+    8,
+    2024,
+    1
+  ]
+];
+    const baseMovies = dedupeList([...rawMoviesCore, ...rawMoviesExpanded, ...rawMoviesMore, ...extraMovieSeeds, ...expandedMovieVault]);
+    const baseShows = dedupeList([...rawShowsCore, ...rawShowsExpanded, ...rawShowsMore, ...extraShowSeeds, ...expandedShowVault]);
     const newMovies = dedupeAgainst(baseMovies, [...parseCompact(compactMoviesT1, 1), ...parseCompact(compactMoviesT3, 1), ...parseCompact(compactMoviesT2, 0)]);
     const newShows = dedupeAgainst(baseShows, [...parseCompact(compactShowsT1, 1), ...parseCompact(compactShowsT3, 1), ...parseCompact(compactShowsT2, 0)]);
 
@@ -2671,6 +5468,139 @@ Odd Taxi|2021|87
     }
 
     const KNOWN_INDIAN_TITLES_SET = new Set([
+      "manjummel boys",
+      "aavesham",
+      "premalu",
+      "kumbalangi nights",
+      "premam",
+      "bangalore days",
+      "drishyam (malayalam)",
+      "drishyam 2 (malayalam)",
+      "lucifer (malayalam)",
+      "ustad hotel",
+      "minnal murali",
+      "angamaly diaries",
+      "ee.ma.yau.",
+      "virus",
+      "ayyappanum koshiyum",
+      "nayattu",
+      "iratta",
+      "kaathal - the core",
+      "kannur squad",
+      "nanpakal nerathu mayakkam",
+      "rorschach",
+      "nna thaan case kodu",
+      "hridayam",
+      "chithha",
+      "super deluxe",
+      "vikram",
+      "kaithi",
+      "vikram vedha (tamil)",
+      "pariyerum perumal",
+      "karnan",
+      "asuran",
+      "soorarai pottru",
+      "mahaaraaja",
+      "jailer",
+      "ponniyin selvan: part i",
+      "ponniyin selvan: part ii",
+      "96",
+      "ratsasan",
+      "theeran adhigaaram ondru",
+      "maanagaram",
+      "thani oruvan",
+      "anbe sivam",
+      "nayakan",
+      "thalapathi",
+      "baashha",
+      "hey ram",
+      "kattradhu thamizh",
+      "pithamagan",
+      "gargi",
+      "kadaisi vivasayi",
+      "jigarthanda doublex",
+      "viduthalai part 1",
+      "lover",
+      "hanu-man",
+      "devara: part 1",
+      "sita ramam",
+      "major",
+      "jersey",
+      "mahanati",
+      "rangasthalam",
+      "arjun reddy",
+      "eega",
+      "magadheera",
+      "athadu",
+      "pokiri",
+      "mayabazar",
+      "sankarabharanam",
+      "sagara sangamam",
+      "swathi muthyam",
+      "geetha govindam",
+      "mathu vadalara",
+      "balagam",
+      "hi nanna",
+      "keedaa cola",
+      "sapta sagaradaache ello - side a",
+      "sapta sagaradaache ello - side b",
+      "kavaludaari",
+      "bell bottom",
+      "dia",
+      "love mocktail",
+      "blink",
+      "shakhahaari",
+      "stree 2",
+      "stree",
+      "bhediya",
+      "munjya",
+      "kill",
+      "madgaon express",
+      "laapataa ladies",
+      "chandu champion",
+      "sector 36",
+      "merry christmas",
+      "article 370",
+      "shaitaan",
+      "sam bahadur",
+      "omg 2",
+      "rocky aur rani kii prem kahaani",
+      "bhakshak",
+      "do patti",
+      "amar singh chamkila",
+      "joram",
+      "bheed",
+      "faraaz",
+      "the sabarmati report",
+      "bhool bhulaiyaa 3",
+      "singham again",
+      "all we imagine as light",
+      "aspirants",
+      "tathastu",
+      "hostel daze",
+      "college romance",
+      "pitchers",
+      "flames",
+      "permanent roommates",
+      "tripling",
+      "yeh meri family",
+      "cubicles",
+      "immature",
+      "breathe",
+      "breathe: into the shadows",
+      "aarya",
+      "criminal justice",
+      "undekhi",
+      "tabbar",
+      "suzhal - the vortex",
+      "viladhikolam",
+      "ayali",
+      "inspector rishi",
+      "poacher",
+      "manvat murders",
+      "ic 814: the kandahar hijack",
+      "tribhuvan mishra ca topper",
+      "killer soup",
       "3 idiots","dangal","like stars on earth","taare zameen par","my father and my son","rang de basanti",
       "hera pheri","andaz apna apna","munna bhai m.b.b.s.","lage raho munna bhai","sholay","drishyam","drishyam 2",
       "udaan","12th fail","rrr","kantara","kantara: chapter 1","baahubali 2: the conclusion","baahubali: the beginning",
