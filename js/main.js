@@ -1853,7 +1853,7 @@
         badge: 'Top 750 Movies & Shows · HD Stream',
         color: 'from-amber-500/25 to-yellow-500/15 border-amber-400/50 text-amber-200',
         movieTpl: 'https://cinejoy.pk/movie/{tmdb}',
-        tvTpl: 'https://cinejoy.pk/tv/{tmdb}',
+        tvTpl: 'https://cinejoy.pk/series/{tmdb}',
         searchTpl: 'https://cinejoy.pk/search?keyword={q}'
       },
       {
