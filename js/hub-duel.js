@@ -1,4 +1,4 @@
-﻿  // ==========================================
+  // ==========================================
   // FEATURES 1-3: ANIMATED HUB · TASTE DNA CARD · WATCH DUEL
   // ==========================================
   (function () {
@@ -11,6 +11,7 @@
     const pop = it => (it.thumb ? .35 : 0) + .65 * (1 - Math.min(it.rank, 1500) / 1500);
     const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
     const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+    const getLocal = (typeof window !== 'undefined' && window.getLocal) || ((k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } });
 
     // Use global favTitles so Favourites stay synced across cards, modals, backups, and shelves
 

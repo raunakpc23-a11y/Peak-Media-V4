@@ -1,4 +1,4 @@
-﻿    // ==========================================
+    // ==========================================
     // 1. EXPANDED ~2,100 TITLES DATABASE
     // ==========================================
     const rawMoviesCore = [
@@ -9586,6 +9586,13 @@ Odd Taxi|2021|87
     processDataset(combinedShows, tvShows, 'show');
     Object.values(categoryData).forEach(list => list.sort((a, b) => (a.thumb === b.thumb ? 0 : a.thumb ? -1 : 1) || b.rating - a.rating));
 
+    // Expose primary datasets globally for cross-script access (marathon, universes, mood_dial, hub-duel)
+    window.globalDatabase = globalDatabase;
+    window.movies = movies;
+    window.tvShows = tvShows;
+    window.categoryData = categoryData;
+    window.allTitles = allTitles;
+
     // Generates high-contrast bespoke procedural SVG posters with typography
     function generateStylizedPosterDataURI(item) {
       const theme = genreThemes[item.genre] || genreThemes["Drama"];
@@ -9828,6 +9835,7 @@ Odd Taxi|2021|87
         return def;
       }
     };
+    window.getLocal = getLocal;
 
     let wishlistTitles = getLocal('cs_wishlist', ["Inception", "The Dark Knight", "Breaking Bad", "Spirited Away", "Dune: Part Two"]).filter(t => globalDatabase[t]);
     let watchedTitles = getLocal('cs_watched', ["The Shawshank Redemption", "Pulp Fiction", "Interstellar", "Stranger Things"]).filter(t => globalDatabase[t]);
@@ -10114,6 +10122,7 @@ Odd Taxi|2021|87
       } catch (e) {}
 
       const banner = document.getElementById('heroBanner');
+      if (!banner) return;
       banner.style.background = `linear-gradient(115deg, #07090e 0%, ${theme.c1}cc 55%, ${theme.c2}66 100%)`;
 
       banner.innerHTML = `
@@ -10207,6 +10216,7 @@ Odd Taxi|2021|87
 
     function renderMoodPills() {
       const c = document.getElementById('moodPills');
+      if (!c) return;
       c.innerHTML = Object.keys(moods).map(k => `
         <button type="button" onclick="selectMood('${k}')" class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-semibold transition-all border ${activeMood === k ? 'bg-brand-gold text-black border-brand-gold font-bold shadow-sm' : 'bg-white/5 hover:bg-white/10 text-gray-300 border-white/10'}">
           ${k}
@@ -10325,10 +10335,10 @@ Odd Taxi|2021|87
       const showGenres = [...new Set(tvShows.map(s => s.genre))].sort();
 
       const mSel = document.getElementById('filterMoviesGenre');
-      mSel.innerHTML = '<option value="All">All Genres</option>' + movieGenres.map(g => `<option value="${g}">${g}</option>`).join('');
+      if (mSel) mSel.innerHTML = '<option value="All">All Genres</option>' + movieGenres.map(g => `<option value="${g}">${g}</option>`).join('');
 
       const sSel = document.getElementById('filterShowsGenre');
-      sSel.innerHTML = '<option value="All">All Genres</option>' + showGenres.map(g => `<option value="${g}">${g}</option>`).join('');
+      if (sSel) sSel.innerHTML = '<option value="All">All Genres</option>' + showGenres.map(g => `<option value="${g}">${g}</option>`).join('');
     }
 
     
@@ -10366,12 +10376,16 @@ Odd Taxi|2021|87
 
     function filterAndRenderMovies(resetPage = true) {
       if (resetPage) moviesPage = 1;
-      const q = document.getElementById('searchMovies').value.toLowerCase().trim();
-      const g = document.getElementById('filterMoviesGenre').value;
-      const dec = document.getElementById('filterMoviesDecade').value;
+      const qInp = document.getElementById('searchMovies');
+      const q = (qInp ? qInp.value : '').toLowerCase().trim();
+      const gEl = document.getElementById('filterMoviesGenre');
+      const g = gEl ? gEl.value : 'All';
+      const decEl = document.getElementById('filterMoviesDecade');
+      const dec = decEl ? decEl.value : 'All';
       const platEl = document.getElementById('filterMoviesPlatform');
       const plat = platEl ? platEl.value : 'All';
-      const sort = document.getElementById('sortMovies').value;
+      const sortEl = document.getElementById('sortMovies');
+      const sort = sortEl ? sortEl.value : 'rating';
 
       let list = movies.filter(item => {
         if (!matchesGlobalLang(item)) return false;
@@ -10397,13 +10411,16 @@ Odd Taxi|2021|87
       else list.sort((a, b) => b.rating - a.rating);
 
       if (window.tmSort) list = window.tmSort(list);
-      document.getElementById('moviesCountBadge').textContent = list.length.toLocaleString();
+      const cntEl = document.getElementById('moviesCountBadge');
+      if (cntEl) cntEl.textContent = list.length.toLocaleString();
       const container = document.getElementById('moviesResults');
+      if (!container) return;
 
       if (!list.length) {
         container.className = "py-16 text-center text-gray-400";
         container.innerHTML = `<i class="fa-solid fa-film text-4xl text-gray-600 mb-3 block"></i>No movies matched your filter criteria.`;
-        document.getElementById('moviesPagination').innerHTML = '';
+        const pg = document.getElementById('moviesPagination');
+        if (pg) pg.innerHTML = '';
         return;
       }
 
@@ -10417,19 +10434,23 @@ Odd Taxi|2021|87
       renderPagination('moviesPagination', moviesPage, totalPages, (p) => {
         moviesPage = p;
         filterAndRenderMovies(false);
-        document.getElementById('tab-movies').scrollIntoView({ behavior: 'smooth' });
+        const mTab = document.getElementById('tab-movies');
+        if (mTab) mTab.scrollIntoView({ behavior: 'smooth' });
       });
     }
 
     function filterAndRenderShows(resetPage = true) {
       if (resetPage) showsPage = 1;
-      const q = document.getElementById('searchShows').value.toLowerCase().trim();
-      const g = document.getElementById('filterShowsGenre').value;
+      const qInp = document.getElementById('searchShows');
+      const q = (qInp ? qInp.value : '').toLowerCase().trim();
+      const gEl = document.getElementById('filterShowsGenre');
+      const g = gEl ? gEl.value : 'All';
       const decEl = document.getElementById('filterShowsDecade');
       const dec = decEl ? decEl.value : 'All';
       const platEl = document.getElementById('filterShowsPlatform');
       const plat = platEl ? platEl.value : 'All';
-      const sort = document.getElementById('sortShows').value;
+      const sortEl = document.getElementById('sortShows');
+      const sort = sortEl ? sortEl.value : 'rating';
 
       let list = tvShows.filter(item => {
         if (!matchesGlobalLang(item)) return false;
@@ -10450,14 +10471,16 @@ Odd Taxi|2021|87
       else if (sort === 'title') list.sort((a, b) => a.title.localeCompare(b.title));
       else list.sort((a, b) => b.rating - a.rating);
 
-      if (window.tmSort) list = window.tmSort(list);
-      document.getElementById('showsCountBadge').textContent = list.length.toLocaleString();
+      const cntEl = document.getElementById('showsCountBadge');
+      if (cntEl) cntEl.textContent = list.length.toLocaleString();
       const container = document.getElementById('showsResults');
+      if (!container) return;
 
       if (!list.length) {
         container.className = "py-16 text-center text-gray-400";
-        container.innerHTML = `<i class="fa-solid fa-tv text-4xl text-gray-600 mb-3 block"></i>No TV series matched your filter criteria.`;
-        document.getElementById('showsPagination').innerHTML = '';
+        container.innerHTML = `<i class="fa-solid fa-tv text-4xl text-gray-600 mb-3 block"></i>No TV shows matched your filter criteria.`;
+        const pg = document.getElementById('showsPagination');
+        if (pg) pg.innerHTML = '';
         return;
       }
 
@@ -10471,9 +10494,16 @@ Odd Taxi|2021|87
       renderPagination('showsPagination', showsPage, totalPages, (p) => {
         showsPage = p;
         filterAndRenderShows(false);
-        document.getElementById('tab-shows').scrollIntoView({ behavior: 'smooth' });
+        const sTab = document.getElementById('tab-shows');
+        if (sTab) sTab.scrollIntoView({ behavior: 'smooth' });
       });
     }
+
+    // Expose rendering functions globally
+    window.filterAndRenderMovies = filterAndRenderMovies;
+    window.filterAndRenderShows = filterAndRenderShows;
+    window.renderDiscoverTab = renderDiscoverTab;
+    window.selectMood = selectMood;
 
     function renderPagination(elId, current, total, onPage) {
       const el = document.getElementById(elId);

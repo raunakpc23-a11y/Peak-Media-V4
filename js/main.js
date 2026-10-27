@@ -655,15 +655,15 @@
 
     window.initMusicVault = function() {
       ensureMusicLoaded();
-      $('musicTotalSongsCount').textContent = musicCatalog.length.toLocaleString();
-      $('musicTotalPlaylistsCount').textContent = musicPlaylists.length;
-      $('musicFavCountBadge').textContent = songFavs.length;
+      if ($('musicTotalSongsCount')) $('musicTotalSongsCount').textContent = musicCatalog.length.toLocaleString();
+      if ($('musicTotalPlaylistsCount')) $('musicTotalPlaylistsCount').textContent = musicPlaylists.length;
+      if ($('musicFavCountBadge')) $('musicFavCountBadge').textContent = songFavs.length;
       if ($('musicAdFreeCountBadge')) $('musicAdFreeCountBadge').textContent = songAdFree.length;
 
       // Populate Playlist Dropdown
       const plSel = $('musicFilterPlaylist');
       if (plSel && plSel.options.length <= 1) {
-        plSel.innerHTML = '<option value="all">All 42 Playlists (' + musicCatalog.length + ' unique songs)</option>' +
+        plSel.innerHTML = '<option value="all">All ' + musicPlaylists.length + ' Playlists (' + musicCatalog.length + ' unique songs)</option>' +
           musicPlaylists.map(p => `<option value="${p.id}">${esc(p.title)} (${p.count})</option>`).join('');
       }
 
@@ -2312,6 +2312,7 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
     window.addEventListener('DOMContentLoaded', () => {
       updateHeaderProfileUI();
       window.setGlobalLanguage(getLS('cs_lang_filter', 'all'));
+      if (window.initMusicVault) window.initMusicVault();
       checkIncomingShareHash();
       const onboarded = getLS('cs_onboarded_v1', null);
       if (!onboarded) {
