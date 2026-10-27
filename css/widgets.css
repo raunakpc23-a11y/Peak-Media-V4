@@ -32,8 +32,15 @@ input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
-  cursor: pointer;
-  height: 24px;
+  cursor: grab;
+  height: 28px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input[type="range"]:active {
+  cursor: grabbing;
 }
 
 input[type="range"]:focus {
@@ -43,71 +50,89 @@ input[type="range"]:focus {
 /* WebKit Track */
 input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 6px;
-  background: linear-gradient(90deg, rgba(229, 169, 60, 0.35), rgba(56, 189, 248, 0.45));
+  height: 7px;
+  background: linear-gradient(90deg, rgba(229, 169, 60, 0.4), rgba(56, 189, 248, 0.5));
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
-  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.7);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 input[type="range"]:hover::-webkit-slider-runnable-track {
-  background: linear-gradient(90deg, rgba(229, 169, 60, 0.55), rgba(56, 189, 248, 0.65));
-  border-color: rgba(229, 169, 60, 0.4);
+  background: linear-gradient(90deg, rgba(229, 169, 60, 0.65), rgba(56, 189, 248, 0.75));
+  border-color: rgba(229, 169, 60, 0.5);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(229, 169, 60, 0.25);
 }
 
 /* WebKit Thumb */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  height: 18px;
-  width: 18px;
-  margin-top: -6px;
+  height: 20px;
+  width: 20px;
+  margin-top: -6.5px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff, #e5a93c 60%, #b45309 100%);
+  background: radial-gradient(circle at 35% 30%, #ffffff, #e5a93c 60%, #b45309 100%);
   border: 2px solid #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 10px rgba(229, 169, 60, 0.5);
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7), 0 0 12px rgba(229, 169, 60, 0.6);
+  cursor: grab;
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 0.18s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:active,
+input[type="range"]:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  transform: scale(1.18);
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.8), 0 0 22px #e5a93c;
 }
 
 input[type="range"]:hover::-webkit-slider-thumb {
-  transform: scale(1.22);
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.7), 0 0 16px rgba(229, 169, 60, 0.85);
-}
-
-input[type="range"]:active::-webkit-slider-thumb {
-  transform: scale(1.1);
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8), 0 0 20px #e5a93c;
+  transform: scale(1.15);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.75), 0 0 16px rgba(229, 169, 60, 0.85);
 }
 
 /* Firefox Track */
 input[type="range"]::-moz-range-track {
   width: 100%;
-  height: 6px;
-  background: linear-gradient(90deg, rgba(229, 169, 60, 0.35), rgba(56, 189, 248, 0.45));
+  height: 7px;
+  background: linear-gradient(90deg, rgba(229, 169, 60, 0.4), rgba(56, 189, 248, 0.5));
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.7);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 /* Firefox Thumb */
 input[type="range"]::-moz-range-thumb {
-  height: 18px;
-  width: 18px;
+  height: 20px;
+  width: 20px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff, #e5a93c 60%, #b45309 100%);
+  background: radial-gradient(circle at 35% 30%, #ffffff, #e5a93c 60%, #b45309 100%);
   border: 2px solid #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 10px rgba(229, 169, 60, 0.5);
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7), 0 0 12px rgba(229, 169, 60, 0.6);
+  cursor: grab;
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 0.18s ease;
 }
 
 input[type="range"]:hover::-moz-range-thumb {
-  transform: scale(1.22);
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.7), 0 0 16px rgba(229, 169, 60, 0.85);
+  transform: scale(1.15);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.75), 0 0 16px rgba(229, 169, 60, 0.85);
 }
 
-/* 2. Immersive Horizontal Carousels with Soft Edge Fading */
+input[type="range"]:active::-moz-range-thumb {
+  cursor: grabbing;
+  transform: scale(1.18);
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.8), 0 0 22px #e5a93c;
+}
+
+/* 2. Immersive Horizontal Carousels with Soft Edge Fading & Smooth Touch Momentum */
 .hscroll, .snap-x {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(229, 169, 60, 0.3) transparent;
+}
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;

@@ -16,15 +16,15 @@
     discover: { first: 'discover', subs: [] },
     browse: { first: 'movies', subs: [['movies', 'Movies', 'fa-clapperboard'], ['shows', 'Shows', 'fa-tv'], ['categories', 'Genres', 'fa-layer-group'], ['universes', 'Universes', 'fa-globe']] },
     music: { first: 'music', subs: [] },
-    decide: { first: 'duel', subs: [['duel', 'Duel', 'fa-trophy'], ['match', 'Matchmaker', 'fa-wand-magic-sparkles'], ['ricochet', 'Ricochet', 'fa-circle-dot'], ['marathon', 'Marathon', 'fa-hourglass-half'], ['compat', 'Compatibility', 'fa-people-arrows']] },
+    decide: { first: 'mood', subs: [['mood', 'Mood Dial', 'fa-compass'], ['duel', 'Duel', 'fa-trophy'], ['match', 'Matchmaker', 'fa-wand-magic-sparkles'], ['ricochet', 'Ricochet', 'fa-circle-dot'], ['marathon', 'Marathon', 'fa-hourglass-half'], ['compat', 'Compatibility', 'fa-people-arrows']] },
     space: { first: 'hub', subs: [['hub', 'Shelves', 'fa-bookmark'], ['lists', 'Playlists', 'fa-list-check'], ['web', 'DNA', 'fa-circle-nodes'], ['profile', 'Profile', 'fa-user'], ['admin', 'Admin', 'fa-shield-halved']] }
   };
-  const PANE_GROUP = { discover: 'discover', movies: 'browse', shows: 'browse', categories: 'browse', universes: 'browse', music: 'music', duel: 'decide', match: 'decide', ricochet: 'decide', marathon: 'decide', compat: 'decide', hub: 'space', lists: 'space', web: 'space', profile: 'space', admin: 'space' };
+  const PANE_GROUP = { discover: 'discover', movies: 'browse', shows: 'browse', categories: 'browse', universes: 'browse', music: 'music', mood: 'decide', duel: 'decide', match: 'decide', ricochet: 'decide', marathon: 'decide', compat: 'decide', hub: 'space', lists: 'space', web: 'space', profile: 'space', admin: 'space' };
   const ON = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative bg-brand-gold text-black shadow-md';
   const OFF = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative text-gray-300 hover:text-white hover:bg-white/5';
   window.switchTab = function (key) {
     if (key === 'roulette') { openSurpriseModal(); return; }
-    if (key === 'space') key = 'hub'; if (key === 'browse') key = 'movies'; if (key === 'decide') key = 'duel';
+    if (key === 'space') key = 'hub'; if (key === 'browse') key = 'movies'; if (key === 'decide') key = 'mood';
     if (!PANE_GROUP[key]) key = 'discover';
     const g = PANE_GROUP[key];
     Object.keys(PANE_GROUP).forEach(k => {
@@ -40,6 +40,7 @@
       btn.className = 'mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] transition-colors ' + (active ? 'text-brand-gold font-bold bg-brand-gold/10' : 'text-gray-400 font-semibold');
     });
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
+    if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
     if (key === 'music' && window.initMusicVault) window.initMusicVault();
     if (key === 'lists' && window.renderCustomListsTab) window.renderCustomListsTab();
     if ((key === 'profile' || key === 'admin') && window.renderProfileTab) window.renderProfileTab();

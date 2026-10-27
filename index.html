@@ -241,71 +241,6 @@
         </div>
       </div>
 
-      <!-- Interactive Cinema Mood Dial & Vibe Engine -->
-      <div class="space-y-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Haptic Rotary Vibe Engine</span>
-            <h2 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2 mt-0.5">
-              <i class="fa-solid fa-compass text-brand-gold"></i> Cinema Mood Dial
-            </h2>
-            <p class="text-xs sm:text-sm text-gray-400">Spin the rotary dial or drag with touch/mouse to calibrate tonight's cinematic mood</p>
-          </div>
-          <button type="button" onclick="spinMoodDialRoulette()" id="moodDialSpinBtn" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-gold to-amber-400 text-black font-extrabold text-xs flex items-center gap-1.5 shadow-lg shadow-brand-gold/20 hover:scale-[1.02] transition-all">
-            <i class="fa-solid fa-dice"></i> <span>Spin Mood</span>
-          </button>
-        </div>
-
-        <!-- Rotary Dial & Active Mood Card Deck -->
-        <div class="glass-card rounded-3xl p-4 sm:p-6 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <!-- Circular Interactive Dial -->
-          <div class="relative flex items-center justify-center shrink-0">
-            <svg id="moodDialSvg" width="280" height="280" class="select-none cursor-grab active:cursor-grabbing touch-none transition-transform"></svg>
-            <div class="absolute -bottom-2 text-[10px] text-gray-500 font-bold uppercase tracking-wider select-none pointer-events-none">
-              <i class="fa-solid fa-arrows-rotate mr-1 text-brand-gold"></i> Drag or Click Wedge to Rotate
-            </div>
-          </div>
-
-          <!-- Active Sector Info & Intensity Calibration -->
-          <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-4 p-5 rounded-2xl bg-black/40 border border-white/15 transition-all w-full">
-            <div class="flex items-start justify-between gap-3">
-              <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                  <span id="moodDialActiveIcon" class="text-2xl">🌌</span>
-                  <h3 id="moodDialActiveName" class="text-xl sm:text-2xl font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
-                </div>
-                <p id="moodDialActiveDesc" class="text-xs sm:text-sm text-gray-300 leading-relaxed">Reality-bending paradoxes, space odysseys, and psychological twists</p>
-              </div>
-            </div>
-
-            <!-- Intensity Calibration Slider -->
-            <div class="space-y-1.5 pt-3 border-t border-white/10">
-              <div class="flex items-center justify-between text-xs">
-                <span class="text-gray-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-sliders text-brand-gold"></i> Intensity Calibration:</span>
-                <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold">⚖️ Deep &amp; Immersive</span>
-              </div>
-              <input id="moodDialIntensitySlider" type="range" min="1" max="3" step="1" value="2" oninput="setMoodDialIntensity(this.value)" class="w-full accent-brand-gold cursor-pointer">
-              <div class="flex justify-between text-[10px] text-gray-500 font-semibold px-0.5">
-                <span>Gentle / Chill</span>
-                <span>Balanced</span>
-                <span>Peak / Hardcore</span>
-              </div>
-            </div>
-
-            <!-- Quick Mood Sector Pills -->
-            <div class="space-y-1.5 pt-2 border-t border-white/10">
-              <div class="text-[11px] font-bold text-gray-400">Quick Mood Jump:</div>
-              <div id="moodDialPillsBox" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
-              <div id="moodPills" class="hidden"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Live Curated Recommendations Track -->
-        <div class="has-arrows">
-          <div id="moodRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
-        </div>
-      </div>
 
             <!-- Curated Row 1: The 9.0+ Pantheon -->
       <div class="space-y-4">
@@ -425,7 +360,7 @@
         <!-- Top 100 Cinejoy Watch Indicator Pill -->
         <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-bold">
           <i class="fa-solid fa-circle-play text-amber-400"></i>
-          <span>Top 100 IMDb Movies: "Watch Now" linked to Cinejoy</span>
+          <span>Top 500 IMDb Movies: "Watch Now" linked to Cinejoy</span>
         </div>
         <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()" class="hidden"><span id="cinejoySyncStateBadge">Off</span></button>
       </div>
@@ -458,7 +393,7 @@
         <select id="sortMovies" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="popular">Sort: Most Popular</option>
           <option value="rating_desc">Sort: Highest Rated (★)</option>
-          <option value="top100_watch">Filter: Top 100 (Watch Now on Cinejoy)</option>
+          <option value="top100_watch">Filter: Top 500 (Watch Now on Cinejoy)</option>
           <option value="year_desc">Sort: Newest First</option>
           <option value="year_asc">Sort: Oldest Classics First</option>
           <option value="title">Sort: Alphabetical (A–Z)</option>
@@ -577,6 +512,103 @@
         </div>
       </div>
       <p class="text-xs text-gray-500">Drag nodes to rearrange · scroll or pinch buttons to zoom · click a glowing outer node, then <b class="text-gray-300">Explore from here</b> to grow the web in that direction.</p>
+    </section>
+
+    <!-- TAB: CINEMA MOOD DIAL (Play Centerpiece) -->
+    <section id="tab-mood" class="tab-pane hidden fade-in space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div>
+          <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Haptic Rotary Vibe Engine</span>
+          <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-3 mt-0.5">
+            <i class="fa-solid fa-compass text-brand-gold"></i> Cinema Mood Dial
+          </h1>
+          <p class="text-xs sm:text-sm text-gray-400 mt-1">Spin the rotary dial, drag the smooth mood slider, or calibrate intensity to find tonight's ideal cinematic vibe.</p>
+        </div>
+        <button type="button" onclick="spinMoodDialRoulette()" id="moodDialSpinBtn" class="self-start sm:self-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-gold to-amber-400 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-brand-gold/20 hover:scale-[1.02] active:scale-95 transition-all">
+          <i class="fa-solid fa-dice text-sm"></i> <span>Spin Mood Roulette</span>
+        </button>
+      </div>
+
+      <!-- Rotary Dial & Active Mood Card Deck -->
+      <div class="glass-card rounded-3xl p-4 sm:p-7 border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-6 shadow-2xl">
+        <!-- Circular Interactive Dial -->
+        <div class="relative flex items-center justify-center shrink-0">
+          <svg id="moodDialSvg" width="280" height="280" class="select-none cursor-grab active:cursor-grabbing touch-none transition-transform"></svg>
+          <div class="absolute -bottom-2 text-[10px] text-gray-500 font-bold uppercase tracking-wider select-none pointer-events-none">
+            <i class="fa-solid fa-arrows-rotate mr-1 text-brand-gold"></i> Drag Wheel or Slide Below
+          </div>
+        </div>
+
+        <!-- Active Sector Info & Interactive Sliders Deck -->
+        <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-4 p-5 sm:p-6 rounded-2xl bg-black/40 border border-white/15 transition-all w-full">
+          <div class="flex items-start justify-between gap-3">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2.5">
+                <span id="moodDialActiveIcon" class="text-3xl">🌌</span>
+                <h3 id="moodDialActiveName" class="text-xl sm:text-2xl font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
+              </div>
+              <p id="moodDialActiveDesc" class="text-xs sm:text-sm text-gray-300 leading-relaxed">Reality-bending paradoxes, space odysseys, and psychological twists</p>
+            </div>
+          </div>
+
+          <!-- PRIMARY INTERACTIVE LIVE MOOD SLIDER -->
+          <div class="space-y-2 pt-3 border-t border-white/10">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-300 font-bold flex items-center gap-1.5">
+                <i class="fa-solid fa-gauge-high text-brand-gold"></i> Live Mood Slider:
+              </span>
+              <span id="moodDialSliderSectorLbl" class="font-extrabold text-brand-gold text-xs">🌌 Mind-Bending</span>
+            </div>
+            <div class="relative px-1">
+              <input id="moodDialSectorSlider" type="range" min="0" max="7" step="1" value="0" oninput="onMoodDialSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab active:cursor-grabbing">
+            </div>
+            <div class="flex justify-between text-[10px] text-gray-400 font-semibold px-1">
+              <span>Mind-Bending</span>
+              <span>Comedy</span>
+              <span>Action</span>
+              <span>Noir</span>
+              <span>Heartfelt</span>
+              <span>Whimsical</span>
+              <span>Psych</span>
+              <span>Epic</span>
+            </div>
+          </div>
+
+          <!-- Intensity Calibration Slider -->
+          <div class="space-y-1.5 pt-3 border-t border-white/10">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-sliders text-brand-gold"></i> Intensity Calibration:</span>
+              <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold">⚖️ Deep &amp; Immersive</span>
+            </div>
+            <input id="moodDialIntensitySlider" type="range" min="1" max="3" step="1" value="2" oninput="setMoodDialIntensity(this.value)" class="w-full accent-brand-gold cursor-grab active:cursor-grabbing">
+            <div class="flex justify-between text-[10px] text-gray-500 font-semibold px-0.5">
+              <span>Gentle / Chill</span>
+              <span>Balanced</span>
+              <span>Peak / Hardcore</span>
+            </div>
+          </div>
+
+          <!-- Quick Mood Sector Pills -->
+          <div class="space-y-1.5 pt-2 border-t border-white/10">
+            <div class="text-[11px] font-bold text-gray-400">Quick Mood Jump:</div>
+            <div id="moodDialPillsBox" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
+            <div id="moodPills" class="hidden"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Curated Recommendations Track -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg sm:text-xl font-display font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-film text-brand-gold"></i> Live Calibrated Recommendations
+          </h2>
+          <span class="text-xs text-gray-400">Updates instantly as you adjust dial or slider</span>
+        </div>
+        <div class="has-arrows">
+          <div id="moodRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
+        </div>
+      </div>
     </section>
 
     <!-- TAB: WATCH DUEL -->

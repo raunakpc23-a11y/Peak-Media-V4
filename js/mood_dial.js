@@ -182,10 +182,27 @@
       }
     });
 
+    // Sync live Mood Slider and Label
+    const sectorSlider = $('moodDialSectorSlider');
+    if (sectorSlider && parseInt(sectorSlider.value, 10) !== idx) {
+      sectorSlider.value = idx;
+    }
+    const sectorSliderLbl = $('moodDialSliderSectorLbl');
+    if (sectorSliderLbl) {
+      sectorSliderLbl.textContent = `${sector.icon} ${sector.short.replace(/^[^ ]+ /, '')}`;
+    }
+
     if (triggerUpdate) {
       renderMoodDialRecommendations(sector);
     }
   }
+
+  window.onMoodDialSliderChange = function(val) {
+    const idx = parseInt(val, 10);
+    if (idx >= 0 && idx < MOOD_SECTORS.length) {
+      rotateMoodDialToSector(idx);
+    }
+  };
 
   window.setMoodDialIntensity = function(lvl) {
     currentIntensity = parseInt(lvl, 10) || 2;
@@ -276,9 +293,11 @@
     }
   }
 
+  let dialInteractionsSetUp = false;
   function setupDialInteractions() {
     const svg = $('moodDialSvg');
-    if (!svg) return;
+    if (!svg || dialInteractionsSetUp) return;
+    dialInteractionsSetUp = true;
 
     function getAngle(e) {
       const rect = svg.getBoundingClientRect();
