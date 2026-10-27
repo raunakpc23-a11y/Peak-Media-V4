@@ -9593,6 +9593,19 @@ Odd Taxi|2021|87
     window.categoryData = categoryData;
     window.allTitles = allTitles;
 
+    // Top 100 movies strictly according to IMDb rating (with rank as tiebreaker)
+    const top100ImdbList = movies.slice()
+      .sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0) || (a.rank - b.rank))
+      .slice(0, 100);
+    const top100ImdbSet = new Set(top100ImdbList.map(m => m.title));
+    window.top100ImdbSet = top100ImdbSet;
+    window.isTop100ImdbMovie = function(title) {
+      return top100ImdbSet.has(title);
+    };
+    window.getCinejoyTop100Titles = function() {
+      return top100ImdbList.map(m => m.title);
+    };
+
     // Generates high-contrast bespoke procedural SVG posters with typography
     function generateStylizedPosterDataURI(item) {
       const theme = genreThemes[item.genre] || genreThemes["Drama"];
@@ -10037,10 +10050,10 @@ Odd Taxi|2021|87
             <span>${item.year}</span>
             <span class="text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
           </div>
-          ${cinejoyTop100Active ? `
+          ${(item.type === 'movie' && window.isTop100ImdbMovie && window.isTop100ImdbMovie(item.title)) ? `
           <div class="pt-2 mt-1 border-t border-white/10" onclick="event.stopPropagation()">
-            <a href="https://cinejoy.to/search?keyword=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:opacity-95 text-black font-black text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition-all">
-              <i class="fa-solid fa-circle-play text-xs"></i> <span>Watch Now on Cinejoy</span>
+            <a href="https://cinejoy.to/search?keyword=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition-all">
+              <i class="fa-solid fa-circle-play text-xs"></i> <span>Watch Now</span>
             </a>
           </div>` : ''}
         </div>
@@ -10400,11 +10413,9 @@ Odd Taxi|2021|87
         return matchQ && matchG && matchDec && matchPlat;
       });
 
-      if (cinejoyTop100Active) {
-        const top100Set = new Set(window.getCinejoyTop100Titles());
-        list = list.filter(item => top100Set.has(item.title));
-      }
       if (sort === 'popular') list.sort((a, b) => a.rank - b.rank);
+      else if (sort === 'rating_desc') list.sort((a, b) => b.rating - a.rating);
+      else if (sort === 'top100_watch') list = list.filter(item => top100ImdbSet.has(item.title)).sort((a, b) => b.rating - a.rating);
       else if (sort === 'year_desc') list.sort((a, b) => b.year - a.year);
       else if (sort === 'year_asc') list.sort((a, b) => a.year - b.year);
       else if (sort === 'title') list.sort((a, b) => a.title.localeCompare(b.title));
@@ -10801,29 +10812,10 @@ Odd Taxi|2021|87
               <a href="https://www.youtube.com/results?search_query=${encodeURIComponent((item.rawName || item.cleanName) + ' ' + item.year + ' official trailer')}" target="_blank" rel="noopener" class="px-4 py-2.5 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 text-xs font-bold flex items-center gap-2 transition-all">
                 <i class="fa-brands fa-youtube"></i> Trailer
               </a>
-              <button type="button" onclick="toggleWatchNowDrawer('${escTitle}')" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-cyan-300 hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-sky-500/25 transition-all">
-                <i class="fa-solid fa-circle-play"></i> <span>Watch Now</span> <i class="fa-solid fa-chevron-down text-[10px]"></i>
-              </button>
-            </div>
-
-            <!-- FMHY Top-3 Streaming Portals Drawer (Appears When "Watch Now" Is Clicked) -->
-            <div id="watchNowPortalsDrawer" class="hidden mt-3 p-4 rounded-2xl bg-black/75 border border-sky-400/40 space-y-3 animate-fadeIn">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <div class="text-xs font-extrabold uppercase tracking-wider text-sky-300"><i class="fa-solid fa-tower-broadcast mr-1.5"></i>Select Streaming Portal (FMHY Top 3)</div>
-                  <div id="watchNowResolverStatus" class="text-[11px] text-gray-400">Resolving direct catalog ID for instant launch...</div>
-                </div>
-                ${item.type === 'show' ? `
-                <div class="flex items-center gap-1.5 text-xs">
-                  <label class="text-gray-400 font-bold">S<input id="wnSeasonInp" type="number" min="1" max="30" value="1" onchange="refreshWatchNowPortalLinks('${escTitle}')" class="ml-1 w-12 px-1.5 py-1 rounded bg-black border border-white/20 text-white text-center font-bold"></label>
-                  <label class="text-gray-400 font-bold">E<input id="wnEpisodeInp" type="number" min="1" max="99" value="1" onchange="refreshWatchNowPortalLinks('${escTitle}')" class="ml-1 w-12 px-1.5 py-1 rounded bg-black border border-white/20 text-white text-center font-bold"></label>
-                </div>` : ''}
-              </div>
-              <div id="watchNowPortalsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5"></div>
-              <div class="text-[10px] text-gray-500 flex items-center justify-between">
-                <span>Tip: Use uBlock Origin for the cleanest ad-free playback on external portals.</span>
-                <button type="button" onclick="closeDetailModal(); switchTab('admin');" class="text-sky-400 hover:underline font-semibold">Configure Portals</button>
-              </div>
+              ${(item.type === 'movie' && window.isTop100ImdbMovie && window.isTop100ImdbMovie(item.title)) ? `
+              <a href="https://cinejoy.to/search?keyword=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
+                <i class="fa-solid fa-circle-play text-sm"></i> <span>Watch Now on Cinejoy</span>
+              </a>` : ''}
             </div>
 
             <!-- More in Genre -->

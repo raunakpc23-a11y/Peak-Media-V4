@@ -517,9 +517,8 @@
       saveLS('cs_profile_v1', obProfile);
       saveLS('cs_onboarded_v1', 'true');
       updateHeaderProfileUI();
-      if (obProfile.language === 'Hindi') window.setGlobalLanguage('hi');
-      else if (obProfile.language === 'English') window.setGlobalLanguage('en');
-      else window.setGlobalLanguage('all');
+      // Keep entire vault visible by default across all titles
+      window.setGlobalLanguage('all');
       renderDiscoverTab();
       updateAllCountersAndViews();
       // Auto-sync visitor telemetry to Supabase when setup completes
@@ -2311,7 +2310,7 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
     // Initialize on DOMContentLoaded
     window.addEventListener('DOMContentLoaded', () => {
       updateHeaderProfileUI();
-      window.setGlobalLanguage(getLS('cs_lang_filter', 'all'));
+      window.setGlobalLanguage('all');
       if (window.initMusicVault) window.initMusicVault();
       checkIncomingShareHash();
       const onboarded = getLS('cs_onboarded_v1', null);

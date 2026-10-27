@@ -422,12 +422,12 @@
           <i id="moviesFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
         </button>
 
-        <!-- Cinejoy Top 100 Sync Toggle Button -->
-        <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()" class="px-4 py-2.5 rounded-xl glass-card border border-amber-400/40 hover:border-amber-400 text-xs sm:text-sm font-extrabold text-amber-300 flex items-center gap-2 shadow-lg shadow-amber-500/10 hover:scale-[1.02] transition-all">
-          <i class="fa-solid fa-bolt text-amber-400"></i>
-          <span>🍿 Cinejoy Sync (Top 100)</span>
-          <span id="cinejoySyncStateBadge" class="px-2 py-0.5 rounded-full bg-white/10 text-[10px] text-gray-300">Off</span>
-        </button>
+        <!-- Top 100 Cinejoy Watch Indicator Pill -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-bold">
+          <i class="fa-solid fa-circle-play text-amber-400"></i>
+          <span>Top 100 IMDb Movies: "Watch Now" linked to Cinejoy</span>
+        </div>
+        <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()" class="hidden"><span id="cinejoySyncStateBadge">Off</span></button>
       </div>
       <div id="moviesFilterGrid" class="hidden grid glass-card p-3.5 sm:p-4 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 sm:gap-3 border border-brand-gold/25 animate-fadeIn" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.07), rgba(17, 21, 32, 0.85))">
         <div class="sm:col-span-2 relative">
@@ -458,6 +458,7 @@
         <select id="sortMovies" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="popular">Sort: Most Popular</option>
           <option value="rating_desc">Sort: Highest Rated (★)</option>
+          <option value="top100_watch">Filter: Top 100 (Watch Now on Cinejoy)</option>
           <option value="year_desc">Sort: Newest First</option>
           <option value="year_asc">Sort: Oldest Classics First</option>
           <option value="title">Sort: Alphabetical (A–Z)</option>
