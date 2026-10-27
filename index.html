@@ -357,10 +357,10 @@
           <i id="moviesFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
         </button>
 
-        <!-- Top 100 Cinejoy Watch Indicator Pill -->
+        <!-- Top 750 Cinejoy Watch Indicator Pill -->
         <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-bold">
           <i class="fa-solid fa-circle-play text-amber-400"></i>
-          <span>Top 500 IMDb Movies: "Watch Now" linked to Cinejoy</span>
+          <span>Top 750 IMDb Movies: "Watch Now" linked to Cinejoy</span>
         </div>
         <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()" class="hidden"><span id="cinejoySyncStateBadge">Off</span></button>
       </div>
@@ -393,7 +393,7 @@
         <select id="sortMovies" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="popular">Sort: Most Popular</option>
           <option value="rating_desc">Sort: Highest Rated (★)</option>
-          <option value="top100_watch">Filter: Top 500 (Watch Now on Cinejoy)</option>
+          <option value="top100_watch">Filter: Top 750 (Watch Now on Cinejoy)</option>
           <option value="year_desc">Sort: Newest First</option>
           <option value="year_asc">Sort: Oldest Classics First</option>
           <option value="title">Sort: Alphabetical (A–Z)</option>
@@ -421,13 +421,19 @@
       </div>
 
       <!-- Collapsible Filter Trigger Bar (Hidden by Default on All Screens Until Clicked) -->
-      <div class="flex items-center justify-between gap-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2.5">
         <button type="button" id="showsFilterToggleBtn" onclick="toggleCatalogFilterPanel('shows')" class="px-4 py-2.5 rounded-xl glass-card border border-brand-gold/35 hover:border-brand-gold text-xs sm:text-sm font-bold text-brand-gold flex items-center gap-2.5 shadow-md transition-all">
           <i class="fa-solid fa-sliders"></i>
           <span>Filters &amp; Sort</span>
           <span class="px-2 py-0.5 rounded-full bg-brand-gold/15 text-[10px] text-white font-semibold">Search · Genre · Decade · Platform</span>
           <i id="showsFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
         </button>
+
+        <!-- Top 750 Cinejoy Watch Indicator Pill -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-500/10 border border-purple-400/30 text-purple-300 text-xs font-bold">
+          <i class="fa-solid fa-circle-play text-purple-400"></i>
+          <span>Top 750 IMDb Series: "Watch Now" linked to Cinejoy</span>
+        </div>
       </div>
       <div id="showsFilterGrid" class="hidden grid glass-card p-3.5 sm:p-4 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 sm:gap-3 border border-brand-gold/25 animate-fadeIn" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.07), rgba(17, 21, 32, 0.85))">
         <div class="sm:col-span-2 relative">
@@ -457,6 +463,7 @@
         <select id="sortShows" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="popular">Sort: Most Popular</option>
           <option value="rating_desc">Sort: Highest Rated (★)</option>
+          <option value="top500_watch">Filter: Top 750 (Watch Now on Cinejoy)</option>
           <option value="year_desc">Sort: Newest First</option>
           <option value="year_asc">Sort: Oldest First</option>
           <option value="title">Sort: Alphabetical (A–Z)</option>
@@ -1309,7 +1316,7 @@
         <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2">
           <div class="relative flex-1 min-w-0">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-gold text-xs sm:text-sm"></i>
-            <input type="text" id="musicSearchInput" placeholder="Search 4,447 songs, singers, or soundtracks..." class="w-full pl-9 pr-3 py-2 bg-black/60 border border-white/15 rounded-xl text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold">
+            <input type="text" id="musicSearchInput" placeholder="Search 4,552 songs, singers, or soundtracks..." class="w-full pl-9 pr-3 py-2 bg-black/60 border border-white/15 rounded-xl text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold">
           </div>
 
           <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
@@ -1334,7 +1341,7 @@
               <option value="en">English &amp; Global</option>
             </select>
             <select id="musicFilterPlaylist" class="dark-select px-3 py-2 bg-[#0d111a] border border-brand-gold/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-gold cursor-pointer">
-              <option value="all">All 68 Playlists</option>
+              <option value="all">All 70 Playlists</option>
             </select>
             <select id="musicFilterMood" class="dark-select px-3 py-2 bg-[#0d111a] border border-brand-gold/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-gold cursor-pointer">
               <option value="all">All Moods</option>

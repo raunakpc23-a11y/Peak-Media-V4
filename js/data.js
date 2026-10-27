@@ -9053,8 +9053,2069 @@ Odd Taxi|2021|87
     1
   ]
 ];
-    const baseMovies = dedupeList([...rawMoviesCore, ...rawMoviesExpanded, ...rawMoviesMore, ...extraMovieSeeds, ...expandedMovieVault, ...expandedVaultBatch2Movies]);
-    const baseShows = dedupeList([...rawShowsCore, ...rawShowsExpanded, ...rawShowsMore, ...extraShowSeeds, ...expandedShowVault, ...expandedVaultBatch2Shows]);
+        // ==========================================
+    // 1.4 NEW RELEASES & EXPANDED VAULT (2023-2026)
+    // ==========================================
+    const newerMovies2024_2026 = [
+  [
+    "Heretic",
+    "Horror",
+    7.1,
+    2024
+  ],
+  [
+    "Smile 2",
+    "Horror",
+    6.6,
+    2024
+  ],
+  [
+    "Terrifier 3",
+    "Horror",
+    6.4,
+    2024
+  ],
+  [
+    "Sing Sing",
+    "Drama",
+    7.8,
+    2024
+  ],
+  [
+    "Hit Man",
+    "Comedy",
+    6.8,
+    2024
+  ],
+  [
+    "The Fall Guy",
+    "Action",
+    6.9,
+    2024
+  ],
+  [
+    "Blink Twice",
+    "Thriller",
+    6.6,
+    2024
+  ],
+  [
+    "Monkey Man",
+    "Action",
+    6.9,
+    2024
+  ],
+  [
+    "Horizon: An American Saga - Chapter 1",
+    "Western",
+    6.7,
+    2024
+  ],
+  [
+    "Abigail",
+    "Horror",
+    6.6,
+    2024
+  ],
+  [
+    "Speak No Evil",
+    "Thriller",
+    6.9,
+    2024
+  ],
+  [
+    "Red One",
+    "Action",
+    6.6,
+    2024
+  ],
+  [
+    "Wolfs",
+    "Comedy",
+    6.5,
+    2024
+  ],
+  [
+    "The Bikeriders",
+    "Drama",
+    6.7,
+    2024
+  ],
+  [
+    "Fly Me to the Moon",
+    "Romance",
+    6.6,
+    2024
+  ],
+  [
+    "Kneecap",
+    "Comedy",
+    7.5,
+    2024
+  ],
+  [
+    "Love Lies Bleeding",
+    "Thriller",
+    6.6,
+    2024
+  ],
+  [
+    "Late Night with the Devil",
+    "Horror",
+    7,
+    2024
+  ],
+  [
+    "In a Violent Nature",
+    "Horror",
+    5.8,
+    2024
+  ],
+  [
+    "Boy Kills World",
+    "Action",
+    6.4,
+    2024
+  ],
+  [
+    "The Ministry of Ungentlemanly Warfare",
+    "War",
+    6.8,
+    2024
+  ],
+  [
+    "Trap",
+    "Thriller",
+    6.2,
+    2024
+  ],
+  [
+    "Cuckoo",
+    "Horror",
+    6,
+    2024
+  ],
+  [
+    "The Piano Lesson",
+    "Drama",
+    6.8,
+    2024
+  ],
+  [
+    "Blitz",
+    "War",
+    6.5,
+    2024
+  ],
+  [
+    "Emilia Pérez",
+    "Crime",
+    7.2,
+    2024
+  ],
+  [
+    "Flow",
+    "Animation",
+    8.1,
+    2024
+  ],
+  [
+    "Memoir of a Snail",
+    "Animation",
+    8,
+    2024
+  ],
+  [
+    "The Apprentice",
+    "Drama",
+    7.1,
+    2024
+  ],
+  [
+    "Juror #2",
+    "Thriller",
+    7,
+    2024
+  ],
+  [
+    "The Seed of the Sacred Fig",
+    "Drama",
+    7.8,
+    2024
+  ],
+  [
+    "All We Imagine as Light",
+    "Drama",
+    7.5,
+    2024
+  ],
+  [
+    "I Saw the TV Glow",
+    "Drama",
+    5.9,
+    2024
+  ],
+  [
+    "Megalopolis",
+    "Sci-Fi",
+    5,
+    2024
+  ],
+  [
+    "Nightbitch",
+    "Comedy",
+    6,
+    2024
+  ],
+  [
+    "Better Man",
+    "Drama",
+    7.4,
+    2024
+  ],
+  [
+    "September 5",
+    "Drama",
+    7.5,
+    2024
+  ],
+  [
+    "Nickel Boys",
+    "Drama",
+    7.4,
+    2024
+  ],
+  [
+    "Hard Truths",
+    "Drama",
+    7.2,
+    2024
+  ],
+  [
+    "The Room Next Door",
+    "Drama",
+    6.8,
+    2024
+  ],
+  [
+    "Queer",
+    "Drama",
+    6.4,
+    2024
+  ],
+  [
+    "Babygirl",
+    "Thriller",
+    6,
+    2024
+  ],
+  [
+    "Unstoppable",
+    "Drama",
+    7,
+    2024
+  ],
+  [
+    "The Order",
+    "Crime",
+    6.9,
+    2024
+  ],
+  [
+    "Transformers One",
+    "Animation",
+    7.7,
+    2024
+  ],
+  [
+    "Paddington in Peru",
+    "Comedy",
+    7,
+    2024
+  ],
+  [
+    "Wallace & Gromit: Vengeance Most Fowl",
+    "Animation",
+    7.6,
+    2024
+  ],
+  [
+    "Den of Thieves 2: Pantera",
+    "Action",
+    6.5,
+    2025
+  ],
+  [
+    "Flight Risk",
+    "Thriller",
+    5.8,
+    2025
+  ],
+  [
+    "Dog Man",
+    "Animation",
+    6.8,
+    2025
+  ],
+  [
+    "One of Them Days",
+    "Comedy",
+    6.4,
+    2025
+  ],
+  [
+    "Karate Kid: Legends",
+    "Action",
+    6.9,
+    2025
+  ],
+  [
+    "Now You See Me 3",
+    "Crime",
+    7,
+    2025
+  ],
+  [
+    "Saw XI",
+    "Horror",
+    6.5,
+    2025
+  ],
+  [
+    "Five Nights at Freddy's 2",
+    "Horror",
+    6.2,
+    2025
+  ],
+  [
+    "M3GAN 2.0",
+    "Horror",
+    6.4,
+    2025
+  ],
+  [
+    "I Know What You Did Last Summer (2025)",
+    "Horror",
+    6,
+    2025
+  ],
+  [
+    "The Bride!",
+    "Horror",
+    7.1,
+    2025
+  ],
+  [
+    "High and Low (2025)",
+    "Crime",
+    7.3,
+    2025
+  ],
+  [
+    "Deliver Me from Nowhere",
+    "Drama",
+    7.5,
+    2025
+  ],
+  [
+    "Spider-Man: Beyond the Spider-Verse",
+    "Animation",
+    8.7,
+    2026
+  ],
+  [
+    "Avengers: Doomsday",
+    "Action",
+    8.4,
+    2026
+  ],
+  [
+    "The Batman: Part II",
+    "Crime",
+    8.2,
+    2026
+  ],
+  [
+    "Dune: Messiah",
+    "Sci-Fi",
+    8.5,
+    2026
+  ],
+  [
+    "Shrek 5",
+    "Animation",
+    7.5,
+    2026
+  ],
+  [
+    "Toy Story 5",
+    "Animation",
+    7.4,
+    2026
+  ],
+  [
+    "The Mandalorian & Grogu",
+    "Sci-Fi",
+    7.8,
+    2026
+  ],
+  [
+    "Supergirl: Woman of Tomorrow",
+    "Action",
+    7.5,
+    2026
+  ],
+  [
+    "Fast XI",
+    "Action",
+    6.5,
+    2026
+  ],
+  [
+    "Scream 7",
+    "Horror",
+    6.6,
+    2026
+  ],
+  [
+    "The Hunger Games: Sunrise on the Reaping",
+    "Action",
+    7.5,
+    2026
+  ],
+  [
+    "Moana (Live Action)",
+    "Fantasy",
+    7.2,
+    2026
+  ],
+  [
+    "Ice Age 6",
+    "Animation",
+    6.8,
+    2026
+  ],
+  [
+    "Michael",
+    "Drama",
+    7.6,
+    2025
+  ],
+  [
+    "A Haunting in Venice",
+    "Crime",
+    6.5,
+    2023
+  ],
+  [
+    "Bottoms",
+    "Comedy",
+    6.7,
+    2023
+  ],
+  [
+    "No Hard Feelings",
+    "Comedy",
+    6.4,
+    2023
+  ],
+  [
+    "Talk to Me (2023)",
+    "Horror",
+    7.1,
+    2023
+  ],
+  [
+    "Priscilla",
+    "Drama",
+    6.6,
+    2023
+  ],
+  [
+    "Godzilla Minus One/Minus Color",
+    "Action",
+    8.4,
+    2024
+  ],
+  [
+    "The Beekeeper",
+    "Action",
+    6.4,
+    2024
+  ],
+  [
+    "Madame Web",
+    "Action",
+    4,
+    2024
+  ],
+  [
+    "Argylle",
+    "Action",
+    5.7,
+    2024
+  ],
+  [
+    "Land of Bad",
+    "Action",
+    6.5,
+    2024
+  ],
+  [
+    "The First Omen",
+    "Horror",
+    6.5,
+    2024
+  ],
+  [
+    "Tarot",
+    "Horror",
+    4.9,
+    2024
+  ],
+  [
+    "The Strangers: Chapter 1",
+    "Horror",
+    4.7,
+    2024
+  ],
+  [
+    "Atlas",
+    "Sci-Fi",
+    5.6,
+    2024
+  ],
+  [
+    "Beverly Hills Cop: Axel F",
+    "Comedy",
+    6.5,
+    2024
+  ],
+  [
+    "Borderlands",
+    "Sci-Fi",
+    4.6,
+    2024
+  ],
+  [
+    "The Crow (2024)",
+    "Action",
+    4.7,
+    2024
+  ],
+  [
+    "Never Let Go",
+    "Horror",
+    5.6,
+    2024
+  ],
+  [
+    "Hellboy: The Crooked Man",
+    "Horror",
+    5,
+    2024
+  ],
+  [
+    "Kraven the Hunter",
+    "Action",
+    5.8,
+    2024
+  ],
+  [
+    "La Chimera",
+    "Fantasy",
+    7.3,
+    2023
+  ],
+  [
+    "Monster (2023)",
+    "Drama",
+    7.9,
+    2023
+  ],
+  [
+    "The Taste of Things",
+    "Romance",
+    7.4,
+    2023
+  ],
+  [
+    "Fallen Leaves",
+    "Comedy",
+    7.3,
+    2023
+  ],
+  [
+    "Perfect Days",
+    "Drama",
+    7.9,
+    2023
+  ],
+  [
+    "Io Capitano",
+    "Drama",
+    7.6,
+    2023
+  ],
+  [
+    "Evil Does Not Exist",
+    "Drama",
+    7,
+    2023
+  ],
+  [
+    "About Dry Grasses",
+    "Drama",
+    7.8,
+    2023
+  ],
+  [
+    "Green Border",
+    "Drama",
+    7.4,
+    2023
+  ],
+  [
+    "Look Back",
+    "Animation",
+    8.2,
+    2024
+  ],
+  [
+    "Oddity",
+    "Horror",
+    6.7,
+    2024
+  ],
+  [
+    "Strange Darling",
+    "Thriller",
+    7.2,
+    2024
+  ],
+  [
+    "Daddio",
+    "Drama",
+    6.7,
+    2024
+  ],
+  [
+    "Janet Planet",
+    "Drama",
+    6.4,
+    2024
+  ],
+  [
+    "Ghostlight",
+    "Drama",
+    7.6,
+    2024
+  ],
+  [
+    "Thelma",
+    "Comedy",
+    7.1,
+    2024
+  ],
+  [
+    "Babes",
+    "Comedy",
+    6.2,
+    2024
+  ],
+  [
+    "My Old Ass",
+    "Comedy",
+    7,
+    2024
+  ],
+  [
+    "Between the Temples",
+    "Comedy",
+    6.3,
+    2024
+  ],
+  [
+    "Merry Christmas",
+    "Thriller",
+    7,
+    2024
+  ],
+  [
+    "Shaitaan",
+    "Horror",
+    6.6,
+    2024
+  ],
+  [
+    "Yodha",
+    "Action",
+    5.8,
+    2024
+  ],
+  [
+    "Maidaan",
+    "Drama",
+    7.9,
+    2024
+  ],
+  [
+    "Bade Miyan Chote Miyan (2024)",
+    "Action",
+    4.3,
+    2024
+  ],
+  [
+    "Srikanth",
+    "Drama",
+    7.4,
+    2024
+  ],
+  [
+    "Chandu Champion",
+    "Drama",
+    7.7,
+    2024
+  ],
+  [
+    "Sarfira",
+    "Drama",
+    6.7,
+    2024
+  ],
+  [
+    "Bad Newz",
+    "Comedy",
+    5.4,
+    2024
+  ],
+  [
+    "Ulajh",
+    "Thriller",
+    6.1,
+    2024
+  ],
+  [
+    "Phir Aayi Hasseen Dillruba",
+    "Thriller",
+    5.6,
+    2024
+  ],
+  [
+    "Khel Khel Mein",
+    "Comedy",
+    6.6,
+    2024
+  ],
+  [
+    "Vedaa",
+    "Action",
+    6,
+    2024
+  ],
+  [
+    "Sector 36",
+    "Crime",
+    7.2,
+    2024
+  ],
+  [
+    "Jigra",
+    "Action",
+    6,
+    2024
+  ],
+  [
+    "CTRL",
+    "Thriller",
+    6.2,
+    2024
+  ],
+  [
+    "Do Patti",
+    "Thriller",
+    5.4,
+    2024
+  ],
+  [
+    "I Want to Talk",
+    "Drama",
+    7.4,
+    2024
+  ],
+  [
+    "Baby John",
+    "Action",
+    6.2,
+    2024
+  ],
+  [
+    "Sky Force",
+    "Action",
+    6.8,
+    2025
+  ],
+  [
+    "Emergency",
+    "Drama",
+    6.5,
+    2025
+  ],
+  [
+    "Deva",
+    "Action",
+    6.9,
+    2025
+  ],
+  [
+    "Love & War",
+    "Romance",
+    7.8,
+    2026
+  ],
+  [
+    "Ramayana: Part 1",
+    "Fantasy",
+    8.5,
+    2026
+  ],
+  [
+    "War 2",
+    "Action",
+    7.2,
+    2025
+  ],
+  [
+    "Pathaan 2",
+    "Action",
+    6.8,
+    2026
+  ],
+  [
+    "Tiger vs Pathaan",
+    "Action",
+    7.2,
+    2026
+  ],
+  [
+    "Alpha",
+    "Action",
+    7,
+    2025
+  ],
+  [
+    "Brahmastra: Part Two - Dev",
+    "Fantasy",
+    7.4,
+    2026
+  ],
+  [
+    "Spirit",
+    "Action",
+    7.5,
+    2025
+  ],
+  [
+    "Toxic",
+    "Action",
+    7.7,
+    2025
+  ],
+  [
+    "Kanguva",
+    "Action",
+    5.3,
+    2024
+  ],
+  [
+    "The Greatest of All Time (GOAT)",
+    "Action",
+    6.1,
+    2024
+  ],
+  [
+    "Vettaiyan",
+    "Action",
+    6.4,
+    2024
+  ],
+  [
+    "Raayan",
+    "Action",
+    7.5,
+    2024
+  ],
+  [
+    "Thangalaan",
+    "Action",
+    7.1,
+    2024
+  ],
+  [
+    "Indian 2",
+    "Action",
+    4.2,
+    2024
+  ],
+  [
+    "Meiyazhagan",
+    "Drama",
+    8.3,
+    2024
+  ],
+  [
+    "Lubber Pandhu",
+    "Drama",
+    8.2,
+    2024
+  ],
+  [
+    "Vaazhai",
+    "Drama",
+    8.1,
+    2024
+  ],
+  [
+    "Bramayugam",
+    "Horror",
+    7.8,
+    2024
+  ],
+  [
+    "Aadujeevitham - The Goat Life",
+    "Drama",
+    8.1,
+    2024
+  ],
+  [
+    "Kishkindha Kaandam",
+    "Thriller",
+    8.2,
+    2024
+  ],
+  [
+    "ARM (Ajayante Randam Moshanam)",
+    "Action",
+    7.6,
+    2024
+  ],
+  [
+    "Turbo",
+    "Action",
+    6.3,
+    2024
+  ],
+  [
+    "Varshangalkku Shesham",
+    "Comedy",
+    7.2,
+    2024
+  ],
+  [
+    "Guruvayoor Ambalanadayil",
+    "Comedy",
+    7,
+    2024
+  ],
+  [
+    "Level Cross",
+    "Thriller",
+    7.1,
+    2024
+  ],
+  [
+    "Bougainvillea",
+    "Thriller",
+    6.5,
+    2024
+  ],
+  [
+    "Saripodhaa Sanivaaram",
+    "Action",
+    7,
+    2024
+  ],
+  [
+    "Tillu Square",
+    "Comedy",
+    7.1,
+    2024
+  ],
+  [
+    "Guntur Kaaram",
+    "Action",
+    5.4,
+    2024
+  ],
+  [
+    "Captain Miller",
+    "Action",
+    6.6,
+    2024
+  ],
+  [
+    "Ayalaan",
+    "Sci-Fi",
+    6.1,
+    2024
+  ]
+];
+
+    const newerShows2024_2026 = [
+  [
+    "Bad Monkey",
+    "Comedy",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Sunny",
+    "Sci-Fi",
+    6.7,
+    2024,
+    1
+  ],
+  [
+    "Manhunt",
+    "Drama",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Franklin",
+    "Drama",
+    6.2,
+    2024,
+    1
+  ],
+  [
+    "Sugar (2024)",
+    "Crime",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "The New Look",
+    "Drama",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Lady in the Lake",
+    "Thriller",
+    6.4,
+    2024,
+    1
+  ],
+  [
+    "Where's Wanda?",
+    "Comedy",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "La Maison",
+    "Drama",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "Before",
+    "Thriller",
+    5.5,
+    2024,
+    1
+  ],
+  [
+    "Me (Series)",
+    "Sci-Fi",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "Camp Snoopy",
+    "Animation",
+    7.6,
+    2024,
+    1
+  ],
+  [
+    "WondLa",
+    "Animation",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "Midnight Family",
+    "Drama",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Liaison",
+    "Thriller",
+    6.4,
+    2023,
+    1
+  ],
+  [
+    "Dear Edward",
+    "Drama",
+    7.2,
+    2023,
+    1
+  ],
+  [
+    "Extrapolations",
+    "Sci-Fi",
+    6.2,
+    2023,
+    1
+  ],
+  [
+    "The Last Thing He Told Me",
+    "Mystery",
+    6.5,
+    2023,
+    1
+  ],
+  [
+    "City on Fire",
+    "Crime",
+    6.4,
+    2023,
+    1
+  ],
+  [
+    "The Crowded Room",
+    "Drama",
+    7.7,
+    2023,
+    1
+  ],
+  [
+    "The Changeling",
+    "Horror",
+    5.9,
+    2023,
+    1
+  ],
+  [
+    "Criminal Record",
+    "Crime",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "The Big Door Prize",
+    "Comedy",
+    6.4,
+    2023,
+    2
+  ],
+  [
+    "Physical",
+    "Comedy",
+    7.4,
+    2021,
+    3
+  ],
+  [
+    "Trying",
+    "Comedy",
+    8,
+    2020,
+    4
+  ],
+  [
+    "A Good Girl's Guide to Murder",
+    "Thriller",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "Supacell",
+    "Sci-Fi",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "Eric",
+    "Crime",
+    6.9,
+    2024,
+    1
+  ],
+  [
+    "Dead Boy Detectives",
+    "Fantasy",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "The Decameron",
+    "Comedy",
+    6.3,
+    2024,
+    1
+  ],
+  [
+    "Kaos",
+    "Comedy",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "A Man in Full",
+    "Drama",
+    6.6,
+    2024,
+    1
+  ],
+  [
+    "Senna",
+    "Drama",
+    8.1,
+    2024,
+    1
+  ],
+  [
+    "Interior Chinatown",
+    "Comedy",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Tomb Raider: The Legend of Lara Croft",
+    "Animation",
+    5.3,
+    2024,
+    1
+  ],
+  [
+    "Twilight of the Gods",
+    "Animation",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Scott Pilgrim Takes Off",
+    "Animation",
+    7.6,
+    2023,
+    1
+  ],
+  [
+    "Castlevania: Nocturne",
+    "Animation",
+    7.4,
+    2023,
+    1
+  ],
+  [
+    "Delicious in Dungeon",
+    "Animation",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Ranma 1/2 (2024)",
+    "Animation",
+    7.6,
+    2024,
+    1
+  ],
+  [
+    "Dragon Ball Daima",
+    "Animation",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "Dandadan",
+    "Animation",
+    8.3,
+    2024,
+    1
+  ],
+  [
+    "Terminator Zero",
+    "Animation",
+    7,
+    2024,
+    1
+  ],
+  [
+    "Gyeongseong Creature",
+    "Horror",
+    7.3,
+    2023,
+    2
+  ],
+  [
+    "The Glory",
+    "Drama",
+    8.1,
+    2022,
+    1
+  ],
+  [
+    "Queen of Tears",
+    "Romance",
+    8.2,
+    2024,
+    1
+  ],
+  [
+    "A Killer Paradox",
+    "Crime",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "The Bequeathed",
+    "Mystery",
+    6.5,
+    2024,
+    1
+  ],
+  [
+    "Doctor Slump",
+    "Comedy",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Parasyte: The Grey",
+    "Sci-Fi",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "Hierarchy",
+    "Drama",
+    6.1,
+    2024,
+    1
+  ],
+  [
+    "The Whirlwind",
+    "Drama",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "The Frog",
+    "Thriller",
+    6.9,
+    2024,
+    1
+  ],
+  [
+    "Mr. Plankton",
+    "Comedy",
+    7.9,
+    2024,
+    1
+  ],
+  [
+    "The Trunk",
+    "Mystery",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "Bloodhounds",
+    "Action",
+    8.1,
+    2023,
+    1
+  ],
+  [
+    "Mask Girl",
+    "Thriller",
+    7.3,
+    2023,
+    1
+  ],
+  [
+    "My Demon",
+    "Fantasy",
+    7.7,
+    2023,
+    1
+  ],
+  [
+    "Marry My Husband",
+    "Fantasy",
+    7.9,
+    2024,
+    1
+  ],
+  [
+    "Death's Game",
+    "Fantasy",
+    8.5,
+    2023,
+    1
+  ],
+  [
+    "Moving",
+    "Action",
+    8.5,
+    2023,
+    1
+  ],
+  [
+    "A Shop for Killers",
+    "Action",
+    8.1,
+    2024,
+    1
+  ],
+  [
+    "The Judge from Hell",
+    "Fantasy",
+    7.9,
+    2024,
+    1
+  ],
+  [
+    "Family by Choice",
+    "Drama",
+    8.3,
+    2024,
+    1
+  ],
+  [
+    "Jeongnyeon: The Star Is Born",
+    "Drama",
+    8.2,
+    2024,
+    1
+  ],
+  [
+    "The Franchise",
+    "Comedy",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "The Day of the Jackal",
+    "Thriller",
+    8.2,
+    2024,
+    1
+  ],
+  [
+    "Say Nothing",
+    "Drama",
+    8.3,
+    2024,
+    1
+  ],
+  [
+    "The Regime",
+    "Drama",
+    6.1,
+    2024,
+    1
+  ],
+  [
+    "Under the Bridge",
+    "Crime",
+    7.3,
+    2024,
+    1
+  ],
+  [
+    "Apples Never Fall",
+    "Drama",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "Expats",
+    "Drama",
+    6.1,
+    2024,
+    1
+  ],
+  [
+    "Boy Swallows Universe",
+    "Drama",
+    8,
+    2024,
+    1
+  ],
+  [
+    "Star Wars: The Acolyte",
+    "Sci-Fi",
+    4.2,
+    2024,
+    1
+  ],
+  [
+    "Star Wars: Tales of the Empire",
+    "Animation",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Ted (TV Series)",
+    "Comedy",
+    7.9,
+    2024,
+    1
+  ],
+  [
+    "Hysteria!",
+    "Horror",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "Teacup",
+    "Horror",
+    6.5,
+    2024,
+    1
+  ],
+  [
+    "Fight Night: The Million Dollar Heist",
+    "Crime",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Those About to Die",
+    "Action",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "Twisted Metal",
+    "Action",
+    7.4,
+    2023,
+    1
+  ],
+  [
+    "Poker Face",
+    "Mystery",
+    7.9,
+    2023,
+    1
+  ],
+  [
+    "The Continental: From the World of John Wick",
+    "Action",
+    7.2,
+    2023,
+    1
+  ],
+  [
+    "Tulsa King",
+    "Crime",
+    8,
+    2022,
+    2
+  ],
+  [
+    "Lioness",
+    "Action",
+    7.7,
+    2023,
+    2
+  ],
+  [
+    "Lawmen: Bass Reeves",
+    "Western",
+    7.6,
+    2023,
+    1
+  ],
+  [
+    "Knuckles",
+    "Action",
+    6.2,
+    2024,
+    1
+  ],
+  [
+    "Star Trek: Strange New Worlds",
+    "Sci-Fi",
+    8.3,
+    2022,
+    2
+  ],
+  [
+    "Star Trek: Lower Decks",
+    "Animation",
+    7.7,
+    2020,
+    5
+  ],
+  [
+    "Evil",
+    "Horror",
+    7.8,
+    2019,
+    4
+  ],
+  [
+    "Mr. & Mrs. Smith (2024)",
+    "Action",
+    7,
+    2024,
+    1
+  ],
+  [
+    "Secret Level",
+    "Animation",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Like a Dragon: Yakuza",
+    "Action",
+    6.1,
+    2024,
+    1
+  ],
+  [
+    "Daisy Jones & The Six",
+    "Drama",
+    8.1,
+    2023,
+    1
+  ],
+  [
+    "Swarm",
+    "Thriller",
+    7.2,
+    2023,
+    1
+  ],
+  [
+    "Gen V",
+    "Action",
+    7.8,
+    2023,
+    1
+  ],
+  [
+    "My Lady Jane",
+    "Comedy",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "English Teacher",
+    "Comedy",
+    8.1,
+    2024,
+    1
+  ],
+  [
+    "Feud: Capote vs. The Swans",
+    "Drama",
+    7.4,
+    2024,
+    2
+  ],
+  [
+    "We Were the Lucky Ones",
+    "Drama",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "A Murder at the End of the World",
+    "Mystery",
+    7.1,
+    2023,
+    1
+  ],
+  [
+    "Percy Jackson and the Olympians",
+    "Fantasy",
+    7.1,
+    2023,
+    1
+  ],
+  [
+    "Goosebumps (2023)",
+    "Horror",
+    6.7,
+    2023,
+    1
+  ],
+  [
+    "Renegade Nell",
+    "Fantasy",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "Doctor Who (2024)",
+    "Sci-Fi",
+    6.4,
+    2024,
+    1
+  ],
+  [
+    "Bleach: Thousand-Year Blood War",
+    "Animation",
+    9,
+    2024,
+    3
+  ],
+  [
+    "Hell's Paradise",
+    "Animation",
+    8.1,
+    2023,
+    1
+  ],
+  [
+    "Oshi no Ko",
+    "Animation",
+    8.3,
+    2023,
+    2
+  ],
+  [
+    "Mashle: Magic and Muscles",
+    "Animation",
+    7.5,
+    2023,
+    2
+  ],
+  [
+    "The Apothecary Diaries",
+    "Animation",
+    8.6,
+    2023,
+    1
+  ],
+  [
+    "Shangri-La Frontier",
+    "Animation",
+    7.9,
+    2023,
+    2
+  ],
+  [
+    "Undead Unluck",
+    "Animation",
+    7.3,
+    2023,
+    1
+  ],
+  [
+    "Ninja Kamui",
+    "Animation",
+    7.6,
+    2024,
+    1
+  ],
+  [
+    "Trigun Stampede",
+    "Animation",
+    7.4,
+    2023,
+    1
+  ],
+  [
+    "Zom 100: Bucket List of the Dead",
+    "Animation",
+    7.7,
+    2023,
+    1
+  ],
+  [
+    "Heavenly Delusion",
+    "Animation",
+    8,
+    2023,
+    1
+  ],
+  [
+    "Maamla Legal Hai",
+    "Comedy",
+    8,
+    2024,
+    1
+  ],
+  [
+    "Poacher",
+    "Crime",
+    7.8,
+    2024,
+    1
+  ],
+  [
+    "Killer Soup",
+    "Comedy",
+    6.4,
+    2024,
+    1
+  ],
+  [
+    "Indian Police Force",
+    "Action",
+    5.2,
+    2024,
+    1
+  ],
+  [
+    "Karmma Calling",
+    "Drama",
+    5.7,
+    2024,
+    1
+  ],
+  [
+    "Showtime",
+    "Drama",
+    6,
+    2024,
+    1
+  ],
+  [
+    "Dil Dosti Dilemma",
+    "Comedy",
+    7,
+    2024,
+    1
+  ],
+  [
+    "Big Girls Don't Cry",
+    "Drama",
+    6.5,
+    2024,
+    1
+  ],
+  [
+    "Lootere",
+    "Action",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Baahubali: Crown of Blood",
+    "Animation",
+    7.3,
+    2024,
+    1
+  ],
+  [
+    "Shekhar Home",
+    "Crime",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "IC 814: The Kandahar Hijack",
+    "Thriller",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Call Me Bae",
+    "Comedy",
+    5.8,
+    2024,
+    1
+  ],
+  [
+    "Raat Jawaani Hai",
+    "Comedy",
+    8.3,
+    2024,
+    1
+  ],
+  [
+    "Citadel: Honey Bunny",
+    "Action",
+    6.5,
+    2024,
+    1
+  ],
+  [
+    "Bandwaale",
+    "Comedy",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "The Great Indian Kapil Show",
+    "Comedy",
+    7,
+    2024,
+    2
+  ],
+  [
+    "Tribhuvan Mishra CA Topper",
+    "Comedy",
+    7.3,
+    2024,
+    1
+  ],
+  [
+    "Barzakh",
+    "Drama",
+    7.4,
+    2024,
+    1
+  ],
+  [
+    "Thalaimai Seyalagam",
+    "Thriller",
+    7.2,
+    2024,
+    1
+  ],
+  [
+    "Inspector Rishi",
+    "Horror",
+    7.1,
+    2024,
+    1
+  ],
+  [
+    "Parachute",
+    "Drama",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "Manorathangal",
+    "Drama",
+    7.5,
+    2024,
+    1
+  ],
+  [
+    "Nagendran's Honeymoons",
+    "Comedy",
+    6.8,
+    2024,
+    1
+  ],
+  [
+    "School of Lies",
+    "Mystery",
+    7.1,
+    2023,
+    1
+  ],
+  [
+    "Tooth Pari: When Love Bites",
+    "Romance",
+    7,
+    2023,
+    1
+  ],
+  [
+    "Trial by Fire",
+    "Drama",
+    7.8,
+    2023,
+    1
+  ],
+  [
+    "Kaala Paani",
+    "Thriller",
+    8,
+    2023,
+    1
+  ],
+  [
+    "The Jengaburu Curse",
+    "Thriller",
+    7.1,
+    2023,
+    1
+  ],
+  [
+    "Aakhri Sach",
+    "Crime",
+    7.1,
+    2023,
+    1
+  ],
+  [
+    "Choona",
+    "Comedy",
+    7.1,
+    2023,
+    1
+  ],
+  [
+    "Kaalkoot",
+    "Crime",
+    7.8,
+    2023,
+    1
+  ],
+  [
+    "Dhootha",
+    "Thriller",
+    7.4,
+    2023,
+    1
+  ],
+  [
+    "Curry & Cyanide",
+    "Documentary",
+    7.1,
+    2023,
+    1
+  ]
+];
+
+    const baseMovies = dedupeList([...rawMoviesCore, ...rawMoviesExpanded, ...rawMoviesMore, ...extraMovieSeeds, ...expandedMovieVault, ...expandedVaultBatch2Movies, ...newerMovies2024_2026]);
+    const baseShows = dedupeList([...rawShowsCore, ...rawShowsExpanded, ...rawShowsMore, ...extraShowSeeds, ...expandedShowVault, ...expandedVaultBatch2Shows, ...newerShows2024_2026]);
     const newMovies = dedupeAgainst(baseMovies, [...parseCompact(compactMoviesT1, 1), ...parseCompact(compactMoviesT3, 1), ...parseCompact(compactMoviesT2, 0)]);
     const newShows = dedupeAgainst(baseShows, [...parseCompact(compactShowsT1, 1), ...parseCompact(compactShowsT3, 1), ...parseCompact(compactShowsT2, 0)]);
 
@@ -9593,8 +11654,8 @@ Odd Taxi|2021|87
     window.categoryData = categoryData;
     window.allTitles = allTitles;
 
-    // Direct Cinejoy movie streaming URLs for the Top 500 IMDb movies (exact TMDb ID + slug)
-    const CINEJOY_TOP500_URLS = {
+    // Direct Cinejoy movie streaming URLs for the Top 750 IMDb movies (exact TMDb ID + slug)
+    const CINEJOY_TOP750_URLS = {
       "96": "https://cinejoy.pk/movie/441717-96-2018",
       "1917": "https://cinejoy.pk/movie/530915-1917-2019",
       "The Shawshank Redemption": "https://cinejoy.pk/movie/278-the-shawshank-redemption-1994",
@@ -10094,33 +12155,1069 @@ Odd Taxi|2021|87
       "Chainsaw Man - The Movie: Reze Arc": "https://cinejoy.pk/movie/chainsaw-man-the-movie-reze-arc-2025",
       "Mughal-E-Azam": "https://cinejoy.pk/movie/11156-mughal-e-azam-1960",
       "OMG: Oh My God!": "https://cinejoy.pk/movie/134375-omg-oh-my-god-2012",
-      "Where Is the Friend's Home?": "https://cinejoy.pk/movie/30020-where-is-the-friends-home-1987"
+      "Where Is the Friend's Home?": "https://cinejoy.pk/movie/30020-where-is-the-friends-home-1987",
+      "Bell Bottom": "https://cinejoy.pk/movie/584786-bell-bottom-2019",
+      "Dia": "https://cinejoy.pk/movie/672128-dia-2020",
+      "Love Mocktail": "https://cinejoy.pk/movie/672125-love-mocktail-2020",
+      "Raise the Red Lantern": "https://cinejoy.pk/movie/10404-raise-the-red-lantern-1991",
+      "Andrei Rublev": "https://cinejoy.pk/movie/895-andrei-rublev-1966",
+      "The Hidden Fortress": "https://cinejoy.pk/movie/1059-the-hidden-fortress-1958",
+      "Early Summer": "https://cinejoy.pk/movie/50247-early-summer-1951",
+      "Fanny and Alexander": "https://cinejoy.pk/movie/5961-fanny-and-alexander-1982",
+      "Autumn Sonata": "https://cinejoy.pk/movie/12761-autumn-sonata-1978",
+      "Cries and Whispers": "https://cinejoy.pk/movie/10238-cries-and-whispers-1972",
+      "Nights of Cabiria": "https://cinejoy.pk/movie/19426-nights-of-cabiria-1957",
+      "A Short Film About Love": "https://cinejoy.pk/movie/31056-a-short-film-about-love-1988",
+      "Sunrise: A Song of Two Humans": "https://cinejoy.pk/movie/631-sunrise-a-song-of-two-humans-1927",
+      "Agantuk": "https://cinejoy.pk/movie/1171629-agantuk-1991",
+      "Meghe Dhaka Tara": "https://cinejoy.pk/movie/59239-meghe-dhaka-tara-1960",
+      "Subarnarekha": "https://cinejoy.pk/movie/86303-subarnarekha-1965",
+      "Ghatashraddha": "https://cinejoy.pk/movie/258535-ghatashraddha-1977",
+      "Chomana Dudi": "https://cinejoy.pk/movie/315898-chomana-dudi-1975",
+      "Anantaram": "https://cinejoy.pk/movie/275030-anantaram-1987",
+      "Traffic": "https://cinejoy.pk/movie/142948-traffic-2011",
+      "Take Off": "https://cinejoy.pk/movie/430521-take-off-2017",
+      "Marupadiyum": "https://cinejoy.pk/movie/318858-marupadiyum-1993",
+      "Anjali": "https://cinejoy.pk/movie/223365-anjali-1990",
+      "Sathi Leelavathi": "https://cinejoy.pk/movie/66352-sathi-leelavathi-1995",
+      "Indian (1996)": "https://cinejoy.pk/movie/31521-indian-1996",
+      "Ghilli": "https://cinejoy.pk/movie/63647-ghilli-2004",
+      "Autograph": "https://cinejoy.pk/movie/140299-autograph-2004",
+      "Vinnaithaandi Varuvaayaa": "https://cinejoy.pk/movie/37941-vinnaithaandi-varuvaayaa-2010",
+      "Aadukalam": "https://cinejoy.pk/movie/68016-aadukalam-2011",
+      "Thuppakki": "https://cinejoy.pk/movie/143010-thuppakki-2012",
+      "Kaththi": "https://cinejoy.pk/movie/263475-kaththi-2014",
+      "Money (1993)": "https://cinejoy.pk/movie/132465-money-1993",
+      "Appula Appa Rao": "https://cinejoy.pk/movie/180736-appula-appa-rao-1991",
+      "Kushi": "https://cinejoy.pk/movie/69654-kushi-2001",
+      "Okkadu": "https://cinejoy.pk/movie/94965-okkadu-2003",
+      "Anukokunda Oka Roju": "https://cinejoy.pk/movie/80862-anukokunda-oka-roju-2005",
+      "Prasthanam": "https://cinejoy.pk/movie/52522-prasthanam-2010",
+      "Vedam": "https://cinejoy.pk/movie/97342-vedam-2010",
+      "1: Nenokkadine": "https://cinejoy.pk/movie/249772-1-nenokkadine-2014",
+      "Wolfwalkers": "https://cinejoy.pk/movie/441130-wolfwalkers-2020",
+      "The Help": "https://cinejoy.pk/movie/50014-the-help-2011",
+      "Andaz Apna Apna": "https://cinejoy.pk/movie/58128-andaz-apna-apna-1994",
+      "Butch Cassidy and the Sundance Kid": "https://cinejoy.pk/movie/642-butch-cassidy-and-the-sundance-kid-1969",
+      "The Maltese Falcon": "https://cinejoy.pk/movie/963-the-maltese-falcon-1941",
+      "The Princess Bride": "https://cinejoy.pk/movie/2493-the-princess-bride-1987",
+      "Touch of Evil": "https://cinejoy.pk/movie/1480-touch-of-evil-1958",
+      "Annie Hall": "https://cinejoy.pk/movie/703-annie-hall-1977",
+      "Gandhi": "https://cinejoy.pk/movie/783-gandhi-1982",
+      "The Bourne Ultimatum": "https://cinejoy.pk/movie/2503-the-bourne-ultimatum-2007",
+      "Donnie Darko": "https://cinejoy.pk/movie/141-donnie-darko-2001",
+      "Groundhog Day": "https://cinejoy.pk/movie/137-groundhog-day-1993",
+      "Zootopia": "https://cinejoy.pk/movie/269149-zootopia-2016",
+      "Infernal Affairs": "https://cinejoy.pk/movie/10775-infernal-affairs-2002",
+      "Dune": "https://cinejoy.pk/movie/438631-dune-2021",
+      "Baahubali: The Beginning": "https://cinejoy.pk/movie/256040-baahubali-the-beginning-2015",
+      "The Avengers": "https://cinejoy.pk/movie/24428-the-avengers-2012",
+      "Guardians of the Galaxy": "https://cinejoy.pk/movie/118340-guardians-of-the-galaxy-2014",
+      "Deadpool": "https://cinejoy.pk/movie/293660-deadpool-2016",
+      "Casino Royale": "https://cinejoy.pk/movie/36557-casino-royale-2006",
+      "Blade Runner 2049": "https://cinejoy.pk/movie/335984-blade-runner-2049-2017",
+      "The Martian": "https://cinejoy.pk/movie/286217-the-martian-2015",
+      "Black Swan": "https://cinejoy.pk/movie/44214-black-swan-2010",
+      "The Revenant": "https://cinejoy.pk/movie/281957-the-revenant-2015",
+      "The King's Speech": "https://cinejoy.pk/movie/45269-the-kings-speech-2010",
+      "The Imitation Game": "https://cinejoy.pk/movie/205596-the-imitation-game-2014",
+      "The Pursuit of Happyness": "https://cinejoy.pk/movie/1402-the-pursuit-of-happyness-2006",
+      "Slumdog Millionaire": "https://cinejoy.pk/movie/12405-slumdog-millionaire-2008",
+      "Lion": "https://cinejoy.pk/movie/348655-lion-2016",
+      "The Incredibles": "https://cinejoy.pk/movie/9806-the-incredibles-2004",
+      "Soul": "https://cinejoy.pk/movie/508442-soul-2020",
+      "Akira": "https://cinejoy.pk/movie/149-akira-1988",
+      "Castle in the Sky": "https://cinejoy.pk/movie/10515-castle-in-the-sky-1986",
+      "Princess Kaguya": "https://cinejoy.pk/movie/494688-princess-kaguya-2013",
+      "Dilwale Dulhania Le Jayenge": "https://cinejoy.pk/movie/19404-dilwale-dulhania-le-jayenge-1995",
+      "Marty Supreme": "https://cinejoy.pk/movie/1317288-marty-supreme-2025",
+      "Sentimental Value": "https://cinejoy.pk/movie/1124566-sentimental-value-2025",
+      "CODA": "https://cinejoy.pk/movie/776503-coda-2021",
+      "The First Slam Dunk": "https://cinejoy.pk/movie/783675-the-first-slam-dunk-2022",
+      "Dhurandhar": "https://cinejoy.pk/movie/1291608-dhurandhar-2025",
+      "Deewaar": "https://cinejoy.pk/movie/22460-deewaar-1975",
+      "Thalapathi": "https://cinejoy.pk/movie/29811-thalapathi-1991",
+      "Arjun Reddy": "https://cinejoy.pk/movie/473234-arjun-reddy-2017",
+      "Thudarum": "https://cinejoy.pk/movie/1261125-thudarum-2025",
+      "Dances with Wolves": "https://cinejoy.pk/movie/581-dances-with-wolves-1990",
+      "Rio Bravo": "https://cinejoy.pk/movie/301-rio-bravo-1959",
+      "Scent of a Woman": "https://cinejoy.pk/movie/9475-scent-of-a-woman-1992",
+      "Rain Man": "https://cinejoy.pk/movie/380-rain-man-1988",
+      "Cinderella Man": "https://cinejoy.pk/movie/921-cinderella-man-2005",
+      "Her": "https://cinejoy.pk/movie/152601-her-2013",
+      "Ip Man": "https://cinejoy.pk/movie/14756-ip-man-2008",
+      "Central Station": "https://cinejoy.pk/movie/666-central-station-1998",
+      "La Dolce Vita": "https://cinejoy.pk/movie/439-la-dolce-vita-1960",
+      "8½": "https://cinejoy.pk/movie/422-8-1963",
+      "Beauty and the Beast": "https://cinejoy.pk/movie/10020-beauty-and-the-beast-1991",
+      "Aladdin": "https://cinejoy.pk/movie/812-aladdin-1992",
+      "Persepolis": "https://cinejoy.pk/movie/2011-persepolis-2007",
+      "Waltz with Bashir": "https://cinejoy.pk/movie/8885-waltz-with-bashir-2008",
+      "Perfect Blue": "https://cinejoy.pk/movie/10494-perfect-blue-1997",
+      "Vaastav: The Reality": "https://cinejoy.pk/movie/146270-vaastav-the-reality-1999",
+      "Company": "https://cinejoy.pk/movie/15761-company-2002",
+      "Maqbool": "https://cinejoy.pk/movie/21265-maqbool-2003",
+      "Chungking Express": "https://cinejoy.pk/movie/11104-chungking-express-1994",
+      "Ayyappanum Koshiyum": "https://cinejoy.pk/movie/657996-ayyappanum-koshiyum-2020",
+      "Karnan": "https://cinejoy.pk/movie/680652-karnan-2021",
+      "Hey Ram": "https://cinejoy.pk/movie/60579-hey-ram-2000",
+      "Pokiri": "https://cinejoy.pk/movie/23381-pokiri-2006",
+      "Shakhahaari": "https://cinejoy.pk/movie/1230559-shakhahaari-2024",
+      "Chandu Champion": "https://cinejoy.pk/movie/1020951-chandu-champion-2024",
+      "The Tale of the Princess Kaguya": "https://cinejoy.pk/movie/149871-the-tale-of-the-princess-kaguya-2013",
+      "Nobody Knows": "https://cinejoy.pk/movie/2517-nobody-knows-2004",
+      "Dogville": "https://cinejoy.pk/movie/553-dogville-2003",
+      "Solaris (1972)": "https://cinejoy.pk/movie/593-solaris-1972",
+      "Mirror": "https://cinejoy.pk/movie/578385-mirror-1975",
+      "Ivan's Childhood": "https://cinejoy.pk/movie/31442-ivans-childhood-1962",
+      "Elite Squad": "https://cinejoy.pk/movie/7347-elite-squad-2007",
+      "Elite Squad: The Enemy Within": "https://cinejoy.pk/movie/47931-elite-squad-the-enemy-within-2010",
+      "Magnolia": "https://cinejoy.pk/movie/334-magnolia-1999",
+      "Dog Day Afternoon": "https://cinejoy.pk/movie/968-dog-day-afternoon-1975",
+      "Fail Safe": "https://cinejoy.pk/movie/31067-fail-safe-1964",
+      "Sanjuro": "https://cinejoy.pk/movie/11712-sanjuro-1962",
+      "Throne of Blood": "https://cinejoy.pk/movie/3777-throne-of-blood-1957",
+      "Kagemusha": "https://cinejoy.pk/movie/11953-kagemusha-1980",
+      "Winter Light": "https://cinejoy.pk/movie/29455-winter-light-1963",
+      "The Virgin Spring": "https://cinejoy.pk/movie/11656-the-virgin-spring-1960",
+      "Rome, Open City": "https://cinejoy.pk/movie/307-rome-open-city-1945",
+      "La Strada": "https://cinejoy.pk/movie/405-la-strada-1954",
+      "La Notte": "https://cinejoy.pk/movie/41050-la-notte-1961",
+      "Fitzcarraldo": "https://cinejoy.pk/movie/9343-fitzcarraldo-1982",
+      "A Short Film About Killing": "https://cinejoy.pk/movie/10754-a-short-film-about-killing-1988",
+      "Nostalghia": "https://cinejoy.pk/movie/1394-nostalghia-1983",
+      "The Cabinet of Dr. Caligari": "https://cinejoy.pk/movie/234-the-cabinet-of-dr-caligari-1920",
+      "Jalsaghar": "https://cinejoy.pk/movie/822-jalsaghar-1958",
+      "Elippathayam": "https://cinejoy.pk/movie/88093-elippathayam-1982",
+      "Guppy": "https://cinejoy.pk/movie/411054-guppy-2016",
+      "Joseph": "https://cinejoy.pk/movie/562326-joseph-2018",
+      "Malik": "https://cinejoy.pk/movie/474960-malik-2021",
+      "16 Vayathinile": "https://cinejoy.pk/movie/66332-16-vayathinile-1977",
+      "Pizza": "https://cinejoy.pk/movie/139357-pizza-2012",
+      "Madras": "https://cinejoy.pk/movie/280948-madras-2014",
+      "Love Today": "https://cinejoy.pk/movie/1032627-love-today-2022",
+      "Por Thozhil": "https://cinejoy.pk/movie/1115239-por-thozhil-2023",
+      "Khaidi": "https://cinejoy.pk/movie/269834-khaidi-1983",
+      "Leader": "https://cinejoy.pk/movie/1281122-leader-2010",
+      "Manam": "https://cinejoy.pk/movie/253533-manam-2014",
+      "Oopiri": "https://cinejoy.pk/movie/369925-oopiri-2016",
+      "Brochevarevarura": "https://cinejoy.pk/movie/611754-brochevarevarura-2019",
+      "The Disappearance of Haruhi Suzumiya": "https://cinejoy.pk/movie/36865-the-disappearance-of-haruhi-suzumiya-2010",
+      "Evangelion: 3.0+1.0 Thrice Upon a Time": "https://cinejoy.pk/movie/283566-evangelion-30-10-thrice-upon-a-time-2021",
+      "Project Hail Mary": "https://cinejoy.pk/movie/687163-project-hail-mary-2026",
+      "The Nightmare Before Christmas": "https://cinejoy.pk/movie/9479-the-nightmare-before-christmas-1993",
+      "The Invisible Guest": "https://cinejoy.pk/movie/411088-the-invisible-guest-2016",
+      "Special 26": "https://cinejoy.pk/movie/165904-special-26-2013",
+      "The Diving Bell and the Butterfly": "https://cinejoy.pk/movie/2013-the-diving-bell-and-the-butterfly-2007",
+      "Departures": "https://cinejoy.pk/movie/16804-departures-2008",
+      "Rosemary's Baby": "https://cinejoy.pk/movie/805-rosemarys-baby-1968",
+      "Big Fish": "https://cinejoy.pk/movie/587-big-fish-2003",
+      "Dallas Buyers Club": "https://cinejoy.pk/movie/152532-dallas-buyers-club-2013",
+      "Roman Holiday": "https://cinejoy.pk/movie/804-roman-holiday-1953",
+      "Sin City": "https://cinejoy.pk/movie/187-sin-city-2005",
+      "Arrival": "https://cinejoy.pk/movie/329865-arrival-2016",
+      "Avatar": "https://cinejoy.pk/movie/19995-avatar-2009",
+      "The Holdovers": "https://cinejoy.pk/movie/840430-the-holdovers-2023",
+      "Past Lives": "https://cinejoy.pk/movie/666277-past-lives-2023",
+      "Iron Man": "https://cinejoy.pk/movie/1726-iron-man-2008",
+      "Guardians of the Galaxy Vol. 3": "https://cinejoy.pk/movie/447365-guardians-of-the-galaxy-vol-3-2023",
+      "Thor: Ragnarok": "https://cinejoy.pk/movie/284053-thor-ragnarok-2017",
+      "X-Men: Days of Future Past": "https://cinejoy.pk/movie/127585-x-men-days-of-future-past-2014",
+      "Zack Snyder's Justice League": "https://cinejoy.pk/movie/791373-zack-snyders-justice-league-2021",
+      "Harry Potter and the Prisoner of Azkaban": "https://cinejoy.pk/movie/673-harry-potter-and-the-prisoner-of-azkaban-2004",
+      "Edge of Tomorrow": "https://cinejoy.pk/movie/137113-edge-of-tomorrow-2014",
+      "District 9": "https://cinejoy.pk/movie/17654-district-9-2009",
+      "Children of Men": "https://cinejoy.pk/movie/9693-children-of-men-2006",
+      "E.T. the Extra-Terrestrial": "https://cinejoy.pk/movie/601-et-the-extra-terrestrial-1982",
+      "Knives Out": "https://cinejoy.pk/movie/546554-knives-out-2019",
+      "Mulholland Drive": "https://cinejoy.pk/movie/1018-mulholland-drive-2001",
+      "Mystic River": "https://cinejoy.pk/movie/322-mystic-river-2003",
+      "Bohemian Rhapsody": "https://cinejoy.pk/movie/424694-bohemian-rhapsody-2018",
+      "Shoplifters": "https://cinejoy.pk/movie/505192-shoplifters-2018",
+      "Shrek": "https://cinejoy.pk/movie/808-shrek-2001",
+      "Ghost in the Shell": "https://cinejoy.pk/movie/9323-ghost-in-the-shell-1995",
+      "Shaun of the Dead": "https://cinejoy.pk/movie/747-shaun-of-the-dead-2004",
+      "Titanic": "https://cinejoy.pk/movie/597-titanic-1997",
+      "Before Midnight": "https://cinejoy.pk/movie/132344-before-midnight-2013",
+      "Kal Ho Naa Ho": "https://cinejoy.pk/movie/4254-kal-ho-naa-ho-2003",
+      "Jab We Met": "https://cinejoy.pk/movie/11807-jab-we-met-2007",
+      "Ne Zha 2": "https://cinejoy.pk/movie/980477-ne-zha-2-2025",
+      "Super 30": "https://cinejoy.pk/movie/534075-super-30-2019",
+      "Gully Boy": "https://cinejoy.pk/movie/491625-gully-boy-2019",
+      "Badhaai Ho": "https://cinejoy.pk/movie/547654-badhaai-ho-2018",
+      "Dev.D": "https://cinejoy.pk/movie/15977-devd-2009",
+      "My Name Is Khan": "https://cinejoy.pk/movie/26022-my-name-is-khan-2010",
+      "Secret Superstar": "https://cinejoy.pk/movie/441889-secret-superstar-2017",
+      "Uyare": "https://cinejoy.pk/movie/594712-uyare-2019",
+      "The Searchers": "https://cinejoy.pk/movie/3114-the-searchers-1956",
+      "A Fistful of Dollars": "https://cinejoy.pk/movie/391-a-fistful-of-dollars-1964",
+      "Life of Pi": "https://cinejoy.pk/movie/87827-life-of-pi-2012",
+      "Boyhood": "https://cinejoy.pk/movie/85350-boyhood-2014",
+      "Crouching Tiger, Hidden Dragon": "https://cinejoy.pk/movie/146-crouching-tiger-hidden-dragon-2000",
+      "Hero": "https://cinejoy.pk/movie/79-hero-2002",
+      "Toy Story 2": "https://cinejoy.pk/movie/863-toy-story-2-1999",
+      "Fantastic Mr. Fox": "https://cinejoy.pk/movie/10315-fantastic-mr-fox-2009",
+      "Jojo Rabbit": "https://cinejoy.pk/movie/515001-jojo-rabbit-2019",
+      "Shree 420": "https://cinejoy.pk/movie/48929-shree-420-1955",
+      "Salaam Bombay!": "https://cinejoy.pk/movie/45129-salaam-bombay-1988",
+      "Kabhi Haan Kabhi Naa": "https://cinejoy.pk/movie/15419-kabhi-haan-kabhi-naa-1994",
+      "Border": "https://cinejoy.pk/movie/33125-border-1997",
+      "Ankhon Dekhi": "https://cinejoy.pk/movie/241882-ankhon-dekhi-2013",
+      "Mukkabaaz": "https://cinejoy.pk/movie/470641-mukkabaaz-2017",
+      "Sonchiriya": "https://cinejoy.pk/movie/535144-sonchiriya-2019",
+      "Bramayugam": "https://cinejoy.pk/movie/1166133-bramayugam-2024",
+      "Killa": "https://cinejoy.pk/movie/284729-killa-2014",
+      "About Elly": "https://cinejoy.pk/movie/37181-about-elly-2009",
+      "Perfect Days": "https://cinejoy.pk/movie/976893-perfect-days-2023",
+      "Monster (2023)": "https://cinejoy.pk/movie/1050035-monster-2023",
+      "Memoir of a Snail": "https://cinejoy.pk/movie/1064486-memoir-of-a-snail-2024",
+      "Jigarthanda DoubleX": "https://cinejoy.pk/movie/1007074-jigarthanda-doublex-2023",
+      "A Taxi Driver": "https://cinejoy.pk/movie/437068-a-taxi-driver-2017",
+      "Love Letter": "https://cinejoy.pk/movie/47002-love-letter-1995",
+      "Like Father, Like Son": "https://cinejoy.pk/movie/177945-like-father-like-son-2013",
+      "Still Walking": "https://cinejoy.pk/movie/25050-still-walking-2008",
+      "Amour": "https://cinejoy.pk/movie/86837-amour-2012",
+      "Dancer in the Dark": "https://cinejoy.pk/movie/16-dancer-in-the-dark-2000",
+      "The Return (2003)": "https://cinejoy.pk/movie/11190-the-return-2003",
+      "The Conformist": "https://cinejoy.pk/movie/8416-the-conformist-1970",
+      "Nine Queens": "https://cinejoy.pk/movie/18079-nine-queens-2000",
+      "Boogie Nights": "https://cinejoy.pk/movie/4995-boogie-nights-1997",
+      "The Wrestler": "https://cinejoy.pk/movie/12163-the-wrestler-2008",
+      "All the President's Men": "https://cinejoy.pk/movie/891-all-the-presidents-men-1976",
+      "Carlito's Way": "https://cinejoy.pk/movie/6075-carlitos-way-1993",
+      "Through a Glass Darkly": "https://cinejoy.pk/movie/11602-through-a-glass-darkly-1961",
+      "Mad Max 2: The Road Warrior": "https://cinejoy.pk/movie/mad-max-2-the-road-warrior-1981",
+      "Jambalakidi Pamba": "https://cinejoy.pk/movie/jambalakidi-pamba-1993",
+      "Wolf Children": "https://cinejoy.pk/movie/wolf-children-2012",
+      "La La Land": "https://cinejoy.pk/movie/la-la-land-2016",
+      "Life of Brian": "https://cinejoy.pk/movie/life-of-brian-1979",
+      "Nausicaa of the Valley of the Wind": "https://cinejoy.pk/movie/nausicaa-of-the-valley-of-the-wind-1984",
+      "8 1/2": "https://cinejoy.pk/movie/8-1-2-1963",
+      "Twelve Monkeys": "https://cinejoy.pk/movie/twelve-monkeys-1995",
+      "Demon Slayer: Kimetsu no Yaiba - The Movie: Infinity Castle": "https://cinejoy.pk/movie/demon-slayer-kimetsu-no-yaiba-the-movie-infinity-castle-2025",
+      "Kantara: Chapter 1": "https://cinejoy.pk/movie/kantara-chapter-1-2025",
+      "Kill Bill: Vol. 2": "https://cinejoy.pk/movie/kill-bill-vol-2-2004",
+      "Kaathal - The Core": "https://cinejoy.pk/movie/kaathal-the-core-2023",
+      "Sapta Sagaradaache Ello - Side B": "https://cinejoy.pk/movie/sapta-sagaradaache-ello-side-b-2023",
+      "Joy Baba Felunath": "https://cinejoy.pk/movie/joy-baba-felunath-1979",
+      "Nenjathai Killathe": "https://cinejoy.pk/movie/nenjathai-killathe-1980",
+      "Ayutha Ezhuthu": "https://cinejoy.pk/movie/ayutha-ezhuthu-2004",
+      "Kizumonogatari III: Reiketsu": "https://cinejoy.pk/movie/kizumonogatari-iii-reiketsu-2017",
+      "wings of Desire": "https://cinejoy.pk/movie/wings-of-desire-1987",
+      "Kavaludaari": "https://cinejoy.pk/movie/kavaludaari-2019",
+      "Cleo from 5 to 7": "https://cinejoy.pk/movie/cleo-from-5-to-7-1962"
 };
-    window.CINEJOY_TOP500_URLS = CINEJOY_TOP500_URLS;
-    window.CINEJOY_TOP100_URLS = CINEJOY_TOP500_URLS; // backwards-compatible alias
+    window.CINEJOY_TOP750_URLS = CINEJOY_TOP750_URLS;
+    window.CINEJOY_TOP500_URLS = CINEJOY_TOP750_URLS; // backwards-compatible alias
+    window.CINEJOY_TOP100_URLS = CINEJOY_TOP750_URLS; // backwards-compatible alias
 
-    // Top 500 movies strictly according to IMDb rating (with rank as tiebreaker)
-    const top500ImdbList = movies.slice()
+    // Top 750 movies strictly according to IMDb rating (with rank as tiebreaker)
+    const top750ImdbList = movies.slice()
       .sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0) || (a.rank - b.rank))
-      .slice(0, 500);
-    const top500ImdbSet = new Set(Object.keys(CINEJOY_TOP500_URLS));
-    window.top500ImdbSet = top500ImdbSet;
-    window.top100ImdbSet = top500ImdbSet; // backwards-compatible alias
+      .slice(0, 750);
+    const top750ImdbSet = new Set(Object.keys(CINEJOY_TOP750_URLS));
+    window.top750ImdbSet = top750ImdbSet;
+    window.top500ImdbSet = top750ImdbSet; // backwards-compatible alias
+    window.top100ImdbSet = top750ImdbSet; // backwards-compatible alias
 
     window.getCinejoyMovieUrl = function(title) {
-      return CINEJOY_TOP500_URLS[title] || null;
+      return CINEJOY_TOP750_URLS[title] || null;
     };
     window.isTop100ImdbMovie = function(title) {
-      return Boolean(CINEJOY_TOP500_URLS[title]);
+      return Boolean(CINEJOY_TOP750_URLS[title]);
     };
     window.isTopCinejoyMovie = function(title) {
-      return Boolean(CINEJOY_TOP500_URLS[title]);
+      return Boolean(CINEJOY_TOP750_URLS[title]);
+    };
+    window.getCinejoyTop750Titles = function() {
+      return Object.keys(CINEJOY_TOP750_URLS);
     };
     window.getCinejoyTop500Titles = function() {
-      return Object.keys(CINEJOY_TOP500_URLS);
+      return Object.keys(CINEJOY_TOP750_URLS);
     };
     window.getCinejoyTop100Titles = function() {
-      return Object.keys(CINEJOY_TOP500_URLS);
+      return Object.keys(CINEJOY_TOP750_URLS);
+    };
+
+    // Direct Cinejoy TV shows streaming URLs for the Top 750 IMDb TV Shows (exact TMDb ID + slug)
+    const CINEJOY_TOP750_SHOWS_URLS = {
+      "24": "https://cinejoy.pk/tv/1973-24-2001",
+      "1883": "https://cinejoy.pk/tv/118357-1883-2021",
+      "1923": "https://cinejoy.pk/tv/157744-1923-2022",
+      "Breaking Bad": "https://cinejoy.pk/tv/1396-breaking-bad-2008",
+      "Planet Earth II": "https://cinejoy.pk/tv/68595-planet-earth-ii-2016",
+      "Planet Earth": "https://cinejoy.pk/tv/1044-planet-earth-2006",
+      "Band of Brothers": "https://cinejoy.pk/tv/4613-band-of-brothers-2001",
+      "Chernobyl": "https://cinejoy.pk/tv/87108-chernobyl-2019",
+      "Mahabharat (1988)": "https://cinejoy.pk/tv/12605-mahabharat-1988",
+      "The Wire": "https://cinejoy.pk/tv/1438-the-wire-2002",
+      "Avatar: The Last Airbender": "https://cinejoy.pk/tv/246-avatar-the-last-airbender-2005",
+      "Blue Planet II": "https://cinejoy.pk/tv/74313-blue-planet-ii-2017",
+      "Cosmos: A Spacetime Odyssey": "https://cinejoy.pk/tv/58474-cosmos-a-spacetime-odyssey-2014",
+      "Our Planet": "https://cinejoy.pk/tv/83880-our-planet-2019",
+      "Ramayan (1987)": "https://cinejoy.pk/tv/1990-ramayan-1987",
+      "The Chosen": "https://cinejoy.pk/tv/85077-the-chosen-2017",
+      "The Sopranos": "https://cinejoy.pk/tv/1398-the-sopranos-1999",
+      "Game of Thrones": "https://cinejoy.pk/tv/1399-game-of-thrones-2011",
+      "The World at War": "https://cinejoy.pk/tv/751-the-world-at-war-1973",
+      "Reply 1988": "https://cinejoy.pk/tv/64010-reply-1988-2015",
+      "Rick and Morty": "https://cinejoy.pk/tv/60625-rick-and-morty-2013",
+      "The Twilight Zone": "https://cinejoy.pk/tv/6357-the-twilight-zone-1959",
+      "Sherlock": "https://cinejoy.pk/tv/19885-sherlock-2010",
+      "Fullmetal Alchemist: Brotherhood": "https://cinejoy.pk/tv/31911-fullmetal-alchemist-brotherhood-2009",
+      "The Last Dance": "https://cinejoy.pk/tv/79525-the-last-dance-2020",
+      "Life (Series)": "https://cinejoy.pk/tv/16946-life-2009",
+      "Attack on Titan": "https://cinejoy.pk/tv/1429-attack-on-titan-2013",
+      "Gullak": "https://cinejoy.pk/tv/90966-gullak-2019",
+      "TVF Pitchers": "https://cinejoy.pk/tv/63180-tvf-pitchers-2015",
+      "Gullak (Season 4)": "https://cinejoy.pk/tv/90966-gullak-2024",
+      "My Mister": "https://cinejoy.pk/tv/76662-my-mister-2018",
+      "The Civil War": "https://cinejoy.pk/tv/9693-the-civil-war-1990",
+      "The Vietnam War": "https://cinejoy.pk/tv/46434-the-vietnam-war-2017",
+      "Batman: The Animated Series": "https://cinejoy.pk/tv/2098-batman-the-animated-series-1992",
+      "The Office": "https://cinejoy.pk/tv/2316-the-office-2005",
+      "Firefly": "https://cinejoy.pk/tv/1437-firefly-2002",
+      "Only Fools and Horses": "https://cinejoy.pk/tv/72-only-fools-and-horses-1981",
+      "Better Call Saul": "https://cinejoy.pk/tv/60059-better-call-saul-2015",
+      "The Beatles: Get Back": "https://cinejoy.pk/tv/128876-the-beatles-get-back-2021",
+      "Arcane": "https://cinejoy.pk/tv/94605-arcane-2021",
+      "Kota Factory": "https://cinejoy.pk/tv/89113-kota-factory-2019",
+      "The Blue Planet": "https://cinejoy.pk/tv/13579-the-blue-planet-2001",
+      "Frozen Planet": "https://cinejoy.pk/tv/8724-frozen-planet-2011",
+      "Aspirants": "https://cinejoy.pk/tv/124411-aspirants-2021",
+      "Misaeng": "https://cinejoy.pk/tv/61678-misaeng-2014",
+      "Dynasties": "https://cinejoy.pk/tv/82953-dynasties-2018",
+      "Malgudi Days": "https://cinejoy.pk/tv/15211-malgudi-days-1986",
+      "Kota Factory (Season 3)": "https://cinejoy.pk/tv/89113-kota-factory-2024",
+      "Bluey": "https://cinejoy.pk/tv/82728-bluey-2018",
+      "Office Office": "https://cinejoy.pk/tv/18327-office-office-2001",
+      "Detectorists": "https://cinejoy.pk/tv/61828-detectorists-2014",
+      "Africa": "https://cinejoy.pk/tv/46664-africa-2013",
+      "True Detective": "https://cinejoy.pk/tv/46648-true-detective-2014",
+      "Death Note": "https://cinejoy.pk/tv/13916-death-note-2006",
+      "Fargo (Series)": "https://cinejoy.pk/tv/60622-fargo-2014",
+      "Friends": "https://cinejoy.pk/tv/1668-friends-1994",
+      "Seinfeld": "https://cinejoy.pk/tv/1400-seinfeld-1989",
+      "Succession": "https://cinejoy.pk/tv/76331-succession-2018",
+      "One Piece": "https://cinejoy.pk/tv/37854-one-piece-1999",
+      "Cowboy Bebop": "https://cinejoy.pk/tv/30991-cowboy-bebop-1998",
+      "Gravity Falls": "https://cinejoy.pk/tv/40075-gravity-falls-2012",
+      "Panchayat": "https://cinejoy.pk/tv/101352-panchayat-2020",
+      "Rocket Boys": "https://cinejoy.pk/tv/138211-rocket-boys-2022",
+      "When They See Us": "https://cinejoy.pk/tv/81355-when-they-see-us-2019",
+      "The West Wing": "https://cinejoy.pk/tv/688-the-west-wing-1999",
+      "Seven Worlds, One Planet": "https://cinejoy.pk/tv/90790-seven-worlds-one-planet-2019",
+      "X-Men '97": "https://cinejoy.pk/tv/138502-x-men-97-2024",
+      "Panchayat (Season 3)": "https://cinejoy.pk/tv/101352-panchayat-2024",
+      "Twinkling Watermelon": "https://cinejoy.pk/tv/212204-twinkling-watermelon-2023",
+      "Bleach: Thousand-Year Blood War": "https://cinejoy.pk/tv/332002-bleach-thousand-year-blood-war-2022",
+      "Gintama": "https://cinejoy.pk/tv/57041-gintama-2006",
+      "Peaky Blinders": "https://cinejoy.pk/tv/60574-peaky-blinders-2013",
+      "Narcos": "https://cinejoy.pk/tv/63351-narcos-2015",
+      "The Last of Us": "https://cinejoy.pk/tv/100088-the-last-of-us-2023",
+      "Ted Lasso": "https://cinejoy.pk/tv/97546-ted-lasso-2020",
+      "Twin Peaks": "https://cinejoy.pk/tv/1920-twin-peaks-1990",
+      "It's Always Sunny in Philadelphia": "https://cinejoy.pk/tv/2710-its-always-sunny-in-philadelphia-2005",
+      "Curb Your Enthusiasm": "https://cinejoy.pk/tv/4546-curb-your-enthusiasm-2000",
+      "Vinland Saga": "https://cinejoy.pk/tv/88803-vinland-saga-2019",
+      "BoJack Horseman": "https://cinejoy.pk/tv/61222-bojack-horseman-2014",
+      "Dragon Ball Z": "https://cinejoy.pk/tv/12971-dragon-ball-z-1989",
+      "Steins;Gate": "https://cinejoy.pk/tv/42509-steins-gate-2011",
+      "Over the Garden Wall": "https://cinejoy.pk/tv/61617-over-the-garden-wall-2014",
+      "Bocchi the Rock!": "https://cinejoy.pk/tv/119100-bocchi-the-rock-2022",
+      "Fawlty Towers": "https://cinejoy.pk/tv/2207-fawlty-towers-1975",
+      "Yes Minister": "https://cinejoy.pk/tv/4549-yes-minister-1980",
+      "Hospital Playlist": "https://cinejoy.pk/tv/96102-hospital-playlist-2020",
+      "When Life Gives You Tangerines": "https://cinejoy.pk/tv/219246-when-life-gives-you-tangerines-2025",
+      "Beyond Evil": "https://cinejoy.pk/tv/116612-beyond-evil-2021",
+      "Severance (Season 2)": "https://cinejoy.pk/tv/95396-severance-2025",
+      "The Last of Us (Season 2)": "https://cinejoy.pk/tv/100088-the-last-of-us-2025",
+      "Sarabhai vs Sarabhai": "https://cinejoy.pk/tv/4165-sarabhai-vs-sarabhai-2004",
+      "Father Ted": "https://cinejoy.pk/tv/1813-father-ted-1995",
+      "Blackadder": "https://cinejoy.pk/tv/7246-blackadder-1983",
+      "Stranger Things": "https://cinejoy.pk/tv/66732-stranger-things-2016",
+      "Black Mirror": "https://cinejoy.pk/tv/42009-black-mirror-2011",
+      "Mad Men": "https://cinejoy.pk/tv/1104-mad-men-2007",
+      "The Boys": "https://cinejoy.pk/tv/76479-the-boys-2019",
+      "Dark": "https://cinejoy.pk/tv/70523-dark-2017",
+      "The Mandalorian": "https://cinejoy.pk/tv/82856-the-mandalorian-2019",
+      "Dexter": "https://cinejoy.pk/tv/1405-dexter-2006",
+      "The Marvelous Mrs. Maisel": "https://cinejoy.pk/tv/70796-the-marvelous-mrs-maisel-2017",
+      "Arrested Development": "https://cinejoy.pk/tv/4589-arrested-development-2003",
+      "Severance": "https://cinejoy.pk/tv/95396-severance-2022",
+      "Fleabag": "https://cinejoy.pk/tv/67070-fleabag-2016",
+      "Yellowstone": "https://cinejoy.pk/tv/73586-yellowstone-2018",
+      "Downton Abbey": "https://cinejoy.pk/tv/33907-downton-abbey-2010",
+      "Rome": "https://cinejoy.pk/tv/1891-rome-2005",
+      "Line of Duty": "https://cinejoy.pk/tv/43982-line-of-duty-2012",
+      "House M.D.": "https://cinejoy.pk/tv/1408-house-md-2004",
+      "Battlestar Galactica": "https://cinejoy.pk/tv/1972-battlestar-galactica-2004",
+      "Star Trek: The Next Generation": "https://cinejoy.pk/tv/655-star-trek-the-next-generation-1987",
+      "Invincible": "https://cinejoy.pk/tv/95557-invincible-2021",
+      "Monster": "https://cinejoy.pk/tv/30981-monster-2004",
+      "Haikyu!!": "https://cinejoy.pk/tv/60863-haikyu-2014",
+      "The Simpsons": "https://cinejoy.pk/tv/456-the-simpsons-1989",
+      "The Family Man": "https://cinejoy.pk/tv/93352-the-family-man-2019",
+      "Gomorrah": "https://cinejoy.pk/tv/61068-gomorrah-2014",
+      "The Pitt": "https://cinejoy.pk/tv/250307-the-pitt-2025",
+      "Blue Eye Samurai": "https://cinejoy.pk/tv/225180-blue-eye-samurai-2023",
+      "This Is Us": "https://cinejoy.pk/tv/67136-this-is-us-2016",
+      "Black Warrant": "https://cinejoy.pk/tv/279339-black-warrant-2025",
+      "Yeh Meri Family": "https://cinejoy.pk/tv/81166-yeh-meri-family-2018",
+      "Crash Landing on You": "https://cinejoy.pk/tv/94796-crash-landing-on-you-2019",
+      "Move to Heaven": "https://cinejoy.pk/tv/96571-move-to-heaven-2021",
+      "It's Okay to Not Be Okay": "https://cinejoy.pk/tv/96462-its-okay-to-not-be-okay-2020",
+      "Signal": "https://cinejoy.pk/tv/64840-signal-2016",
+      "Mr. Sunshine": "https://cinejoy.pk/tv/75820-mr-sunshine-2018",
+      "Prison Playbook": "https://cinejoy.pk/tv/74821-prison-playbook-2017",
+      "Stranger": "https://cinejoy.pk/tv/70626-stranger-2017",
+      "Sunderland 'Til I Die": "https://cinejoy.pk/tv/84777-sunderland-til-i-die-2018",
+      "Top Gear": "https://cinejoy.pk/tv/45-top-gear-2002",
+      "Byomkesh Bakshi": "https://cinejoy.pk/tv/62707-byomkesh-bakshi-1993",
+      "Scavengers Reign": "https://cinejoy.pk/tv/204154-scavengers-reign-2023",
+      "Invincible (Season 2)": "https://cinejoy.pk/tv/95557-invincible-2024",
+      "ImMature": "https://cinejoy.pk/tv/87030-immature-2019",
+      "Lovely Runner": "https://cinejoy.pk/tv/230923-lovely-runner-2024",
+      "Alchemy of Souls": "https://cinejoy.pk/tv/135157-alchemy-of-souls-2022",
+      "Six Feet Under": "https://cinejoy.pk/tv/1274-six-feet-under-2001",
+      "The Bureau (Le Bureau des Legendes)": "https://cinejoy.pk/tv/62476-the-bureau-2015",
+      "The Bureau": "https://cinejoy.pk/tv/62476-the-bureau-2015",
+      "The Newsroom": "https://cinejoy.pk/tv/15621-the-newsroom-2012",
+      "Oz": "https://cinejoy.pk/tv/3322-oz-1997",
+      "The Thick of It": "https://cinejoy.pk/tv/4507-the-thick-of-it-2005",
+      "Infinity Train": "https://cinejoy.pk/tv/91425-infinity-train-2019",
+      "Mushishi": "https://cinejoy.pk/tv/26867-mushishi-2005",
+      "Berserk": "https://cinejoy.pk/tv/35935-berserk-1997",
+      "Made in Abyss": "https://cinejoy.pk/tv/72636-made-in-abyss-2017",
+      "Odd Taxi": "https://cinejoy.pk/tv/116727-odd-taxi-2021",
+      "Farscape": "https://cinejoy.pk/tv/4271-farscape-1999",
+      "The Shield": "https://cinejoy.pk/tv/1414-the-shield-2002",
+      "Fruits Basket": "https://cinejoy.pk/tv/85991-fruits-basket-2019",
+      "The Crown": "https://cinejoy.pk/tv/65494-the-crown-2016",
+      "House of Cards": "https://cinejoy.pk/tv/1425-house-of-cards-2013",
+      "Mindhunter": "https://cinejoy.pk/tv/67744-mindhunter-2017",
+      "Parks and Recreation": "https://cinejoy.pk/tv/8592-parks-and-recreation-2009",
+      "The Bear": "https://cinejoy.pk/tv/136315-the-bear-2022",
+      "Deadwood": "https://cinejoy.pk/tv/1406-deadwood-2004",
+      "Boardwalk Empire": "https://cinejoy.pk/tv/1621-boardwalk-empire-2010",
+      "Justified": "https://cinejoy.pk/tv/1436-justified-2010",
+      "The X-Files": "https://cinejoy.pk/tv/4087-the-x-files-1993",
+      "Doctor Who": "https://cinejoy.pk/tv/121-doctor-who-2005",
+      "Daredevil": "https://cinejoy.pk/tv/61889-daredevil-2015",
+      "Atlanta": "https://cinejoy.pk/tv/65495-atlanta-2016",
+      "Demon Slayer: Kimetsu no Yaiba": "https://cinejoy.pk/tv/85937-demon-slayer-kimetsu-no-yaiba-2019",
+      "Jujutsu Kaisen": "https://cinejoy.pk/tv/95479-jujutsu-kaisen-2020",
+      "Cyberpunk: Edgerunners": "https://cinejoy.pk/tv/105248-cyberpunk-edgerunners-2022",
+      "Mob Psycho 100": "https://cinejoy.pk/tv/67075-mob-psycho-100-2016",
+      "Samurai Champloo": "https://cinejoy.pk/tv/1063-samurai-champloo-2004",
+      "Adventure Time": "https://cinejoy.pk/tv/15260-adventure-time-2010",
+      "Special OPS": "https://cinejoy.pk/tv/100612-special-ops-2020",
+      "The Bridge": "https://cinejoy.pk/tv/45016-the-bridge-2011",
+      "Dopesick": "https://cinejoy.pk/tv/110695-dopesick-2021",
+      "Making a Murderer": "https://cinejoy.pk/tv/64439-making-a-murderer-2015",
+      "The Penguin": "https://cinejoy.pk/tv/194764-the-penguin-2024",
+      "Heartstopper": "https://cinejoy.pk/tv/124834-heartstopper-2022",
+      "Your Lie in April": "https://cinejoy.pk/tv/61663-your-lie-in-april-2014",
+      "Archer": "https://cinejoy.pk/tv/10283-archer-2009",
+      "Primal": "https://cinejoy.pk/tv/89456-primal-2019",
+      "Frasier": "https://cinejoy.pk/tv/3452-frasier-1993",
+      "Taskmaster": "https://cinejoy.pk/tv/63404-taskmaster-2015",
+      "Sons of Anarchy": "https://cinejoy.pk/tv/1409-sons-of-anarchy-2008",
+      "A Knight of the Seven Kingdoms": "https://cinejoy.pk/tv/224372-a-knight-of-the-seven-kingdoms-2026",
+      "Shameless": "https://cinejoy.pk/tv/34307-shameless-2011",
+      "The Haunting of Hill House": "https://cinejoy.pk/tv/72844-the-haunting-of-hill-house-2018",
+      "Planet Earth III": "https://cinejoy.pk/tv/116156-planet-earth-iii-2023",
+      "The Jinx": "https://cinejoy.pk/tv/61929-the-jinx-2015",
+      "Our Blues": "https://cinejoy.pk/tv/135840-our-blues-2022",
+      "Twenty-Five Twenty-One": "https://cinejoy.pk/tv/129888-twenty-five-twenty-one-2022",
+      "Endeavour": "https://cinejoy.pk/tv/44264-endeavour-2012",
+      "The Bridge (Bron/Broen)": "https://cinejoy.pk/tv/45016-the-bridge-2011",
+      "My Brilliant Friend": "https://cinejoy.pk/tv/78154-my-brilliant-friend-2018",
+      "Samurai Jack": "https://cinejoy.pk/tv/2723-samurai-jack-2001",
+      "Great Teacher Onizuka": "https://cinejoy.pk/tv/62057-great-teacher-onizuka-1999",
+      "Prime Suspect": "https://cinejoy.pk/tv/2583-prime-suspect-1991",
+      "Agatha Christie's Poirot": "https://cinejoy.pk/tv/790-agatha-christies-poirot-1989",
+      "Hilda": "https://cinejoy.pk/tv/82456-hilda-2018",
+      "Westworld": "https://cinejoy.pk/tv/63247-westworld-2016",
+      "The Queen's Gambit": "https://cinejoy.pk/tv/87739-the-queens-gambit-2020",
+      "Mr. Robot": "https://cinejoy.pk/tv/62560-mr-robot-2015",
+      "Ozark": "https://cinejoy.pk/tv/69740-ozark-2017",
+      "Hannibal (Series)": "https://cinejoy.pk/tv/40008-hannibal-2013",
+      "Modern Family": "https://cinejoy.pk/tv/1421-modern-family-2009",
+      "Community": "https://cinejoy.pk/tv/18347-community-2009",
+      "The Expanse": "https://cinejoy.pk/tv/63639-the-expanse-2015",
+      "Person of Interest": "https://cinejoy.pk/tv/1411-person-of-interest-2011",
+      "The Punisher": "https://cinejoy.pk/tv/67178-the-punisher-2017",
+      "Vikings": "https://cinejoy.pk/tv/61856-vikings-2013",
+      "The Last Kingdom": "https://cinejoy.pk/tv/63333-the-last-kingdom-2015",
+      "Spartacus": "https://cinejoy.pk/tv/46296-spartacus-2010",
+      "Silicon Valley": "https://cinejoy.pk/tv/60573-silicon-valley-2014",
+      "Neon Genesis Evangelion": "https://cinejoy.pk/tv/890-neon-genesis-evangelion-1995",
+      "Futurama": "https://cinejoy.pk/tv/615-futurama-1999",
+      "Sacred Games": "https://cinejoy.pk/tv/79352-sacred-games-2018",
+      "Mirzapur": "https://cinejoy.pk/tv/84105-mirzapur-2018",
+      "Borgen": "https://cinejoy.pk/tv/42445-borgen-2010",
+      "Generation Kill": "https://cinejoy.pk/tv/17035-generation-kill-2008",
+      "Formula 1: Drive to Survive": "https://cinejoy.pk/tv/87083-formula-1-drive-to-survive-2019",
+      "Chef's Table": "https://cinejoy.pk/tv/62391-chefs-table-2015",
+      "What We Do in the Shadows": "https://cinejoy.pk/tv/83631-what-we-do-in-the-shadows-2019",
+      "Oshi no Ko": "https://cinejoy.pk/tv/203737-oshi-no-ko-2023",
+      "Violet Evergarden": "https://cinejoy.pk/tv/75214-violet-evergarden-2018",
+      "The Owl House": "https://cinejoy.pk/tv/92685-the-owl-house-2020",
+      "The Legend of Korra": "https://cinejoy.pk/tv/33880-the-legend-of-korra-2012",
+      "Black Books": "https://cinejoy.pk/tv/903-black-books-2000",
+      "The IT Crowd": "https://cinejoy.pk/tv/2490-the-it-crowd-2006",
+      "Luther": "https://cinejoy.pk/tv/1426-luther-2010",
+      "Happy Valley": "https://cinejoy.pk/tv/61244-happy-valley-2014",
+      "Extraordinary Attorney Woo": "https://cinejoy.pk/tv/197067-extraordinary-attorney-woo-2022",
+      "Moving": "https://cinejoy.pk/tv/126485-moving-2023",
+      "Hometown Cha-Cha-Cha": "https://cinejoy.pk/tv/128883-hometown-cha-cha-cha-2021",
+      "Mr. Queen": "https://cinejoy.pk/tv/108261-mr-queen-2020",
+      "The Untamed": "https://cinejoy.pk/tv/90761-the-untamed-2019",
+      "Story of Yanxi Palace": "https://cinejoy.pk/tv/81133-story-of-yanxi-palace-2018",
+      "All or Nothing: Manchester City": "https://cinejoy.pk/tv/81705-all-or-nothing-manchester-city-2018",
+      "The Grand Tour": "https://cinejoy.pk/tv/67557-the-grand-tour-2016",
+      "Slow Horses (Season 4)": "https://cinejoy.pk/tv/95480-slow-horses-2024",
+      "Ayali": "https://cinejoy.pk/tv/218640-ayali-2023",
+      "Death's Game": "https://cinejoy.pk/tv/218230-deaths-game-2023",
+      "Spiral (Engrenages)": "https://cinejoy.pk/tv/11726-spiral-2005",
+      "Jury Duty": "https://cinejoy.pk/tv/222023-jury-duty-2023",
+      "Foyle's War": "https://cinejoy.pk/tv/3163-foyles-war-2002",
+      "One Foot in the Grave": "https://cinejoy.pk/tv/4548-one-foot-in-the-grave-1990",
+      "Louie": "https://cinejoy.pk/tv/32962-louie-2010",
+      "The Legend of Vox Machina": "https://cinejoy.pk/tv/135934-the-legend-of-vox-machina-2022",
+      "Gargoyles": "https://cinejoy.pk/tv/1719-gargoyles-1994",
+      "Ranking of Kings": "https://cinejoy.pk/tv/112613-ranking-of-kings-2021",
+      "Friday Night Lights": "https://cinejoy.pk/tv/4278-friday-night-lights-2006",
+      "Big Little Lies": "https://cinejoy.pk/tv/66292-big-little-lies-2017",
+      "M*A*S*H": "https://cinejoy.pk/tv/918-m-a-s-h-1972",
+      "Inside No. 9": "https://cinejoy.pk/tv/61746-inside-no-9-2014",
+      "Trailer Park Boys": "https://cinejoy.pk/tv/3796-trailer-park-boys-2001",
+      "Homicide: Life on the Street": "https://cinejoy.pk/tv/4464-homicide-life-on-the-street-1993",
+      "Fallout": "https://cinejoy.pk/tv/106379-fallout-2024",
+      "Andor": "https://cinejoy.pk/tv/83867-andor-2022",
+      "House of the Dragon": "https://cinejoy.pk/tv/94997-house-of-the-dragon-2022",
+      "The Americans": "https://cinejoy.pk/tv/46533-the-americans-2013",
+      "Brooklyn Nine-Nine": "https://cinejoy.pk/tv/48891-brooklyn-nine-nine-2013",
+      "Suits": "https://cinejoy.pk/tv/37680-suits-2011",
+      "Supernatural": "https://cinejoy.pk/tv/1622-supernatural-2005",
+      "Fringe": "https://cinejoy.pk/tv/1705-fringe-2008",
+      "Outlander": "https://cinejoy.pk/tv/56570-outlander-2014",
+      "The Handmaid's Tale": "https://cinejoy.pk/tv/69478-the-handmaids-tale-2017",
+      "Barry": "https://cinejoy.pk/tv/73107-barry-2018",
+      "Naruto": "https://cinejoy.pk/tv/46260-naruto-2002",
+      "Chainsaw Man": "https://cinejoy.pk/tv/114410-chainsaw-man-2022",
+      "Love, Death & Robots": "https://cinejoy.pk/tv/86831-love-death-and-robots-2019",
+      "Farzi": "https://cinejoy.pk/tv/132117-farzi-2023",
+      "Babylon Berlin": "https://cinejoy.pk/tv/66980-babylon-berlin-2017",
+      "Mare of Easttown": "https://cinejoy.pk/tv/115004-mare-of-easttown-2021",
+      "The Night Of": "https://cinejoy.pk/tv/66276-the-night-of-2016",
+      "Unbelievable": "https://cinejoy.pk/tv/91275-unbelievable-2019",
+      "Bosch": "https://cinejoy.pk/tv/60585-bosch-2014",
+      "King of the Hill": "https://cinejoy.pk/tv/2122-king-of-the-hill-1997",
+      "Regular Show": "https://cinejoy.pk/tv/31132-regular-show-2010",
+      "Amphibia": "https://cinejoy.pk/tv/85349-amphibia-2019",
+      "Star Wars: The Clone Wars": "https://cinejoy.pk/tv/4194-star-wars-the-clone-wars-2008",
+      "Mr. Bean": "https://cinejoy.pk/tv/4327-mr-bean-1990",
+      "Peep Show": "https://cinejoy.pk/tv/815-peep-show-2003",
+      "Billions": "https://cinejoy.pk/tv/62852-billions-2016",
+      "Broadchurch": "https://cinejoy.pk/tv/1427-broadchurch-2013",
+      "The Inbetweeners": "https://cinejoy.pk/tv/7317-the-inbetweeners-2008",
+      "Stargate SG-1": "https://cinejoy.pk/tv/4629-stargate-sg-1-1997",
+      "Babylon 5": "https://cinejoy.pk/tv/3137-babylon-5-1994",
+      "Utopia": "https://cinejoy.pk/tv/46511-utopia-2013",
+      "Permanent Roommates": "https://cinejoy.pk/tv/64068-permanent-roommates-2014",
+      "Bandish Bandits": "https://cinejoy.pk/tv/106872-bandish-bandits-2020",
+      "Vincenzo": "https://cinejoy.pk/tv/117376-vincenzo-2021",
+      "Weak Hero Class 1": "https://cinejoy.pk/tv/200709-weak-hero-class-1-2022",
+      "Our Beloved Summer": "https://cinejoy.pk/tv/135897-our-beloved-summer-2021",
+      "Healer": "https://cinejoy.pk/tv/61670-healer-2014",
+      "Mouse": "https://cinejoy.pk/tv/117378-mouse-2021",
+      "Taxi Driver (Series)": "https://cinejoy.pk/tv/119769-taxi-driver-2021",
+      "Street Food": "https://cinejoy.pk/tv/87832-street-food-2019",
+      "The Killing (Danish)": "https://cinejoy.pk/tv/32368-the-killing-2007",
+      "House of the Dragon (Season 2)": "https://cinejoy.pk/tv/94997-house-of-the-dragon-2024",
+      "Mirzapur (Season 3)": "https://cinejoy.pk/tv/84105-mirzapur-2024",
+      "The Killing (Forbrydelsen)": "https://cinejoy.pk/tv/32368-the-killing-2007",
+      "Red Dwarf": "https://cinejoy.pk/tv/326-red-dwarf-1988",
+      "The Fugitive (Series)": "https://cinejoy.pk/tv/10083-the-fugitive-1963",
+      "Rocko's Modern Life": "https://cinejoy.pk/tv/657-rockos-modern-life-1993",
+      "Clannad": "https://cinejoy.pk/tv/24835-clannad-2007",
+      "Ghost in the Shell: Stand Alone Complex": "https://cinejoy.pk/tv/1095-ghost-in-the-shell-stand-alone-complex-2002",
+      "Hellsing Ultimate": "https://cinejoy.pk/tv/61752-hellsing-ultimate-2006",
+      "Banshee": "https://cinejoy.pk/tv/41727-banshee-2013",
+      "Columbo": "https://cinejoy.pk/tv/873-columbo-1968",
+      "Euphoria": "https://cinejoy.pk/tv/85552-euphoria-2019",
+      "Homeland": "https://cinejoy.pk/tv/1407-homeland-2011",
+      "How I Met Your Mother": "https://cinejoy.pk/tv/1100-how-i-met-your-mother-2005",
+      "Lost": "https://cinejoy.pk/tv/4607-lost-2004",
+      "Prison Break": "https://cinejoy.pk/tv/2288-prison-break-2005",
+      "Orphan Black": "https://cinejoy.pk/tv/56296-orphan-black-2013",
+      "My Hero Academia": "https://cinejoy.pk/tv/65930-my-hero-academia-2016",
+      "Castlevania": "https://cinejoy.pk/tv/71024-castlevania-2017",
+      "Fauda": "https://cinejoy.pk/tv/69557-fauda-2015",
+      "The Pacific": "https://cinejoy.pk/tv/16997-the-pacific-2010",
+      "Reservation Dogs": "https://cinejoy.pk/tv/95215-reservation-dogs-2021",
+      "Sex Education": "https://cinejoy.pk/tv/81356-sex-education-2019",
+      "Narcos: Mexico": "https://cinejoy.pk/tv/80968-narcos-mexico-2018",
+      "Re:Zero": "https://cinejoy.pk/tv/65942-rezero-2016",
+      "Mushoku Tensei": "https://cinejoy.pk/tv/94664-mushoku-tensei-2021",
+      "One Piece (Live Action)": "https://cinejoy.pk/tv/111110-one-piece-2023",
+      "Helluva Boss": "https://cinejoy.pk/tv/289892-helluva-boss-2019",
+      "The Fresh Prince of Bel-Air": "https://cinejoy.pk/tv/1892-the-fresh-prince-of-bel-air-1990",
+      "Scrubs": "https://cinejoy.pk/tv/4556-scrubs-2001",
+      "Derry Girls": "https://cinejoy.pk/tv/76148-derry-girls-2018",
+      "Veep": "https://cinejoy.pk/tv/2947-veep-2012",
+      "Psych": "https://cinejoy.pk/tv/1447-psych-2006",
+      "Top Boy": "https://cinejoy.pk/tv/41889-top-boy-2011",
+      "Buffy the Vampire Slayer": "https://cinejoy.pk/tv/95-buffy-the-vampire-slayer-1997",
+      "The Leftovers": "https://cinejoy.pk/tv/54344-the-leftovers-2014",
+      "Hostel Daze": "https://cinejoy.pk/tv/96421-hostel-daze-2019",
+      "Kingdom": "https://cinejoy.pk/tv/70593-kingdom-2019",
+      "Sky Castle": "https://cinejoy.pk/tv/257511-sky-castle-2018",
+      "Midnight Diner": "https://cinejoy.pk/tv/47008-midnight-diner-2009",
+      "Pachinko": "https://cinejoy.pk/tv/110382-pachinko-2022",
+      "Welcome to Wrexham": "https://cinejoy.pk/tv/126929-welcome-to-wrexham-2022",
+      "The Great British Bake Off": "https://cinejoy.pk/tv/34549-the-great-british-bake-off-2010",
+      "Bad Sisters": "https://cinejoy.pk/tv/199318-bad-sisters-2022",
+      "Sandwiched Forever": "https://cinejoy.pk/tv/115220-sandwiched-forever-2020",
+      "Daily Dose of Sunshine": "https://cinejoy.pk/tv/205319-daily-dose-of-sunshine-2023",
+      "My Liberation Notes": "https://cinejoy.pk/tv/154887-my-liberation-notes-2022",
+      "Shtisel": "https://cinejoy.pk/tv/56017-shtisel-2013",
+      "Call My Agent! (Dix pour cent)": "https://cinejoy.pk/tv/64165-call-my-agent-2015",
+      "Pluribus": "https://cinejoy.pk/tv/225171-pluribus-2025",
+      "Dr. Stone": "https://cinejoy.pk/tv/86031-dr-stone-2019",
+      "Last Chance U": "https://cinejoy.pk/tv/67027-last-chance-u-2016",
+      "Hell on Wheels": "https://cinejoy.pk/tv/1401-hell-on-wheels-2011",
+      "Rectify": "https://cinejoy.pk/tv/46619-rectify-2013",
+      "Damages": "https://cinejoy.pk/tv/4920-damages-2007",
+      "Khichdi": "https://cinejoy.pk/tv/91511-khichdi-2002",
+      "Toast of London": "https://cinejoy.pk/tv/61413-toast-of-london-2012",
+      "Dad's Army": "https://cinejoy.pk/tv/505-dads-army-1968",
+      "Pantheon": "https://cinejoy.pk/tv/195339-pantheon-2022",
+      "Hill Street Blues": "https://cinejoy.pk/tv/3828-hill-street-blues-1981",
+      "Craig of the Creek": "https://cinejoy.pk/tv/79061-craig-of-the-creek-2018",
+      "Dragon Ball": "https://cinejoy.pk/tv/12609-dragon-ball-1986",
+      "Assassination Classroom": "https://cinejoy.pk/tv/62110-assassination-classroom-2013",
+      "Anohana": "https://cinejoy.pk/tv/39434-anohana-2011",
+      "Parasyte: The Maxim": "https://cinejoy.pk/tv/61459-parasyte-the-maxim-2014",
+      "Psycho-Pass": "https://cinejoy.pk/tv/43865-psycho-pass-2012",
+      "Parenthood": "https://cinejoy.pk/tv/21762-parenthood-2010",
+      "Halt and Catch Fire": "https://cinejoy.pk/tv/59659-halt-and-catch-fire-2014",
+      "Pose": "https://cinejoy.pk/tv/79084-pose-2018",
+      "Normal People": "https://cinejoy.pk/tv/89905-normal-people-2020",
+      "The Good Wife": "https://cinejoy.pk/tv/1435-the-good-wife-2009",
+      "I Love Lucy": "https://cinejoy.pk/tv/2730-i-love-lucy-1951",
+      "The Golden Girls": "https://cinejoy.pk/tv/1678-the-golden-girls-1985",
+      "Master of None": "https://cinejoy.pk/tv/64254-master-of-none-2015",
+      "Grace and Frankie": "https://cinejoy.pk/tv/62320-grace-and-frankie-2015",
+      "Letterkenny": "https://cinejoy.pk/tv/65798-letterkenny-2016",
+      "The Dragon Prince": "https://cinejoy.pk/tv/81046-the-dragon-prince-2018",
+      "Young Justice": "https://cinejoy.pk/tv/33217-young-justice-2010",
+      "We Bare Bears": "https://cinejoy.pk/tv/63401-we-bare-bears-2015",
+      "Slow Horses": "https://cinejoy.pk/tv/95480-slow-horses-2022",
+      "The Big Bang Theory": "https://cinejoy.pk/tv/1418-the-big-bang-theory-2007",
+      "Money Heist": "https://cinejoy.pk/tv/71446-money-heist-2017",
+      "Sense8": "https://cinejoy.pk/tv/61664-sense8-2015",
+      "Loki": "https://cinejoy.pk/tv/84958-loki-2021",
+      "The Good Place": "https://cinejoy.pk/tv/66573-the-good-place-2016",
+      "Bleach": "https://cinejoy.pk/tv/30984-bleach-2004",
+      "Family Guy": "https://cinejoy.pk/tv/1434-family-guy-1999",
+      "Peacemaker": "https://cinejoy.pk/tv/110492-peacemaker-2022",
+      "Daredevil: Born Again": "https://cinejoy.pk/tv/202555-daredevil-born-again-2025",
+      "Bosch: Legacy": "https://cinejoy.pk/tv/153657-bosch-legacy-2022",
+      "Solo Leveling": "https://cinejoy.pk/tv/127532-solo-leveling-2024",
+      "Blue Lock": "https://cinejoy.pk/tv/131041-blue-lock-2022",
+      "Bob's Burgers": "https://cinejoy.pk/tv/32726-bobs-burgers-2011",
+      "Steven Universe": "https://cinejoy.pk/tv/61175-steven-universe-2013",
+      "SpongeBob SquarePants": "https://cinejoy.pk/tv/387-spongebob-squarepants-1999",
+      "Everybody Loves Raymond": "https://cinejoy.pk/tv/2140-everybody-loves-raymond-1996",
+      "30 Rock": "https://cinejoy.pk/tv/4608-30-rock-2006",
+      "Malcolm in the Middle": "https://cinejoy.pk/tv/2004-malcolm-in-the-middle-2000",
+      "The Mentalist": "https://cinejoy.pk/tv/5920-the-mentalist-2008",
+      "Killing Eve": "https://cinejoy.pk/tv/72750-killing-eve-2018",
+      "Gangs of London": "https://cinejoy.pk/tv/85021-gangs-of-london-2020",
+      "Skins": "https://cinejoy.pk/tv/900-skins-2007",
+      "Misfits": "https://cinejoy.pk/tv/31295-misfits-2009",
+      "Penny Dreadful": "https://cinejoy.pk/tv/54671-penny-dreadful-2014",
+      "Star Trek: Strange New Worlds": "https://cinejoy.pk/tv/103516-star-trek-strange-new-worlds-2022",
+      "Jubilee": "https://cinejoy.pk/tv/222922-jubilee-2023",
+      "Little Things": "https://cinejoy.pk/tv/82862-little-things-2016",
+      "Maamla Legal Hai": "https://cinejoy.pk/tv/246483-maamla-legal-hai-2024",
+      "Descendants of the Sun": "https://cinejoy.pk/tv/65143-descendants-of-the-sun-2016",
+      "Itaewon Class": "https://cinejoy.pk/tv/96162-itaewon-class-2020",
+      "Queen of Tears": "https://cinejoy.pk/tv/215720-queen-of-tears-2024",
+      "Bon Appétit, Your Majesty": "https://cinejoy.pk/tv/280945-bon-app-tit-your-majesty-2025",
+      "Life on Our Planet": "https://cinejoy.pk/tv/213609-life-on-our-planet-2023",
+      "Cheer": "https://cinejoy.pk/tv/97401-cheer-2020",
+      "Beckham": "https://cinejoy.pk/tv/235345-beckham-2023",
+      "Queer Eye": "https://cinejoy.pk/tv/76922-queer-eye-2018",
+      "CID": "https://cinejoy.pk/tv/15226-cid-1998",
+      "Silo (Season 2)": "https://cinejoy.pk/tv/125988-silo-2024",
+      "Pluto": "https://cinejoy.pk/tv/91997-pluto-2023",
+      "Cubicles": "https://cinejoy.pk/tv/96312-cubicles-2019",
+      "The Glory (Part 2)": "https://cinejoy.pk/tv/136283-the-glory-2023",
+      "D.P.": "https://cinejoy.pk/tv/110534-dp-2021",
+      "Watchmen (Series) (Series)": "https://cinejoy.pk/tv/79788-watchmen-2019",
+      "Caliphate": "https://cinejoy.pk/tv/92891-caliphate-2020",
+      "Money Heist (La Casa de Papel)": "https://cinejoy.pk/tv/71446-money-heist-2017",
+      "Patria": "https://cinejoy.pk/tv/85964-patria-2020",
+      "Tom and Jerry (Series)": "https://cinejoy.pk/tv/337576-tom-and-jerry-1940",
+      "Godless": "https://cinejoy.pk/tv/73467-godless-2017",
+      "Deutschland 83": "https://cinejoy.pk/tv/62681-deutschland-83-2015",
+      "Skam": "https://cinejoy.pk/tv/65320-skam-2015",
+      "Treme": "https://cinejoy.pk/tv/17967-treme-2010",
+      "Peter Kay's Car Share": "https://cinejoy.pk/tv/62557-peter-kays-car-share-2015",
+      "Extras": "https://cinejoy.pk/tv/2693-extras-2005",
+      "Better Things": "https://cinejoy.pk/tv/66859-better-things-2016",
+      "The Prisoner": "https://cinejoy.pk/tv/894-the-prisoner-1967",
+      "Humans": "https://cinejoy.pk/tv/62822-humans-2015",
+      "The Rockford Files": "https://cinejoy.pk/tv/954-the-rockford-files-1974",
+      "White Collar": "https://cinejoy.pk/tv/21510-white-collar-2009",
+      "Wentworth": "https://cinejoy.pk/tv/44856-wentworth-2013",
+      "The Originals": "https://cinejoy.pk/tv/46896-the-originals-2013",
+      "Voltron: Legendary Defender": "https://cinejoy.pk/tv/66558-voltron-legendary-defender-2016",
+      "Star vs. the Forces of Evil": "https://cinejoy.pk/tv/61923-star-vs-the-forces-of-evil-2015",
+      "Toradora!": "https://cinejoy.pk/tv/42916-toradora-2008",
+      "Death Parade": "https://cinejoy.pk/tv/61901-death-parade-2015",
+      "Erased": "https://cinejoy.pk/tv/74939-erased-2016",
+      "The Act": "https://cinejoy.pk/tv/82883-the-act-2019",
+      "Maid": "https://cinejoy.pk/tv/111141-maid-2021",
+      "The Great": "https://cinejoy.pk/tv/93812-the-great-2020",
+      "Nurse Jackie": "https://cinejoy.pk/tv/18053-nurse-jackie-2009",
+      "The Honeymooners": "https://cinejoy.pk/tv/4439-the-honeymooners-1955",
+      "The Andy Griffith Show": "https://cinejoy.pk/tv/106-the-andy-griffith-show-1960",
+      "Gavin & Stacey": "https://cinejoy.pk/tv/3696-gavin-and-stacey-2007",
+      "Cobra Kai": "https://cinejoy.pk/tv/77169-cobra-kai-2018",
+      "The Outer Limits": "https://cinejoy.pk/tv/21567-the-outer-limits-1963",
+      "Ray Donovan": "https://cinejoy.pk/tv/1423-ray-donovan-2013",
+      "Snowfall": "https://cinejoy.pk/tv/71694-snowfall-2017",
+      "Power": "https://cinejoy.pk/tv/54650-power-2014",
+      "Angel": "https://cinejoy.pk/tv/2426-angel-1999",
+      "Trigun": "https://cinejoy.pk/tv/26453-trigun-1998",
+      "Final Space": "https://cinejoy.pk/tv/74387-final-space-2018",
+      "Cosmos": "https://cinejoy.pk/tv/1430-cosmos-a-personal-voyage-1980",
+      "Scam 1992": "https://cinejoy.pk/tv/111059-scam-1992-the-harshad-mehta-story-2020",
+      "Arcane: Season 2": "https://cinejoy.pk/tv/94605-arcane-2021",
+      "Pitchers": "https://cinejoy.pk/tv/63333-tvf-pitchers-2015",
+      "Hunter x Hunter": "https://cinejoy.pk/tv/46298-hunter-x-hunter-2011",
+      "Frieren: Beyond Journey's End": "https://cinejoy.pk/tv/209867-frieren-beyond-journeys-end-2023",
+      "Attack on Titan: Final Season": "https://cinejoy.pk/tv/1429-attack-on-titan-2013",
+      "Dekalog": "https://cinejoy.pk/tv/3598-dekalog-1989",
+      "Nirvana in Fire": "https://cinejoy.pk/tv/64295-nirvana-in-fire-2015",
+      "Shogun": "https://cinejoy.pk/tv/126308-shogun-2024",
+      "Naruto: Shippuden": "https://cinejoy.pk/tv/31910-naruto-shippuden-2007",
+      "One Punch Man": "https://cinejoy.pk/tv/63926-one-punch-man-2015",
+      "Code Geass": "https://cinejoy.pk/tv/34391-code-geass-2006",
+      "South Park": "https://cinejoy.pk/tv/2190-south-park-1997",
+      "Dungeon Meshi": "https://cinejoy.pk/tv/207584-delicious-in-dungeon-2024",
+      "Tathastu": "https://cinejoy.pk/tv/tathastu-2022",
+      "Jujutsu Kaisen Season 2": "https://cinejoy.pk/tv/95479-jujutsu-kaisen-2020",
+      "Goblin": "https://cinejoy.pk/tv/67915-guardian-the-lonely-and-great-god-2016",
+      "Kaguya-sama: Love Is War": "https://cinejoy.pk/tv/83584-kaguya-sama-love-is-war-2019",
+      "Schitt's Creek": "https://cinejoy.pk/tv/61662-schitts-creek-2015",
+      "Delhi Crime": "https://cinejoy.pk/tv/delhi-crime-2019",
+      "Asur: Welcome to Your Dark Side": "https://cinejoy.pk/tv/asur-welcome-to-your-dark-side-2020",
+      "Dan Da Dan": "https://cinejoy.pk/tv/dan-da-dan-2024",
+      "Spy x Family": "https://cinejoy.pk/tv/spy-x-family-2022",
+      "Flames": "https://cinejoy.pk/tv/flames-2018",
+      "The Railway Men": "https://cinejoy.pk/tv/the-railway-men-2023",
+      "Tripling": "https://cinejoy.pk/tv/tripling-2016",
+      "The Office UK": "https://cinejoy.pk/tv/the-office-uk-2001",
+      "Strong Girl Bong-soon": "https://cinejoy.pk/tv/strong-girl-bong-soon-2017",
+      "Worst of Evil": "https://cinejoy.pk/tv/worst-of-evil-2023",
+      "X-Men: The Animated Series": "https://cinejoy.pk/tv/x-men-the-animated-series-1992",
+      "Unforgotten": "https://cinejoy.pk/tv/unforgotten-2015",
+      "Young Pope": "https://cinejoy.pk/tv/young-pope-2016",
+      "FIR": "https://cinejoy.pk/tv/fir-2006",
+      "Allo' Allo!": "https://cinejoy.pk/tv/allo-allo-1982",
+      "Star Trek (Series)": "https://cinejoy.pk/tv/star-trek-series-1966",
+      "Looney Tunes": "https://cinejoy.pk/tv/looney-tunes-1930",
+      "Star Wars: Rebels": "https://cinejoy.pk/tv/star-wars-rebels-2014",
+      "Special OPS 1.5": "https://cinejoy.pk/tv/special-ops-15-2021",
+      "Look Back": "https://cinejoy.pk/tv/look-back-2024",
+      "Suzhal - The Vortex": "https://cinejoy.pk/tv/suzhal-the-vortex-2022",
+      "Vis a Vis (Locked Up)": "https://cinejoy.pk/tv/vis-a-vis-locked-up-2015",
+      "Adventure Time: Distant Lands": "https://cinejoy.pk/tv/adventure-time-distant-lands-2020",
+      "Konosuba": "https://cinejoy.pk/tv/konosuba-2016",
+      "Vivy: Fluorite Eye's Song": "https://cinejoy.pk/tv/vivy-fluorite-eyes-song-2021",
+      "Kipo and the Age of Wonderbeasts": "https://cinejoy.pk/tv/95599-kipo-and-the-age-of-wonderbeasts-2020",
+      "Courage the Cowardly Dog": "https://cinejoy.pk/tv/2085-courage-the-cowardly-dog-1999",
+      "The Amazing World of Gumball": "https://cinejoy.pk/tv/37606-the-amazing-world-of-gumball-2011",
+      "Ugly Delicious": "https://cinejoy.pk/tv/77416-ugly-delicious-2018",
+      "Abstract: The Art of Design": "https://cinejoy.pk/tv/70177-abstract-the-art-of-design-2017",
+      "Bates Motel": "https://cinejoy.pk/tv/46786-bates-motel-2013",
+      "Lucifer": "https://cinejoy.pk/tv/63174-lucifer-2016",
+      "Wednesday": "https://cinejoy.pk/tv/119051-wednesday-2022",
+      "The Walking Dead": "https://cinejoy.pk/tv/1402-the-walking-dead-2010",
+      "Star Trek: Deep Space Nine": "https://cinejoy.pk/tv/580-star-trek-deep-space-nine-1993",
+      "Paatal Lok": "https://cinejoy.pk/tv/103051-paatal-lok-2020",
+      "Sharp Objects": "https://cinejoy.pk/tv/70453-sharp-objects-2018",
+      "Wild Wild Country": "https://cinejoy.pk/tv/77601-wild-wild-country-2018",
+      "Adolescence": "https://cinejoy.pk/tv/249042-adolescence-2025",
+      "Task": "https://cinejoy.pk/tv/228305-task-2025",
+      "Reacher": "https://cinejoy.pk/tv/108978-reacher-2022",
+      "Landman": "https://cinejoy.pk/tv/157741-landman-2024",
+      "Shrinking": "https://cinejoy.pk/tv/136311-shrinking-2023",
+      "Only Murders in the Building": "https://cinejoy.pk/tv/107113-only-murders-in-the-building-2021",
+      "Hacks": "https://cinejoy.pk/tv/124101-hacks-2021",
+      "Silo": "https://cinejoy.pk/tv/125988-silo-2023",
+      "Black Clover": "https://cinejoy.pk/tv/73223-black-clover-2017",
+      "Phineas and Ferb": "https://cinejoy.pk/tv/1877-phineas-and-ferb-2007",
+      "That '70s Show": "https://cinejoy.pk/tv/52-that-70s-show-1998",
+      "Criminal Minds": "https://cinejoy.pk/tv/4057-criminal-minds-2005",
+      "Monk": "https://cinejoy.pk/tv/1695-monk-2002",
+      "Castle": "https://cinejoy.pk/tv/1419-castle-2009",
+      "Bodyguard": "https://cinejoy.pk/tv/80307-bodyguard-2018",
+      "Call the Midwife": "https://cinejoy.pk/tv/39793-call-the-midwife-2012",
+      "Legion": "https://cinejoy.pk/tv/67195-legion-2017",
+      "Counterpart": "https://cinejoy.pk/tv/63646-counterpart-2017",
+      "Made in Heaven": "https://cinejoy.pk/tv/87407-made-in-heaven-2019",
+      "Tanaav": "https://cinejoy.pk/tv/204074-tanaav-2022",
+      "The Glory": "https://cinejoy.pk/tv/136283-the-glory-2022",
+      "Love Between Fairy and Devil": "https://cinejoy.pk/tv/130368-love-between-fairy-and-devil-2022",
+      "Explained": "https://cinejoy.pk/tv/79746-explained-2018",
+      "Black Sails": "https://cinejoy.pk/tv/47665-black-sails-2014",
+      "Ripley": "https://cinejoy.pk/tv/94028-ripley-2024",
+      "Black Bird": "https://cinejoy.pk/tv/155537-black-bird-2022",
+      "Tabbar": "https://cinejoy.pk/tv/136460-tabbar-2021",
+      "Bloodhounds": "https://cinejoy.pk/tv/127529-bloodhounds-2023",
+      "Reborn Rich": "https://cinejoy.pk/tv/153496-reborn-rich-2022",
+      "The New Pope": "https://cinejoy.pk/tv/88408-the-new-pope-2020",
+      "Riot Police (Antidisturbios)": "https://cinejoy.pk/tv/96005-riot-police-2020",
+      "The Morning Show": "https://cinejoy.pk/tv/90282-the-morning-show-2019",
+      "Good Omens": "https://cinejoy.pk/tv/71915-good-omens-2019",
+      "Longmire": "https://cinejoy.pk/tv/43901-longmire-2012",
+      "Catastrophe": "https://cinejoy.pk/tv/61920-catastrophe-2015",
+      "Animaniacs": "https://cinejoy.pk/tv/82-animaniacs-1993",
+      "That Time I Got Reincarnated as a Slime": "https://cinejoy.pk/tv/82684-that-time-i-got-reincarnated-as-a-slime-2018",
+      "No Game No Life": "https://cinejoy.pk/tv/60808-no-game-no-life-2014",
+      "How to Get Away with Murder": "https://cinejoy.pk/tv/61056-how-to-get-away-with-murder-2014",
+      "Squid Game": "https://cinejoy.pk/tv/93405-squid-game-2021",
+      "The White Lotus": "https://cinejoy.pk/tv/111803-the-white-lotus-2021",
+      "The Witcher": "https://cinejoy.pk/tv/71912-the-witcher-2019",
+      "American Horror Story": "https://cinejoy.pk/tv/1413-american-horror-story-2011",
+      "Beef": "https://cinejoy.pk/tv/154385-beef-2023",
+      "Paradise": "https://cinejoy.pk/tv/245927-paradise-2025",
+      "Jack Ryan": "https://cinejoy.pk/tv/73375-jack-ryan-2018",
+      "Lawmen: Bass Reeves": "https://cinejoy.pk/tv/157732-lawmen-bass-reeves-2023",
+      "Mayor of Kingstown": "https://cinejoy.pk/tv/97951-mayor-of-kingstown-2021",
+      "For All Mankind": "https://cinejoy.pk/tv/87917-for-all-mankind-2019",
+      "Kaiju No. 8": "https://cinejoy.pk/tv/207468-kaiju-no-8-2024",
+      "Hell's Paradise": "https://cinejoy.pk/tv/117465-hells-paradise-2023",
+      "Harley Quinn": "https://cinejoy.pk/tv/74440-harley-quinn-2019",
+      "Hazbin Hotel": "https://cinejoy.pk/tv/94954-hazbin-hotel-2024",
+      "The Good Doctor": "https://cinejoy.pk/tv/71712-the-good-doctor-2017",
+      "Law & Order: Special Victims Unit": "https://cinejoy.pk/tv/2734-law-and-order-special-victims-unit-1999",
+      "The Fall": "https://cinejoy.pk/tv/49010-the-fall-2013",
+      "Criminal Justice": "https://cinejoy.pk/tv/88177-criminal-justice-2019",
+      "Rangbaaz": "https://cinejoy.pk/tv/85201-rangbaaz-2018",
+      "Sandeep Bhaiya": "https://cinejoy.pk/tv/229429-sandeep-bhaiya-2020",
+      "Chacha Vidhayak Hain Humare": "https://cinejoy.pk/tv/99889-chacha-vidhayak-hain-humare-2018",
+      "Start-Up": "https://cinejoy.pk/tv/99048-start-up-2020",
+      "Eternal Love": "https://cinejoy.pk/tv/69316-eternal-love-2017",
+      "The Keepers": "https://cinejoy.pk/tv/26101-the-keepers-2017",
+      "The Staircase": "https://cinejoy.pk/tv/21421-the-staircase-2004",
+      "Quarterback": "https://cinejoy.pk/tv/220998-quarterback-2023",
+      "Velvet": "https://cinejoy.pk/tv/61260-velvet-2013",
+      "One Hundred Years of Solitude": "https://cinejoy.pk/tv/207333-one-hundred-years-of-solitude-2024",
+      "Tokyo Vice": "https://cinejoy.pk/tv/90296-tokyo-vice-2022",
+      "Drops of God": "https://cinejoy.pk/tv/218961-drops-of-god-2023",
+      "Kaala Paani": "https://cinejoy.pk/tv/235356-kaala-paani-2023",
+      "Through the Darkness": "https://cinejoy.pk/tv/146102-through-the-darkness-2022",
+      "Squid Game (Season 2)": "https://cinejoy.pk/tv/93405-squid-game-2024",
+      "Trapped (Ófærð)": "https://cinejoy.pk/tv/64852-trapped-2015",
+      "Bones": "https://cinejoy.pk/tv/1911-bones-2005",
+      "Call My Agent!": "https://cinejoy.pk/tv/64165-call-my-agent-2015",
+      "Young Royals": "https://cinejoy.pk/tv/125910-young-royals-2021",
+      "Trapped (Series)": "https://cinejoy.pk/tv/64852-trapped-2015",
+      "Friday Night Dinner": "https://cinejoy.pk/tv/34435-friday-night-dinner-2011",
+      "The Righteous Gemstones": "https://cinejoy.pk/tv/82782-the-righteous-gemstones-2019",
+      "The Studio": "https://cinejoy.pk/tv/247767-the-studio-2025",
+      "Burn Notice": "https://cinejoy.pk/tv/2919-burn-notice-2007",
+      "Leverage": "https://cinejoy.pk/tv/7482-leverage-2008",
+      "The Lincoln Lawyer": "https://cinejoy.pk/tv/116799-the-lincoln-lawyer-2022",
+      "Summer Camp Island": "https://cinejoy.pk/tv/81665-summer-camp-island-2018",
+      "Angel Beats!": "https://cinejoy.pk/tv/42942-angel-beats-2010",
+      "Ouran High School Host Club": "https://cinejoy.pk/tv/1043-ouran-high-school-host-club-2006",
+      "Orange Is the New Black": "https://cinejoy.pk/tv/1424-orange-is-the-new-black-2013",
+      "The Deuce": "https://cinejoy.pk/tv/65817-the-deuce-2017",
+      "I May Destroy You": "https://cinejoy.pk/tv/102619-i-may-destroy-you-2020",
+      "The Tudors": "https://cinejoy.pk/tv/2942-the-tudors-2007",
+      "The Borgias": "https://cinejoy.pk/tv/33025-the-borgias-2011",
+      "Stargate Atlantis": "https://cinejoy.pk/tv/2290-stargate-atlantis-2004",
+      "The Orville": "https://cinejoy.pk/tv/71738-the-orville-2017",
+      "Ripper Street": "https://cinejoy.pk/tv/46930-ripper-street-2012",
+      "Vera": "https://cinejoy.pk/tv/39185-vera-2011",
+      "Interview with the Vampire (Series)": "https://cinejoy.pk/tv/128098-interview-with-the-vampire-2022",
+      "Cardcaptor Sakura": "https://cinejoy.pk/tv/35790-cardcaptor-sakura-1998",
+      "Rugrats": "https://cinejoy.pk/tv/3022-rugrats-1991",
+      "Ed, Edd n Eddy": "https://cinejoy.pk/tv/606-ed-edd-n-eddy-1999",
+      "Salt Fat Acid Heat": "https://cinejoy.pk/tv/83039-salt-fat-acid-heat-2018",
+      "Sharpe": "https://cinejoy.pk/tv/225-sharpe-1993",
+      "Bonanza": "https://cinejoy.pk/tv/1018-bonanza-1959",
+      "Gunsmoke": "https://cinejoy.pk/tv/3713-gunsmoke-1955",
+      "WandaVision": "https://cinejoy.pk/tv/85271-wandavision-2021",
+      "Never Have I Ever": "https://cinejoy.pk/tv/100883-never-have-i-ever-2020",
+      "Altered Carbon": "https://cinejoy.pk/tv/68421-altered-carbon-2018",
+      "Fairy Tail": "https://cinejoy.pk/tv/46261-fairy-tail-2009",
+      "Trigun Stampede": "https://cinejoy.pk/tv/204266-trigun-stampede-2023",
+      "ER": "https://cinejoy.pk/tv/4588-er-1994",
+      "Merlin": "https://cinejoy.pk/tv/7225-merlin-2008",
+      "True Blood": "https://cinejoy.pk/tv/10545-true-blood-2008",
+      "Station Eleven": "https://cinejoy.pk/tv/90972-station-eleven-2021",
+      "The Man in the High Castle": "https://cinejoy.pk/tv/62017-the-man-in-the-high-castle-2015",
+      "Jessica Jones": "https://cinejoy.pk/tv/38472-jessica-jones-2015",
+      "Agent Carter": "https://cinejoy.pk/tv/61550-agent-carter-2015",
+      "Upload": "https://cinejoy.pk/tv/86248-upload-2020",
+      "Resident Alien": "https://cinejoy.pk/tv/96580-resident-alien-2021",
+      "Kohrra": "https://cinejoy.pk/tv/230034-kohrra-2023",
+      "Breathe": "https://cinejoy.pk/tv/76659-breathe-2018",
+      "Castaway Diva": "https://cinejoy.pk/tv/216310-castaway-diva-2023",
+      "Little Women (2022)": "https://cinejoy.pk/tv/134675-little-women-2022",
+      "Suburra: Blood on Rome": "https://cinejoy.pk/tv/73671-suburra-blood-on-rome-2017",
+      "Valley of Tears": "https://cinejoy.pk/tv/111150-valley-of-tears-2020",
+      "Superstore": "https://cinejoy.pk/tv/62649-superstore-2015",
+      "The Umbrella Academy": "https://cinejoy.pk/tv/75006-the-umbrella-academy-2019",
+      "Law & Order": "https://cinejoy.pk/tv/549-law-and-order-1990",
+      "Poker Face": "https://cinejoy.pk/tv/120998-poker-face-2023",
+      "The Blacklist": "https://cinejoy.pk/tv/46952-the-blacklist-2013",
+      "Dragon Ball Super": "https://cinejoy.pk/tv/62715-dragon-ball-super-2015",
+      "Masters of the Air": "https://cinejoy.pk/tv/46518-masters-of-the-air-2024",
+      "Fresh Meat": "https://cinejoy.pk/tv/40632-fresh-meat-2011",
+      "Man Like Mobeen": "https://cinejoy.pk/tv/86704-man-like-mobeen-2017",
+      "Keeping Up Appearances": "https://cinejoy.pk/tv/34-keeping-up-appearances-1990",
+      "Raising Hope": "https://cinejoy.pk/tv/32815-raising-hope-2010",
+      "Mythic Quest": "https://cinejoy.pk/tv/94951-mythic-quest-2020",
+      "She-Ra and the Princesses of Power": "https://cinejoy.pk/tv/79732-she-ra-and-the-princesses-of-power-2018",
+      "Overlord": "https://cinejoy.pk/tv/64196-overlord-2015",
+      "Soul Eater": "https://cinejoy.pk/tv/37305-soul-eater-2008",
+      "Little Fires Everywhere": "https://cinejoy.pk/tv/90257-little-fires-everywhere-2020",
+      "Fellow Travelers": "https://cinejoy.pk/tv/216089-fellow-travelers-2023",
+      "The Gentlemen": "https://cinejoy.pk/tv/236235-the-gentlemen-2024",
+      "Victoria": "https://cinejoy.pk/tv/67419-victoria-2016",
+      "Weeds": "https://cinejoy.pk/tv/186-weeds-2005",
+      "Insecure": "https://cinejoy.pk/tv/67883-insecure-2016",
+      "Midsomer Murders": "https://cinejoy.pk/tv/764-midsomer-murders-1997",
+      "Shetland": "https://cinejoy.pk/tv/46923-shetland-2013",
+      "The Sinner": "https://cinejoy.pk/tv/39852-the-sinner-2017",
+      "Grimm": "https://cinejoy.pk/tv/39351-grimm-2011",
+      "Daria": "https://cinejoy.pk/tv/2131-daria-1997",
+      "Dexter's Laboratory": "https://cinejoy.pk/tv/4229-dexters-laboratory-1996",
+      "Clarence": "https://cinejoy.pk/tv/50035-clarence-2014",
+      "New Girl": "https://cinejoy.pk/tv/1420-new-girl-2011",
+      "Gilmore Girls": "https://cinejoy.pk/tv/4586-gilmore-girls-2000",
+      "The Diplomat": "https://cinejoy.pk/tv/203762-the-diplomat-2023",
+      "Creature Commandos": "https://cinejoy.pk/tv/219543-creature-commandos-2024",
+      "Abbott Elementary": "https://cinejoy.pk/tv/125935-abbott-elementary-2021",
+      "Dead to Me": "https://cinejoy.pk/tv/81357-dead-to-me-2019",
+      "Tokyo Ghoul": "https://cinejoy.pk/tv/61374-tokyo-ghoul-2014",
+      "Star Wars: The Bad Batch": "https://cinejoy.pk/tv/105971-star-wars-the-bad-batch-2021",
+      "Cheers": "https://cinejoy.pk/tv/141-cheers-1982",
+      "Ghosts": "https://cinejoy.pk/tv/17174-ghosts-2019",
+      "Entourage": "https://cinejoy.pk/tv/1940-entourage-2004",
+      "Elementary": "https://cinejoy.pk/tv/1415-elementary-2012",
+      "Evil": "https://cinejoy.pk/tv/86848-evil-2019",
+      "From": "https://cinejoy.pk/tv/124364-from-2022",
+      "Gotham": "https://cinejoy.pk/tv/60708-gotham-2014",
+      "Doom Patrol": "https://cinejoy.pk/tv/79501-doom-patrol-2019",
+      "Star Trek: Voyager": "https://cinejoy.pk/tv/1855-star-trek-voyager-1995",
+      "Dahaad": "https://cinejoy.pk/tv/201050-dahaad-2023",
+      "Inside Edge": "https://cinejoy.pk/tv/72739-inside-edge-2017",
+      "Lootere": "https://cinejoy.pk/tv/248259-lootere-2024",
+      "Maharani": "https://cinejoy.pk/tv/126098-maharani-2021",
+      "Business Proposal": "https://cinejoy.pk/tv/154825-business-proposal-2022",
+      "The Dropout": "https://cinejoy.pk/tv/122066-the-dropout-2022",
+      "The Amazing Race": "https://cinejoy.pk/tv/30957-the-amazing-race-2001",
+      "Wallander": "https://cinejoy.pk/tv/7263-wallander-2008",
+      "Crisis on Infinite Earths": "https://cinejoy.pk/tv/98069-crisis-on-infinite-earths-2019",
+      "Superman & Lois": "https://cinejoy.pk/tv/95057-superman-and-lois-2021",
+      "Wind Breaker": "https://cinejoy.pk/tv/223500-wind-breaker-2024",
+      "Poacher": "https://cinejoy.pk/tv/216636-poacher-2024",
+      "Yellowjackets": "https://cinejoy.pk/tv/117488-yellowjackets-2021",
+      "Lessons in Chemistry": "https://cinejoy.pk/tv/117303-lessons-in-chemistry-2023",
+      "The Sandman": "https://cinejoy.pk/tv/90802-the-sandman-2022",
+      "Teen Titans": "https://cinejoy.pk/tv/604-teen-titans-2003",
+      "Rita": "https://cinejoy.pk/tv/51078-rita-2012",
+      "Rubicon": "https://cinejoy.pk/tv/30892-rubicon-2010",
+      "Bad Education": "https://cinejoy.pk/tv/58460-bad-education-2012",
+      "The Vicar of Dibley": "https://cinejoy.pk/tv/2767-the-vicar-of-dibley-1994",
+      "Colin from Accounts": "https://cinejoy.pk/tv/203614-colin-from-accounts-2022",
+      "Blake's 7": "https://cinejoy.pk/tv/1731-blakes-7-1978",
+      "Continuum": "https://cinejoy.pk/tv/43020-continuum-2012",
+      "Magnum, P.I.": "https://cinejoy.pk/tv/734-magnum-pi-1980",
+      "Perry Mason": "https://cinejoy.pk/tv/4177-perry-mason-1957",
+      "The Closer": "https://cinejoy.pk/tv/1450-the-closer-2005",
+      "Danny Phantom": "https://cinejoy.pk/tv/2309-danny-phantom-2004",
+      "K-On!": "https://cinejoy.pk/tv/42253-k-on-2009",
+      "Scandal": "https://cinejoy.pk/tv/39269-scandal-2012",
+      "Jane the Virgin": "https://cinejoy.pk/tv/61418-jane-the-virgin-2014",
+      "Mrs. America": "https://cinejoy.pk/tv/83605-mrs-america-2020",
+      "Poldark": "https://cinejoy.pk/tv/62084-poldark-2015",
+      "Chicago Fire": "https://cinejoy.pk/tv/44006-chicago-fire-2012",
+      "Chicago P.D.": "https://cinejoy.pk/tv/58841-chicago-pd-2014",
+      "Reno 911!": "https://cinejoy.pk/tv/2187-reno-911-2003",
+      "Happy Endings": "https://cinejoy.pk/tv/32829-happy-endings-2011",
+      "Ramy": "https://cinejoy.pk/tv/87382-ramy-2019",
+      "Stargate Universe": "https://cinejoy.pk/tv/5148-stargate-universe-2009",
+      "Eureka": "https://cinejoy.pk/tv/4620-eureka-2006",
+      "12 Monkeys": "https://cinejoy.pk/tv/60948-12-monkeys-2015",
+      "The OA": "https://cinejoy.pk/tv/69061-the-oa-2016",
+      "Travelers": "https://cinejoy.pk/tv/67683-travelers-2016",
+      "Sweet Tooth": "https://cinejoy.pk/tv/103768-sweet-tooth-2021",
+      "NYPD Blue": "https://cinejoy.pk/tv/194-nypd-blue-1993",
+      "Godfather of Harlem": "https://cinejoy.pk/tv/79086-godfather-of-harlem-2019",
+      "Digimon Adventure": "https://cinejoy.pk/tv/31654-digimon-adventure-1999",
+      "Hey Arnold!": "https://cinejoy.pk/tv/537-hey-arnold-1996",
+      "Hogan's Heroes": "https://cinejoy.pk/tv/4068-hogans-heroes-1965",
+      "Wagon Train": "https://cinejoy.pk/tv/6081-wagon-train-1957",
+      "The Vampire Diaries": "https://cinejoy.pk/tv/18165-the-vampire-diaries-2009",
+      "Teen Wolf": "https://cinejoy.pk/tv/34524-teen-wolf-2011",
+      "Engineering Girls": "https://cinejoy.pk/tv/engineering-girls-2018",
+      "Hotel Del Luna": "https://cinejoy.pk/tv/hotel-del-luna-2019",
+      "My Octopus Teacher": "https://cinejoy.pk/tv/my-octopus-teacher-2020",
+      "Free Solo": "https://cinejoy.pk/tv/free-solo-2018",
+      "Les Revenants": "https://cinejoy.pk/tv/les-revenants-2012",
+      "Dahmer": "https://cinejoy.pk/tv/dahmer-2022",
+      "Terrace House": "https://cinejoy.pk/tv/terrace-house-2012",
+      "Viladhikolam": "https://cinejoy.pk/tv/viladhikolam-2022",
+      "Mashle: Magic and Muscles": "https://cinejoy.pk/tv/mashle-magic-and-muscles-2023",
+      "Manhunt: Unabomber": "https://cinejoy.pk/tv/manhunt-unabomber-2017",
+      "Have Gun - Will Travel": "https://cinejoy.pk/tv/have-gun-will-travel-1957",
+      "Walking Dead: Daryl Dixon": "https://cinejoy.pk/tv/walking-dead-daryl-dixon-2023",
+      "College Romance": "https://cinejoy.pk/tv/college-romance-2018",
+      "Trial by Fire": "https://cinejoy.pk/tv/trial-by-fire-2023",
+      "La Casa de las Flores": "https://cinejoy.pk/tv/la-casa-de-las-flores-2018",
+      "Dept. Q": "https://cinejoy.pk/tv/dept-q-2025",
+      "How to Sell Drugs Online (Fast)": "https://cinejoy.pk/tv/how-to-sell-drugs-online-fast-2019",
+      "Taking Chance": "https://cinejoy.pk/tv/taking-chance-2009"
+};
+    window.CINEJOY_TOP750_SHOWS_URLS = CINEJOY_TOP750_SHOWS_URLS;
+    window.CINEJOY_TOP500_SHOWS_URLS = CINEJOY_TOP750_SHOWS_URLS; // backwards-compatible alias
+
+    const top750ShowsList = tvShows.slice()
+      .sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0) || (a.rank - b.rank))
+      .slice(0, 750);
+    const top750ShowsSet = new Set(Object.keys(CINEJOY_TOP750_SHOWS_URLS));
+    window.top750ShowsSet = top750ShowsSet;
+    window.top500ShowsSet = top750ShowsSet; // backwards-compatible alias
+
+    window.getCinejoyShowUrl = function(title) {
+      return CINEJOY_TOP750_SHOWS_URLS[title] || null;
+    };
+    window.getCinejoyUrl = function(title, type) {
+      if (type === 'show') return CINEJOY_TOP750_SHOWS_URLS[title] || null;
+      if (type === 'movie') return CINEJOY_TOP750_URLS[title] || null;
+      return CINEJOY_TOP750_URLS[title] || CINEJOY_TOP750_SHOWS_URLS[title] || null;
+    };
+    window.isTopCinejoyItem = function(title, type) {
+      return Boolean(window.getCinejoyUrl(title, type));
+    };
+    window.getCinejoyTop750ShowsTitles = function() {
+      return Object.keys(CINEJOY_TOP750_SHOWS_URLS);
+    };
+    window.getCinejoyTop500ShowsTitles = function() {
+      return Object.keys(CINEJOY_TOP750_SHOWS_URLS);
     };
 
     // Generates high-contrast bespoke procedural SVG posters with typography
@@ -10567,9 +13664,9 @@ Odd Taxi|2021|87
             <span>${item.year}</span>
             <span class="text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
           </div>
-          ${(item.type === 'movie' && window.isTop100ImdbMovie && window.isTop100ImdbMovie(item.title)) ? `
+          ${(window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? `
           <div class="pt-2 mt-1 border-t border-white/10" onclick="event.stopPropagation()">
-            <a href="${(window.getCinejoyMovieUrl && window.getCinejoyMovieUrl(item.title)) || 'https://cinejoy.pk/search?keyword=' + encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition-all">
+            <a href="${window.getCinejoyUrl(item.title, item.type)}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition-all">
               <i class="fa-solid fa-circle-play text-xs"></i> <span>Watch Now</span>
             </a>
           </div>` : ''}
@@ -10931,6 +14028,7 @@ Odd Taxi|2021|87
       });
 
       if (sort === 'popular') list.sort((a, b) => a.rank - b.rank);
+      else if (sort === 'top500_watch') list = list.filter(item => top500ShowsSet.has(item.title)).sort((a, b) => b.rating - a.rating);
       else if (sort === 'rating_desc') list.sort((a, b) => b.rating - a.rating);
       else if (sort === 'top100_watch') list = list.filter(item => top500ImdbSet.has(item.title)).sort((a, b) => b.rating - a.rating);
       else if (sort === 'year_desc') list.sort((a, b) => b.year - a.year);
@@ -11329,8 +14427,8 @@ Odd Taxi|2021|87
               <a href="https://www.youtube.com/results?search_query=${encodeURIComponent((item.rawName || item.cleanName) + ' ' + item.year + ' official trailer')}" target="_blank" rel="noopener" class="px-4 py-2.5 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 text-xs font-bold flex items-center gap-2 transition-all">
                 <i class="fa-brands fa-youtube"></i> Trailer
               </a>
-              ${(item.type === 'movie' && window.isTop100ImdbMovie && window.isTop100ImdbMovie(item.title)) ? `
-              <a href="${(window.getCinejoyMovieUrl && window.getCinejoyMovieUrl(item.title)) || 'https://cinejoy.pk/search?keyword=' + encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
+              ${(window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? `
+              <a href="${window.getCinejoyUrl(item.title, item.type)}" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
                 <i class="fa-solid fa-circle-play text-sm"></i> <span>Watch Now on Cinejoy</span>
               </a>` : ''}
             </div>
