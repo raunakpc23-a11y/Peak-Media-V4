@@ -9593,17 +9593,125 @@ Odd Taxi|2021|87
     window.categoryData = categoryData;
     window.allTitles = allTitles;
 
+    // Direct Cinejoy movie streaming URLs for the Top 100 IMDb movies (exact TMDb ID + slug)
+    const CINEJOY_TOP100_URLS = {
+      "96": "https://cinejoy.pk/movie/441717-96-2018",
+      "The Shawshank Redemption": "https://cinejoy.pk/movie/278-the-shawshank-redemption-1994",
+      "The Godfather": "https://cinejoy.pk/movie/238-the-godfather-1972",
+      "Mayabazar": "https://cinejoy.pk/movie/158023-mayabazar-1957",
+      "The Dark Knight": "https://cinejoy.pk/movie/155-the-dark-knight-2008",
+      "12 Angry Men": "https://cinejoy.pk/movie/389-12-angry-men-1957",
+      "Schindler's List": "https://cinejoy.pk/movie/424-schindlers-list-1993",
+      "The Lord of the Rings: The Return of the King": "https://cinejoy.pk/movie/122-the-lord-of-the-rings-the-return-of-the-king-2003",
+      "Pulp Fiction": "https://cinejoy.pk/movie/680-pulp-fiction-1994",
+      "The Lord of the Rings: The Fellowship of the Ring": "https://cinejoy.pk/movie/120-the-lord-of-the-rings-the-fellowship-of-the-ring-2001",
+      "Oppenheimer": "https://cinejoy.pk/movie/872585-oppenheimer-2023",
+      "12th Fail": "https://cinejoy.pk/movie/1163258-12th-fail-2023",
+      "Kireedam": "https://cinejoy.pk/movie/191017-kireedam-1989",
+      "Sandhesam": "https://cinejoy.pk/movie/134477-sandhesam-1991",
+      "The Good, the Bad and the Ugly": "https://cinejoy.pk/movie/429-the-good-the-bad-and-the-ugly-1966",
+      "Fight Club": "https://cinejoy.pk/movie/550-fight-club-1999",
+      "The Lord of the Rings: The Two Towers": "https://cinejoy.pk/movie/121-the-lord-of-the-rings-the-two-towers-2002",
+      "Inception": "https://cinejoy.pk/movie/27205-inception-2010",
+      "Jai Bhim": "https://cinejoy.pk/movie/855400-jai-bhim-2021",
+      "C/o Kancharapalem": "https://cinejoy.pk/movie/544795-c-o-kancharapalem-2018",
+      "Natsamrat": "https://cinejoy.pk/movie/378227-natsamrat-2016",
+      "Sankarabharanam": "https://cinejoy.pk/movie/30088-sankarabharanam-1980",
+      "Goopy Gyne Bagha Byne": "https://cinejoy.pk/movie/135092-goopy-gyne-bagha-byne-1969",
+      "Manichitrathazhu": "https://cinejoy.pk/movie/84368-manichitrathazhu-1993",
+      "Nadodikkattu": "https://cinejoy.pk/movie/275366-nadodikkattu-1987",
+      "The Matrix": "https://cinejoy.pk/movie/603-the-matrix-1999",
+      "Goodfellas": "https://cinejoy.pk/movie/769-goodfellas-1990",
+      "One Flew Over the Cuckoo's Nest": "https://cinejoy.pk/movie/510-one-flew-over-the-cuckoos-nest-1975",
+      "Interstellar": "https://cinejoy.pk/movie/157336-interstellar-2014",
+      "Anand": "https://cinejoy.pk/movie/26237-anand-1971",
+      "Soorarai Pottru": "https://cinejoy.pk/movie/595228-soorarai-pottru-2020",
+      "777 Charlie": "https://cinejoy.pk/movie/634120-777-charlie-2022",
+      "Swathi Muthyam": "https://cinejoy.pk/movie/900471-swathi-muthyam-1986",
+      "Hirak Rajar Deshe": "https://cinejoy.pk/movie/206789-hirak-rajar-deshe-1980",
+      "Ramji Rao Speaking": "https://cinejoy.pk/movie/150768-ramji-rao-speaking-1989",
+      "Thevar Magan": "https://cinejoy.pk/movie/66362-thevar-magan-1992",
+      "Peranbu": "https://cinejoy.pk/movie/412865-peranbu-2018",
+      "Rudraveena": "https://cinejoy.pk/movie/66342-rudraveena-1988",
+      "It's a Wonderful Life": "https://cinejoy.pk/movie/1585-its-a-wonderful-life-1946",
+      "Seven Samurai": "https://cinejoy.pk/movie/346-seven-samurai-1954",
+      "The Silence of the Lambs": "https://cinejoy.pk/movie/274-the-silence-of-the-lambs-1991",
+      "Saving Private Ryan": "https://cinejoy.pk/movie/857-saving-private-ryan-1998",
+      "City of God": "https://cinejoy.pk/movie/598-city-of-god-2002",
+      "Life Is Beautiful": "https://cinejoy.pk/movie/637-life-is-beautiful-1997",
+      "The Green Mile": "https://cinejoy.pk/movie/497-the-green-mile-1999",
+      "Terminator 2: Judgment Day": "https://cinejoy.pk/movie/280-terminator-2-judgment-day-1991",
+      "Spirited Away": "https://cinejoy.pk/movie/129-spirited-away-2001",
+      "Dune: Part Two": "https://cinejoy.pk/movie/693134-dune-part-two-2024",
+      "Spider-Man: Across the Spider-Verse": "https://cinejoy.pk/movie/569094-spider-man-across-the-spider-verse-2023",
+      "Pariyerum Perumal": "https://cinejoy.pk/movie/462718-pariyerum-perumal-2018",
+      "Nayakan": "https://cinejoy.pk/movie/338704-nayakan-1987",
+      "Anbe Sivam": "https://cinejoy.pk/movie/26910-anbe-sivam-2003",
+      "Kadaisi Vivasayi": "https://cinejoy.pk/movie/613703-kadaisi-vivasayi-2021",
+      "Harakiri": "https://cinejoy.pk/movie/14537-harakiri-1962",
+      "Oru Vadakkan Veeragatha": "https://cinejoy.pk/movie/151662-oru-vadakkan-veeragatha-1989",
+      "Devasuram": "https://cinejoy.pk/movie/237672-devasuram-1993",
+      "Godfather (Malayalam)": "https://cinejoy.pk/movie/134474-godfather-1991",
+      "Thoovanathumbikal": "https://cinejoy.pk/movie/210492-thoovanathumbikal-1987",
+      "Kilukkam": "https://cinejoy.pk/movie/139476-kilukkam-1991",
+      "Gundamma Katha": "https://cinejoy.pk/movie/86146-gundamma-katha-1962",
+      "Aha Naa Pellanta": "https://cinejoy.pk/movie/37612-aha-naa-pellanta-1987",
+      "Seven": "https://cinejoy.pk/movie/807-seven-1995",
+      "Back to the Future": "https://cinejoy.pk/movie/105-back-to-the-future-1985",
+      "The Pianist": "https://cinejoy.pk/movie/423-the-pianist-2002",
+      "Psycho": "https://cinejoy.pk/movie/539-psycho-1960",
+      "Parasite": "https://cinejoy.pk/movie/496243-parasite-2019",
+      "The Lion King": "https://cinejoy.pk/movie/8587-the-lion-king-1994",
+      "Gladiator": "https://cinejoy.pk/movie/98-gladiator-2000",
+      "American History X": "https://cinejoy.pk/movie/73-american-history-x-1998",
+      "The Departed": "https://cinejoy.pk/movie/1422-the-departed-2006",
+      "Whiplash": "https://cinejoy.pk/movie/244786-whiplash-2014",
+      "The Prestige": "https://cinejoy.pk/movie/1124-the-prestige-2006",
+      "Casablanca": "https://cinejoy.pk/movie/289-casablanca-1942",
+      "Grave of the Fireflies": "https://cinejoy.pk/movie/12477-grave-of-the-fireflies-1988",
+      "Cinema Paradiso": "https://cinejoy.pk/movie/11216-cinema-paradiso-1988",
+      "The Usual Suspects": "https://cinejoy.pk/movie/629-the-usual-suspects-1995",
+      "Once Upon a Time in the West": "https://cinejoy.pk/movie/335-once-upon-a-time-in-the-west-1968",
+      "Rear Window": "https://cinejoy.pk/movie/567-rear-window-1954",
+      "Alien": "https://cinejoy.pk/movie/348-alien-1979",
+      "City Lights": "https://cinejoy.pk/movie/901-city-lights-1931",
+      "Django Unchained": "https://cinejoy.pk/movie/68718-django-unchained-2012",
+      "The Intouchables": "https://cinejoy.pk/movie/77338-the-intouchables-2011",
+      "Modern Times": "https://cinejoy.pk/movie/3082-modern-times-1936",
+      "Maharaja": "https://cinejoy.pk/movie/1118224-maharaja-2024",
+      "Sita Ramam": "https://cinejoy.pk/movie/894803-sita-ramam-2022",
+      "Kumbalangi Nights": "https://cinejoy.pk/movie/575351-kumbalangi-nights-2019",
+      "Jersey": "https://cinejoy.pk/movie/592898-jersey-2019",
+      "Pather Panchali": "https://cinejoy.pk/movie/5801-pather-panchali-1955",
+      "Apur Sansar": "https://cinejoy.pk/movie/896-apur-sansar-1959",
+      "Gol Maal": "https://cinejoy.pk/movie/30066-gol-maal-1979",
+      "Aaranya Kaandam": "https://cinejoy.pk/movie/119123-aaranya-kaandam-2010",
+      "Spadikam": "https://cinejoy.pk/movie/240179-spadikam-1995",
+      "The Godfather: Part II": "https://cinejoy.pk/movie/240-the-godfather-part-ii-1974",
+      "Forrest Gump": "https://cinejoy.pk/movie/13-forrest-gump-1994",
+      "Sagara Sangamam": "https://cinejoy.pk/movie/30153-sagara-sangamam-1983",
+      "Star Wars: Episode V - The Empire Strikes Back": "https://cinejoy.pk/movie/1891-the-empire-strikes-back-1980",
+      "Se7en": "https://cinejoy.pk/movie/807-se7en-1995",
+      "Star Wars: Episode IV - A New Hope": "https://cinejoy.pk/movie/11-star-wars-episode-iv-a-new-hope-1977",
+      "Leon: The Professional": "https://cinejoy.pk/movie/101-leon-the-professional-1994",
+      "Mahaaraaja": "https://cinejoy.pk/movie/1118224-maharaja-2024"
+};
+    window.CINEJOY_TOP100_URLS = CINEJOY_TOP100_URLS;
+
     // Top 100 movies strictly according to IMDb rating (with rank as tiebreaker)
     const top100ImdbList = movies.slice()
       .sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0) || (a.rank - b.rank))
       .slice(0, 100);
-    const top100ImdbSet = new Set(top100ImdbList.map(m => m.title));
+    const top100ImdbSet = new Set(Object.keys(CINEJOY_TOP100_URLS));
     window.top100ImdbSet = top100ImdbSet;
+    window.getCinejoyMovieUrl = function(title) {
+      return CINEJOY_TOP100_URLS[title] || null;
+    };
     window.isTop100ImdbMovie = function(title) {
-      return top100ImdbSet.has(title);
+      return Boolean(CINEJOY_TOP100_URLS[title]);
     };
     window.getCinejoyTop100Titles = function() {
-      return top100ImdbList.map(m => m.title);
+      return Object.keys(CINEJOY_TOP100_URLS);
     };
 
     // Generates high-contrast bespoke procedural SVG posters with typography
@@ -10052,7 +10160,7 @@ Odd Taxi|2021|87
           </div>
           ${(item.type === 'movie' && window.isTop100ImdbMovie && window.isTop100ImdbMovie(item.title)) ? `
           <div class="pt-2 mt-1 border-t border-white/10" onclick="event.stopPropagation()">
-            <a href="https://cinejoy.to/search?keyword=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition-all">
+            <a href="${(window.getCinejoyMovieUrl && window.getCinejoyMovieUrl(item.title)) || 'https://cinejoy.pk/search?keyword=' + encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition-all">
               <i class="fa-solid fa-circle-play text-xs"></i> <span>Watch Now</span>
             </a>
           </div>` : ''}
@@ -10813,7 +10921,7 @@ Odd Taxi|2021|87
                 <i class="fa-brands fa-youtube"></i> Trailer
               </a>
               ${(item.type === 'movie' && window.isTop100ImdbMovie && window.isTop100ImdbMovie(item.title)) ? `
-              <a href="https://cinejoy.to/search?keyword=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
+              <a href="${(window.getCinejoyMovieUrl && window.getCinejoyMovieUrl(item.title)) || 'https://cinejoy.pk/search?keyword=' + encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
                 <i class="fa-solid fa-circle-play text-sm"></i> <span>Watch Now on Cinejoy</span>
               </a>` : ''}
             </div>

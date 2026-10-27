@@ -1852,9 +1852,9 @@
         name: 'Cinejoy',
         badge: 'Top 100 Synced · HD Stream',
         color: 'from-amber-500/25 to-yellow-500/15 border-amber-400/50 text-amber-200',
-        movieTpl: 'https://cinejoy.to/search?keyword={q}',
-        tvTpl: 'https://cinejoy.to/search?keyword={q}',
-        searchTpl: 'https://cinejoy.to/search?keyword={q}'
+        movieTpl: 'https://cinejoy.pk/movie/{tmdb}',
+        tvTpl: 'https://cinejoy.pk/search?keyword={q}',
+        searchTpl: 'https://cinejoy.pk/search?keyword={q}'
       },
       {
         id: 'cineby',
@@ -1946,7 +1946,9 @@
 
       grid.innerHTML = DEFAULT_FMHY_PORTALS.map((p, idx) => {
         let href = p.searchTpl.replace('{q}', qEnc);
-        if (tmdbId) {
+        if (p.id === 'cinejoy' && window.getCinejoyMovieUrl && window.getCinejoyMovieUrl(item.title)) {
+          href = window.getCinejoyMovieUrl(item.title);
+        } else if (tmdbId) {
           href = item.type === 'show'
             ? p.tvTpl.replace('{tmdb}', tmdbId).replace('{s}', s).replace('{e}', e)
             : p.movieTpl.replace('{tmdb}', tmdbId);
