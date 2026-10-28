@@ -1978,50 +1978,95 @@
     };
 
     // ---------------------------------------------------------
-    // CINEPASS TICKET LEDGER (WORKING HAND-IN-HAND WITH TASTE DNA)
+    // OFFICIAL GOLDEN TICKET LEDGER (AUTHENTIC COMMEMORATIVE PASSES)
     // ---------------------------------------------------------
     window.renderCinePassLedger = function() {
       const container = $('cinePassLedgerContainer');
       if (!container) return;
       const watched = (watchedTitles || []).map(t => globalDatabase[t]).filter(Boolean);
+      const userName = (typeof obProfile !== 'undefined' && obProfile.username) ? obProfile.username : 'Peak Cinephile';
+
       if (!watched.length) {
+        // Provide a gorgeous sample Golden Ticket so the feature is immediately visible and demonstrable
+        const sample = globalDatabase['The Dark Knight'] || globalDatabase['Breaking Bad'] || Object.values(globalDatabase)[0];
+        const sampleRating = (sample && myRatings && myRatings[sample.title]) ? `${myRatings[sample.title]}★` : (sample ? `★ ${sample.rating}` : '★ 9.0');
+        const samplePoster = sample ? (posterCache[sample.type + ':' + sample.title] || generateStylizedPosterDataURI(sample)) : '';
+        const sampleTitle = sample ? (sample.cleanName || sample.title) : 'The Dark Knight';
+        const sampleMeta = sample ? `${sample.genre} · ${sample.year}` : 'Action · 2008';
+        const sampleEsc = sample ? sample.title.replace(/'/g, "\\'") : 'The Dark Knight';
+
         container.innerHTML = `
-          <div class="col-span-full py-12 text-center text-gray-500 space-y-2">
-            <i class="fa-solid fa-ticket-simple text-3xl opacity-40"></i>
-            <div class="text-sm font-semibold">Your CinePass is currently blank</div>
-            <div class="text-xs text-gray-400">Mark movies or series as "Watched" across the app to stamp vintage ticket stubs into your ledger.</div>
+          <div class="col-span-full mb-2 p-3.5 rounded-2xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-between gap-3 text-xs">
+            <span class="text-amber-200 font-medium flex items-center gap-2">
+              <i class="fa-solid fa-award text-amber-400 text-sm"></i>
+              <span><strong>Sample Golden Ticket:</strong> Mark any movie or show as <strong>Watched</strong> across the app to mint your official passes into this ledger!</span>
+            </span>
+          </div>
+          <div class="golden-ticket-card p-4 sm:p-5 relative cursor-pointer group flex flex-col justify-between overflow-hidden" onclick="openDetailModal('${sampleEsc}')">
+            <div class="flex items-center justify-between border-b border-amber-400/30 pb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-400/20 text-amber-300 text-xs font-black shadow-inner">★</span>
+                <span class="text-[11px] font-black uppercase tracking-widest text-amber-300 font-mono">OFFICIAL GOLDEN TICKET</span>
+              </div>
+              <span class="text-[10px] font-mono text-amber-200/70 uppercase tracking-wider">${sample ? sample.type : 'MOVIE'}</span>
+            </div>
+            <div class="my-3.5 flex items-center gap-3.5">
+              <div class="w-16 h-24 rounded-xl overflow-hidden shrink-0 border border-amber-400/40 bg-black shadow-md">
+                <img src="${samplePoster}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
+              </div>
+              <div class="min-w-0 flex-1">
+                <h4 class="font-extrabold text-white text-base leading-snug truncate group-hover:text-amber-300 transition-colors">${sampleTitle}</h4>
+                <div class="text-xs text-amber-200/80 font-medium mt-0.5">${sampleMeta}</div>
+                <div class="text-[11px] text-gray-400 mt-1">IMDb: <span class="text-white font-bold">${sample ? sample.rating : '9.0'}</span></div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-amber-400/30 pt-2.5 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-1.5 text-gray-300 font-semibold truncate max-w-[55%]">
+                <i class="fa-solid fa-user-circle text-amber-400 text-sm"></i>
+                <span class="truncate text-white font-bold">${esc(userName)}</span>
+              </div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-400/20 border border-amber-400/40 text-amber-300 font-black">
+                <i class="fa-solid fa-star text-[10px]"></i>
+                <span>${sampleRating}</span>
+              </div>
+            </div>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = watched.slice(0, 18).map((it, idx) => {
-        const userStar = (myRatings && myRatings[it.title]) ? `${myRatings[it.title]}★` : '★ ' + it.rating;
-        const seatRow = String.fromCharCode(65 + (idx % 8)) + '-' + ((idx * 3 % 24) + 1);
-        const stubDate = new Date(Date.now() - idx * 86400000 * 2).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      container.innerHTML = watched.slice(0, 30).map((it) => {
+        const userRating = (myRatings && myRatings[it.title]) ? `${myRatings[it.title]}★` : `★ ${it.rating}`;
+        const posterSrc = posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it);
         const escT = it.title.replace(/'/g, "\\'");
         return `
-          <div class="cinepass-ticket p-4 text-left cursor-pointer group" onclick="openDetailModal('${escT}')">
-            <div class="flex items-center justify-between text-[10px] text-amber-400/80 font-mono tracking-widest uppercase">
-              <span>PEAK CINEMA ARCHIVE</span>
-              <span>STUB #${String(idx + 1042).padStart(5, '0')}</span>
+          <div class="golden-ticket-card p-4 sm:p-5 relative cursor-pointer group flex flex-col justify-between overflow-hidden" onclick="openDetailModal('${escT}')">
+            <div class="flex items-center justify-between border-b border-amber-400/30 pb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-400/20 text-amber-300 text-xs font-black shadow-inner">★</span>
+                <span class="text-[11px] font-black uppercase tracking-widest text-amber-300 font-mono">OFFICIAL GOLDEN TICKET</span>
+              </div>
+              <span class="text-[10px] font-mono text-amber-200/70 uppercase tracking-wider">${it.type}</span>
             </div>
-            <div class="mt-2 flex items-start gap-3">
-              <div class="w-12 h-16 rounded-lg overflow-hidden shrink-0 border border-white/10 bg-black">
-                <img src="${posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it)}" class="w-full h-full object-cover" alt="">
+            <div class="my-3.5 flex items-center gap-3.5">
+              <div class="w-16 h-24 rounded-xl overflow-hidden shrink-0 border border-amber-400/40 bg-black shadow-md">
+                <img src="${posterSrc}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="${esc(it.cleanName || it.title)}">
               </div>
               <div class="min-w-0 flex-1">
-                <h4 class="font-bold text-white text-sm truncate group-hover:text-brand-gold transition-colors">${it.cleanName || it.title}</h4>
-                <div class="text-[11px] text-gray-400">${it.genre} · ${it.year}</div>
-                <div class="flex items-center gap-2 mt-1.5 text-[10px] text-gray-300">
-                  <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-400/30">SEAT ${seatRow}</span>
-                  <span class="text-brand-gold font-bold">${userStar}</span>
-                </div>
+                <h4 class="font-extrabold text-white text-base leading-snug truncate group-hover:text-amber-300 transition-colors">${esc(it.cleanName || it.title)}</h4>
+                <div class="text-xs text-amber-200/80 font-medium mt-0.5">${it.genre} · ${it.year}</div>
+                <div class="text-[11px] text-gray-400 mt-1">IMDb: <span class="text-white font-bold">${it.rating}</span></div>
               </div>
             </div>
-            <div class="cinepass-perforation my-2.5 pt-2 flex items-center justify-between text-[9px] font-mono text-gray-400">
-              <span>STAMPED: ${stubDate}</span>
-              <span class="text-amber-400 font-bold group-hover:underline">VIEW PASS &rarr;</span>
+            <div class="border-t border-dashed border-amber-400/30 pt-2.5 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-1.5 text-gray-300 font-semibold truncate max-w-[55%]">
+                <i class="fa-solid fa-user-circle text-amber-400 text-sm"></i>
+                <span class="truncate text-white font-bold">${esc(userName)}</span>
+              </div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-400/20 border border-amber-400/40 text-amber-300 font-black">
+                <i class="fa-solid fa-star text-[10px]"></i>
+                <span>${userRating}</span>
+              </div>
             </div>
           </div>
         `;
@@ -2030,39 +2075,39 @@
 
     window.exportCinePassLedger = function() {
       const watched = (watchedTitles || []).map(t => globalDatabase[t]).filter(Boolean);
+      const userName = (typeof obProfile !== 'undefined' && obProfile.username) ? obProfile.username : 'Peak Cinephile';
       if (!watched.length) {
-        showToast('Mark titles as watched first to generate your CinePass!', 'fa-ticket', 'text-amber-400');
+        showToast('Mark titles as watched first to generate your Golden Ticket Ledger!', 'fa-ticket', 'text-amber-400');
         return;
       }
       const lines = [
         "==================================================",
-        "          PEAK MEDIA · CINEPASS TICKET LEDGER     ",
+        "      PEAK MEDIA · OFFICIAL GOLDEN TICKET LEDGER  ",
         "==================================================",
+        `Issued To: ${userName}`,
         `Generated on: ${new Date().toLocaleDateString()}`,
-        `Total Stamped Titles: ${watched.length}`,
+        `Total Golden Tickets Minted: ${watched.length}`,
         "",
-        ...watched.map((it, i) => `${i + 1}. ${it.cleanName || it.title} (${it.year}) - Rating: ${it.rating}★ [${it.genre}]`)
+        ...watched.map((it, i) => `${i + 1}. [${it.type.toUpperCase()}] ${it.cleanName || it.title} (${it.year}) - User Rating: ${myRatings[it.title] ? myRatings[it.title] + '★' : it.rating + '★'} - Genre: ${it.genre}`)
       ];
       const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
       const u = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = u;
-      a.download = `peak-cinepass-ledger-${new Date().toISOString().slice(0, 10)}.txt`;
+      a.download = `peak-golden-tickets-${new Date().toISOString().slice(0, 10)}.txt`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(u), 1000);
-      showToast('Exported CinePass Ledger archive!', 'fa-download', 'text-brand-gold');
+      showToast('Exported Golden Ticket Ledger archive!', 'fa-download', 'text-brand-gold');
     };
 
     // ---------------------------------------------------------
-    // CINEMA HALL LIGHTS-OUT & SENSORY SANCTUARY ENGINE
+    // CINEMA HALL LIGHTS-OUT & SOUNDTRACK VERIFICATION
     // ---------------------------------------------------------
     window.toggleCinemaLightsOut = function() {
       const active = document.body.classList.toggle('lights-out-mode');
-      const btn = $('lightsOutToggleBtn');
-      const lbl = $('lightsOutLbl');
-      if (btn) btn.classList.toggle('bg-amber-400/20', active);
-      if (lbl) lbl.textContent = active ? 'Lights On' : 'Lights Out';
-      showToast(active ? 'Cinema Lights-Out Active (100% OLED Black)' : 'Lights-Out Deactivated', 'fa-moon', 'text-brand-gold');
+      const tgl = $('lightsOutTgl');
+      if (tgl) tgl.classList.toggle('on', active);
+      showToast(active ? 'Cinema Hall Lights-Out (OLED Pitch-Black)' : 'Lights-Out Deactivated', 'fa-moon', 'text-amber-400');
     };
 
     window.playOSTForTitle = function(title) {
@@ -2075,138 +2120,11 @@
       if (found) {
         window.playSongById(found.id);
         showToast(`Playing Official Theme: "${found.t.slice(0, 36)}"`, 'fa-music', 'text-brand-gold');
-      } else {
-        const fallback = (musicCatalog || []).find(s => s.m === 'Epic' || s.m === 'Chill') || (musicCatalog && musicCatalog[0]);
-        if (fallback) {
-          window.playSongById(fallback.id);
-          showToast(`Playing Cinematic Soundtrack: "${fallback.t.slice(0, 32)}"`, 'fa-music', 'text-indigo-300');
-        }
+        return true;
       }
+      showToast(`No verified soundtrack found for "${title}"`, 'fa-circle-info', 'text-gray-400');
+      return false;
     };
-
-    let sanctuaryTimerId = null;
-    let sanctuarySecondsRemaining = 25 * 60;
-    let sanctuaryAudioMuted = false;
-    let sanctuaryCanvasActive = false;
-
-    window.openCinemaSanctuaryModal = function() {
-      const modal = $('sanctuaryModal');
-      if (!modal) return;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      initSanctuaryCanvas();
-      showToast('Entered Sensory Cinema Sanctuary', 'fa-spa', 'text-indigo-300');
-    };
-
-    window.closeCinemaSanctuaryModal = function() {
-      const modal = $('sanctuaryModal');
-      if (!modal) return;
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      if (sanctuaryTimerId) {
-        clearInterval(sanctuaryTimerId);
-        sanctuaryTimerId = null;
-      }
-    };
-
-    window.setSanctuaryTheme = function(theme) {
-      const btns = document.querySelectorAll('#sanctuaryAtmospheres button');
-      btns.forEach(b => {
-        const isCur = b.dataset.env === theme;
-        b.className = `p-3 rounded-2xl border text-left transition-all ${isCur ? 'border-brand-gold bg-brand-gold/15 text-white' : 'border-white/10 bg-black/40 hover:bg-white/5 text-gray-300'}`;
-      });
-      const names = { cyberpunk: 'Neo-Tokyo Neon Rain', paris: 'Parisian Rain & Accordion', booth: '35mm Projection Booth', space: 'Deep Space Observation Deck' };
-      showToast(`Atmosphere: ${names[theme] || theme}`, 'fa-sparkles', 'text-brand-gold');
-    };
-
-    window.setSanctuaryTimer = function(minutes) {
-      if (sanctuaryTimerId) clearInterval(sanctuaryTimerId);
-      sanctuaryTimerId = null;
-      sanctuarySecondsRemaining = minutes * 60;
-      updateSanctuaryTimerDisplay();
-      const btn = $('sanctuaryTimerToggleBtn');
-      if (btn) btn.textContent = 'Start';
-    };
-
-    window.toggleSanctuaryTimer = function() {
-      const btn = $('sanctuaryTimerToggleBtn');
-      if (sanctuaryTimerId) {
-        clearInterval(sanctuaryTimerId);
-        sanctuaryTimerId = null;
-        if (btn) btn.textContent = 'Resume';
-      } else {
-        sanctuaryTimerId = setInterval(() => {
-          if (sanctuarySecondsRemaining <= 0) {
-            clearInterval(sanctuaryTimerId);
-            sanctuaryTimerId = null;
-            showToast('Sanctuary Focus session complete!', 'fa-bell', 'text-brand-gold');
-            if (btn) btn.textContent = 'Start';
-            return;
-          }
-          sanctuarySecondsRemaining--;
-          updateSanctuaryTimerDisplay();
-        }, 1000);
-        if (btn) btn.textContent = 'Pause';
-      }
-    };
-
-    function updateSanctuaryTimerDisplay() {
-      const el = $('sanctuaryTimerDisplay');
-      if (!el) return;
-      const m = Math.floor(sanctuarySecondsRemaining / 60);
-      const s = sanctuarySecondsRemaining % 60;
-      el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-    }
-
-    window.toggleSanctuaryAudio = function() {
-      sanctuaryAudioMuted = !sanctuaryAudioMuted;
-      const st = $('sanctuaryAudioStatus');
-      if (st) {
-        st.textContent = sanctuaryAudioMuted ? 'Muted' : 'Active';
-        st.className = `text-[11px] font-bold ${sanctuaryAudioMuted ? 'text-gray-400' : 'text-emerald-400'}`;
-      }
-      showToast(sanctuaryAudioMuted ? 'Sanctuary Ambient Audio Muted' : 'Sanctuary Ambient Audio Unmuted', 'fa-volume-high', 'text-indigo-300');
-    };
-
-    function initSanctuaryCanvas() {
-      const cv = $('sanctuaryCanvas');
-      if (!cv || sanctuaryCanvasActive) return;
-      sanctuaryCanvasActive = true;
-      const ctx = cv.getContext('2d');
-      let drops = [];
-      function resize() {
-        cv.width = cv.offsetWidth || 700;
-        cv.height = cv.offsetHeight || 450;
-        drops = Array.from({ length: 45 }, () => ({
-          x: Math.random() * cv.width,
-          y: Math.random() * cv.height,
-          l: 12 + Math.random() * 20,
-          v: 4 + Math.random() * 6
-        }));
-      }
-      resize();
-      function draw() {
-        const modal = $('sanctuaryModal');
-        if (!modal || modal.classList.contains('hidden')) {
-          sanctuaryCanvasActive = false;
-          return;
-        }
-        ctx.clearRect(0, 0, cv.width, cv.height);
-        ctx.strokeStyle = 'rgba(165, 180, 252, 0.28)';
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        drops.forEach(d => {
-          ctx.moveTo(d.x, d.y);
-          ctx.lineTo(d.x - 2, d.y + d.l);
-          d.y += d.v;
-          d.x -= 0.6;
-          if (d.y > cv.height) { d.y = -20; d.x = Math.random() * cv.width; }
-        });
-        ctx.stroke();
-        requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    }
 
     window.launchMusicVibeStation = function(lang, mood) {
       ensureMusicLoaded();

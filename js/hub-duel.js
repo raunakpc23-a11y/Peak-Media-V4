@@ -390,7 +390,7 @@
         $('duelSize').querySelectorAll('button').forEach(x => {
           x.className = 'flex-1 py-2 rounded-xl text-xs font-bold ' + (+x.dataset.v === D.size ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-300');
         });
-        const modeLabels = { classic: 'Classic Head-to-Head Duel (2)', royale: 'Battle Royale Tournament (8/16 Brackets)', matchmaker: 'Rapid Matchmaker (Swipe Decider)' };
+        const modeLabels = { classic: 'Classic Head-to-Head Duel (2)', royale: 'Battle Royale Tournament (8/16/32 Brackets)', matchmaker: 'Rapid Matchmaker (Swipe Decider)' };
         showToast(`Mode: ${modeLabels[D.mode] || D.mode}`, 'fa-trophy', 'text-brand-gold');
       });
     }
@@ -439,7 +439,7 @@
       $('duelSetup').classList.add('hidden'); $('duelChamp').classList.add('hidden'); $('duelArena').classList.remove('hidden');
       showMatch();
     }
-    const roundName = n => n === 2 ? 'Grand Final' : n === 4 ? 'Semi-finals' : n === 8 ? 'Quarter-finals' : 'Round of 16';
+    const roundName = n => n === 2 ? 'Grand Final' : n === 4 ? 'Semi-finals' : n === 8 ? 'Quarter-finals' : n === 16 ? 'Round of 16' : n === 32 ? 'Round of 32' : `Round of ${n}`;
     function showMatch() {
       const cur = D.rounds[D.r], a = cur[D.m * 2], b = cur[D.m * 2 + 1];
       $('duelRound').textContent = `${roundName(cur.length)} · Duel ${D.m + 1} of ${cur.length / 2}`;

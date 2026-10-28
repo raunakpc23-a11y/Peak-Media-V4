@@ -15829,6 +15829,8 @@ Odd Taxi|2021|87
         const active = favTitles.includes(t);
         btn.className = `w-8 h-8 rounded-full flex items-center justify-center transition-all ${active ? 'bg-brand-gold text-black shadow-lg shadow-brand-gold/40 scale-105' : 'bg-black/65 text-gray-300 hover:bg-black hover:text-white'}`;
       });
+
+      if (window.renderCinePassLedger) window.renderCinePassLedger();
     }
 
     // ==========================================
@@ -16619,7 +16621,7 @@ Odd Taxi|2021|87
         totalSeasons: 9,
         notes: {
           1: { badge: "Skippable", color: "bg-amber-500/20 text-amber-300 border-amber-400/40", consensus: "Season 1 is an awkward British remake clone. True stride and comedy genius starts in Season 2." },
-          2: { badge: "Golden Era", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 2: Peak ensemble comedy begins; landmark Jim & Pam storyline." },
+          2: { badge: "Golden", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 2: Peak ensemble comedy begins; landmark Jim & Pam storyline." },
           3: { badge: "Essential", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 3: Acclaimed series high-water mark with iconic Stamford merger." },
           5: { badge: "Iconic", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 5: The legendary Michael Scott Paper Company storyline." },
           8: { badge: "Transitional", color: "bg-purple-500/20 text-purple-300 border-purple-400/40", consensus: "Season 8: Post-Michael era; uneven storylines but strong ensemble moments." }
@@ -16630,14 +16632,14 @@ Odd Taxi|2021|87
         notes: {
           1: { badge: "Slow Burn", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 1: Deliberate character study establishing Walter White's moral descent." },
           4: { badge: "Peak TV", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 4: Masterclass cat-and-mouse tension culminating in 'Face Off'." },
-          5: { badge: "Zenith Masterpiece", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 5: Ozymandias and one of the most flawless finales in television history." }
+          5: { badge: "Masterclass", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 5: Masterclass in television storytelling with Ozymandias and a landmark series finale." }
         }
       },
       "Game of Thrones": {
         totalSeasons: 8,
         notes: {
           1: { badge: "Landmark", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 1: Faithful adaptation of Martin's novel; redefined modern prestige fantasy." },
-          4: { badge: "Peak Thrones", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 4: Tyrion's trial and the Oberyn duel; pinnacle of the entire series." },
+          4: { badge: "Peak TV", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 4: Tyrion's trial and the Oberyn duel; pinnacle of the entire series." },
           8: { badge: "Divisive", color: "bg-rose-500/20 text-rose-300 border-rose-400/40", consensus: "Season 8: Widely criticized as rushed; impressive spectacle but polarized storytelling." }
         }
       },
@@ -16646,13 +16648,13 @@ Odd Taxi|2021|87
         notes: {
           1: { badge: "Masterpiece", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 1: Flawless tight 80s sci-fi nostalgia thriller." },
           3: { badge: "Blockbuster", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 3: Summer neon spectacle at Starcourt Mall; high energy popcorn fun." },
-          4: { badge: "Epic Scale", color: "bg-purple-500/20 text-purple-300 border-purple-400/40", consensus: "Season 4: Feature-length episodes, darker horror, and landmark Vecna backstory." }
+          4: { badge: "Epic", color: "bg-purple-500/20 text-purple-300 border-purple-400/40", consensus: "Season 4: Feature-length episodes, darker horror, and landmark Vecna backstory." }
         }
       },
       "True Detective": {
         totalSeasons: 4,
         notes: {
-          1: { badge: "All-Time Peak", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 1: Standalone magnum opus with Matthew McConaughey and Woody Harrelson." },
+          1: { badge: "Masterpiece", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 1: Standalone magnum opus with Matthew McConaughey and Woody Harrelson." },
           2: { badge: "Muddled", color: "bg-rose-500/20 text-rose-300 border-rose-400/40", consensus: "Season 2: Disjointed neo-noir that suffered from high Season 1 expectations." }
         }
       },
@@ -16661,34 +16663,34 @@ Odd Taxi|2021|87
         notes: {
           1: { badge: "Classic", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 1: Iconic introduction to Miami's favorite vigilante forensic tech." },
           4: { badge: "Peak Drama", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 4: John Lithgow's chilling Trinity Killer and jaw-dropping finale." },
-          8: { badge: "Divisive Finale", color: "bg-rose-500/20 text-rose-300 border-rose-400/40", consensus: "Season 8: Infamous lumberjack resolution; controversial conclusion." }
+          8: { badge: "Divisive", color: "bg-rose-500/20 text-rose-300 border-rose-400/40", consensus: "Season 8: Infamous lumberjack resolution; controversial conclusion." }
         }
       },
       "The Wire": {
         totalSeasons: 5,
         notes: {
-          1: { badge: "Gritty Classic", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 1: Groundbreaking procedural realism on Baltimore street corners." },
-          4: { badge: "Television Zenith", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 4: Widely regarded by critics as the single greatest television season ever produced." }
+          1: { badge: "Classic", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 1: Groundbreaking procedural realism on Baltimore street corners." },
+          4: { badge: "Masterclass", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 4: Masterclass procedural storytelling, widely acclaimed as television's greatest season." }
         }
       },
       "Lost": {
         totalSeasons: 6,
         notes: {
-          1: { badge: "Cultural Phenomenon", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 1: The pilot that changed network TV; gripping island character mystery." },
-          6: { badge: "Polarizing", color: "bg-purple-500/20 text-purple-300 border-purple-400/40", consensus: "Season 6: Flash sideways and spiritual resolution that split the fandom in two." }
+          1: { badge: "Iconic", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 1: The pilot that changed network TV; gripping island character mystery." },
+          6: { badge: "Divisive", color: "bg-purple-500/20 text-purple-300 border-purple-400/40", consensus: "Season 6: Flash sideways and spiritual resolution that split the fandom in two." }
         }
       },
       "Prison Break": {
         totalSeasons: 5,
         notes: {
-          1: { badge: "Flawless Thriller", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 1: Gold-standard escape puzzle with non-stop adrenaline." },
-          3: { badge: "Strike Shortened", color: "bg-amber-500/20 text-amber-300 border-amber-400/40", consensus: "Season 3: Shortened Sona prison arc impacted by the 2007 strike." }
+          1: { badge: "Masterclass", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 1: Gold-standard escape puzzle with non-stop adrenaline." },
+          3: { badge: "Strike", color: "bg-amber-500/20 text-amber-300 border-amber-400/40", consensus: "Season 3: Shortened Sona prison arc impacted by the 2007 strike." }
         }
       },
       "Fargo": {
         totalSeasons: 5,
         notes: {
-          1: { badge: "Phenomenal", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 1: Lorne Malvo and Lester Nygaard in a wickedly dark Midwestern caper." },
+          1: { badge: "Masterclass", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 1: Lorne Malvo and Lester Nygaard in a wickedly dark Midwestern caper." },
           2: { badge: "Masterpiece", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 2: 1979 Gerhardt syndicate war; stylish, bloody, and exquisitely paced." }
         }
       }
@@ -16891,10 +16893,10 @@ Odd Taxi|2021|87
 
       content.innerHTML = `
         <div class="flex flex-col sm:flex-row gap-6 p-6 sm:p-8">
-          <div class="w-40 sm:w-52 shrink-0 mx-auto sm:mx-0 rounded-2xl overflow-hidden border border-white/20 shadow-2xl poster-aspect bg-[#090c14] relative">
-            <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover transition-opacity duration-300" alt="${item.title}">
+          <div class="w-44 sm:w-56 shrink-0 mx-auto sm:mx-0 rounded-2xl overflow-hidden border border-white/20 shadow-2xl aspect-[2/3] bg-[#0c101c] flex items-center justify-center relative group/poster">
+            <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover/poster:scale-105" alt="${item.title}">
           </div>
-          <div class="flex-1 space-y-3.5">
+          <div class="flex-1 space-y-4">
             <div class="flex flex-wrap items-center gap-2">
               <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-extrabold text-xs">★ ${item.rating}</span>
               <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-200 text-xs font-semibold">#${item.rank} Ranked</span>
@@ -16902,46 +16904,37 @@ Odd Taxi|2021|87
               <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] font-semibold">${item.platformName}</span>
             </div>
 
-            <!-- Critics vs Crowd Scorecard -->
-            <div class="p-3 sm:p-4 rounded-2xl bg-[#0c101c] border border-white/15 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div class="flex items-center gap-4 sm:gap-6 divide-x divide-white/10">
+            <!-- Master Critics vs Crowd Scorecard (Spacious, Complete 1-Click Overview) -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#121626] via-[#0c101c] to-[#0a0d18] border border-white/20 shadow-2xl space-y-3">
+              <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/10 text-center">
                 <!-- IMDb Pillar -->
-                <div class="flex items-center gap-2.5">
-                  <span class="px-2 py-0.5 rounded bg-[#f5c518] text-black font-black text-[11px] tracking-tight font-mono shadow-sm">IMDb</span>
-                  <div>
-                    <div class="flex items-baseline gap-0.5">
-                      <span class="text-white font-extrabold text-base leading-none">${item.rating}</span>
-                      <span class="text-gray-400 text-xs">/10</span>
-                    </div>
-                    <div class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Rating</div>
+                <div class="flex flex-col items-center justify-center px-1 sm:px-2">
+                  <span class="px-2 py-0.5 rounded bg-[#f5c518] text-black font-black text-xs tracking-tight font-mono shadow-sm">IMDb</span>
+                  <div class="flex items-baseline gap-0.5 mt-1.5">
+                    <span class="text-white font-extrabold text-lg sm:text-2xl leading-none">${item.rating}</span>
+                    <span class="text-gray-400 text-xs">/10</span>
                   </div>
+                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">#${item.rank} Ranked</div>
                 </div>
 
                 <!-- Rotten Tomatoes Critics Meter Pillar -->
-                <div class="pl-4 sm:pl-6 flex items-center gap-2.5">
-                  <span class="text-xl leading-none select-none" title="Rotten Tomatoes Tomatometer">🍅</span>
-                  <div>
-                    <div class="flex items-baseline gap-0.5">
-                      <span class="text-rose-400 font-extrabold text-base leading-none">${rtCritics}%</span>
-                    </div>
-                    <div class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Tomatometer</div>
-                  </div>
+                <div class="flex flex-col items-center justify-center px-1 sm:px-2 pl-2 sm:pl-4">
+                  <span class="text-2xl sm:text-3xl leading-none select-none" title="Rotten Tomatoes Tomatometer">🍅</span>
+                  <div class="text-rose-400 font-extrabold text-lg sm:text-2xl leading-none mt-1.5">${rtCritics}%</div>
+                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">Critics Score</div>
                 </div>
 
                 <!-- Audience Popcorn Meter Pillar -->
-                <div class="pl-4 sm:pl-6 flex items-center gap-2.5">
-                  <span class="text-xl leading-none select-none" title="Audience Popcorn Meter">🍿</span>
-                  <div>
-                    <div class="flex items-baseline gap-0.5">
-                      <span class="text-amber-400 font-extrabold text-base leading-none">${rtAudience}%</span>
-                    </div>
-                    <div class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Audience</div>
-                  </div>
+                <div class="flex flex-col items-center justify-center px-1 sm:px-2 pl-2 sm:pl-4">
+                  <span class="text-2xl sm:text-3xl leading-none select-none" title="Audience Popcorn Meter">🍿</span>
+                  <div class="text-amber-400 font-extrabold text-lg sm:text-2xl leading-none mt-1.5">${rtAudience}%</div>
+                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">Audience Score</div>
                 </div>
               </div>
 
-              <!-- Alignment / Rift Verdict Badge -->
-              <div class="shrink-0 self-start sm:self-center">
+              <!-- Verdict Banner -->
+              <div class="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
+                <span class="text-[11px] text-gray-300 font-medium">Consensus Verdict:</span>
                 <span class="px-3 py-1 rounded-full border text-xs font-extrabold flex items-center gap-1.5 shadow-sm ${riftBadge.color}">
                   <i class="fa-solid ${riftBadge.icon} text-[11px]"></i>
                   <span>${riftBadge.text}</span>
@@ -16974,19 +16967,16 @@ Odd Taxi|2021|87
               <span class="text-[11px] text-gray-500 ml-1">${userRating ? `${userRating}/5 Stars` : '(Tap star to rate)'}</span>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="pt-1 flex flex-wrap gap-2.5">
-              <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${isW ? 'bg-rose-500 text-white' : 'bg-white/10 hover:bg-white/15 text-white border border-white/15'}">
-                <i class="fa-solid fa-heart"></i> ${isW ? 'In Watchlist' : 'Add to Watchlist'}
+            <!-- Action Buttons: Simply Heart for Watchlist, Watched/Unwatched, Favourite, Trailer, Cinejoy -->
+            <div class="pt-1 flex flex-wrap items-center gap-2.5">
+              <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" title="${isW ? 'In Watchlist (Click to remove)' : 'Add to Watchlist'}" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isW ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40' : 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/15'}">
+                <i class="fa-solid fa-heart text-base ${isW ? 'text-white' : 'text-gray-300'}"></i>
               </button>
-              <button onclick="toggleWatched('${escTitle}', event); openDetailModal('${escTitle}');" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${isWatched ? 'bg-emerald-500 text-black' : 'bg-white/10 hover:bg-white/15 text-white border border-white/15'}">
-                <i class="fa-solid fa-check"></i> ${isWatched ? 'Marked Watched' : 'Mark Watched'}
+              <button onclick="toggleWatched('${escTitle}', event); openDetailModal('${escTitle}');" title="${isWatched ? 'Mark as Unwatched' : 'Mark as Watched'}" class="px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${isWatched ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/25' : 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/15'}">
+                <i class="fa-solid ${isWatched ? 'fa-check' : 'fa-circle'}"></i> <span>${isWatched ? 'Watched' : 'Unwatched'}</span>
               </button>
-              <button onclick="toggleFav('${escTitle}', event); openDetailModal('${escTitle}');" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${favTitles.includes(item.title) ? 'bg-brand-gold text-black' : 'bg-white/10 hover:bg-white/15 text-white border border-white/15'}">
-                <i class="fa-solid fa-star"></i> ${favTitles.includes(item.title) ? 'Favourited' : 'Favourite'}
-              </button>
-              <button onclick="playOSTForTitle('${escTitle}')" class="px-3.5 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 border border-indigo-400/35 text-xs font-bold flex items-center gap-1.5 transition-all" title="Play official theme music in player">
-                <i class="fa-solid fa-music text-indigo-300"></i> Theme Track
+              <button onclick="toggleFav('${escTitle}', event); openDetailModal('${escTitle}');" title="Toggle Favourite" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${favTitles.includes(item.title) ? 'bg-brand-gold text-black shadow' : 'bg-white/10 hover:bg-white/20 text-white border border-white/15'}">
+                <i class="fa-solid fa-star"></i>
               </button>
               <a href="https://www.youtube.com/results?search_query=${encodeURIComponent((item.rawName || item.cleanName) + ' ' + item.year + ' official trailer')}" target="_blank" rel="noopener" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', 'trailer') : true" class="px-3.5 py-2 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 text-xs font-bold flex items-center gap-1.5 transition-all">
                 <i class="fa-brands fa-youtube"></i> Trailer

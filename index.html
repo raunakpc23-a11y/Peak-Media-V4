@@ -134,20 +134,8 @@
           <span class="hidden sm:inline">Roulette</span>
         </button>
 
-        <!-- Sensory Cinema Sanctuary Button -->
-        <button type="button" onclick="openCinemaSanctuaryModal()" title="Sensory Cinema Sanctuary (Ambient Focus Lounge)" class="min-h-[36px] sm:min-h-[40px] px-2.5 sm:px-3 py-1.5 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/35 text-xs font-bold text-indigo-300 flex items-center gap-1.5 transition-all">
-          <i class="fa-solid fa-spa text-brand-gold"></i>
-          <span class="hidden xl:inline">Sanctuary</span>
-        </button>
-
-        <!-- Cinema Hall Lights-Out Mode Toggle -->
-        <button type="button" onclick="toggleCinemaLightsOut()" id="lightsOutToggleBtn" title="Cinema Hall Lights-Out (100% OLED Black)" class="min-h-[36px] sm:min-h-[40px] px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all">
-          <i class="fa-solid fa-moon text-amber-400"></i>
-          <span id="lightsOutLbl" class="hidden xl:inline">Lights Out</span>
-        </button>
-
-        <!-- Settings Drawer Trigger (Theme & Visual Effects) -->
-        <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Theme &amp; Visual Effects" class="min-h-[36px] sm:min-h-[40px] px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-sky-400/35 text-xs font-bold text-sky-300 flex items-center gap-1.5 transition-all">
+        <!-- Settings Drawer Trigger (Theme, Atmosphere & Lights-Out) -->
+        <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Theme &amp; Atmosphere Settings" class="min-h-[36px] sm:min-h-[40px] px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-sky-400/35 text-xs font-bold text-sky-300 flex items-center gap-1.5 transition-all">
           <i class="fa-solid fa-palette text-brand-gold"></i>
           <span id="vibeName" class="hidden xl:inline">Theme</span>
         </button>
@@ -180,6 +168,13 @@
           <span class="block text-[11px] text-gray-400">Disables background particles & continuous motion loops</span>
         </span>
         <span id="reduceTgl" class="tgl on"></span>
+      </label>
+      <label class="flex items-center justify-between gap-3 cursor-pointer pt-2 border-t border-white/10" onclick="toggleCinemaLightsOut()">
+        <span>
+          <span class="block text-sm font-bold text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-moon text-amber-400"></i> Cinema Hall Lights-Out</span>
+          <span class="block text-[11px] text-gray-400">100% OLED pitch-black deep focus mode</span>
+        </span>
+        <span id="lightsOutTgl" class="tgl"></span>
       </label>
       <div class="pt-3 border-t border-white/10 text-xs text-gray-300 space-y-2">
         <button type="button" onclick="tmOpen()" class="w-full flex justify-between items-center py-1.5 px-2 rounded-lg hover:bg-white/5 text-left">
@@ -699,6 +694,7 @@
               <button data-v="4" class="flex-1 py-2 rounded-xl text-xs font-bold bg-brand-gold text-black">4</button>
               <button data-v="8" class="flex-1 py-2 rounded-xl text-xs font-bold bg-white/5 text-gray-300">8</button>
               <button data-v="16" class="flex-1 py-2 rounded-xl text-xs font-bold bg-white/5 text-gray-300">16</button>
+              <button data-v="32" class="flex-1 py-2 rounded-xl text-xs font-bold bg-white/5 text-gray-300">32</button>
             </div>
           </div>
           <div>
@@ -1570,7 +1566,7 @@
             </div>
 
             <!-- Quick Interactive Modes -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <button type="button" onclick="tmOpen()" class="p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
                 <div class="text-xs font-bold text-cyan-300"><i class="fa-solid fa-clock-rotate-left mr-1.5"></i>Time Machine Dial</div>
                 <div class="text-[11px] text-gray-400">Filter by any release year (1930–2026)</div>
@@ -1583,20 +1579,24 @@
                 <div class="text-xs font-bold text-emerald-300"><i class="fa-solid fa-scale-unbalanced mr-1.5"></i>English vs Hindi</div>
                 <div class="text-[11px] text-gray-400">Compare ratings across both catalogs</div>
               </button>
+              <button type="button" onclick="toggleCinemaLightsOut()" class="p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-amber-400/30 text-left space-y-1 transition-all">
+                <div class="text-xs font-bold text-amber-300"><i class="fa-solid fa-moon mr-1.5"></i>Cinema Lights-Out</div>
+                <div class="text-[11px] text-gray-400">Toggle 100% OLED pitch-black screen</div>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- BLOCK 2: CINEPASS VINTAGE TICKET LEDGER & TASTE DNA (WORKING HAND-IN-HAND) -->
+      <!-- BLOCK 2: OFFICIAL GOLDEN TICKET LEDGER (AUTHENTIC COMMEMORATIVE PASSES) -->
       <div class="glass-card rounded-3xl p-6 sm:p-8 border border-brand-gold/30 space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
           <div>
             <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Personal Cinema Heritage</span>
             <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2.5 mt-0.5">
-              <i class="fa-solid fa-ticket text-brand-gold"></i> CinePass Ticket Ledger &amp; Taste Persona
+              <i class="fa-solid fa-ticket text-brand-gold"></i> ★ Official Golden Ticket Ledger
             </h3>
-            <p class="text-xs text-gray-400 mt-1">Every title you mark as watched stamps an authentic perforated vintage ticket stub into your personal cinema archive.</p>
+            <p class="text-xs text-gray-400 mt-1">Every title you mark as watched stamps an authentic golden ticket stub with your username and rating.</p>
           </div>
           <div class="flex items-center gap-2">
             <button type="button" onclick="exportCinePassLedger()" class="px-3 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/35 text-xs font-bold text-brand-gold flex items-center gap-1.5 transition-all">
@@ -1715,83 +1715,6 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
       <div id="detailModalContent"></div>
-    </div>
-  </div>
-
-  <!-- MODAL: SENSORY CINEMA SANCTUARY (AMBIENT FOCUS & DECOMPRESSION LOUNGE) -->
-  <div id="sanctuaryModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl" onclick="if(event.target.id==='sanctuaryModal')closeCinemaSanctuaryModal()">
-    <div class="relative w-full max-w-3xl rounded-3xl overflow-hidden glass-card border border-indigo-500/40 shadow-2xl bg-gradient-to-br from-[#0c0d1f]/95 via-[#080914]/95 to-[#120e24]/95 p-6 sm:p-8 space-y-6 animate-fadeIn">
-      <canvas id="sanctuaryCanvas" class="sanctuary-rain-canvas"></canvas>
-      
-      <div class="relative z-10 flex items-center justify-between border-b border-white/10 pb-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 text-lg">
-            <i class="fa-solid fa-spa"></i>
-          </div>
-          <div>
-            <div class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400">Sensory Cinema Sanctuary</div>
-            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white">Atmospheric Cinema Lounge</h2>
-          </div>
-        </div>
-        <button type="button" onclick="closeCinemaSanctuaryModal()" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <!-- Environment Selector -->
-      <div class="relative z-10 space-y-2">
-        <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Select Atmosphere</label>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="sanctuaryAtmospheres">
-          <button type="button" onclick="setSanctuaryTheme('cyberpunk')" data-env="cyberpunk" class="p-3 rounded-2xl border text-left transition-all border-brand-gold bg-brand-gold/15 text-white">
-            <div class="text-xs font-extrabold text-brand-gold"><i class="fa-solid fa-bolt mr-1"></i>Neo-Tokyo</div>
-            <div class="text-[10px] text-gray-400 mt-0.5">Neon Rain &amp; Synth</div>
-          </button>
-          <button type="button" onclick="setSanctuaryTheme('paris')" data-env="paris" class="p-3 rounded-2xl border text-left transition-all border-white/10 bg-black/40 hover:bg-white/5 text-gray-300">
-            <div class="text-xs font-extrabold text-pink-300"><i class="fa-solid fa-cloud-rain mr-1"></i>Parisian Rain</div>
-            <div class="text-[10px] text-gray-400 mt-0.5">Accordion &amp; Melancholy</div>
-          </button>
-          <button type="button" onclick="setSanctuaryTheme('booth')" data-env="booth" class="p-3 rounded-2xl border text-left transition-all border-white/10 bg-black/40 hover:bg-white/5 text-gray-300">
-            <div class="text-xs font-extrabold text-amber-300"><i class="fa-solid fa-film mr-1"></i>35mm Booth</div>
-            <div class="text-[10px] text-gray-400 mt-0.5">Projector Click &amp; Warmth</div>
-          </button>
-          <button type="button" onclick="setSanctuaryTheme('space')" data-env="space" class="p-3 rounded-2xl border text-left transition-all border-white/10 bg-black/40 hover:bg-white/5 text-gray-300">
-            <div class="text-xs font-extrabold text-cyan-300"><i class="fa-solid fa-meteor mr-1"></i>Deep Space</div>
-            <div class="text-[10px] text-gray-400 mt-0.5">Silent Drift &amp; Zimmer</div>
-          </button>
-        </div>
-      </div>
-
-      <!-- Live Controls: Pomodoro Focus Timer + Looping Audio Level + Silent Trailer Preview -->
-      <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-        <div class="p-4 rounded-2xl bg-black/50 border border-white/10 space-y-3">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-bold text-gray-300"><i class="fa-solid fa-stopwatch mr-1.5 text-indigo-400"></i>Focus &amp; Relax Timer</span>
-            <span id="sanctuaryTimerDisplay" class="font-mono text-brand-gold font-bold">25:00</span>
-          </div>
-          <div class="flex gap-2">
-            <button type="button" onclick="setSanctuaryTimer(15)" class="flex-1 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">15m</button>
-            <button type="button" onclick="setSanctuaryTimer(25)" class="flex-1 py-1.5 rounded-xl bg-brand-gold text-black text-xs font-bold shadow">25m</button>
-            <button type="button" onclick="setSanctuaryTimer(45)" class="flex-1 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">45m</button>
-            <button type="button" id="sanctuaryTimerToggleBtn" onclick="toggleSanctuaryTimer()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">Start</button>
-          </div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-black/50 border border-white/10 space-y-3">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-bold text-gray-300"><i class="fa-solid fa-sliders mr-1.5 text-brand-gold"></i>Ambient Atmospheric Audio</span>
-            <span id="sanctuaryAudioStatus" class="text-[11px] text-emerald-400 font-bold">Active</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <button type="button" id="sanctuaryAudioToggleBtn" onclick="toggleSanctuaryAudio()" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white flex items-center gap-1.5">
-              <i class="fa-solid fa-volume-high text-brand-gold"></i>
-              <span>Mute / Sound</span>
-            </button>
-            <button type="button" onclick="playOSTForTitle('Interstellar')" class="flex-1 py-1.5 px-2.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-300 text-xs font-bold truncate">
-              <i class="fa-solid fa-music mr-1"></i>Ambient Score
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
