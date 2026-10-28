@@ -1978,8 +1978,25 @@
     };
 
     // ---------------------------------------------------------
-    // OFFICIAL GOLDEN TICKET LEDGER (AUTHENTIC COMMEMORATIVE PASSES)
+    // OFFICIAL GOLDEN TICKET LEDGER (CUSTOM VIP COLLECTIBLE PASSES)
     // ---------------------------------------------------------
+    const VIP_HOOKS = {
+      "The Dark Knight": "When chaos engulfs Gotham, Batman confronts his darkest moral limits.",
+      "Inception": "A subconscious dream infiltrator is offered one final shot at redemption.",
+      "Breaking Bad": "A terminally ill teacher enters the underworld to provide for his family.",
+      "Interstellar": "Explorers journey through a wormhole to guarantee humanity's tomorrow.",
+      "The Office": "A hilarious mockumentary capturing everyday office eccentricities.",
+      "Pulp Fiction": "Violence and redemption intertwine across quirky criminal lives in L.A.",
+      "Fight Club": "An insomniac forms an underground combat society that spirals wildly.",
+      "The Godfather": "An aging mafia patriarch transfers power to his reluctant son.",
+      "The Matrix": "A hacker uncovers the astonishing simulation controlling human reality.",
+      "Parasite": "A destitute family infiltrates an affluent home through deception.",
+      "Whiplash": "A young drummer faces a ruthless instructor who demands sheer perfection.",
+      "Stranger Things": "A boy's disappearance unveils shadowy experiments and supernatural terror.",
+      "Game of Thrones": "Noble dynasties battle relentlessly for the Iron Throne.",
+      "The Shawshank Redemption": "Hope and friendship endure through decades within prison walls."
+    };
+
     window.renderCinePassLedger = function() {
       const container = $('cinePassLedgerContainer');
       if (!container) return;
@@ -1987,12 +2004,12 @@
       const userName = (typeof obProfile !== 'undefined' && obProfile.username) ? obProfile.username : 'Peak Cinephile';
 
       if (!watched.length) {
-        // Provide a gorgeous sample Golden Ticket so the feature is immediately visible and demonstrable
         const sample = globalDatabase['The Dark Knight'] || globalDatabase['Breaking Bad'] || Object.values(globalDatabase)[0];
         const sampleRating = (sample && myRatings && myRatings[sample.title]) ? `${myRatings[sample.title]}★` : (sample ? `★ ${sample.rating}` : '★ 9.0');
         const samplePoster = sample ? (posterCache[sample.type + ':' + sample.title] || generateStylizedPosterDataURI(sample)) : '';
         const sampleTitle = sample ? (sample.cleanName || sample.title) : 'The Dark Knight';
         const sampleMeta = sample ? `${sample.genre} · ${sample.year}` : 'Action · 2008';
+        const sampleHook = sample ? (VIP_HOOKS[sample.cleanName] || VIP_HOOKS[sample.title] || `A high-stakes fight for purpose and truth.`) : 'When chaos engulfs Gotham, Batman confronts his darkest moral limits.';
         const sampleEsc = sample ? sample.title.replace(/'/g, "\\'") : 'The Dark Knight';
 
         container.innerHTML = `
@@ -2002,31 +2019,36 @@
               <span><strong>Sample Golden Ticket:</strong> Mark any movie or show as <strong>Watched</strong> across the app to mint your official passes into this ledger!</span>
             </span>
           </div>
-          <div class="golden-ticket-card p-4 sm:p-5 relative cursor-pointer group flex flex-col justify-between overflow-hidden" onclick="openDetailModal('${sampleEsc}')">
-            <div class="flex items-center justify-between border-b border-amber-400/30 pb-2.5">
-              <div class="flex items-center gap-2">
-                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-400/20 text-amber-300 text-xs font-black shadow-inner">★</span>
-                <span class="text-[11px] font-black uppercase tracking-widest text-amber-300 font-mono">OFFICIAL GOLDEN TICKET</span>
+          <div class="golden-ticket-vip p-5 sm:p-6 text-amber-950 flex flex-col justify-between cursor-pointer group shadow-2xl relative select-none" onclick="openDetailModal('${sampleEsc}')">
+            <div class="flex items-center justify-between border-b-2 border-dashed border-amber-950/25 pb-2.5">
+              <div class="flex items-center gap-1.5 font-black text-[11px] tracking-widest uppercase font-mono">
+                <i class="fa-solid fa-ticket-simple text-amber-900"></i>
+                <span>GOLDEN ADMISSION PASS</span>
               </div>
-              <span class="text-[10px] font-mono text-amber-200/70 uppercase tracking-wider">${sample ? sample.type : 'MOVIE'}</span>
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-950/15 border border-amber-950/25 font-mono">${sample ? sample.type : 'MOVIE'}</span>
             </div>
-            <div class="my-3.5 flex items-center gap-3.5">
-              <div class="w-16 h-24 rounded-xl overflow-hidden shrink-0 border border-amber-400/40 bg-black shadow-md">
-                <img src="${samplePoster}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
+
+            <div class="my-4 flex flex-col items-center">
+              <div class="w-40 sm:w-48 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-950/40 shadow-2xl bg-black relative">
+                <img src="${samplePoster}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="${esc(sampleTitle)}">
               </div>
-              <div class="min-w-0 flex-1">
-                <h4 class="font-extrabold text-white text-base leading-snug truncate group-hover:text-amber-300 transition-colors">${sampleTitle}</h4>
-                <div class="text-xs text-amber-200/80 font-medium mt-0.5">${sampleMeta}</div>
-                <div class="text-[11px] text-gray-400 mt-1">IMDb: <span class="text-white font-bold">${sample ? sample.rating : '9.0'}</span></div>
-              </div>
+              <h3 class="font-black text-amber-950 text-lg sm:text-xl text-center mt-3 leading-snug line-clamp-1">${esc(sampleTitle)}</h3>
+              <div class="text-xs font-bold text-amber-900/80 tracking-wide mt-0.5">${sampleMeta}</div>
             </div>
-            <div class="border-t border-dashed border-amber-400/30 pt-2.5 flex items-center justify-between text-xs">
-              <div class="flex items-center gap-1.5 text-gray-300 font-semibold truncate max-w-[55%]">
-                <i class="fa-solid fa-user-circle text-amber-400 text-sm"></i>
-                <span class="truncate text-white font-bold">${esc(userName)}</span>
+
+            <div class="px-3 py-2 rounded-xl bg-black/10 border border-amber-950/15 text-center text-xs font-semibold italic text-amber-950 leading-relaxed shadow-inner">
+              "${sampleHook}"
+            </div>
+
+            <div class="mt-4 pt-3 border-t-2 border-dashed border-amber-950/25 flex items-center justify-between text-xs font-black">
+              <div class="flex items-center gap-2 tracking-wide">
+                <span class="w-6 h-6 rounded-full bg-amber-950 text-amber-300 flex items-center justify-center text-[10px] shadow">
+                  <i class="fa-solid fa-stamp"></i>
+                </span>
+                <span class="truncate max-w-[130px] sm:max-w-[170px] uppercase font-mono">${esc(userName)}</span>
               </div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-400/20 border border-amber-400/40 text-amber-300 font-black">
-                <i class="fa-solid fa-star text-[10px]"></i>
+              <div class="px-3 py-1 rounded-full bg-amber-950 text-amber-300 text-xs font-black shadow-md flex items-center gap-1.5 tracking-wider font-mono">
+                <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
                 <span>${sampleRating}</span>
               </div>
             </div>
@@ -2039,32 +2061,39 @@
         const userRating = (myRatings && myRatings[it.title]) ? `${myRatings[it.title]}★` : `★ ${it.rating}`;
         const posterSrc = posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it);
         const escT = it.title.replace(/'/g, "\\'");
+        const hookText = VIP_HOOKS[it.cleanName] || VIP_HOOKS[it.title] || `A critically acclaimed ${it.genre.toLowerCase()} journey from ${it.year}.`;
+
         return `
-          <div class="golden-ticket-card p-4 sm:p-5 relative cursor-pointer group flex flex-col justify-between overflow-hidden" onclick="openDetailModal('${escT}')">
-            <div class="flex items-center justify-between border-b border-amber-400/30 pb-2.5">
-              <div class="flex items-center gap-2">
-                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-400/20 text-amber-300 text-xs font-black shadow-inner">★</span>
-                <span class="text-[11px] font-black uppercase tracking-widest text-amber-300 font-mono">OFFICIAL GOLDEN TICKET</span>
+          <div class="golden-ticket-vip p-5 sm:p-6 text-amber-950 flex flex-col justify-between cursor-pointer group shadow-2xl relative select-none" onclick="openDetailModal('${escT}')">
+            <div class="flex items-center justify-between border-b-2 border-dashed border-amber-950/25 pb-2.5">
+              <div class="flex items-center gap-1.5 font-black text-[11px] tracking-widest uppercase font-mono">
+                <i class="fa-solid fa-ticket-simple text-amber-900"></i>
+                <span>GOLDEN ADMISSION PASS</span>
               </div>
-              <span class="text-[10px] font-mono text-amber-200/70 uppercase tracking-wider">${it.type}</span>
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-950/15 border border-amber-950/25 font-mono">${it.type}</span>
             </div>
-            <div class="my-3.5 flex items-center gap-3.5">
-              <div class="w-16 h-24 rounded-xl overflow-hidden shrink-0 border border-amber-400/40 bg-black shadow-md">
-                <img src="${posterSrc}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="${esc(it.cleanName || it.title)}">
+
+            <div class="my-4 flex flex-col items-center">
+              <div class="w-40 sm:w-48 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-950/40 shadow-2xl bg-black relative">
+                <img src="${posterSrc}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="${esc(it.cleanName || it.title)}">
               </div>
-              <div class="min-w-0 flex-1">
-                <h4 class="font-extrabold text-white text-base leading-snug truncate group-hover:text-amber-300 transition-colors">${esc(it.cleanName || it.title)}</h4>
-                <div class="text-xs text-amber-200/80 font-medium mt-0.5">${it.genre} · ${it.year}</div>
-                <div class="text-[11px] text-gray-400 mt-1">IMDb: <span class="text-white font-bold">${it.rating}</span></div>
-              </div>
+              <h3 class="font-black text-amber-950 text-lg sm:text-xl text-center mt-3 leading-snug line-clamp-1">${esc(it.cleanName || it.title)}</h3>
+              <div class="text-xs font-bold text-amber-900/80 tracking-wide mt-0.5">${it.genre} · ${it.year}</div>
             </div>
-            <div class="border-t border-dashed border-amber-400/30 pt-2.5 flex items-center justify-between text-xs">
-              <div class="flex items-center gap-1.5 text-gray-300 font-semibold truncate max-w-[55%]">
-                <i class="fa-solid fa-user-circle text-amber-400 text-sm"></i>
-                <span class="truncate text-white font-bold">${esc(userName)}</span>
+
+            <div class="px-3 py-2 rounded-xl bg-black/10 border border-amber-950/15 text-center text-xs font-semibold italic text-amber-950 leading-relaxed shadow-inner">
+              "${hookText}"
+            </div>
+
+            <div class="mt-4 pt-3 border-t-2 border-dashed border-amber-950/25 flex items-center justify-between text-xs font-black">
+              <div class="flex items-center gap-2 tracking-wide">
+                <span class="w-6 h-6 rounded-full bg-amber-950 text-amber-300 flex items-center justify-center text-[10px] shadow">
+                  <i class="fa-solid fa-stamp"></i>
+                </span>
+                <span class="truncate max-w-[130px] sm:max-w-[170px] uppercase font-mono">${esc(userName)}</span>
               </div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-400/20 border border-amber-400/40 text-amber-300 font-black">
-                <i class="fa-solid fa-star text-[10px]"></i>
+              <div class="px-3 py-1 rounded-full bg-amber-950 text-amber-300 text-xs font-black shadow-md flex items-center gap-1.5 tracking-wider font-mono">
+                <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
                 <span>${userRating}</span>
               </div>
             </div>

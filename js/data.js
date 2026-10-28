@@ -11150,7 +11150,7 @@ Odd Taxi|2021|87
       "Hulu": "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
     };
 
-    const platforms = ["Netflix", "Max", "Prime Video", "Disney+", "Hulu"];
+    const platforms = ["Netflix", "Prime Video", "Disney+ Hotstar", "JioCinema", "SonyLIV", "ZEE5"];
     const globalDatabase = {};
     const allTitles = [];
     const movies = [];
@@ -11178,11 +11178,11 @@ Odd Taxi|2021|87
 
     function inferPlatform(name, type, hash) {
       const l = name.toLowerCase();
-      if (/avengers|iron man|captain america|thor|guardians of the galaxy|black panther|doctor strange|ant-man|black widow|shang-chi|eternals|marvels|thunderbolts|fantastic four|wandavision|loki|hawkeye|moon knight|ms\. marvel|she-hulk|secret invasion|agatha all along|daredevil|punisher|star wars|mandalorian|andor|ahsoka|obi-wan|boba fett|acolyte|skeleton crew|clone wars|rebels|bad batch|toy story|finding nemo|finding dory|incredibles|ratatouille|wall-e|inside out|coco|soul|zootopia|moana|frozen|lion king|aladdin|beauty and the beast|simpsons|bluey/.test(l)) return "Disney+";
-      if (/sopranos|the wire|game of thrones|house of the dragon|knight of the seven kingdoms|succession|chernobyl|band of brothers|the pacific|last of us|white lotus|euphoria|true detective|barry|silicon valley|veep|curb your enthusiasm|deadwood|rome|boardwalk empire|six feet under|leftovers|watchmen|peacemaker|the penguin|creature commandos|the pitt|batman|dark knight|man of steel|justice league|wonder woman|aquaman|shazam|suicide squad|joker|harry potter|fantastic beasts|dune|lord of the rings: the|the hobbit/.test(l)) return "Max";
+      if (/avengers|iron man|captain america|thor|guardians of the galaxy|black panther|doctor strange|ant-man|black widow|shang-chi|eternals|marvels|thunderbolts|fantastic four|wandavision|loki|hawkeye|moon knight|ms\. marvel|she-hulk|secret invasion|agatha all along|daredevil|punisher|star wars|mandalorian|andor|ahsoka|obi-wan|boba fett|acolyte|skeleton crew|clone wars|rebels|bad batch|toy story|finding nemo|finding dory|incredibles|ratatouille|wall-e|inside out|coco|soul|zootopia|moana|frozen|lion king|aladdin|beauty and the beast|simpsons|bluey|shogun|shōgun|the bear|only murders in the building|modern family|how i met your mother|malcolm in the middle|criminal minds|greys anatomy|white collar/.test(l)) return "Disney+ Hotstar";
+      if (/sopranos|the wire|game of thrones|house of the dragon|knight of the seven kingdoms|succession|chernobyl|band of brothers|the pacific|last of us|white lotus|euphoria|true detective|barry|silicon valley|veep|curb your enthusiasm|deadwood|rome|boardwalk empire|six feet under|leftovers|watchmen|peacemaker|the penguin|creature commandos|the pitt|batman|dark knight|man of steel|justice league|wonder woman|aquaman|shazam|suicide squad|joker|harry potter|fantastic beasts|dune|lord of the rings: the|the hobbit|oppenheimer|rick and morty/.test(l)) return "JioCinema";
       if (/stranger things|squid game|wednesday|black mirror|the crown|dark|money heist|la casa de papel|narcos|ozark|mindhunter|bridgerton|queen's gambit|arcane|blue eye samurai|bojack horseman|castlevania|cyberpunk|love, death|sex education|heartstopper|witcher|lupin|3 body problem|beef|baby reindeer|adolescence|glass onion|roma|irishman|marriage story|all quiet on the western front|sacred games|delhi crime|kohrra|heeramandi|railway men|black warrant/.test(l)) return "Netflix";
       if (/the boys|gen v|invincible|fallout|reacher|rings of power|fleabag|marvelous mrs\. maisel|jack ryan|bosch|wheel of time|mr\. & mrs\. smith|the expanse|good omens|legend of vox machina|family man|mirzapur|panchayat|paatal lok|farzi|made in heaven|jubilee/.test(l)) return "Prime Video";
-      if (/shogun|shōgun|the bear|only murders in the building|handmaid's tale|fargo|atlanta|always sunny|what we do in the shadows|reservation dogs|buffy|firefly|x-files|arrested development|community|bob's burgers|archer|futurama|rick and morty|family guy/.test(l)) return "Hulu";
+      if (/scam 1992|scam 2003|gullak|rocket boys|tabbar|maharani|jl50|avrodh|undekhi/.test(l)) return "SonyLIV";
       return platforms[hash % platforms.length];
     }
 
@@ -15529,7 +15529,7 @@ Odd Taxi|2021|87
       'show:Kaun Banega Crorepati': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Kaun_Banega_Crorepati_Title.jpg'
     };
 
-    async function fetchPoster(item, forceSynopsis = false) {
+    async function fetchPoster(item, forceSynopsis = false, isPriority = false) {
       if (!item) return null;
       const cacheKey = item.type + ':' + item.title;
       if (KNOWN_POSTER_OVERRIDES[cacheKey]) {
@@ -15537,12 +15537,14 @@ Odd Taxi|2021|87
         return KNOWN_POSTER_OVERRIDES[cacheKey];
       }
       // All titles are eligible for poster resolution
-      if (posterCache[cacheKey] !== undefined && (!forceSynopsis || summaryCache[cacheKey])) return posterCache[cacheKey];
+      if (posterCache[cacheKey] && !posterCache[cacheKey].startsWith('data:image/svg') && (!forceSynopsis || summaryCache[cacheKey])) {
+        return posterCache[cacheKey];
+      }
       if (inFlightFetches[cacheKey]) return inFlightFetches[cacheKey];
 
       inFlightFetches[cacheKey] = (async () => {
-        // Concurrency governor (max 6 active requests)
-        if (activeFetches >= 6) {
+        // Concurrency governor (max 6 active requests, bypassed for priority modal clicks)
+        if (!isPriority && activeFetches >= 6) {
           await new Promise(resolve => fetchQueue.push(resolve));
         }
         activeFetches++;
@@ -16783,7 +16785,7 @@ Odd Taxi|2021|87
       };
       const hookText = HOOKS[item.cleanName] || HOOKS[item.title] || `When a turning point strikes in ${item.year}, a high-stakes fight for purpose and truth begins.`;
 
-      // 3. Season Consensus Section (Dedicated separate area; ONLY shown when special consensus exists)
+      // 3. Season Consensus Section (Dedicated clean collapsible drawer; ONLY shown when special consensus exists)
       let seasonsHtml = '';
       if (item.type === 'show') {
         const guide = SEASON_SPECIAL_GUIDES[item.cleanName] || SEASON_SPECIAL_GUIDES[item.title];
@@ -16811,85 +16813,83 @@ Odd Taxi|2021|87
           const defaultSeasonNote = guide.notes[1] ? guide.notes[1].consensus : `Hover or tap any season above to inspect consensus notes.`;
 
           seasonsHtml = `
-            <div class="mt-3 p-3.5 rounded-2xl bg-[#0c101c] border border-white/15 space-y-2.5">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="w-6 h-6 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-400 text-xs font-bold">
-                    <i class="fa-solid fa-list-ol"></i>
+            <details class="group/season rounded-2xl bg-[#0c101c] border border-white/15 overflow-hidden transition-all">
+              <summary class="flex items-center justify-between p-3.5 cursor-pointer select-none hover:bg-white/5 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-6 h-6 rounded-lg bg-amber-400/20 border border-amber-400/35 flex items-center justify-center text-amber-400 text-xs">
+                    <i class="fa-solid fa-layer-group"></i>
                   </span>
-                  <span class="text-xs font-extrabold uppercase tracking-wider text-white">Season Guide &amp; Consensus</span>
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-white">Season Guide &amp; Consensus (${guide.totalSeasons} Seasons)</span>
                 </div>
-                <span class="text-[11px] font-semibold text-brand-gold">${guide.totalSeasons} Seasons</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] text-amber-300 font-bold group-open/season:hidden">View Details &rarr;</span>
+                  <i class="fa-solid fa-chevron-down text-gray-400 text-xs transition-transform duration-300 group-open/season:rotate-180"></i>
+                </div>
+              </summary>
+              <div class="p-3.5 pt-0 space-y-2.5 border-t border-white/10 mt-1">
+                <div class="flex flex-wrap gap-1.5 items-center pt-2">${seasonPills.join('')}</div>
+                <div id="seasonNoteDisplay" class="text-xs text-gray-300 bg-black/60 border border-white/10 rounded-xl p-2.5 leading-relaxed italic">
+                  ${defaultSeasonNote}
+                </div>
               </div>
-              <div class="flex flex-wrap gap-1.5 items-center pt-1">${seasonPills.join('')}</div>
-              <div id="seasonNoteDisplay" class="text-xs text-gray-300 bg-black/60 border border-white/10 rounded-xl p-2.5 leading-relaxed italic">
-                ${defaultSeasonNote}
-              </div>
-            </div>
+            </details>
           `;
         }
       }
 
-      // 4. Zero-Bloat Where to Watch Availability (Strictly where title is available)
-      const plat = item.platformName || 'Streaming';
-      const qEnc = encodeURIComponent(item.cleanName || item.title);
-      let platUrl = `https://www.google.com/search?q=watch+${qEnc}+on+${encodeURIComponent(plat)}`;
+      // 4. Custom Streaming Platform for India (Strictly 1 site beside Cinejoy)
+      const rawPlat = (item.platformName || 'Streaming').toLowerCase();
+      let indiaPlatform = 'JioCinema';
       let platIcon = 'fa-solid fa-play';
-      let platClass = 'bg-white/10 text-white border-white/20';
+      let platClass = 'bg-[#E11383]/20 hover:bg-[#E11383]/30 text-pink-300 border-[#E11383]/40';
+      let platLabel = 'Watch on JioCinema';
+      let platSearchUrl = `https://www.jiocinema.com/search/${encodeURIComponent(item.cleanName || item.title)}`;
 
-      if (/netflix/i.test(plat)) {
-        platUrl = `https://www.netflix.com/search?q=${qEnc}`;
+      if (/netflix/i.test(rawPlat)) {
+        indiaPlatform = 'Netflix';
         platIcon = 'fa-solid fa-n';
-        platClass = 'bg-red-600/20 text-red-300 border-red-500/40 hover:bg-red-600/30';
-      } else if (/prime/i.test(plat) || /amazon/i.test(plat)) {
-        platUrl = `https://www.amazon.com/s?k=${qEnc}`;
+        platClass = 'bg-red-600/20 hover:bg-red-600/30 text-red-300 border-red-500/40';
+        platLabel = 'Watch on Netflix';
+        platSearchUrl = `https://www.netflix.com/search?q=${encodeURIComponent(item.cleanName || item.title)}`;
+      } else if (/prime|amazon/i.test(rawPlat)) {
+        indiaPlatform = 'Prime Video';
         platIcon = 'fa-brands fa-amazon';
-        platClass = 'bg-sky-500/20 text-sky-300 border-sky-400/40 hover:bg-sky-500/30';
-      } else if (/hotstar/i.test(plat) || /disney/i.test(plat)) {
-        platUrl = `https://www.hotstar.com/in/search?q=${qEnc}`;
-        platIcon = 'fa-solid fa-play';
-        platClass = 'bg-blue-600/20 text-blue-300 border-blue-400/40 hover:bg-blue-600/30';
-      } else if (/max/i.test(plat) || /hbo/i.test(plat)) {
-        platUrl = `https://www.max.com/search?q=${qEnc}`;
-        platIcon = 'fa-solid fa-m';
-        platClass = 'bg-purple-600/20 text-purple-300 border-purple-400/40 hover:bg-purple-600/30';
-      } else if (/apple/i.test(plat)) {
-        platUrl = `https://tv.apple.com/search?term=${qEnc}`;
-        platIcon = 'fa-brands fa-apple';
-        platClass = 'bg-zinc-700/30 text-gray-200 border-zinc-500/40 hover:bg-zinc-700/40';
-      } else if (/sonyliv/i.test(plat)) {
-        platUrl = `https://www.sonyliv.com/search?q=${qEnc}`;
+        platClass = 'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-sky-400/40';
+        platLabel = 'Watch on Prime Video';
+        platSearchUrl = `https://www.primevideo.com/search/ref=atv_nb_sr?phrase=${encodeURIComponent(item.cleanName || item.title)}`;
+      } else if (/disney|hotstar|hulu/i.test(rawPlat)) {
+        indiaPlatform = 'Disney+ Hotstar';
+        platIcon = 'fa-solid fa-star text-amber-400';
+        platClass = 'bg-blue-600/20 hover:bg-blue-600/30 text-blue-200 border-blue-400/40';
+        platLabel = 'Watch on Disney+ Hotstar';
+        platSearchUrl = `https://www.hotstar.com/in/search?q=${encodeURIComponent(item.cleanName || item.title)}`;
+      } else if (/sony|liv/i.test(rawPlat)) {
+        indiaPlatform = 'SonyLIV';
         platIcon = 'fa-solid fa-tv';
-        platClass = 'bg-amber-600/20 text-amber-300 border-amber-500/40 hover:bg-amber-600/30';
-      } else if (/zee5/i.test(plat)) {
-        platUrl = `https://www.zee5.com/search?q=${qEnc}`;
+        platClass = 'bg-amber-600/20 hover:bg-amber-600/30 text-amber-200 border-amber-500/40';
+        platLabel = 'Watch on SonyLIV';
+        platSearchUrl = `https://www.sonyliv.com/search?q=${encodeURIComponent(item.cleanName || item.title)}`;
+      } else if (/zee/i.test(rawPlat)) {
+        indiaPlatform = 'ZEE5';
         platIcon = 'fa-solid fa-film';
-        platClass = 'bg-fuchsia-600/20 text-fuchsia-300 border-fuchsia-500/40 hover:bg-fuchsia-600/30';
-      } else if (/jiocinema/i.test(plat)) {
-        platUrl = `https://www.jiocinema.com/search/${qEnc}`;
+        platClass = 'bg-purple-600/20 hover:bg-purple-600/30 text-purple-200 border-purple-500/40';
+        platLabel = 'Watch on ZEE5';
+        platSearchUrl = `https://www.zee5.com/search?q=${encodeURIComponent(item.cleanName || item.title)}`;
+      } else if (/apple/i.test(rawPlat)) {
+        indiaPlatform = 'Apple TV+';
+        platIcon = 'fa-brands fa-apple';
+        platClass = 'bg-zinc-700/30 hover:bg-zinc-700/40 text-gray-100 border-zinc-500/40';
+        platLabel = 'Watch on Apple TV+';
+        platSearchUrl = `https://tv.apple.com/search?term=${encodeURIComponent(item.cleanName || item.title)}`;
+      } else if (/max|hbo|warner/i.test(rawPlat)) {
+        indiaPlatform = 'JioCinema';
         platIcon = 'fa-solid fa-play';
-        platClass = 'bg-pink-600/20 text-pink-300 border-pink-500/40 hover:bg-pink-600/30';
+        platClass = 'bg-[#E11383]/20 hover:bg-[#E11383]/30 text-pink-300 border-[#E11383]/40';
+        platLabel = 'Watch on JioCinema';
+        platSearchUrl = `https://www.jiocinema.com/search/${encodeURIComponent(item.cleanName || item.title)}`;
       }
 
       const cinejoyStreamUrl = (window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? window.getCinejoyUrl(item.title, item.type) : null;
-
-      const whereToWatchHtml = `
-        <div class="pt-2.5 border-t border-white/10 space-y-1.5">
-          <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 flex items-center justify-between">
-            <span>Streaming Platform</span>
-            <span class="text-emerald-400 text-[10px] flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Available</span>
-          </div>
-          <div class="flex flex-wrap gap-2 text-xs">
-            <a href="${platUrl}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-xl ${platClass} font-bold flex items-center gap-2 transition-colors">
-              <i class="${platIcon}"></i> ${plat}
-            </a>
-            ${cinejoyStreamUrl ? `
-            <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/35 text-amber-300 font-bold flex items-center gap-2 transition-colors">
-              <i class="fa-solid fa-circle-play text-brand-gold"></i> Direct Stream (Cinejoy)
-            </a>` : ''}
-          </div>
-        </div>
-      `;
 
       content.innerHTML = `
         <div class="flex flex-col sm:flex-row gap-6 p-6 sm:p-8">
@@ -16901,34 +16901,63 @@ Odd Taxi|2021|87
               <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-extrabold text-xs">★ ${item.rating}</span>
               <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-200 text-xs font-semibold">#${item.rank} Ranked</span>
               <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-300 text-xs">${item.genre} · ${item.year}</span>
-              <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] font-semibold">${item.platformName}</span>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] font-semibold">${indiaPlatform}</span>
             </div>
 
-            <!-- Master Critics vs Crowd Scorecard (Spacious, Complete 1-Click Overview) -->
+            <!-- Master Critics vs Crowd Scorecard (Spacious, Vibrant High-Def Metrics) -->
             <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#121626] via-[#0c101c] to-[#0a0d18] border border-white/20 shadow-2xl space-y-3">
               <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/10 text-center">
                 <!-- IMDb Pillar -->
-                <div class="flex flex-col items-center justify-center px-1 sm:px-2">
-                  <span class="px-2 py-0.5 rounded bg-[#f5c518] text-black font-black text-xs tracking-tight font-mono shadow-sm">IMDb</span>
-                  <div class="flex items-baseline gap-0.5 mt-1.5">
-                    <span class="text-white font-extrabold text-lg sm:text-2xl leading-none">${item.rating}</span>
-                    <span class="text-gray-400 text-xs">/10</span>
+                <div class="flex flex-col items-center justify-center px-1 sm:px-3">
+                  <div class="px-2.5 py-1 rounded-lg bg-gradient-to-b from-[#f5c518] to-[#d4a017] text-black font-black text-xs tracking-tight font-mono shadow-[0_0_12px_rgba(245,197,24,0.35)] flex items-center gap-1">
+                    <i class="fa-solid fa-star text-[10px]"></i>
+                    <span>IMDb</span>
                   </div>
-                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">#${item.rank} Ranked</div>
+                  <div class="flex items-baseline gap-1 mt-2">
+                    <span class="text-white font-extrabold text-xl sm:text-2xl leading-none drop-shadow">${item.rating}</span>
+                    <span class="text-gray-400 text-xs font-semibold">/10</span>
+                  </div>
+                  <div class="text-[10px] text-amber-400/90 font-extrabold uppercase tracking-wider mt-1.5">#${item.rank} Ranked</div>
                 </div>
 
                 <!-- Rotten Tomatoes Critics Meter Pillar -->
-                <div class="flex flex-col items-center justify-center px-1 sm:px-2 pl-2 sm:pl-4">
-                  <span class="text-2xl sm:text-3xl leading-none select-none" title="Rotten Tomatoes Tomatometer">🍅</span>
-                  <div class="text-rose-400 font-extrabold text-lg sm:text-2xl leading-none mt-1.5">${rtCritics}%</div>
-                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">Critics Score</div>
+                <div class="flex flex-col items-center justify-center px-1 sm:px-3 pl-2 sm:pl-4">
+                  <div class="relative w-8 h-8 flex items-center justify-center drop-shadow-[0_0_10px_rgba(250,50,20,0.5)]">
+                    <svg viewBox="0 0 32 32" class="w-7 h-7" fill="none">
+                      <path d="M16 6C11 6 5 9 5 18C5 25 11 28 16 28C21 28 27 25 27 18C27 9 21 6 16 6Z" fill="url(#rtRedGrad)" />
+                      <ellipse cx="12" cy="13" rx="3.5" ry="2" fill="white" fill-opacity="0.35" transform="rotate(-25 12 13)" />
+                      <path d="M16 7V3C16 3 14 4.5 13 4" stroke="#22C55E" stroke-width="2" stroke-linecap="round" />
+                      <path d="M16 6C14.5 4 11 5 11 5C13 6.5 14 7 14 7" fill="#16A34A" />
+                      <path d="M16 6C17.5 4 21 5 21 5C19 6.5 18 7 18 7" fill="#16A34A" />
+                      <defs>
+                        <radialGradient id="rtRedGrad" cx="35%" cy="35%" r="65%">
+                          <stop offset="0%" stop-color="#FF5A36" />
+                          <stop offset="70%" stop-color="#E11D48" />
+                          <stop offset="100%" stop-color="#9F1239" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                  </div>
+                  <div class="text-rose-400 font-extrabold text-xl sm:text-2xl leading-none mt-2 drop-shadow">${rtCritics}%</div>
+                  <div class="text-[10px] text-rose-300 font-extrabold uppercase tracking-wider mt-1.5">Critics Meter</div>
                 </div>
 
                 <!-- Audience Popcorn Meter Pillar -->
-                <div class="flex flex-col items-center justify-center px-1 sm:px-2 pl-2 sm:pl-4">
-                  <span class="text-2xl sm:text-3xl leading-none select-none" title="Audience Popcorn Meter">🍿</span>
-                  <div class="text-amber-400 font-extrabold text-lg sm:text-2xl leading-none mt-1.5">${rtAudience}%</div>
-                  <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">Audience Score</div>
+                <div class="flex flex-col items-center justify-center px-1 sm:px-3 pl-2 sm:pl-4">
+                  <div class="relative w-8 h-8 flex items-center justify-center drop-shadow-[0_0_10px_rgba(245,197,24,0.45)]">
+                    <svg viewBox="0 0 32 32" class="w-7 h-7" fill="none">
+                      <path d="M8 12L10 28H22L24 12H8Z" fill="#DC2626" />
+                      <path d="M11.5 12L13 28H15L13.8 12H11.5Z" fill="#F8FAFC" />
+                      <path d="M17 12L18.2 28H20.2L19.3 12H17Z" fill="#F8FAFC" />
+                      <circle cx="11" cy="11" r="3" fill="#FBBF24" />
+                      <circle cx="16" cy="9.5" r="3.5" fill="#FDE047" />
+                      <circle cx="21" cy="11" r="3" fill="#FBBF24" />
+                      <circle cx="13.5" cy="8" r="2.5" fill="#FEF08A" />
+                      <circle cx="18.5" cy="8" r="2.5" fill="#FDE047" />
+                    </svg>
+                  </div>
+                  <div class="text-amber-400 font-extrabold text-xl sm:text-2xl leading-none mt-2 drop-shadow">${rtAudience}%</div>
+                  <div class="text-[10px] text-amber-300 font-extrabold uppercase tracking-wider mt-1.5">Audience Popcorn</div>
                 </div>
               </div>
 
@@ -16952,7 +16981,6 @@ Odd Taxi|2021|87
             <p id="modalSynopsisText" class="text-xs sm:text-sm text-gray-300 leading-relaxed max-h-28 overflow-y-auto pr-1">${cachedSynopsis}</p>
 
             ${seasonsHtml}
-            ${whereToWatchHtml}
 
             <!-- Star Rating Tracker -->
             <div class="flex items-center gap-2 pt-1 border-t border-white/10">
@@ -16967,7 +16995,7 @@ Odd Taxi|2021|87
               <span class="text-[11px] text-gray-500 ml-1">${userRating ? `${userRating}/5 Stars` : '(Tap star to rate)'}</span>
             </div>
 
-            <!-- Action Buttons: Simply Heart for Watchlist, Watched/Unwatched, Favourite, Trailer, Cinejoy -->
+            <!-- Action Row: Heart, Watched/Unwatched, Fav, Trailer + Exactly ONE Indian Streaming button beside Cinejoy -->
             <div class="pt-1 flex flex-wrap items-center gap-2.5">
               <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" title="${isW ? 'In Watchlist (Click to remove)' : 'Add to Watchlist'}" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isW ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40' : 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/15'}">
                 <i class="fa-solid fa-heart text-base ${isW ? 'text-white' : 'text-gray-300'}"></i>
@@ -16981,9 +17009,15 @@ Odd Taxi|2021|87
               <a href="https://www.youtube.com/results?search_query=${encodeURIComponent((item.rawName || item.cleanName) + ' ' + item.year + ' official trailer')}" target="_blank" rel="noopener" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', 'trailer') : true" class="px-3.5 py-2 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 text-xs font-bold flex items-center gap-1.5 transition-all">
                 <i class="fa-brands fa-youtube"></i> Trailer
               </a>
-              ${(window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? `
-              <a href="${window.getCinejoyUrl(item.title, item.type)}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
-                <i class="fa-solid fa-circle-play text-sm"></i> <span>Watch Now on Cinejoy</span>
+
+              <!-- Single Indian Streaming Platform Button beside Cinejoy -->
+              <a href="${platSearchUrl}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl ${platClass} border font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all">
+                <i class="${platIcon}"></i> <span>${platLabel}</span>
+              </a>
+
+              ${cinejoyStreamUrl ? `
+              <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
+                <i class="fa-solid fa-circle-play text-sm"></i> <span>Watch on Cinejoy</span>
               </a>` : ''}
             </div>
 
@@ -17006,9 +17040,9 @@ Odd Taxi|2021|87
       modal.classList.remove('hidden');
       modal.classList.add('flex');
 
-      // Fetch poster & synopsis asynchronously if not cached
+      // Fetch poster & synopsis asynchronously with priority if not cached
       if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
-        fetchPoster(item).then(realUrl => {
+        fetchPoster(item, false, true).then(realUrl => {
           const modalImg = document.getElementById('modalPosterImg');
           if (realUrl && modalImg) modalImg.src = realUrl;
         });

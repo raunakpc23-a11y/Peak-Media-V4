@@ -390,7 +390,7 @@
         $('duelSize').querySelectorAll('button').forEach(x => {
           x.className = 'flex-1 py-2 rounded-xl text-xs font-bold ' + (+x.dataset.v === D.size ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-300');
         });
-        const modeLabels = { classic: 'Classic Head-to-Head Duel (2)', royale: 'Battle Royale Tournament (8/16/32 Brackets)', matchmaker: 'Rapid Matchmaker (Swipe Decider)' };
+        const modeLabels = { classic: 'Classic Duel', royale: 'Battle Royale Tournament', matchmaker: 'Rapid Matchmaker' };
         showToast(`Mode: ${modeLabels[D.mode] || D.mode}`, 'fa-trophy', 'text-brand-gold');
       });
     }
@@ -442,7 +442,7 @@
     const roundName = n => n === 2 ? 'Grand Final' : n === 4 ? 'Semi-finals' : n === 8 ? 'Quarter-finals' : n === 16 ? 'Round of 16' : n === 32 ? 'Round of 32' : `Round of ${n}`;
     function showMatch() {
       const cur = D.rounds[D.r], a = cur[D.m * 2], b = cur[D.m * 2 + 1];
-      $('duelRound').textContent = `${roundName(cur.length)} · Duel ${D.m + 1} of ${cur.length / 2}`;
+      $('duelRound').textContent = `${roundName(cur.length)} · Face-Off`;
       const card = (it, s) => `<div class="duel-card ${s}" data-t="${esc(it.title)}"><img class="lazy-poster" data-title="${esc(it.title)}" src="${poster(it)}" alt=""><div class="p-3 text-left"><div class="text-[10px] font-bold uppercase" style="color:${th(it.genre).accent}">${it.genre} · ${it.year}</div><div class="font-bold text-sm text-white leading-tight line-clamp-2">${esc(it.cleanName)}</div><div class="text-xs text-gray-400 mt-0.5"><i class="fa-solid fa-star text-brand-gold text-[9px]"></i> ${it.rating}${myRatings[it.title] ? ' · you: ' + myRatings[it.title] + '★' : ''}</div></div></div>`;
       $('duelStage').innerHTML = card(a, 'l') + '<div class="vs-flash">VS</div>' + card(b, 'r');
       attachThumbObservers($('duelStage'));
@@ -450,14 +450,71 @@
       D.busy = false; renderBracket();
     }
     function renderBracket() {
-      const slot = (i, w, c) => `<div class="br-slot ${w ? 'w' : ''} ${c ? 'cur' : ''}">${i ? esc(i.cleanName) : '…'}</div>`;
-      $('duelBracket').innerHTML = D.rounds.map((rd, ri) => {
+      const container = $('duelBracket');
+      if (!container) return;
+      
+      const cols = D.rounds.map((rd, ri) => {
         const nextWinners = ri < D.r ? (D.rounds[ri + 1] || []) : D.winners;
-        return `<div class="space-y-1.5"><div class="text-[10px] font-bold uppercase text-gray-500">${roundName(rd.length)}</div>${rd.map((i, k) => slot(i, nextWinners.includes(i), ri === D.r && Math.floor(k / 2) === D.m)).join('')}</div>`;
-      }).join('') +
-        (D.winners.length ? `<div class="space-y-1.5"><div class="text-[10px] font-bold uppercase text-gray-500">Advancing</div>${D.winners.map(i => slot(i, true, false)).join('')}</div>` : '');
+        const matchCount = Math.floor(rd.length / 2);
+        const matchesHtml = [];
+
+        for (let m = 0; m < matchCount; m++) {
+          const a = rd[m * 2];
+          const b = rd[m * 2 + 1];
+          const isLive = (ri === D.r && m === D.m);
+          const isAWin = a && nextWinners.includes(a);
+          const isBWin = b && nextWinners.includes(b);
+
+          matchesHtml.push(`
+            <div class="bracket-match-node p-2 rounded-xl border transition-all ${isLive ? 'border-brand-gold bg-brand-gold/15 shadow-[0_0_15px_rgba(245,197,24,0.35)] ring-1 ring-brand-gold/50' : 'border-white/10 bg-black/60'}">
+              <div class="px-2 py-1 rounded-lg text-xs font-bold truncate flex items-center justify-between ${isAWin ? 'bg-amber-400/20 text-amber-300 font-black' : (isLive ? 'text-white' : 'text-gray-400')}">
+                <span class="truncate">${a ? esc(a.cleanName || a.title) : '…'}</span>
+                ${isAWin ? '<span class="text-[10px] text-amber-400 ml-1">★</span>' : ''}
+              </div>
+              <div class="my-1 border-t border-white/10 flex items-center justify-center">
+                <span class="text-[9px] font-mono text-gray-500 uppercase px-1 -mt-2 bg-[#0c101c]">VS</span>
+              </div>
+              <div class="px-2 py-1 rounded-lg text-xs font-bold truncate flex items-center justify-between ${isBWin ? 'bg-amber-400/20 text-amber-300 font-black' : (isLive ? 'text-white' : 'text-gray-400')}">
+                <span class="truncate">${b ? esc(b.cleanName || b.title) : '…'}</span>
+                ${isBWin ? '<span class="text-[10px] text-amber-400 ml-1">★</span>' : ''}
+              </div>
+            </div>
+          `);
+        }
+
+        return `
+          <div class="bracket-column flex flex-col justify-around gap-3 min-w-[150px] sm:min-w-[170px] max-w-[200px]">
+            <div class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-brand-gold text-center pb-1.5 border-b border-brand-gold/30">${roundName(rd.length)}</div>
+            <div class="space-y-3 flex-1 flex flex-col justify-around">
+              ${matchesHtml.join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const advancingCol = D.winners.length ? `
+        <div class="bracket-column flex flex-col justify-around gap-3 min-w-[150px] sm:min-w-[170px] max-w-[200px]">
+          <div class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-emerald-400 text-center pb-1.5 border-b border-emerald-400/30">Advancing</div>
+          <div class="space-y-2 flex-1 flex flex-col justify-center">
+            ${D.winners.map(w => `
+              <div class="p-2 rounded-xl border border-emerald-400/40 bg-emerald-500/10 text-emerald-300 text-xs font-bold truncate flex items-center justify-between shadow-sm">
+                <span class="truncate">${esc(w.cleanName || w.title)}</span>
+                <span class="text-[10px] text-emerald-400 ml-1">✓</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      container.innerHTML = `
+        <div class="w-full overflow-x-auto pb-2 scrollbar-thin">
+          <div class="flex items-stretch justify-start sm:justify-center gap-4 sm:gap-6 min-w-max px-2 py-2">
+            ${cols}
+            ${advancingCol}
+          </div>
+        </div>
+      `;
     }
-    function choose(win, auto, reasonOverride) {
       if (D.busy) return; D.busy = true;
       const cur = D.rounds[D.r], a = cur[D.m * 2], b = cur[D.m * 2 + 1], lose = win === a ? b : a, j = judge(a, b);
       D.path[win.title] = D.path[win.title] || [];

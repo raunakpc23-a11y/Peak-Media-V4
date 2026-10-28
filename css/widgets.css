@@ -234,44 +234,61 @@ body.lights-out-mode .glass-card {
 }
 
 /* ==========================================================================
-   OFFICIAL GOLDEN TICKET LEDGER
+   OFFICIAL GOLDEN TICKET COLLECTIBLE (SPECIAL VIP INTERFACE)
    ========================================================================== */
-.golden-ticket-card {
+.golden-ticket-vip {
   position: relative;
-  background: linear-gradient(135deg, #221808 0%, #151006 50%, #291b05 100%);
-  border: 1.5px solid rgba(245, 197, 24, 0.55);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), inset 0 0 25px rgba(245, 197, 24, 0.08);
-  border-radius: 16px;
+  background: linear-gradient(135deg, #fbe897 0%, #d4af37 32%, #b58927 68%, #f8df81 100%);
+  border: 2px solid #855806;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), 0 0 25px rgba(212, 175, 55, 0.35);
+  border-radius: 20px;
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
 }
 
-.golden-ticket-card:hover {
-  transform: translateY(-3px) scale(1.01);
-  border-color: rgba(245, 197, 24, 0.95);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85), 0 0 20px rgba(245, 197, 24, 0.25);
+.golden-ticket-vip:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.85), 0 0 35px rgba(245, 197, 24, 0.5);
 }
 
-.golden-ticket-card::before,
-.golden-ticket-card::after {
+.golden-ticket-vip::before,
+.golden-ticket-vip::after {
   content: "";
   position: absolute;
   top: 50%;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   background-color: #050811;
   border-radius: 50%;
   transform: translateY(-50%);
-  z-index: 10;
-  border: 1.5px solid rgba(245, 197, 24, 0.55);
+  z-index: 20;
+  border: 2px solid #855806;
 }
 
-.golden-ticket-card::before {
-  left: -10px;
+.golden-ticket-vip::before {
+  left: -12px;
 }
 
-.golden-ticket-card::after {
-  right: -10px;
+.golden-ticket-vip::after {
+  right: -12px;
+}
+
+/* ==========================================================================
+   BATTLE ROYALE TOURNAMENT BRACKET
+   ========================================================================== */
+.bracket-match-node {
+  position: relative;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+}
+
+.bracket-match-node::after {
+  content: "";
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  width: 12px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* ==========================================================================
