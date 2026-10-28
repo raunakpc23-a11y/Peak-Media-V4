@@ -231,7 +231,7 @@
 
     box.classList.remove('hidden');
     if (!mediaMatches.length && !songMatches.length && !quoteItem) {
-      box.innerHTML = `<div class="p-5 text-sm text-gray-400 text-center">No movies, shows, or songs match "${q.replace(/</g, '&lt;')}"</div>`;
+      box.innerHTML = `<div class="p-5 text-sm text-gray-400 text-center bg-[#0c101c]">No movies, shows, or songs match "${q.replace(/</g, '&lt;')}"</div>`;
       return;
     }
 
@@ -240,11 +240,11 @@
       const qAttrT = quoteItem.title.replace(/"/g, '&quot;');
       const qFb = generateStylizedPosterDataURI(quoteItem);
       htmlOut += `
-        <div class="p-3 bg-gradient-to-r from-amber-500/20 via-black to-transparent border-b border-amber-400/30">
+        <div class="p-3 bg-[#131929] border-b border-amber-400/35">
           <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 flex items-center gap-1.5 mb-1.5">
             <i class="fa-solid fa-quote-left text-amber-400"></i> Iconic Dialogue Match
           </div>
-          <button type="button" data-t="${qAttrT}" class="w-full text-left p-2 rounded-xl bg-black/60 hover:bg-white/10 flex items-center gap-3 transition-colors group border border-amber-400/30">
+          <button type="button" data-t="${qAttrT}" class="w-full text-left p-2.5 rounded-xl bg-[#080b14] hover:bg-[#151c2e] flex items-center gap-3 transition-colors group border border-amber-400/30">
             <img src="${posterCache[quoteItem.type + ':' + quoteItem.title] || qFb}" data-title="${qAttrT}" onerror="this.onerror=null;this.src='${qFb}';" class="lazy-poster w-10 h-14 object-cover rounded-md border border-white/10 shrink-0" alt="">
             <div class="min-w-0 flex-1">
               <div class="text-xs italic font-bold text-amber-200">"${quoteMatch.quote}"</div>
@@ -257,20 +257,20 @@
       `;
     }
     if (mediaMatches.length) {
-      htmlOut += `<div class="px-4 py-1.5 bg-white/[0.04] text-[10px] font-extrabold uppercase tracking-wider text-brand-gold">Movies &amp; TV Series (${mediaMatches.length})</div>`;
+      htmlOut += `<div class="px-4 py-2 bg-[#101422] border-b border-white/10 text-[10px] font-extrabold uppercase tracking-wider text-brand-gold flex items-center justify-between"><span>Movies &amp; TV Series</span><span class="text-gray-400 font-normal lowercase">${mediaMatches.length} results</span></div>`;
       htmlOut += mediaMatches.map(i => {
         const attrT = i.title.replace(/"/g, '&quot;');
         const fb = generateStylizedPosterDataURI(i);
-        return `<button type="button" data-t="${attrT}" class="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center gap-3 transition-colors group">
+        return `<button type="button" data-t="${attrT}" class="w-full text-left px-4 py-2.5 bg-[#0c101c] hover:bg-[#161c2c] flex items-center gap-3 transition-colors group">
           <img src="${posterCache[i.type + ':' + i.title] || fb}" data-title="${attrT}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster w-10 h-14 object-cover rounded-md border border-white/10 shrink-0" alt="">
-          <span class="min-w-0 flex-1"><span class="block text-sm font-bold text-white truncate group-hover:text-brand-gold">${i.cleanName || i.title} <span class="text-gray-500 font-normal">(${i.year} · ${i.lang === 'hi' ? 'Hindi' : 'English'})</span></span><span class="block text-[11px] text-gray-400">${i.genre} · ${i.type === 'show' ? 'TV Series' : 'Film'} · ${i.platformName}</span></span>
+          <span class="min-w-0 flex-1"><span class="block text-sm font-bold text-white truncate group-hover:text-brand-gold">${i.cleanName || i.title} <span class="text-gray-400 font-normal">(${i.year} · ${i.lang === 'hi' ? 'Hindi' : 'English'})</span></span><span class="block text-[11px] text-gray-400">${i.genre} · ${i.type === 'show' ? 'TV Series' : 'Film'} · <span class="text-emerald-400">${i.platformName}</span></span></span>
           <span class="text-brand-gold font-bold text-xs shrink-0">★ ${i.rating}</span></button>`;
       }).join('');
     }
     if (songMatches.length) {
-      htmlOut += `<div class="px-4 py-1.5 bg-white/[0.04] text-[10px] font-extrabold uppercase tracking-wider text-cyan-400">Songs &amp; Music Videos (${songMatches.length})</div>`;
+      htmlOut += `<div class="px-4 py-2 bg-[#101422] border-b border-white/10 text-[10px] font-extrabold uppercase tracking-wider text-cyan-400 flex items-center justify-between"><span>Songs &amp; Music Videos</span><span class="text-gray-400 font-normal lowercase">${songMatches.length} results</span></div>`;
       htmlOut += songMatches.map(s => `
-        <button type="button" data-songid="${s.id}" class="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center gap-3 transition-colors group">
+        <button type="button" data-songid="${s.id}" class="w-full text-left px-4 py-2.5 bg-[#0c101c] hover:bg-[#161c2c] flex items-center gap-3 transition-colors group">
           <img src="https://i.ytimg.com/vi/${s.id}/default.jpg" class="w-12 h-9 object-cover rounded-md border border-white/10 shrink-0" alt="">
           <span class="min-w-0 flex-1"><span class="block text-sm font-bold text-white truncate group-hover:text-cyan-300">${s.t.replace(/</g, '&lt;')}</span><span class="block text-[11px] text-gray-400">${s.a.replace(/</g, '&lt;')} · ${s.l === 'hi' ? 'Hindi' : 'English'} · ${s.m}</span></span>
           <span class="text-cyan-300 font-bold text-xs shrink-0"><i class="fa-solid fa-play mr-1"></i>Play</span>

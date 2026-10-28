@@ -15579,7 +15579,7 @@ Odd Taxi|2021|87
             } catch (e) {}
           }
 
-        // Pipeline 2: TV Shows -> Free TVMaze Single Search API
+        // Pipeline 2: TV Shows -> Free TVMaze Single Search API + iTunes Fallback
         if (item.type === 'show') {
           try {
             const res = await fetch(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(queryName)}`);
@@ -15596,13 +15596,30 @@ Odd Taxi|2021|87
               }
             }
           } catch (e) {}
+
+          // Sub-pipeline 2b: iTunes TV Shows
+          try {
+            const res = await fetch(`https://itunes.apple.com/search?media=tvShow&entity=tvSeason&limit=4&term=${encodeURIComponent(queryName)}`);
+            if (res.ok) {
+              const data = await res.json();
+              const match = (data.results || [])[0];
+              if (match && match.artworkUrl100) {
+                const highRes = match.artworkUrl100.replace('100x100bb', '600x900bb');
+                posterCache[cacheKey] = highRes;
+                scheduleSavePosterCache();
+                return highRes;
+              }
+            }
+          } catch (e) {}
         }
 
-        // Pipeline 3: Universal Fallback -> Wikipedia Summary API
+        // Pipeline 3: Universal Fallback -> Wikipedia Summary API (with custom header)
         try {
           const wikiCandidates = [
             `${queryName}_(${item.year}_TV_series)`,
             `${queryName}_(${item.year}_film)`,
+            `${queryName}_(miniseries)`,
+            `${queryName}_(TV_miniseries)`,
             `${queryName}_(TV_series)`,
             `${queryName}_(film)`,
             `${queryName}_(Indian_TV_series)`,
@@ -15611,7 +15628,7 @@ Odd Taxi|2021|87
           ];
           for (const cand of wikiCandidates) {
             const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cand.replace(/ /g, '_'))}`;
-            const res = await fetch(url);
+            const res = await fetch(url, { headers: { 'Api-User-Agent': 'PeakMedia/2.8 (contact@peakmedia.app)' } });
             if (res.ok) {
               const data = await res.json();
               if (data.type === 'standard') {
@@ -15628,7 +15645,6 @@ Odd Taxi|2021|87
           }
         } catch (e) {}
 
-        posterCache[cacheKey] = null;
         return null;
       } finally {
         activeFetches--;
@@ -16597,13 +16613,128 @@ Odd Taxi|2021|87
     // ==========================================
     // 9. DETAILS MODAL & YOUTUBE TRAILERS
     // ==========================================
+    // Curated Season Guides for shows with notable consensus or skippable/peak seasons
+    const SEASON_SPECIAL_GUIDES = {
+      "The Office": {
+        totalSeasons: 9,
+        notes: {
+          1: { badge: "Skippable", color: "bg-amber-500/20 text-amber-300 border-amber-400/40", consensus: "Season 1 is an awkward British remake clone. True stride and comedy genius starts in Season 2." },
+          2: { badge: "Golden Era", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 2: Peak ensemble comedy begins; landmark Jim & Pam storyline." },
+          3: { badge: "Essential", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 3: Acclaimed series high-water mark with iconic Stamford merger." },
+          5: { badge: "Iconic", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 5: The legendary Michael Scott Paper Company storyline." },
+          8: { badge: "Transitional", color: "bg-purple-500/20 text-purple-300 border-purple-400/40", consensus: "Season 8: Post-Michael era; uneven storylines but strong ensemble moments." }
+        }
+      },
+      "Breaking Bad": {
+        totalSeasons: 5,
+        notes: {
+          1: { badge: "Slow Burn", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 1: Deliberate character study establishing Walter White's moral descent." },
+          4: { badge: "Peak TV", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 4: Masterclass cat-and-mouse tension culminating in 'Face Off'." },
+          5: { badge: "Zenith Masterpiece", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 5: Ozymandias and one of the most flawless finales in television history." }
+        }
+      },
+      "Game of Thrones": {
+        totalSeasons: 8,
+        notes: {
+          1: { badge: "Landmark", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 1: Faithful adaptation of Martin's novel; redefined modern prestige fantasy." },
+          4: { badge: "Peak Thrones", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 4: Tyrion's trial and the Oberyn duel; pinnacle of the entire series." },
+          8: { badge: "Divisive", color: "bg-rose-500/20 text-rose-300 border-rose-400/40", consensus: "Season 8: Widely criticized as rushed; impressive spectacle but polarized storytelling." }
+        }
+      },
+      "Stranger Things": {
+        totalSeasons: 4,
+        notes: {
+          1: { badge: "Masterpiece", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 1: Flawless tight 80s sci-fi nostalgia thriller." },
+          3: { badge: "Blockbuster", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 3: Summer neon spectacle at Starcourt Mall; high energy popcorn fun." },
+          4: { badge: "Epic Scale", color: "bg-purple-500/20 text-purple-300 border-purple-400/40", consensus: "Season 4: Feature-length episodes, darker horror, and landmark Vecna backstory." }
+        }
+      },
+      "True Detective": {
+        totalSeasons: 4,
+        notes: {
+          1: { badge: "All-Time Peak", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 1: Standalone magnum opus with Matthew McConaughey and Woody Harrelson." },
+          2: { badge: "Muddled", color: "bg-rose-500/20 text-rose-300 border-rose-400/40", consensus: "Season 2: Disjointed neo-noir that suffered from high Season 1 expectations." }
+        }
+      },
+      "Dexter": {
+        totalSeasons: 8,
+        notes: {
+          1: { badge: "Classic", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 1: Iconic introduction to Miami's favorite vigilante forensic tech." },
+          4: { badge: "Peak Drama", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 4: John Lithgow's chilling Trinity Killer and jaw-dropping finale." },
+          8: { badge: "Divisive Finale", color: "bg-rose-500/20 text-rose-300 border-rose-400/40", consensus: "Season 8: Infamous lumberjack resolution; controversial conclusion." }
+        }
+      },
+      "The Wire": {
+        totalSeasons: 5,
+        notes: {
+          1: { badge: "Gritty Classic", color: "bg-sky-500/20 text-sky-300 border-sky-400/40", consensus: "Season 1: Groundbreaking procedural realism on Baltimore street corners." },
+          4: { badge: "Television Zenith", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 4: Widely regarded by critics as the single greatest television season ever produced." }
+        }
+      },
+      "Lost": {
+        totalSeasons: 6,
+        notes: {
+          1: { badge: "Cultural Phenomenon", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 1: The pilot that changed network TV; gripping island character mystery." },
+          6: { badge: "Polarizing", color: "bg-purple-500/20 text-purple-300 border-purple-400/40", consensus: "Season 6: Flash sideways and spiritual resolution that split the fandom in two." }
+        }
+      },
+      "Prison Break": {
+        totalSeasons: 5,
+        notes: {
+          1: { badge: "Flawless Thriller", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 1: Gold-standard escape puzzle with non-stop adrenaline." },
+          3: { badge: "Strike Shortened", color: "bg-amber-500/20 text-amber-300 border-amber-400/40", consensus: "Season 3: Shortened Sona prison arc impacted by the 2007 strike." }
+        }
+      },
+      "Fargo": {
+        totalSeasons: 5,
+        notes: {
+          1: { badge: "Phenomenal", color: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40", consensus: "Season 1: Lorne Malvo and Lester Nygaard in a wickedly dark Midwestern caper." },
+          2: { badge: "Masterpiece", color: "bg-amber-400/20 text-amber-300 border-amber-400/50", consensus: "Season 2: 1979 Gerhardt syndicate war; stylish, bloody, and exquisitely paced." }
+        }
+      }
+    };
+
     async function openDetailModal(title) {
       const item = globalDatabase[title];
       if (!item) return;
       const modal = document.getElementById('detailModal');
       const content = document.getElementById('detailModalContent');
       const fallbackSvg = generateStylizedPosterDataURI(item);
-      const posterUrl = posterCache[item.type + ':' + item.title] || fallbackSvg;
+
+      // Instant poster resolution:
+      let posterUrl = posterCache[item.type + ':' + item.title];
+
+      // Check if clicked card or any card in DOM already has a rendered image for this title
+      if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
+        const safeTitle = item.title.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        const domCardImgs = document.querySelectorAll(`img[data-title="${safeTitle}"]`);
+        for (const dImg of domCardImgs) {
+          if (dImg.src && !dImg.src.startsWith('data:image/svg') && (dImg.src.startsWith('http') || dImg.src.startsWith('blob'))) {
+            posterUrl = dImg.src;
+            posterCache[item.type + ':' + item.title] = posterUrl;
+            break;
+          }
+        }
+      }
+
+      // Check alternate type cache key
+      if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
+        const altKey = (item.type === 'show' ? 'movie:' : 'show:') + item.title;
+        if (posterCache[altKey] && !posterCache[altKey].startsWith('data:image/svg')) {
+          posterUrl = posterCache[altKey];
+        }
+      }
+
+      // Check known overrides
+      if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
+        const kKey = item.type + ':' + item.title;
+        if (KNOWN_POSTER_OVERRIDES[kKey]) {
+          posterUrl = KNOWN_POSTER_OVERRIDES[kKey];
+          posterCache[kKey] = posterUrl;
+        }
+      }
+
+      const initialPoster = posterUrl || fallbackSvg;
       const isW = wishlistTitles.includes(item.title);
       const isWatched = watchedTitles.includes(item.title);
       const escTitle = item.title.replace(/'/g, "\\'");
@@ -16620,15 +16751,15 @@ Odd Taxi|2021|87
       const rNum = parseFloat(item.rating) || 8.0;
       const rtCritics = Math.min(100, Math.max(55, Math.round((rNum - 3) * 14.5 + (item.rank <= 100 ? 5 : 0))));
       const rtAudience = Math.min(100, Math.max(58, Math.round((rNum - 2.7) * 14)));
-      let riftBadge = { text: 'Universal Masterpiece', icon: 'fa-crown', color: 'bg-amber-400/20 text-amber-300 border-amber-400/35' };
+      let riftBadge = { text: 'Universal Masterpiece', icon: 'fa-crown', color: 'bg-amber-400/20 text-amber-300 border-amber-400/40' };
       if (rtCritics >= 92 && rtAudience <= 72) {
-        riftBadge = { text: 'Critic Darling · Slow Burn', icon: 'fa-glasses', color: 'bg-sky-500/20 text-sky-300 border-sky-400/35' };
+        riftBadge = { text: 'Critic Darling · Slow Burn', icon: 'fa-glasses', color: 'bg-sky-500/20 text-sky-300 border-sky-400/40' };
       } else if (rtCritics <= 68 && rtAudience >= 82) {
-        riftBadge = { text: 'Popcorn Crowd-Pleaser', icon: 'fa-pizza-slice', color: 'bg-rose-500/20 text-rose-300 border-rose-400/35' };
+        riftBadge = { text: 'Popcorn Crowd-Pleaser', icon: 'fa-fire-flame-curved', color: 'bg-rose-500/20 text-rose-300 border-rose-400/40' };
       } else if (rtCritics >= 88 && rtAudience >= 85) {
-        riftBadge = { text: 'Universal Masterpiece', icon: 'fa-crown', color: 'bg-amber-400/20 text-amber-300 border-amber-400/35' };
+        riftBadge = { text: 'Universal Masterpiece', icon: 'fa-crown', color: 'bg-amber-400/20 text-amber-300 border-amber-400/40' };
       } else {
-        riftBadge = { text: 'Fan Favorite', icon: 'fa-fire', color: 'bg-purple-500/20 text-purple-300 border-purple-400/35' };
+        riftBadge = { text: 'Fan Favorite', icon: 'fa-bolt', color: 'bg-purple-500/20 text-purple-300 border-purple-400/40' };
       }
 
       // 2. Curated or generated 15-word Inciting Hook
@@ -16650,80 +16781,118 @@ Odd Taxi|2021|87
       };
       const hookText = HOOKS[item.cleanName] || HOOKS[item.title] || `When a turning point strikes in ${item.year}, a high-stakes fight for purpose and truth begins.`;
 
-      // 3. Season-by-Season Consensus Hover with Smart Special Notes
+      // 3. Season Consensus Section (Dedicated separate area; ONLY shown when special consensus exists)
       let seasonsHtml = '';
       if (item.type === 'show') {
-        const seasonCount = item.seasons || (item.title === 'The Office' ? 9 : item.title === 'Breaking Bad' ? 5 : item.title === 'Game of Thrones' ? 8 : item.title === 'Stranger Things' ? 4 : 4);
-        const seasonPills = [];
-        for (let s = 1; s <= seasonCount; s++) {
-          let consensus = `Season ${s}: Highly rated narrative momentum & character growth.`;
-          let isSpecial = false;
-          let specialBadge = '';
-          if (item.title === 'The Office' && s === 1) {
-            consensus = 'Season 1 is an awkward British remake clone. True stride and comedy genius starts in Season 2.';
-            isSpecial = true;
-            specialBadge = '<span class="text-[9px] bg-amber-500/30 text-amber-300 px-1 py-0.5 rounded font-extrabold ml-1">Skippable</span>';
-          } else if (item.title === 'Game of Thrones' && s === 8) {
-            consensus = 'Season 8 is widely criticized as rushed; impressive spectacle but polarized storytelling.';
-            isSpecial = true;
-            specialBadge = '<span class="text-[9px] bg-rose-500/30 text-rose-300 px-1 py-0.5 rounded font-extrabold ml-1">Divisive</span>';
-          } else if (item.title === 'Breaking Bad' && (s === 4 || s === 5)) {
-            consensus = `Season ${s}: Peak TV history. Unrelenting tension and Heisenberg zenith.`;
-            isSpecial = true;
-            specialBadge = '<span class="text-[9px] bg-emerald-500/30 text-emerald-300 px-1 py-0.5 rounded font-extrabold ml-1">Peak</span>';
+        const guide = SEASON_SPECIAL_GUIDES[item.cleanName] || SEASON_SPECIAL_GUIDES[item.title];
+        if (guide) {
+          const seasonPills = [];
+          for (let s = 1; s <= guide.totalSeasons; s++) {
+            const spec = guide.notes[s];
+            const isSpecial = Boolean(spec);
+            const badgeTag = isSpecial ? `<span class="text-[9px] px-1.5 py-0.5 rounded font-extrabold ml-1 uppercase tracking-wider ${spec.color}">${spec.badge}</span>` : '';
+            const consensusText = isSpecial ? spec.consensus : `Season ${s}: Highly rated narrative momentum and steady character evolution.`;
+            const escConsensus = consensusText.replace(/"/g, '&quot;').replace(/'/g, "\\'");
+
+            seasonPills.push(`
+              <div class="group/s relative">
+                <button type="button" 
+                  onmouseenter="const nd=document.getElementById('seasonNoteDisplay'); if(nd) nd.innerHTML = '${escConsensus}';" 
+                  onclick="const nd=document.getElementById('seasonNoteDisplay'); if(nd) nd.innerHTML = '${escConsensus}';"
+                  class="px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${isSpecial ? 'border-amber-400/50 bg-amber-400/15 text-white shadow-sm' : 'border-white/10 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'}">
+                  S${s}${badgeTag}
+                </button>
+              </div>
+            `);
           }
 
-          seasonPills.push(`
-            <div class="group/s relative">
-              <button type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all ${isSpecial ? 'border-amber-400/50 bg-amber-400/10 text-white' : 'border-white/10 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'}">
-                S${s}${specialBadge}
-              </button>
-              <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 rounded-xl bg-black/95 border border-white/20 text-[11px] text-gray-200 opacity-0 group-hover/s:opacity-100 transition-opacity z-30 shadow-xl text-center leading-snug">
-                ${consensus}
+          const defaultSeasonNote = guide.notes[1] ? guide.notes[1].consensus : `Hover or tap any season above to inspect consensus notes.`;
+
+          seasonsHtml = `
+            <div class="mt-3 p-3.5 rounded-2xl bg-[#0c101c] border border-white/15 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-400 text-xs font-bold">
+                    <i class="fa-solid fa-list-ol"></i>
+                  </span>
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-white">Season Guide &amp; Consensus</span>
+                </div>
+                <span class="text-[11px] font-semibold text-brand-gold">${guide.totalSeasons} Seasons</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5 items-center pt-1">${seasonPills.join('')}</div>
+              <div id="seasonNoteDisplay" class="text-xs text-gray-300 bg-black/60 border border-white/10 rounded-xl p-2.5 leading-relaxed italic">
+                ${defaultSeasonNote}
               </div>
             </div>
-          `);
+          `;
         }
-        seasonsHtml = `
-          <div class="pt-2 border-t border-white/10 space-y-1.5">
-            <div class="flex items-center justify-between text-[11px] text-gray-400 font-bold uppercase tracking-wider">
-              <span>Seasons Consensus (Hover for notes)</span>
-              <span class="text-brand-gold text-[10px] lowercase">${seasonCount} seasons</span>
-            </div>
-            <div class="flex flex-wrap gap-1.5 items-center">${seasonPills.join('')}</div>
-          </div>
-        `;
       }
 
-      // 4. Zero-Bloat Where to Watch Availability
+      // 4. Zero-Bloat Where to Watch Availability (Strictly where title is available)
+      const plat = item.platformName || 'Streaming';
       const qEnc = encodeURIComponent(item.cleanName || item.title);
+      let platUrl = `https://www.google.com/search?q=watch+${qEnc}+on+${encodeURIComponent(plat)}`;
+      let platIcon = 'fa-solid fa-play';
+      let platClass = 'bg-white/10 text-white border-white/20';
+
+      if (/netflix/i.test(plat)) {
+        platUrl = `https://www.netflix.com/search?q=${qEnc}`;
+        platIcon = 'fa-solid fa-n';
+        platClass = 'bg-red-600/20 text-red-300 border-red-500/40 hover:bg-red-600/30';
+      } else if (/prime/i.test(plat) || /amazon/i.test(plat)) {
+        platUrl = `https://www.amazon.com/s?k=${qEnc}`;
+        platIcon = 'fa-brands fa-amazon';
+        platClass = 'bg-sky-500/20 text-sky-300 border-sky-400/40 hover:bg-sky-500/30';
+      } else if (/hotstar/i.test(plat) || /disney/i.test(plat)) {
+        platUrl = `https://www.hotstar.com/in/search?q=${qEnc}`;
+        platIcon = 'fa-solid fa-play';
+        platClass = 'bg-blue-600/20 text-blue-300 border-blue-400/40 hover:bg-blue-600/30';
+      } else if (/max/i.test(plat) || /hbo/i.test(plat)) {
+        platUrl = `https://www.max.com/search?q=${qEnc}`;
+        platIcon = 'fa-solid fa-m';
+        platClass = 'bg-purple-600/20 text-purple-300 border-purple-400/40 hover:bg-purple-600/30';
+      } else if (/apple/i.test(plat)) {
+        platUrl = `https://tv.apple.com/search?term=${qEnc}`;
+        platIcon = 'fa-brands fa-apple';
+        platClass = 'bg-zinc-700/30 text-gray-200 border-zinc-500/40 hover:bg-zinc-700/40';
+      } else if (/sonyliv/i.test(plat)) {
+        platUrl = `https://www.sonyliv.com/search?q=${qEnc}`;
+        platIcon = 'fa-solid fa-tv';
+        platClass = 'bg-amber-600/20 text-amber-300 border-amber-500/40 hover:bg-amber-600/30';
+      } else if (/zee5/i.test(plat)) {
+        platUrl = `https://www.zee5.com/search?q=${qEnc}`;
+        platIcon = 'fa-solid fa-film';
+        platClass = 'bg-fuchsia-600/20 text-fuchsia-300 border-fuchsia-500/40 hover:bg-fuchsia-600/30';
+      } else if (/jiocinema/i.test(plat)) {
+        platUrl = `https://www.jiocinema.com/search/${qEnc}`;
+        platIcon = 'fa-solid fa-play';
+        platClass = 'bg-pink-600/20 text-pink-300 border-pink-500/40 hover:bg-pink-600/30';
+      }
+
+      const cinejoyStreamUrl = (window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? window.getCinejoyUrl(item.title, item.type) : null;
+
       const whereToWatchHtml = `
         <div class="pt-2.5 border-t border-white/10 space-y-1.5">
           <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 flex items-center justify-between">
-            <span>Where to Watch</span>
-            <span class="text-emerald-400 text-[10px]">Active</span>
+            <span>Streaming Platform</span>
+            <span class="text-emerald-400 text-[10px] flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Available</span>
           </div>
           <div class="flex flex-wrap gap-2 text-xs">
-            <a href="https://www.netflix.com/search?q=${qEnc}" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-red-600/15 hover:bg-red-600/25 border border-red-500/30 text-red-300 font-semibold flex items-center gap-1 transition-colors">
-              <i class="fa-solid fa-n"></i> Netflix
+            <a href="${platUrl}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-xl ${platClass} font-bold flex items-center gap-2 transition-colors">
+              <i class="${platIcon}"></i> ${plat}
             </a>
-            <a href="https://www.amazon.com/s?k=${qEnc}+movie" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/30 text-sky-300 font-semibold flex items-center gap-1 transition-colors">
-              <i class="fa-brands fa-amazon"></i> Prime
-            </a>
-            <a href="https://www.hotstar.com/in/search?q=${qEnc}" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-blue-600/15 hover:bg-blue-600/25 border border-blue-400/30 text-blue-300 font-semibold flex items-center gap-1 transition-colors">
-              <i class="fa-solid fa-play"></i> Disney+
-            </a>
-            <a href="https://www.youtube.com/results?search_query=${qEnc}+full+movie" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 font-semibold flex items-center gap-1 transition-colors">
-              <i class="fa-brands fa-youtube"></i> Google/YouTube
-            </a>
+            ${cinejoyStreamUrl ? `
+            <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/35 text-amber-300 font-bold flex items-center gap-2 transition-colors">
+              <i class="fa-solid fa-circle-play text-brand-gold"></i> Direct Stream (Cinejoy)
+            </a>` : ''}
           </div>
         </div>
       `;
 
       content.innerHTML = `
         <div class="flex flex-col sm:flex-row gap-6 p-6 sm:p-8">
-          <div class="w-40 sm:w-52 shrink-0 mx-auto sm:mx-0 rounded-2xl overflow-hidden border border-white/15 shadow-xl poster-aspect bg-black">
-            <img id="modalPosterImg" src="${posterUrl}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover" alt="${item.title}">
+          <div class="w-40 sm:w-52 shrink-0 mx-auto sm:mx-0 rounded-2xl overflow-hidden border border-white/20 shadow-2xl poster-aspect bg-[#090c14] relative">
+            <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover transition-opacity duration-300" alt="${item.title}">
           </div>
           <div class="flex-1 space-y-3.5">
             <div class="flex flex-wrap items-center gap-2">
@@ -16733,16 +16902,51 @@ Odd Taxi|2021|87
               <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] font-semibold">${item.platformName}</span>
             </div>
 
-            <!-- Critics vs Crowd Scorecard & Rift Meter -->
-            <div class="p-2.5 rounded-xl bg-black/45 border border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
-              <div class="flex items-center gap-3">
-                <span class="font-bold text-gray-200 flex items-center gap-1" title="IMDb Rating"><i class="fa-solid fa-star text-brand-gold text-xs"></i> ${item.rating}</span>
-                <span class="font-bold text-rose-400 flex items-center gap-1" title="Rotten Tomatoes Critics Score"><i class="fa-solid fa-apple-whole"></i> ${rtCritics}%</span>
-                <span class="font-bold text-amber-400 flex items-center gap-1" title="Audience Popcorn Score"><i class="fa-solid fa-popcorn"></i> ${rtAudience}%</span>
+            <!-- Critics vs Crowd Scorecard -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-[#0c101c] border border-white/15 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-4 sm:gap-6 divide-x divide-white/10">
+                <!-- IMDb Pillar -->
+                <div class="flex items-center gap-2.5">
+                  <span class="px-2 py-0.5 rounded bg-[#f5c518] text-black font-black text-[11px] tracking-tight font-mono shadow-sm">IMDb</span>
+                  <div>
+                    <div class="flex items-baseline gap-0.5">
+                      <span class="text-white font-extrabold text-base leading-none">${item.rating}</span>
+                      <span class="text-gray-400 text-xs">/10</span>
+                    </div>
+                    <div class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Rating</div>
+                  </div>
+                </div>
+
+                <!-- Rotten Tomatoes Critics Meter Pillar -->
+                <div class="pl-4 sm:pl-6 flex items-center gap-2.5">
+                  <span class="text-xl leading-none select-none" title="Rotten Tomatoes Tomatometer">🍅</span>
+                  <div>
+                    <div class="flex items-baseline gap-0.5">
+                      <span class="text-rose-400 font-extrabold text-base leading-none">${rtCritics}%</span>
+                    </div>
+                    <div class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Tomatometer</div>
+                  </div>
+                </div>
+
+                <!-- Audience Popcorn Meter Pillar -->
+                <div class="pl-4 sm:pl-6 flex items-center gap-2.5">
+                  <span class="text-xl leading-none select-none" title="Audience Popcorn Meter">🍿</span>
+                  <div>
+                    <div class="flex items-baseline gap-0.5">
+                      <span class="text-amber-400 font-extrabold text-base leading-none">${rtAudience}%</span>
+                    </div>
+                    <div class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Audience</div>
+                  </div>
+                </div>
               </div>
-              <span class="px-2.5 py-0.5 rounded-full border text-[11px] font-extrabold flex items-center gap-1 ${riftBadge.color}">
-                <i class="fa-solid ${riftBadge.icon} text-[10px]"></i> ${riftBadge.text}
-              </span>
+
+              <!-- Alignment / Rift Verdict Badge -->
+              <div class="shrink-0 self-start sm:self-center">
+                <span class="px-3 py-1 rounded-full border text-xs font-extrabold flex items-center gap-1.5 shadow-sm ${riftBadge.color}">
+                  <i class="fa-solid ${riftBadge.icon} text-[11px]"></i>
+                  <span>${riftBadge.text}</span>
+                </span>
+              </div>
             </div>
 
             <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-white leading-tight">${item.cleanName || item.title}</h2>
@@ -16813,12 +17017,19 @@ Odd Taxi|2021|87
       modal.classList.add('flex');
 
       // Fetch poster & synopsis asynchronously if not cached
-      const realUrl = await fetchPoster(item);
-      const modalImg = document.getElementById('modalPosterImg');
-      if (realUrl && modalImg) modalImg.src = realUrl;
-      const modalSyn = document.getElementById('modalSynopsisText');
-      if (summaryCache[item.type + ':' + item.title] && modalSyn) {
-        modalSyn.textContent = summaryCache[item.type + ':' + item.title];
+      if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
+        fetchPoster(item).then(realUrl => {
+          const modalImg = document.getElementById('modalPosterImg');
+          if (realUrl && modalImg) modalImg.src = realUrl;
+        });
+      }
+      if (!summaryCache[item.type + ':' + item.title]) {
+        fetchPoster(item, true).then(() => {
+          const modalSyn = document.getElementById('modalSynopsisText');
+          if (summaryCache[item.type + ':' + item.title] && modalSyn) {
+            modalSyn.textContent = summaryCache[item.type + ':' + item.title];
+          }
+        });
       }
     }
 

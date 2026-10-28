@@ -290,4 +290,29 @@ body.lights-out-mode .glass-card {
   opacity: 0.65;
 }
 
+/* ==========================================================================
+   HIGH-CONTRAST OPAQUE SEARCH UI
+   ========================================================================== */
+#browseSearch {
+  background-color: #0c101c !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8) !important;
+}
+
+#bsInput {
+  background-color: #07090e !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+#bsResults {
+  background-color: #0c101c !important;
+  border-color: rgba(229, 169, 60, 0.45) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95) !important;
+}
+
+#palette > div {
+  background-color: #0c101c !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
 

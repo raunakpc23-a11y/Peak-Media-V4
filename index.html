@@ -203,16 +203,16 @@
   </header>
 
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-    <div id="browseSearch" class="hidden mb-4 relative z-30 glass-card p-3 sm:p-4 rounded-2xl border border-brand-gold/35" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.10), rgba(12, 15, 24, 0.90) 65%)">
+    <div id="browseSearch" class="hidden mb-4 relative z-30 p-3 sm:p-4 rounded-2xl border border-white/20 shadow-2xl bg-[#0c101c]">
       <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
         <div class="relative flex-1">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-gold text-sm"></i>
-          <input id="bsInput" type="text" autocomplete="off" placeholder="Search movies, shows, genres, universes, or songs..." class="w-full pl-10 pr-16 py-2.5 rounded-xl bg-black/55 border border-white/15 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold transition-colors">
-          <button type="button" onclick="const inp=document.getElementById('bsInput'); inp.value=''; inp.dispatchEvent(new window.Event('input'));" class="absolute right-2.5 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 text-[11px] text-gray-400 hover:text-white">Clear</button>
+          <input id="bsInput" type="text" autocomplete="off" placeholder="Search movies, shows, genres, universes, or songs..." class="w-full pl-10 pr-16 py-2.5 rounded-xl bg-[#07090e] border border-white/20 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold transition-colors">
+          <button type="button" onclick="const inp=document.getElementById('bsInput'); inp.value=''; inp.dispatchEvent(new window.Event('input'));" class="absolute right-2.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-gray-300 hover:text-white font-medium transition-colors">Clear</button>
         </div>
         <div id="bsChips" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0"></div>
       </div>
-      <div id="bsResults" class="hidden absolute left-0 right-0 top-full mt-2 z-40 glass-card rounded-2xl border border-brand-gold/40 divide-y divide-white/5 max-h-[26rem] overflow-y-auto shadow-2xl"></div>
+      <div id="bsResults" class="hidden absolute left-0 right-0 top-full mt-2 z-40 bg-[#0c101c] rounded-2xl border border-brand-gold/50 divide-y divide-white/10 max-h-[26rem] overflow-y-auto shadow-2xl"></div>
     </div>
     <div id="subNav" class="hidden gap-1.5 sm:gap-2 mb-4 sm:mb-6"></div>
 
@@ -1842,14 +1842,14 @@
     </div>
   </div>
 
-  <div id="palette" class="fixed inset-0 z-[60] hidden items-start justify-center p-4 pt-20 sm:pt-28 bg-black/75 backdrop-blur-md" onclick="if(event.target.id==='palette')closePalette()">
-    <div class="glass-card w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl animate-fadeIn border border-white/20">
-      <div class="flex items-center gap-3 px-4 border-b border-white/10">
-        <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-        <input id="palInput" oninput="palSearch(this.value)" placeholder="Search any of 2,700+ movies or TV series..." class="flex-1 bg-transparent py-4 text-sm text-white placeholder-gray-500 focus:outline-none">
-        <kbd class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-gray-400">ESC</kbd>
+  <div id="palette" class="fixed inset-0 z-[60] hidden items-start justify-center p-4 pt-20 sm:pt-28 bg-black/90 backdrop-blur-md" onclick="if(event.target.id==='palette')closePalette()">
+    <div class="bg-[#0c101c] w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl animate-fadeIn border border-white/25">
+      <div class="flex items-center gap-3 px-4 bg-[#080b13] border-b border-white/10">
+        <i class="fa-solid fa-magnifying-glass text-brand-gold"></i>
+        <input id="palInput" oninput="palSearch(this.value)" placeholder="Search any of 2,700+ movies or TV series..." class="flex-1 bg-transparent py-4 text-sm text-white placeholder-gray-400 focus:outline-none">
+        <kbd class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-gray-300">ESC</kbd>
       </div>
-      <div id="palList" class="max-h-80 overflow-y-auto divide-y divide-white/5"></div>
+      <div id="palList" class="max-h-80 overflow-y-auto divide-y divide-white/10 bg-[#0c101c]"></div>
     </div>
   </div>
 
