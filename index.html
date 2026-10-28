@@ -134,7 +134,19 @@
           <span class="hidden sm:inline">Roulette</span>
         </button>
 
-        <!-- Settings Drawer Trigger (Hidden from top header bar so Vibe is never at the forefront; accessible inside Library -> Profile) -->
+        <!-- Sensory Cinema Sanctuary Button -->
+        <button type="button" onclick="openCinemaSanctuaryModal()" title="Sensory Cinema Sanctuary (Ambient Focus Lounge)" class="min-h-[36px] sm:min-h-[40px] px-2.5 sm:px-3 py-1.5 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/35 text-xs font-bold text-indigo-300 flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-spa text-brand-gold"></i>
+          <span class="hidden xl:inline">Sanctuary</span>
+        </button>
+
+        <!-- Cinema Hall Lights-Out Mode Toggle -->
+        <button type="button" onclick="toggleCinemaLightsOut()" id="lightsOutToggleBtn" title="Cinema Hall Lights-Out (100% OLED Black)" class="min-h-[36px] sm:min-h-[40px] px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-moon text-amber-400"></i>
+          <span id="lightsOutLbl" class="hidden xl:inline">Lights Out</span>
+        </button>
+
+        <!-- Settings Drawer Trigger (Theme & Visual Effects) -->
         <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Theme &amp; Visual Effects" class="min-h-[36px] sm:min-h-[40px] px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-sky-400/35 text-xs font-bold text-sky-300 flex items-center gap-1.5 transition-all">
           <i class="fa-solid fa-palette text-brand-gold"></i>
           <span id="vibeName" class="hidden xl:inline">Theme</span>
@@ -152,7 +164,7 @@
     <div id="vibePanel" class="hidden fixed right-3 sm:right-6 top-16 sm:top-20 w-[min(94vw,24rem)] z-[95] glass-card rounded-2xl border border-brand-gold/40 p-5 space-y-4 shadow-2xl animate-fadeIn">
       <div class="flex items-center justify-between">
         <div class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Settings &amp; Atmosphere</div>
-        <button type="button" onclick="document.getElementById('vibePanel').classList.add('hidden')" class="text-gray-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" onclick="document.getElementById('vibePanel').classList.add('hidden')" aria-label="Close settings panel" title="Close" class="text-gray-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div>
         <div class="flex items-center justify-between mb-2">
@@ -357,10 +369,10 @@
           <i id="moviesFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
         </button>
 
-        <!-- Top 750 Cinejoy Watch Indicator Pill -->
+        <!-- All Movies Cinejoy Watch Indicator Pill -->
         <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-bold">
           <i class="fa-solid fa-circle-play text-amber-400"></i>
-          <span>Top 750 IMDb Movies: "Watch Now" linked to Cinejoy</span>
+          <span>All Movies Vault: "Watch Now" linked to Cinejoy</span>
         </div>
         <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()" class="hidden"><span id="cinejoySyncStateBadge">Off</span></button>
       </div>
@@ -393,7 +405,7 @@
         <select id="sortMovies" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="popular">Sort: Most Popular</option>
           <option value="rating_desc">Sort: Highest Rated (★)</option>
-          <option value="top100_watch">Filter: Top 750 (Watch Now on Cinejoy)</option>
+          <option value="top100_watch">Filter: Watch Now on Cinejoy (Highest Rated)</option>
           <option value="year_desc">Sort: Newest First</option>
           <option value="year_asc">Sort: Oldest Classics First</option>
           <option value="title">Sort: Alphabetical (A–Z)</option>
@@ -429,10 +441,10 @@
           <i id="showsFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
         </button>
 
-        <!-- Top 750 Cinejoy Watch Indicator Pill -->
+        <!-- All Series Cinejoy Watch Indicator Pill -->
         <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-500/10 border border-purple-400/30 text-purple-300 text-xs font-bold">
           <i class="fa-solid fa-circle-play text-purple-400"></i>
-          <span>Top 750 IMDb Series: "Watch Now" linked to Cinejoy</span>
+          <span>All Series Vault: "Watch Now" linked to Cinejoy</span>
         </div>
       </div>
       <div id="showsFilterGrid" class="hidden grid glass-card p-3.5 sm:p-4 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 sm:gap-3 border border-brand-gold/25 animate-fadeIn" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.07), rgba(17, 21, 32, 0.85))">
@@ -463,7 +475,7 @@
         <select id="sortShows" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="popular">Sort: Most Popular</option>
           <option value="rating_desc">Sort: Highest Rated (★)</option>
-          <option value="top500_watch">Filter: Top 750 (Watch Now on Cinejoy)</option>
+          <option value="top500_watch">Filter: Watch Now on Cinejoy (Highest Rated)</option>
           <option value="year_desc">Sort: Newest First</option>
           <option value="year_asc">Sort: Oldest First</option>
           <option value="title">Sort: Alphabetical (A–Z)</option>
@@ -506,8 +518,8 @@
         <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
         <div id="cxLegend" class="absolute top-3 left-3 flex flex-wrap gap-x-3 gap-y-1 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
         <div class="absolute top-3 right-3 flex flex-col gap-1.5">
-          <button id="cxZin" class="w-9 h-9 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white"><i class="fa-solid fa-plus"></i></button>
-          <button id="cxZout" class="w-9 h-9 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white"><i class="fa-solid fa-minus"></i></button>
+          <button id="cxZin" aria-label="Zoom in constellation" title="Zoom in" class="w-9 h-9 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white"><i class="fa-solid fa-plus"></i></button>
+          <button id="cxZout" aria-label="Zoom out constellation" title="Zoom out" class="w-9 h-9 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white"><i class="fa-solid fa-minus"></i></button>
           <button id="cxFit" title="Fit to view" class="w-9 h-9 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white"><i class="fa-solid fa-expand"></i></button>
         </div>
         <div id="cxPanel" class="hidden absolute bottom-3 left-3 w-[min(330px,calc(100%-1.5rem))] glass-card rounded-2xl p-3 shadow-2xl"></div>
@@ -663,12 +675,30 @@
       </div>
 
       <div id="duelSetup" class="glass-card rounded-3xl p-5 sm:p-6 border border-white/10 space-y-4">
+        <!-- Duel Mode Switcher -->
+        <div>
+          <label class="text-[11px] font-extrabold uppercase tracking-wider text-gray-400">Play Mode</label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1.5" id="duelGameMode">
+            <button type="button" data-m="classic" class="py-2.5 px-3 rounded-xl text-xs font-bold transition-all bg-brand-gold text-black shadow">
+              <i class="fa-solid fa-swords mr-1.5"></i> Classic Duel (2)
+            </button>
+            <button type="button" data-m="royale" class="py-2.5 px-3 rounded-xl text-xs font-bold transition-all bg-white/5 text-gray-300 hover:bg-white/10">
+              <i class="fa-solid fa-trophy mr-1.5 text-amber-400"></i> Battle Royale (8/16)
+            </button>
+            <button type="button" data-m="matchmaker" class="py-2.5 px-3 rounded-xl text-xs font-bold transition-all bg-white/5 text-gray-300 hover:bg-white/10">
+              <i class="fa-solid fa-bolt mr-1.5 text-rose-400"></i> Rapid Matchmaker
+            </button>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="text-[11px] font-extrabold uppercase tracking-wider text-gray-400">Bracket size</label>
-            <div class="flex gap-2 mt-1.5" id="duelSize">
-              <button data-v="4" class="flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold bg-brand-gold text-black">4 titles</button>
-              <button data-v="8" class="flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white/5 text-gray-300">8 titles</button>
+            <label class="text-[11px] font-extrabold uppercase tracking-wider text-gray-400">Contender count</label>
+            <div class="flex gap-1.5 mt-1.5" id="duelSize">
+              <button data-v="2" class="flex-1 py-2 rounded-xl text-xs font-bold bg-white/5 text-gray-300">2</button>
+              <button data-v="4" class="flex-1 py-2 rounded-xl text-xs font-bold bg-brand-gold text-black">4</button>
+              <button data-v="8" class="flex-1 py-2 rounded-xl text-xs font-bold bg-white/5 text-gray-300">8</button>
+              <button data-v="16" class="flex-1 py-2 rounded-xl text-xs font-bold bg-white/5 text-gray-300">16</button>
             </div>
           </div>
           <div>
@@ -684,7 +714,7 @@
             <select id="duelMood" class="mt-1.5 w-full px-3 py-2 bg-black/50 border border-white/15 rounded-xl text-xs sm:text-sm text-white"></select>
           </div>
         </div>
-        <button id="duelBuild" class="w-full py-3 rounded-2xl bg-gradient-to-r from-brand-gold to-amber-500 text-black font-extrabold text-xs sm:text-sm shadow-lg"><i class="fa-solid fa-bolt mr-2"></i>Build Custom Bracket &amp; Start</button>
+        <button id="duelBuild" class="w-full py-3 rounded-2xl bg-gradient-to-r from-brand-gold to-amber-500 text-black font-extrabold text-xs sm:text-sm shadow-lg"><i class="fa-solid fa-bolt mr-2"></i>Launch Duel Arena &amp; Start</button>
       </div>
 
       <div id="duelArena" class="glass-card rounded-3xl p-4 sm:p-7 border border-brand-gold/30 space-y-5 relative overflow-hidden">
@@ -1013,7 +1043,7 @@
           </button>
           <label class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 flex items-center gap-1.5 cursor-pointer transition-all">
             <i class="fa-solid fa-upload text-cyan-400"></i> <span>Import Backup</span>
-            <input type="file" accept=".json" class="hidden" onchange="importUserData(event)">
+            <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event)">
           </label>
         </div>
       </div>
@@ -1484,7 +1514,7 @@
             </button>
             <label class="flex-1 py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white cursor-pointer flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-upload text-cyan-300"></i> <span>Import Data</span>
-              <input type="file" accept=".json" class="hidden" onchange="importUserData(event)">
+              <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event)">
             </label>
           </div>
         </div>
@@ -1555,6 +1585,32 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 2: CINEPASS VINTAGE TICKET LEDGER & TASTE DNA (WORKING HAND-IN-HAND) -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-brand-gold/30 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Personal Cinema Heritage</span>
+            <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2.5 mt-0.5">
+              <i class="fa-solid fa-ticket text-brand-gold"></i> CinePass Ticket Ledger &amp; Taste Persona
+            </h3>
+            <p class="text-xs text-gray-400 mt-1">Every title you mark as watched stamps an authentic perforated vintage ticket stub into your personal cinema archive.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="exportCinePassLedger()" class="px-3 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/35 text-xs font-bold text-brand-gold flex items-center gap-1.5 transition-all">
+              <i class="fa-solid fa-download"></i> <span>Export Ledger</span>
+            </button>
+            <button type="button" onclick="switchTab('space')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 flex items-center gap-1.5 transition-all">
+              <i class="fa-solid fa-dna text-cyan-300"></i> <span>Taste DNA Radar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Stamped Tickets Grid -->
+        <div id="cinePassLedgerContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <!-- Rendered dynamically by renderCinePassLedger() -->
         </div>
       </div>
     </section>
@@ -1655,17 +1711,94 @@
   <!-- MODAL 1: MOVIE / SHOW DETAILS -->
   <div id="detailModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='detailModal')closeDetailModal()">
     <div class="glass-card w-full max-w-2xl rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto border border-white/20 shadow-2xl animate-fadeIn relative">
-      <button onclick="closeDetailModal()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center border border-white/15 transition-transform hover:scale-105">
+      <button onclick="closeDetailModal()" aria-label="Close detail modal" title="Close" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center border border-white/15 transition-transform hover:scale-105">
         <i class="fa-solid fa-xmark"></i>
       </button>
       <div id="detailModalContent"></div>
     </div>
   </div>
 
+  <!-- MODAL: SENSORY CINEMA SANCTUARY (AMBIENT FOCUS & DECOMPRESSION LOUNGE) -->
+  <div id="sanctuaryModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl" onclick="if(event.target.id==='sanctuaryModal')closeCinemaSanctuaryModal()">
+    <div class="relative w-full max-w-3xl rounded-3xl overflow-hidden glass-card border border-indigo-500/40 shadow-2xl bg-gradient-to-br from-[#0c0d1f]/95 via-[#080914]/95 to-[#120e24]/95 p-6 sm:p-8 space-y-6 animate-fadeIn">
+      <canvas id="sanctuaryCanvas" class="sanctuary-rain-canvas"></canvas>
+      
+      <div class="relative z-10 flex items-center justify-between border-b border-white/10 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 text-lg">
+            <i class="fa-solid fa-spa"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400">Sensory Cinema Sanctuary</div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white">Atmospheric Cinema Lounge</h2>
+          </div>
+        </div>
+        <button type="button" onclick="closeCinemaSanctuaryModal()" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Environment Selector -->
+      <div class="relative z-10 space-y-2">
+        <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Select Atmosphere</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="sanctuaryAtmospheres">
+          <button type="button" onclick="setSanctuaryTheme('cyberpunk')" data-env="cyberpunk" class="p-3 rounded-2xl border text-left transition-all border-brand-gold bg-brand-gold/15 text-white">
+            <div class="text-xs font-extrabold text-brand-gold"><i class="fa-solid fa-bolt mr-1"></i>Neo-Tokyo</div>
+            <div class="text-[10px] text-gray-400 mt-0.5">Neon Rain &amp; Synth</div>
+          </button>
+          <button type="button" onclick="setSanctuaryTheme('paris')" data-env="paris" class="p-3 rounded-2xl border text-left transition-all border-white/10 bg-black/40 hover:bg-white/5 text-gray-300">
+            <div class="text-xs font-extrabold text-pink-300"><i class="fa-solid fa-cloud-rain mr-1"></i>Parisian Rain</div>
+            <div class="text-[10px] text-gray-400 mt-0.5">Accordion &amp; Melancholy</div>
+          </button>
+          <button type="button" onclick="setSanctuaryTheme('booth')" data-env="booth" class="p-3 rounded-2xl border text-left transition-all border-white/10 bg-black/40 hover:bg-white/5 text-gray-300">
+            <div class="text-xs font-extrabold text-amber-300"><i class="fa-solid fa-film mr-1"></i>35mm Booth</div>
+            <div class="text-[10px] text-gray-400 mt-0.5">Projector Click &amp; Warmth</div>
+          </button>
+          <button type="button" onclick="setSanctuaryTheme('space')" data-env="space" class="p-3 rounded-2xl border text-left transition-all border-white/10 bg-black/40 hover:bg-white/5 text-gray-300">
+            <div class="text-xs font-extrabold text-cyan-300"><i class="fa-solid fa-meteor mr-1"></i>Deep Space</div>
+            <div class="text-[10px] text-gray-400 mt-0.5">Silent Drift &amp; Zimmer</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Controls: Pomodoro Focus Timer + Looping Audio Level + Silent Trailer Preview -->
+      <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div class="p-4 rounded-2xl bg-black/50 border border-white/10 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-gray-300"><i class="fa-solid fa-stopwatch mr-1.5 text-indigo-400"></i>Focus &amp; Relax Timer</span>
+            <span id="sanctuaryTimerDisplay" class="font-mono text-brand-gold font-bold">25:00</span>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" onclick="setSanctuaryTimer(15)" class="flex-1 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">15m</button>
+            <button type="button" onclick="setSanctuaryTimer(25)" class="flex-1 py-1.5 rounded-xl bg-brand-gold text-black text-xs font-bold shadow">25m</button>
+            <button type="button" onclick="setSanctuaryTimer(45)" class="flex-1 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">45m</button>
+            <button type="button" id="sanctuaryTimerToggleBtn" onclick="toggleSanctuaryTimer()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">Start</button>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-black/50 border border-white/10 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-gray-300"><i class="fa-solid fa-sliders mr-1.5 text-brand-gold"></i>Ambient Atmospheric Audio</span>
+            <span id="sanctuaryAudioStatus" class="text-[11px] text-emerald-400 font-bold">Active</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="button" id="sanctuaryAudioToggleBtn" onclick="toggleSanctuaryAudio()" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-volume-high text-brand-gold"></i>
+              <span>Mute / Sound</span>
+            </button>
+            <button type="button" onclick="playOSTForTitle('Interstellar')" class="flex-1 py-1.5 px-2.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-300 text-xs font-bold truncate">
+              <i class="fa-solid fa-music mr-1"></i>Ambient Score
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL 2: REVAMPED SURPRISE ME ROULETTE STUDIO -->
   <div id="surpriseModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/85 backdrop-blur-md">
     <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl space-y-6 relative animate-fadeIn">
-      <button onclick="closeSurpriseModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center">
+      <button onclick="closeSurpriseModal()" aria-label="Close surprise roulette" title="Close" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
@@ -1724,17 +1857,22 @@
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
 
 
-  <!-- PERSISTENT YOUTUBE MINI-PLAYER BAR & VISIBLE VIDEO DOCK -->
-  <div id="musicVideoDock" class="fixed right-3 bottom-36 md:bottom-24 z-50 hidden w-72 sm:w-80 rounded-2xl overflow-hidden glass-card border border-brand-gold/40 shadow-2xl">
-    <div class="flex items-center justify-between px-3 py-1.5 bg-black/85 border-b border-white/10 text-[11px]">
-      <span class="font-bold text-brand-gold flex items-center gap-1.5"><i class="fa-brands fa-youtube text-red-500"></i> Official Player</span>
+  <!-- PERSISTENT YOUTUBE MINI-PLAYER BAR & VISIBLE VIDEO DOCK (DRAGGABLE PiP PREVIEW) -->
+  <div id="musicVideoDock" class="fixed right-3 bottom-36 md:bottom-24 z-50 hidden w-72 sm:w-80 rounded-2xl overflow-hidden glass-card border border-brand-gold/40 shadow-2xl pip-standard">
+    <div id="musicVideoDockHeader" class="dock-drag-handle flex items-center justify-between px-3 py-1.5 bg-black/90 border-b border-white/10 text-[11px] cursor-grab select-none">
       <div class="flex items-center gap-1.5">
-        <a id="ytDockExternalLink" href="https://www.youtube.com" target="_blank" rel="noopener" class="px-2 py-0.5 rounded bg-white/5 text-gray-300 hover:text-white" title="Open on YouTube"><i class="fa-solid fa-up-right-from-square"></i></a>
-        <button type="button" onclick="toggleMusicVideoDock(false)" class="px-2 py-0.5 rounded bg-white/5 text-gray-300 hover:text-white" title="Minimize video window">Hide</button>
-        <button type="button" onclick="closeMusicMiniPlayer()" aria-label="Stop Player" class="w-7 h-7 rounded-lg bg-red-600/30 border-2 border-red-500/70 text-red-400 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all" title="Stop Player"><i class="fa-solid fa-xmark text-base font-black"></i></button>
+        <i class="fa-solid fa-grip-vertical text-gray-500 text-xs" title="Drag dock anywhere"></i>
+        <span class="font-extrabold text-brand-gold flex items-center gap-1.5"><i class="fa-brands fa-youtube text-red-500"></i> <span id="dockTitleLbl">Video PiP</span></span>
+      </div>
+      <div class="flex items-center gap-1">
+        <button type="button" id="dockPipSizeBtn" onclick="cycleVideoDockSize()" class="w-6 h-6 rounded-lg bg-white/5 hover:bg-white/15 text-gray-300 flex items-center justify-center text-[10px]" title="Change Dock Size (Compact / Standard / Expanded)"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+        <button type="button" id="dockMinimizeBtn" onclick="toggleVideoDockMinimize()" class="w-6 h-6 rounded-lg bg-white/5 hover:bg-white/15 text-gray-300 flex items-center justify-center text-[10px]" title="Minimize/Expand Video Frame"><i class="fa-solid fa-minus"></i></button>
+        <a id="ytDockExternalLink" href="https://www.youtube.com" target="_blank" rel="noopener" class="w-6 h-6 rounded-lg bg-white/5 hover:bg-white/15 text-gray-300 flex items-center justify-center text-[10px]" title="Open on YouTube"><i class="fa-solid fa-up-right-from-square"></i></a>
+        <button type="button" onclick="toggleMusicVideoDock(false)" class="px-1.5 py-0.5 rounded-lg bg-white/5 hover:bg-white/15 text-gray-300 text-[10px]" title="Hide Video Window">Hide</button>
+        <button type="button" onclick="closeMusicMiniPlayer()" aria-label="Stop Player" class="w-6 h-6 rounded-lg bg-red-600/30 border border-red-500/70 text-red-400 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all ml-0.5" title="Stop Player"><i class="fa-solid fa-xmark text-xs font-black"></i></button>
       </div>
     </div>
-    <div class="aspect-video w-full bg-black relative">
+    <div id="dockVideoBody" class="dock-body aspect-video w-full bg-black relative">
       <div id="ytPlayerMount" class="w-full h-full"></div>
     </div>
   </div>
@@ -1744,12 +1882,12 @@
     <div class="px-4 py-3 bg-black/75 border-b border-white/10 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="text-xs font-extrabold uppercase tracking-wider text-brand-gold"><i class="fa-solid fa-list-ol mr-1"></i>Queue</span>
-        <span id="musicQueueBadgeCount" class="px-1.5 py-0.2 rounded-full bg-white/10 text-[10px] text-gray-300 font-bold">0</span>
+        <span id="musicQueueBadgeCount" class="px-1.5 py-0.5 rounded-full bg-white/10 text-[10px] text-gray-300 font-bold">0</span>
       </div>
       <div class="flex items-center gap-2 text-xs">
         <button type="button" onclick="shuffleMusicQueue()" class="text-[11px] text-gray-400 hover:text-brand-gold transition-colors" title="Shuffle remaining songs"><i class="fa-solid fa-shuffle mr-1"></i>Shuffle</button>
         <button type="button" onclick="clearMusicQueue()" class="text-[11px] text-gray-400 hover:text-rose-400 transition-colors">Clear</button>
-        <button type="button" onclick="toggleMusicQueueDrawer(false)" class="text-gray-400 hover:text-white ml-1"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" onclick="toggleMusicQueueDrawer(false)" aria-label="Close queue" title="Close" class="text-gray-400 hover:text-white ml-1"><i class="fa-solid fa-xmark"></i></button>
       </div>
     </div>
     <div id="musicQueueList" class="flex-1 overflow-y-auto divide-y divide-white/5 p-2 text-xs"></div>
@@ -1767,7 +1905,7 @@
             <p class="text-[11px] text-gray-400">Audio will gently pause when timer ends</p>
           </div>
         </div>
-        <button type="button" onclick="closeMusicSleepModal()" class="text-gray-400 hover:text-white p-1"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" onclick="closeMusicSleepModal()" aria-label="Close sleep timer" title="Close" class="text-gray-400 hover:text-white p-1"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div id="musicSleepActiveStatus" class="hidden p-3 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-between text-xs">
@@ -1818,7 +1956,7 @@
       <!-- Top Row on Mobile: Track Info + Primary Play/Skip + Prominent Cut Button -->
       <div class="flex items-center justify-between gap-2 min-w-0 flex-1">
         <div class="flex items-center gap-2.5 min-w-0 flex-1">
-          <img id="mpThumb" src="" alt="" class="w-10 h-10 rounded-xl object-cover border border-white/15 shrink-0 cursor-pointer" onclick="toggleMusicVideoDock()">
+          <img id="mpThumb" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%231f2937'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='16' fill='%239ca3af'>🎵</text></svg>" alt="Peak Music" class="w-10 h-10 rounded-xl object-cover border border-white/15 shrink-0 cursor-pointer" onclick="toggleMusicVideoDock()">
           <div class="min-w-0 flex-1">
             <div id="mpTitle" class="text-xs sm:text-sm font-bold text-white truncate cursor-pointer hover:text-brand-gold" onclick="switchTab('music')">Select a song to play</div>
             <div id="mpArtist" class="text-[10px] sm:text-[11px] text-gray-400 truncate">Music Vault</div>
@@ -1880,7 +2018,7 @@
           <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Side-by-Side Vault Comparison</span>
           <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white">English vs Hindi Top 10s</h3>
         </div>
-        <button type="button" onclick="closeLangCompareModal()" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" onclick="closeLangCompareModal()" aria-label="Close language comparison modal" title="Close" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="flex flex-wrap gap-2 items-center text-xs">
         <span class="text-gray-400 font-semibold">Compare by:</span>

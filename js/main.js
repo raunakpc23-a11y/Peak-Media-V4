@@ -903,9 +903,76 @@
       if (!$('tab-music').classList.contains('hidden')) filterAndRenderMusic(false);
     }
 
+    // ---------------------------------------------------------
+    // NATIVE MEDIA SESSION API INTEGRATION (LOCK SCREEN & HARDWARE CONTROLS)
+    // ---------------------------------------------------------
+    let mediaSessionBound = false;
+    function initMediaSessionHandlers() {
+      if (mediaSessionBound || !('mediaSession' in navigator)) return;
+      mediaSessionBound = true;
+      const actions = [
+        ['play', () => {
+          if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
+          isPlayingMusic = true;
+          updateMiniPlayerUI();
+        }],
+        ['pause', () => {
+          if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+          isPlayingMusic = false;
+          updateMiniPlayerUI();
+        }],
+        ['previoustrack', () => window.musicPrev()],
+        ['nexttrack', () => window.musicNext()],
+        ['seekto', (details) => {
+          if (details && details.seekTime !== undefined && ytPlayer && ytPlayer.seekTo) {
+            ytPlayer.seekTo(details.seekTime, true);
+          }
+        }],
+        ['seekbackward', (details) => {
+          if (ytPlayer && ytPlayer.getCurrentTime && ytPlayer.seekTo) {
+            ytPlayer.seekTo(Math.max(0, ytPlayer.getCurrentTime() - (details.seekOffset || 10)), true);
+          }
+        }],
+        ['seekforward', (details) => {
+          if (ytPlayer && ytPlayer.getCurrentTime && ytPlayer.seekTo) {
+            ytPlayer.seekTo(ytPlayer.getCurrentTime() + (details.seekOffset || 10), true);
+          }
+        }],
+        ['stop', () => window.closeMusicMiniPlayer()]
+      ];
+
+      actions.forEach(([act, handler]) => {
+        try {
+          navigator.mediaSession.setActionHandler(act, handler);
+        } catch (e) {
+          // Action not supported in this browser
+        }
+      });
+    }
+
+    function updateMediaSession(song) {
+      if (!('mediaSession' in navigator) || !song) return;
+      try {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: song.t || 'Peak Music Track',
+          artist: song.a || 'Peak Music Vault',
+          album: 'Peak Media Soundstage',
+          artwork: [
+            { src: `https://i.ytimg.com/vi/${song.id}/mqdefault.jpg`, sizes: '320x180', type: 'image/jpeg' },
+            { src: `https://i.ytimg.com/vi/${song.id}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpeg' }
+          ]
+        });
+        navigator.mediaSession.playbackState = isPlayingMusic ? 'playing' : 'paused';
+      } catch (err) {
+        console.debug('MediaSession update error:', err);
+      }
+    }
+
     function updateMiniPlayerUI() {
       const s = musicQueue[musicQueueIdx];
       if (!s) return;
+      initMediaSessionHandlers();
+      updateMediaSession(s);
       $('mpThumb').src = `https://i.ytimg.com/vi/${s.id}/mqdefault.jpg`;
       $('mpTitle').textContent = s.t;
       $('mpArtist').textContent = `${s.a} · ${s.l === 'hi' ? 'Hindi' : 'English'} · ${s.m}`;
@@ -1073,12 +1140,118 @@
       if (!$('tab-music').classList.contains('hidden')) filterAndRenderMusic(false);
     };
 
+    // ---------------------------------------------------------
+    // FLOATING PICTURE-IN-PICTURE (PiP) PREVIEW DOCK CONTROLS
+    // ---------------------------------------------------------
+    let dockSizeState = getLS('pm_dock_size', 'standard'); // 'compact' | 'standard' | 'expanded'
+    let dockMinimized = false;
+
     window.toggleMusicVideoDock = function(force) {
       const d = $('musicVideoDock');
       if (!d) return;
       if (typeof force === 'boolean') d.classList.toggle('hidden', !force);
       else d.classList.toggle('hidden');
     };
+
+    window.cycleVideoDockSize = function() {
+      const dock = $('musicVideoDock');
+      if (!dock) return;
+      if (dockSizeState === 'compact') dockSizeState = 'standard';
+      else if (dockSizeState === 'standard') dockSizeState = 'expanded';
+      else dockSizeState = 'compact';
+      dock.classList.remove('pip-compact', 'pip-standard', 'pip-expanded');
+      dock.classList.add(`pip-${dockSizeState}`);
+      saveLS('pm_dock_size', dockSizeState);
+      showToast(`PiP Window Size: ${dockSizeState.toUpperCase()}`, 'fa-window-restore', 'text-brand-gold');
+    };
+
+    window.toggleVideoDockMinimize = function() {
+      const dock = $('musicVideoDock');
+      if (!dock) return;
+      dockMinimized = !dockMinimized;
+      dock.classList.toggle('pip-minimized', dockMinimized);
+      const icon = $('dockMinimizeBtn');
+      if (icon) icon.innerHTML = `<i class="fa-solid ${dockMinimized ? 'fa-plus' : 'fa-minus'}"></i>`;
+    };
+
+    function initDraggableVideoDock() {
+      const dock = $('musicVideoDock');
+      const handle = $('musicVideoDockHeader');
+      if (!dock || !handle) return;
+
+      // Apply initial saved size
+      dock.classList.remove('pip-compact', 'pip-standard', 'pip-expanded');
+      dock.classList.add(`pip-${dockSizeState}`);
+
+      // Restore saved coordinates if present
+      const savedPos = getLS('pm_dock_pos', null);
+      if (savedPos && typeof savedPos.left === 'number' && typeof savedPos.top === 'number') {
+        const maxX = Math.max(0, window.innerWidth - 100);
+        const maxY = Math.max(0, window.innerHeight - 60);
+        const curX = Math.min(Math.max(8, savedPos.left), maxX);
+        const curY = Math.min(Math.max(8, savedPos.top), maxY);
+        dock.style.left = curX + 'px';
+        dock.style.top = curY + 'px';
+        dock.style.right = 'auto';
+        dock.style.bottom = 'auto';
+      }
+
+      let isDragging = false;
+      let startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+
+      function onPointerDown(e) {
+        if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return;
+        isDragging = true;
+        dock.classList.add('is-dragging');
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        startX = clientX;
+        startY = clientY;
+        const rect = dock.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+        dock.style.left = initialLeft + 'px';
+        dock.style.top = initialTop + 'px';
+        dock.style.right = 'auto';
+        dock.style.bottom = 'auto';
+        document.addEventListener('mousemove', onPointerMove);
+        document.addEventListener('mouseup', onPointerUp);
+        document.addEventListener('touchmove', onPointerMove, { passive: false });
+        document.addEventListener('touchend', onPointerUp);
+      }
+
+      function onPointerMove(e) {
+        if (!isDragging) return;
+        if (e.cancelable) e.preventDefault();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        let newX = initialLeft + dx;
+        let newY = initialTop + dy;
+        const maxW = window.innerWidth - dock.offsetWidth - 8;
+        const maxH = window.innerHeight - dock.offsetHeight - 8;
+        newX = Math.max(8, Math.min(maxW, newX));
+        newY = Math.max(8, Math.min(maxH, newY));
+        dock.style.left = newX + 'px';
+        dock.style.top = newY + 'px';
+      }
+
+      function onPointerUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        dock.classList.remove('is-dragging');
+        document.removeEventListener('mousemove', onPointerMove);
+        document.removeEventListener('mouseup', onPointerUp);
+        document.removeEventListener('touchmove', onPointerMove);
+        document.removeEventListener('touchend', onPointerUp);
+        const rect = dock.getBoundingClientRect();
+        saveLS('pm_dock_pos', { left: Math.round(rect.left), top: Math.round(rect.top) });
+      }
+
+      handle.addEventListener('mousedown', onPointerDown);
+      handle.addEventListener('touchstart', onPointerDown, { passive: true });
+    }
 
     window.toggleMusicQueueDrawer = function(force) {
       const d = $('musicQueueDrawer');
@@ -1098,6 +1271,9 @@
     window.closeMusicMiniPlayer = function() {
       if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
       isPlayingMusic = false;
+      if ('mediaSession' in navigator) {
+        try { navigator.mediaSession.playbackState = 'none'; } catch (e) {}
+      }
       $('musicMiniPlayer').classList.add('hidden');
       $('musicVideoDock').classList.add('hidden');
       $('musicQueueDrawer').classList.add('hidden');
@@ -1797,7 +1973,240 @@
           <div>lang_pref: <span class="text-purple-300">"${esc(obProfile.language || 'All')}"</span> · watchlist: <span class="text-white">${wishlistTitles.length}</span> · watched: <span class="text-white">${watchedTitles.length}</span></div>
         `;
       }
+
+      if (window.renderCinePassLedger) window.renderCinePassLedger();
     };
+
+    // ---------------------------------------------------------
+    // CINEPASS TICKET LEDGER (WORKING HAND-IN-HAND WITH TASTE DNA)
+    // ---------------------------------------------------------
+    window.renderCinePassLedger = function() {
+      const container = $('cinePassLedgerContainer');
+      if (!container) return;
+      const watched = (watchedTitles || []).map(t => globalDatabase[t]).filter(Boolean);
+      if (!watched.length) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-gray-500 space-y-2">
+            <i class="fa-solid fa-ticket-simple text-3xl opacity-40"></i>
+            <div class="text-sm font-semibold">Your CinePass is currently blank</div>
+            <div class="text-xs text-gray-400">Mark movies or series as "Watched" across the app to stamp vintage ticket stubs into your ledger.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = watched.slice(0, 18).map((it, idx) => {
+        const userStar = (myRatings && myRatings[it.title]) ? `${myRatings[it.title]}★` : '★ ' + it.rating;
+        const seatRow = String.fromCharCode(65 + (idx % 8)) + '-' + ((idx * 3 % 24) + 1);
+        const stubDate = new Date(Date.now() - idx * 86400000 * 2).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const escT = it.title.replace(/'/g, "\\'");
+        return `
+          <div class="cinepass-ticket p-4 text-left cursor-pointer group" onclick="openDetailModal('${escT}')">
+            <div class="flex items-center justify-between text-[10px] text-amber-400/80 font-mono tracking-widest uppercase">
+              <span>PEAK CINEMA ARCHIVE</span>
+              <span>STUB #${String(idx + 1042).padStart(5, '0')}</span>
+            </div>
+            <div class="mt-2 flex items-start gap-3">
+              <div class="w-12 h-16 rounded-lg overflow-hidden shrink-0 border border-white/10 bg-black">
+                <img src="${posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it)}" class="w-full h-full object-cover" alt="">
+              </div>
+              <div class="min-w-0 flex-1">
+                <h4 class="font-bold text-white text-sm truncate group-hover:text-brand-gold transition-colors">${it.cleanName || it.title}</h4>
+                <div class="text-[11px] text-gray-400">${it.genre} · ${it.year}</div>
+                <div class="flex items-center gap-2 mt-1.5 text-[10px] text-gray-300">
+                  <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-400/30">SEAT ${seatRow}</span>
+                  <span class="text-brand-gold font-bold">${userStar}</span>
+                </div>
+              </div>
+            </div>
+            <div class="cinepass-perforation my-2.5 pt-2 flex items-center justify-between text-[9px] font-mono text-gray-400">
+              <span>STAMPED: ${stubDate}</span>
+              <span class="text-amber-400 font-bold group-hover:underline">VIEW PASS &rarr;</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.exportCinePassLedger = function() {
+      const watched = (watchedTitles || []).map(t => globalDatabase[t]).filter(Boolean);
+      if (!watched.length) {
+        showToast('Mark titles as watched first to generate your CinePass!', 'fa-ticket', 'text-amber-400');
+        return;
+      }
+      const lines = [
+        "==================================================",
+        "          PEAK MEDIA · CINEPASS TICKET LEDGER     ",
+        "==================================================",
+        `Generated on: ${new Date().toLocaleDateString()}`,
+        `Total Stamped Titles: ${watched.length}`,
+        "",
+        ...watched.map((it, i) => `${i + 1}. ${it.cleanName || it.title} (${it.year}) - Rating: ${it.rating}★ [${it.genre}]`)
+      ];
+      const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+      const u = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = u;
+      a.download = `peak-cinepass-ledger-${new Date().toISOString().slice(0, 10)}.txt`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(u), 1000);
+      showToast('Exported CinePass Ledger archive!', 'fa-download', 'text-brand-gold');
+    };
+
+    // ---------------------------------------------------------
+    // CINEMA HALL LIGHTS-OUT & SENSORY SANCTUARY ENGINE
+    // ---------------------------------------------------------
+    window.toggleCinemaLightsOut = function() {
+      const active = document.body.classList.toggle('lights-out-mode');
+      const btn = $('lightsOutToggleBtn');
+      const lbl = $('lightsOutLbl');
+      if (btn) btn.classList.toggle('bg-amber-400/20', active);
+      if (lbl) lbl.textContent = active ? 'Lights On' : 'Lights Out';
+      showToast(active ? 'Cinema Lights-Out Active (100% OLED Black)' : 'Lights-Out Deactivated', 'fa-moon', 'text-brand-gold');
+    };
+
+    window.playOSTForTitle = function(title) {
+      ensureMusicLoaded();
+      const clean = (title || '').toLowerCase().trim();
+      const found = (musicCatalog || []).find(s => 
+        s.t.toLowerCase().includes(clean) || 
+        (s.a && s.a.toLowerCase().includes(clean))
+      );
+      if (found) {
+        window.playSongById(found.id);
+        showToast(`Playing Official Theme: "${found.t.slice(0, 36)}"`, 'fa-music', 'text-brand-gold');
+      } else {
+        const fallback = (musicCatalog || []).find(s => s.m === 'Epic' || s.m === 'Chill') || (musicCatalog && musicCatalog[0]);
+        if (fallback) {
+          window.playSongById(fallback.id);
+          showToast(`Playing Cinematic Soundtrack: "${fallback.t.slice(0, 32)}"`, 'fa-music', 'text-indigo-300');
+        }
+      }
+    };
+
+    let sanctuaryTimerId = null;
+    let sanctuarySecondsRemaining = 25 * 60;
+    let sanctuaryAudioMuted = false;
+    let sanctuaryCanvasActive = false;
+
+    window.openCinemaSanctuaryModal = function() {
+      const modal = $('sanctuaryModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      initSanctuaryCanvas();
+      showToast('Entered Sensory Cinema Sanctuary', 'fa-spa', 'text-indigo-300');
+    };
+
+    window.closeCinemaSanctuaryModal = function() {
+      const modal = $('sanctuaryModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      if (sanctuaryTimerId) {
+        clearInterval(sanctuaryTimerId);
+        sanctuaryTimerId = null;
+      }
+    };
+
+    window.setSanctuaryTheme = function(theme) {
+      const btns = document.querySelectorAll('#sanctuaryAtmospheres button');
+      btns.forEach(b => {
+        const isCur = b.dataset.env === theme;
+        b.className = `p-3 rounded-2xl border text-left transition-all ${isCur ? 'border-brand-gold bg-brand-gold/15 text-white' : 'border-white/10 bg-black/40 hover:bg-white/5 text-gray-300'}`;
+      });
+      const names = { cyberpunk: 'Neo-Tokyo Neon Rain', paris: 'Parisian Rain & Accordion', booth: '35mm Projection Booth', space: 'Deep Space Observation Deck' };
+      showToast(`Atmosphere: ${names[theme] || theme}`, 'fa-sparkles', 'text-brand-gold');
+    };
+
+    window.setSanctuaryTimer = function(minutes) {
+      if (sanctuaryTimerId) clearInterval(sanctuaryTimerId);
+      sanctuaryTimerId = null;
+      sanctuarySecondsRemaining = minutes * 60;
+      updateSanctuaryTimerDisplay();
+      const btn = $('sanctuaryTimerToggleBtn');
+      if (btn) btn.textContent = 'Start';
+    };
+
+    window.toggleSanctuaryTimer = function() {
+      const btn = $('sanctuaryTimerToggleBtn');
+      if (sanctuaryTimerId) {
+        clearInterval(sanctuaryTimerId);
+        sanctuaryTimerId = null;
+        if (btn) btn.textContent = 'Resume';
+      } else {
+        sanctuaryTimerId = setInterval(() => {
+          if (sanctuarySecondsRemaining <= 0) {
+            clearInterval(sanctuaryTimerId);
+            sanctuaryTimerId = null;
+            showToast('Sanctuary Focus session complete!', 'fa-bell', 'text-brand-gold');
+            if (btn) btn.textContent = 'Start';
+            return;
+          }
+          sanctuarySecondsRemaining--;
+          updateSanctuaryTimerDisplay();
+        }, 1000);
+        if (btn) btn.textContent = 'Pause';
+      }
+    };
+
+    function updateSanctuaryTimerDisplay() {
+      const el = $('sanctuaryTimerDisplay');
+      if (!el) return;
+      const m = Math.floor(sanctuarySecondsRemaining / 60);
+      const s = sanctuarySecondsRemaining % 60;
+      el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    window.toggleSanctuaryAudio = function() {
+      sanctuaryAudioMuted = !sanctuaryAudioMuted;
+      const st = $('sanctuaryAudioStatus');
+      if (st) {
+        st.textContent = sanctuaryAudioMuted ? 'Muted' : 'Active';
+        st.className = `text-[11px] font-bold ${sanctuaryAudioMuted ? 'text-gray-400' : 'text-emerald-400'}`;
+      }
+      showToast(sanctuaryAudioMuted ? 'Sanctuary Ambient Audio Muted' : 'Sanctuary Ambient Audio Unmuted', 'fa-volume-high', 'text-indigo-300');
+    };
+
+    function initSanctuaryCanvas() {
+      const cv = $('sanctuaryCanvas');
+      if (!cv || sanctuaryCanvasActive) return;
+      sanctuaryCanvasActive = true;
+      const ctx = cv.getContext('2d');
+      let drops = [];
+      function resize() {
+        cv.width = cv.offsetWidth || 700;
+        cv.height = cv.offsetHeight || 450;
+        drops = Array.from({ length: 45 }, () => ({
+          x: Math.random() * cv.width,
+          y: Math.random() * cv.height,
+          l: 12 + Math.random() * 20,
+          v: 4 + Math.random() * 6
+        }));
+      }
+      resize();
+      function draw() {
+        const modal = $('sanctuaryModal');
+        if (!modal || modal.classList.contains('hidden')) {
+          sanctuaryCanvasActive = false;
+          return;
+        }
+        ctx.clearRect(0, 0, cv.width, cv.height);
+        ctx.strokeStyle = 'rgba(165, 180, 252, 0.28)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        drops.forEach(d => {
+          ctx.moveTo(d.x, d.y);
+          ctx.lineTo(d.x - 2, d.y + d.l);
+          d.y += d.v;
+          d.x -= 0.6;
+          if (d.y > cv.height) { d.y = -20; d.x = Math.random() * cv.width; }
+        });
+        ctx.stroke();
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    }
 
     window.launchMusicVibeStation = function(lang, mood) {
       ensureMusicLoaded();
@@ -1850,7 +2259,7 @@
       {
         id: 'cinejoy',
         name: 'Cinejoy',
-        badge: 'Top 750 Movies & Shows · HD Stream',
+        badge: 'All Movies & Series · HD Stream',
         color: 'from-amber-500/25 to-yellow-500/15 border-amber-400/50 text-amber-200',
         movieTpl: 'https://cinejoy.pk/movie/{tmdb}',
         tvTpl: 'https://cinejoy.pk/series/{tmdb}',
@@ -1954,7 +2363,8 @@
             ? p.tvTpl.replace('{tmdb}', tmdbId).replace('{s}', s).replace('{e}', e)
             : p.movieTpl.replace('{tmdb}', tmdbId);
         }
-        return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="p-3 rounded-xl bg-gradient-to-br ${p.color} border hover:scale-[1.02] transition-all flex flex-col justify-between gap-1.5 shadow-md">
+        const titleEsc = (item.cleanName || item.title || '').replace(/'/g, "\\'");
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${titleEsc}', '${item.type}') : true" class="p-3 rounded-xl bg-gradient-to-br ${p.color} border hover:scale-[1.02] transition-all flex flex-col justify-between gap-1.5 shadow-md">
           <div class="flex items-center justify-between gap-1">
             <span class="text-xs font-extrabold text-white flex items-center gap-1.5"><i class="fa-solid fa-play text-[10px]"></i> ${idx + 1}. ${p.name}</span>
             <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-80"></i>
@@ -2310,11 +2720,76 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
       showToast('Exported complete library backup (Movies, Shows, Lists & Songs)!', 'fa-download', 'text-brand-gold');
     };
 
+    // ---------------------------------------------------------
+    // CONNECTIVITY & OFFLINE STREAMING MONITORING
+    // ---------------------------------------------------------
+    function initConnectivityMonitoring() {
+      window.addEventListener('online', () => {
+        showToast('Online connection restored. Streaming & trailers ready.', 'fa-wifi', 'text-emerald-400', 4000);
+        document.body.classList.remove('peak-offline-mode');
+      });
+      window.addEventListener('offline', () => {
+        showToast('You are currently offline: Streaming requires internet. Offline vault is active.', 'fa-plane', 'text-amber-400', 6000);
+        document.body.classList.add('peak-offline-mode');
+      });
+    }
+
+    // ---------------------------------------------------------
+    // INDEXEDDB VAULT RUNTIME HYDRATION & PERSISTENCE
+    // ---------------------------------------------------------
+    const PeakVaultStorage = {
+      dbName: 'PeakMediaVault_v1',
+      async open() {
+        if (!('indexedDB' in window)) return null;
+        return new Promise(res => {
+          const req = indexedDB.open(this.dbName, 1);
+          req.onupgradeneeded = e => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('cinejoy_overrides')) {
+              db.createObjectStore('cinejoy_overrides', { keyPath: 'title' });
+            }
+          };
+          req.onsuccess = () => res(req.result);
+          req.onerror = () => res(null);
+        });
+      },
+      async saveOverride(title, url, type) {
+        const db = await this.open();
+        if (!db) return;
+        try {
+          const tx = db.transaction('cinejoy_overrides', 'readwrite');
+          tx.objectStore('cinejoy_overrides').put({ title, url, type, time: Date.now() });
+        } catch (e) {}
+      },
+      async hydrate() {
+        const db = await this.open();
+        if (!db) return;
+        try {
+          const tx = db.transaction('cinejoy_overrides', 'readonly');
+          const req = tx.objectStore('cinejoy_overrides').getAll();
+          req.onsuccess = () => {
+            const rows = req.result || [];
+            rows.forEach(r => {
+              if (r.type === 'show' && window.CINEJOY_ALL_SHOWS_URLS) {
+                window.CINEJOY_ALL_SHOWS_URLS[r.title] = r.url;
+              } else if (window.CINEJOY_ALL_MOVIES_URLS) {
+                window.CINEJOY_ALL_MOVIES_URLS[r.title] = r.url;
+              }
+            });
+          };
+        } catch (e) {}
+      }
+    };
+    window.PeakVaultStorage = PeakVaultStorage;
+
     // Initialize on DOMContentLoaded
     window.addEventListener('DOMContentLoaded', () => {
       updateHeaderProfileUI();
       window.setGlobalLanguage('all');
       if (window.initMusicVault) window.initMusicVault();
+      initDraggableVideoDock();
+      initConnectivityMonitoring();
+      PeakVaultStorage.hydrate();
       checkIncomingShareHash();
       const onboarded = getLS('cs_onboarded_v1', null);
       if (!onboarded) {

@@ -373,11 +373,36 @@
     $('dnaClear').onclick = () => { friend = null; $('dnaCompat').classList.add('hidden'); refreshDNA(); };
 
     // ======================================================
-    // FEATURE 3 — WATCH DUEL
+    // FEATURE 3 — WATCH DUEL (CLASSIC DUEL · BATTLE ROYALE · RAPID MATCHMAKER)
     // ======================================================
-    const D = { size: 4, src: 'wish', rounds: [], r: 0, m: 0, entrants: [], path: {}, busy: false };
-    $('duelMood').innerHTML = Object.keys(moods).map(k => `<option value="${esc(k)}">${esc(k)}</option>`).join('');
-    function seg(id, key) { $(id).querySelectorAll('button').forEach(b => b.onclick = () => { D[key] = key === 'size' ? +b.dataset.v : b.dataset.v; $(id).querySelectorAll('button').forEach(x => x.className = 'flex-1 py-2.5 rounded-xl text-sm font-bold ' + (x === b ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-300')); $('duelMoodWrap').classList.toggle('hidden', D.src !== 'mood'); }); }
+    const D = { mode: 'classic', size: 4, src: 'wish', rounds: [], r: 0, m: 0, entrants: [], path: {}, busy: false };
+    if ($('duelMood')) $('duelMood').innerHTML = Object.keys(moods).map(k => `<option value="${esc(k)}">${esc(k)}</option>`).join('');
+    
+    if ($('duelGameMode')) {
+      $('duelGameMode').querySelectorAll('button').forEach(b => b.onclick = () => {
+        D.mode = b.dataset.m;
+        $('duelGameMode').querySelectorAll('button').forEach(x => {
+          x.className = 'py-2.5 px-3 rounded-xl text-xs font-bold transition-all ' + (x === b ? 'bg-brand-gold text-black shadow' : 'bg-white/5 text-gray-300 hover:bg-white/10');
+        });
+        if (D.mode === 'classic') D.size = 2;
+        else if (D.mode === 'royale') D.size = 8;
+        else if (D.mode === 'matchmaker') D.size = 4;
+        $('duelSize').querySelectorAll('button').forEach(x => {
+          x.className = 'flex-1 py-2 rounded-xl text-xs font-bold ' + (+x.dataset.v === D.size ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-300');
+        });
+        const modeLabels = { classic: 'Classic Head-to-Head Duel (2)', royale: 'Battle Royale Tournament (8/16 Brackets)', matchmaker: 'Rapid Matchmaker (Swipe Decider)' };
+        showToast(`Mode: ${modeLabels[D.mode] || D.mode}`, 'fa-trophy', 'text-brand-gold');
+      });
+    }
+
+    function seg(id, key) {
+      if (!$(id)) return;
+      $(id).querySelectorAll('button').forEach(b => b.onclick = () => {
+        D[key] = key === 'size' ? +b.dataset.v : b.dataset.v;
+        $(id).querySelectorAll('button').forEach(x => x.className = 'flex-1 py-2 rounded-xl text-xs font-bold ' + (x === b ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-300'));
+        if ($('duelMoodWrap')) $('duelMoodWrap').classList.toggle('hidden', D.src !== 'mood');
+      });
+    }
     seg('duelSize', 'size'); seg('duelSrc', 'src');
     const popPool = () => shuffle(allTitles.map(t => globalDatabase[t]).filter(i => i.thumb && i.rank <= 150));
     function pickEntrants() {
@@ -414,7 +439,7 @@
       $('duelSetup').classList.add('hidden'); $('duelChamp').classList.add('hidden'); $('duelArena').classList.remove('hidden');
       showMatch();
     }
-    const roundName = n => n === 2 ? 'Final' : n === 4 ? 'Semi-finals' : 'Quarter-finals';
+    const roundName = n => n === 2 ? 'Grand Final' : n === 4 ? 'Semi-finals' : n === 8 ? 'Quarter-finals' : 'Round of 16';
     function showMatch() {
       const cur = D.rounds[D.r], a = cur[D.m * 2], b = cur[D.m * 2 + 1];
       $('duelRound').textContent = `${roundName(cur.length)} · Duel ${D.m + 1} of ${cur.length / 2}`;

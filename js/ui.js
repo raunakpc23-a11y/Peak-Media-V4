@@ -208,13 +208,54 @@
       songMatches = songsData.filter(s => s.t.toLowerCase().includes(q) || s.a.toLowerCase().includes(q)).slice(0, kind === 'song' ? 15 : 6);
     }
 
+    // Iconic Quote-to-Movie Dialogue Engine Match
+    const ICONIC_QUOTES = [
+      { q: "why so serious", quote: "Why so serious?", title: "The Dark Knight", character: "The Joker" },
+      { q: "may the force be with you", quote: "May the Force be with you.", title: "Star Wars: Episode IV - A New Hope", character: "Han Solo" },
+      { q: "offer he can't refuse", quote: "I'm going to make him an offer he can't refuse.", title: "The Godfather", character: "Don Corleone" },
+      { q: "say hello to my little friend", quote: "Say hello to my little friend!", title: "Scarface", character: "Tony Montana" },
+      { q: "houston, we have a problem", quote: "Houston, we have a problem.", title: "Apollo 13", character: "Jim Lovell" },
+      { q: "you talking to me", quote: "You talkin' to me?", title: "Taxi Driver", character: "Travis Bickle" },
+      { q: "i'll be back", quote: "I'll be back.", title: "The Terminator", character: "The Terminator" },
+      { q: "first rule of fight club", quote: "The first rule of Fight Club is: you do not talk about Fight Club.", title: "Fight Club", character: "Tyler Durden" },
+      { q: "box of chocolates", quote: "Mama always said life was like a box of chocolates.", title: "Forrest Gump", character: "Forrest Gump" },
+      { q: "here's looking at you kid", quote: "Here's looking at you, kid.", title: "Casablanca", character: "Rick Blaine" },
+      { q: "bond. james bond", quote: "The name's Bond. James Bond.", title: "Casino Royale", character: "James Bond" },
+      { q: "my precious", quote: "My precious...", title: "The Lord of the Rings: The Two Towers", character: "Gollum" },
+      { q: "i am iron man", quote: "I am Iron Man.", title: "Avengers: Endgame", character: "Tony Stark" },
+      { q: "king of the world", quote: "I'm the king of the world!", title: "Titanic", character: "Jack Dawson" },
+      { q: "you can't handle the truth", quote: "You can't handle the truth!", title: "A Few Good Men", character: "Col. Jessep" }
+    ];
+    const quoteMatch = ICONIC_QUOTES.find(item => q.length >= 4 && (item.q.includes(q) || q.includes(item.q) || item.quote.toLowerCase().includes(q)));
+    let quoteItem = quoteMatch && globalDatabase ? globalDatabase[quoteMatch.title] : null;
+
     box.classList.remove('hidden');
-    if (!mediaMatches.length && !songMatches.length) {
+    if (!mediaMatches.length && !songMatches.length && !quoteItem) {
       box.innerHTML = `<div class="p-5 text-sm text-gray-400 text-center">No movies, shows, or songs match "${q.replace(/</g, '&lt;')}"</div>`;
       return;
     }
 
     let htmlOut = '';
+    if (quoteItem && quoteMatch) {
+      const qAttrT = quoteItem.title.replace(/"/g, '&quot;');
+      const qFb = generateStylizedPosterDataURI(quoteItem);
+      htmlOut += `
+        <div class="p-3 bg-gradient-to-r from-amber-500/20 via-black to-transparent border-b border-amber-400/30">
+          <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300 flex items-center gap-1.5 mb-1.5">
+            <i class="fa-solid fa-quote-left text-amber-400"></i> Iconic Dialogue Match
+          </div>
+          <button type="button" data-t="${qAttrT}" class="w-full text-left p-2 rounded-xl bg-black/60 hover:bg-white/10 flex items-center gap-3 transition-colors group border border-amber-400/30">
+            <img src="${posterCache[quoteItem.type + ':' + quoteItem.title] || qFb}" data-title="${qAttrT}" onerror="this.onerror=null;this.src='${qFb}';" class="lazy-poster w-10 h-14 object-cover rounded-md border border-white/10 shrink-0" alt="">
+            <div class="min-w-0 flex-1">
+              <div class="text-xs italic font-bold text-amber-200">"${quoteMatch.quote}"</div>
+              <div class="text-sm font-extrabold text-white truncate group-hover:text-brand-gold">${quoteItem.cleanName || quoteItem.title} (${quoteItem.year})</div>
+              <div class="text-[11px] text-gray-400">Spoken by <span class="text-gray-300 font-semibold">${quoteMatch.character}</span> · ★ ${quoteItem.rating}</div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-brand-gold text-black font-extrabold text-xs shrink-0 shadow">Open</span>
+          </button>
+        </div>
+      `;
+    }
     if (mediaMatches.length) {
       htmlOut += `<div class="px-4 py-1.5 bg-white/[0.04] text-[10px] font-extrabold uppercase tracking-wider text-brand-gold">Movies &amp; TV Series (${mediaMatches.length})</div>`;
       htmlOut += mediaMatches.map(i => {

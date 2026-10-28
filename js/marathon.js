@@ -271,7 +271,7 @@
 
   function populateBingeShowDropdown() {
     const sel = $('bingeShowSelect');
-    if (!sel || sel.options.length > 5) return;
+    if (!sel || (sel.options && sel.options.length > 5)) return;
 
     const optGroups = [
       '<optgroup label="⭐ Popular Series & Franchises">' +
