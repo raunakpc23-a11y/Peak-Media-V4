@@ -515,6 +515,7 @@
         </div>
       `;
     }
+    function choose(win, auto, reasonOverride) {
       if (D.busy) return; D.busy = true;
       const cur = D.rounds[D.r], a = cur[D.m * 2], b = cur[D.m * 2 + 1], lose = win === a ? b : a, j = judge(a, b);
       D.path[win.title] = D.path[win.title] || [];

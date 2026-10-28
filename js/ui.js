@@ -111,10 +111,26 @@
     }
     parts.forEach(p => {
       if (mode === 'rain') { p.y += 10 + p.s * 8; p.x -= 1.5; if (p.y > H) { p.y = -20; p.x = Math.random() * W + 40; } cx.strokeStyle = 'rgba(148,163,184,.30)'; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(p.x, p.y); cx.lineTo(p.x + 2, p.y + 14); cx.stroke(); }
-      else if (mode === 'stars') { const a = .25 + .6 * Math.abs(Math.sin(tt * p.s + p.ph)); cx.fillStyle = `rgba(199,210,254,${a})`; cx.beginPath(); cx.arc(p.x, p.y, p.r * .8, 0, 6.28); cx.fill(); }
-      else if (mode === 'embers') { p.y -= .4 + p.s; p.x += Math.sin(tt + p.ph) * .5; if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; } cx.fillStyle = `rgba(${p.s > .8 ? '251,146,60' : '239,68,68'},.55)`; cx.shadowColor = '#ef4444'; cx.shadowBlur = 8; cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.28); cx.fill(); cx.shadowBlur = 0; }
+      else if (mode === 'stars') {
+        p.y -= .12 * p.s; p.x += Math.cos(tt * .18 + p.ph) * .15;
+        if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+        if (p.x < 0) p.x = W; else if (p.x > W) p.x = 0;
+        const a = .25 + .6 * Math.abs(Math.sin(tt * p.s + p.ph));
+        cx.fillStyle = `rgba(199,210,254,${a})`; cx.beginPath(); cx.arc(p.x, p.y, p.r * .8, 0, 6.28); cx.fill();
+      }
+      else if (mode === 'embers') {
+        p.y -= .5 + p.s * .8; p.x += Math.sin(tt * .8 + p.ph) * .6;
+        if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
+        if (p.x < 0) p.x = W; else if (p.x > W) p.x = 0;
+        cx.fillStyle = `rgba(${p.s > .8 ? '251,146,60' : '239,68,68'},.55)`; cx.shadowColor = '#ef4444'; cx.shadowBlur = 8; cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.28); cx.fill(); cx.shadowBlur = 0;
+      }
       else if (mode === 'neon') { p.x += Math.sin(tt * .5 + p.ph) * .4; p.y += Math.cos(tt * .4 + p.ph) * .3; const c = p.ph > 3.1 ? '232,121,249' : '34,211,238'; cx.fillStyle = `rgba(${c},.55)`; cx.shadowColor = `rgb(${c})`; cx.shadowBlur = 12; cx.fillRect(p.x, p.y, p.r * 1.6, p.r * 1.6); cx.shadowBlur = 0; }
-      else if (mode === 'dust') { p.y -= .15 * p.s; p.x += Math.sin(tt * .4 + p.ph) * .3; if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; } cx.fillStyle = `rgba(255,190,90,${.15 + .25 * Math.abs(Math.sin(tt + p.ph))})`; cx.beginPath(); cx.arc(p.x, p.y, p.r * 1.3, 0, 6.28); cx.fill(); }
+      else if (mode === 'dust') {
+        p.y -= .22 * p.s; p.x += Math.sin(tt * .5 + p.ph) * .35;
+        if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+        if (p.x < 0) p.x = W; else if (p.x > W) p.x = 0;
+        cx.fillStyle = `rgba(255,190,90,${.15 + .25 * Math.abs(Math.sin(tt + p.ph))})`; cx.beginPath(); cx.arc(p.x, p.y, p.r * 1.3, 0, 6.28); cx.fill();
+      }
     });
     raf = requestAnimationFrame(frame);
   }

@@ -2000,133 +2000,394 @@
     window.renderCinePassLedger = function() {
       const container = $('cinePassLedgerContainer');
       if (!container) return;
-      const watched = (watchedTitles || []).map(t => globalDatabase[t]).filter(Boolean);
       const userName = (typeof obProfile !== 'undefined' && obProfile.username) ? obProfile.username : 'Peak Cinephile';
+      const minted = getLocal('cs_golden_tickets', []).slice(0, 3);
 
-      if (!watched.length) {
-        const sample = globalDatabase['The Dark Knight'] || globalDatabase['Breaking Bad'] || Object.values(globalDatabase)[0];
-        const sampleRating = (sample && myRatings && myRatings[sample.title]) ? `${myRatings[sample.title]}★` : (sample ? `★ ${sample.rating}` : '★ 9.0');
-        const samplePoster = sample ? (posterCache[sample.type + ':' + sample.title] || generateStylizedPosterDataURI(sample)) : '';
-        const sampleTitle = sample ? (sample.cleanName || sample.title) : 'The Dark Knight';
-        const sampleMeta = sample ? `${sample.genre} · ${sample.year}` : 'Action · 2008';
-        const sampleHook = sample ? (VIP_HOOKS[sample.cleanName] || VIP_HOOKS[sample.title] || `A high-stakes fight for purpose and truth.`) : 'When chaos engulfs Gotham, Batman confronts his darkest moral limits.';
-        const sampleEsc = sample ? sample.title.replace(/'/g, "\\'") : 'The Dark Knight';
+      const slotsHtml = [0, 1, 2].map(idx => {
+        const title = minted[idx];
+        const it = title ? globalDatabase[title] : null;
 
-        container.innerHTML = `
-          <div class="col-span-full mb-2 p-3.5 rounded-2xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-between gap-3 text-xs">
-            <span class="text-amber-200 font-medium flex items-center gap-2">
-              <i class="fa-solid fa-award text-amber-400 text-sm"></i>
-              <span><strong>Sample Golden Ticket:</strong> Mark any movie or show as <strong>Watched</strong> across the app to mint your official passes into this ledger!</span>
-            </span>
-          </div>
-          <div class="golden-ticket-vip p-5 sm:p-6 text-amber-950 flex flex-col justify-between cursor-pointer group shadow-2xl relative select-none" onclick="openDetailModal('${sampleEsc}')">
-            <div class="flex items-center justify-between border-b-2 border-dashed border-amber-950/25 pb-2.5">
-              <div class="flex items-center gap-1.5 font-black text-[11px] tracking-widest uppercase font-mono">
-                <i class="fa-solid fa-ticket-simple text-amber-900"></i>
-                <span>GOLDEN ADMISSION PASS</span>
+        if (it) {
+          const rawRating = (myRatings && myRatings[it.title]) ? `${myRatings[it.title]} / 5` : `${it.rating} / 10`;
+          const posterSrc = posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it);
+          const escT = it.title.replace(/'/g, "\\'");
+          const hookText = VIP_HOOKS[it.cleanName] || VIP_HOOKS[it.title] || `A critically acclaimed ${it.genre.toLowerCase()} journey from ${it.year}.`;
+
+          return `
+            <div class="golden-ticket-vip p-5 sm:p-6 text-amber-950 flex flex-col justify-between cursor-pointer group shadow-2xl relative select-none" onclick="openGoldenTicketExpandModal('${escT}')">
+              <div class="flex items-center justify-between border-b-2 border-dashed border-amber-950/25 pb-2.5">
+                <div class="flex items-center gap-1.5 font-black text-[11px] tracking-widest uppercase font-mono">
+                  <i class="fa-solid fa-ticket-simple text-amber-900"></i>
+                  <span>TOP 3 GOLDEN TICKET · #${idx + 1}</span>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-950/15 border border-amber-950/25 font-mono">${it.type}</span>
               </div>
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-950/15 border border-amber-950/25 font-mono">${sample ? sample.type : 'MOVIE'}</span>
-            </div>
 
-            <div class="my-4 flex flex-col items-center">
-              <div class="w-40 sm:w-48 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-950/40 shadow-2xl bg-black relative">
-                <img src="${samplePoster}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="${esc(sampleTitle)}">
+              <div class="my-3.5 flex flex-col items-center">
+                <div class="w-40 sm:w-44 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-950/40 shadow-2xl bg-black relative">
+                  <img src="${posterSrc}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="${esc(it.cleanName || it.title)}">
+                </div>
+                <h3 class="font-black text-amber-950 text-lg sm:text-xl text-center mt-3 leading-snug line-clamp-1">${esc(it.cleanName || it.title)}</h3>
+                <div class="text-xs font-bold text-amber-900/80 tracking-wide mt-0.5">${it.genre} · ${it.year}</div>
               </div>
-              <h3 class="font-black text-amber-950 text-lg sm:text-xl text-center mt-3 leading-snug line-clamp-1">${esc(sampleTitle)}</h3>
-              <div class="text-xs font-bold text-amber-900/80 tracking-wide mt-0.5">${sampleMeta}</div>
-            </div>
 
-            <div class="px-3 py-2 rounded-xl bg-black/10 border border-amber-950/15 text-center text-xs font-semibold italic text-amber-950 leading-relaxed shadow-inner">
-              "${sampleHook}"
-            </div>
-
-            <div class="mt-4 pt-3 border-t-2 border-dashed border-amber-950/25 flex items-center justify-between text-xs font-black">
-              <div class="flex items-center gap-2 tracking-wide">
-                <span class="w-6 h-6 rounded-full bg-amber-950 text-amber-300 flex items-center justify-center text-[10px] shadow">
-                  <i class="fa-solid fa-stamp"></i>
-                </span>
-                <span class="truncate max-w-[130px] sm:max-w-[170px] uppercase font-mono">${esc(userName)}</span>
+              <div class="px-3 py-2 rounded-xl bg-black/10 border border-amber-950/15 text-center text-xs font-semibold italic text-amber-950 leading-relaxed shadow-inner">
+                "${hookText}"
               </div>
-              <div class="px-3 py-1 rounded-full bg-amber-950 text-amber-300 text-xs font-black shadow-md flex items-center gap-1.5 tracking-wider font-mono">
-                <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
-                <span>${sampleRating}</span>
+
+              <div class="mt-4 pt-3 border-t-2 border-dashed border-amber-950/25 flex items-center justify-between text-xs font-black">
+                <div class="flex items-center gap-2 tracking-wide">
+                  <span class="w-6 h-6 rounded-full bg-amber-950 text-amber-300 flex items-center justify-center text-[10px] shadow">
+                    <i class="fa-solid fa-stamp"></i>
+                  </span>
+                  <span class="truncate max-w-[120px] sm:max-w-[150px] uppercase font-mono">${esc(userName)}</span>
+                </div>
+                <div class="px-3 py-1 rounded-full bg-amber-950 text-amber-300 text-xs font-black shadow-md flex items-center gap-1.5 tracking-wider font-mono">
+                  <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
+                  <span>${rawRating}</span>
+                </div>
               </div>
             </div>
-          </div>
-        `;
-        return;
-      }
+          `;
+        }
 
-      container.innerHTML = watched.slice(0, 30).map((it) => {
-        const userRating = (myRatings && myRatings[it.title]) ? `${myRatings[it.title]}★` : `★ ${it.rating}`;
-        const posterSrc = posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it);
-        const escT = it.title.replace(/'/g, "\\'");
-        const hookText = VIP_HOOKS[it.cleanName] || VIP_HOOKS[it.title] || `A critically acclaimed ${it.genre.toLowerCase()} journey from ${it.year}.`;
-
+        // Empty Slot
         return `
-          <div class="golden-ticket-vip p-5 sm:p-6 text-amber-950 flex flex-col justify-between cursor-pointer group shadow-2xl relative select-none" onclick="openDetailModal('${escT}')">
-            <div class="flex items-center justify-between border-b-2 border-dashed border-amber-950/25 pb-2.5">
-              <div class="flex items-center gap-1.5 font-black text-[11px] tracking-widest uppercase font-mono">
-                <i class="fa-solid fa-ticket-simple text-amber-900"></i>
-                <span>GOLDEN ADMISSION PASS</span>
-              </div>
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-950/15 border border-amber-950/25 font-mono">${it.type}</span>
+          <div class="rounded-2xl border-2 border-dashed border-amber-400/35 bg-gradient-to-b from-amber-400/5 to-black/40 p-6 flex flex-col items-center justify-between text-center min-h-[380px] shadow-lg">
+            <div class="w-full flex items-center justify-between border-b border-dashed border-amber-400/20 pb-2.5 text-[10px] font-black uppercase tracking-wider text-amber-400/70 font-mono">
+              <span>HALL OF FAME</span>
+              <span>SLOT #${idx + 1}</span>
             </div>
-
-            <div class="my-4 flex flex-col items-center">
-              <div class="w-40 sm:w-48 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-950/40 shadow-2xl bg-black relative">
-                <img src="${posterSrc}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="${esc(it.cleanName || it.title)}">
+            <div class="my-auto space-y-3 py-4 flex flex-col items-center">
+              <div class="w-14 h-14 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 text-2xl shadow-inner">
+                <i class="fa-solid fa-ticket-simple"></i>
               </div>
-              <h3 class="font-black text-amber-950 text-lg sm:text-xl text-center mt-3 leading-snug line-clamp-1">${esc(it.cleanName || it.title)}</h3>
-              <div class="text-xs font-bold text-amber-900/80 tracking-wide mt-0.5">${it.genre} · ${it.year}</div>
+              <h4 class="text-sm sm:text-base font-extrabold text-white">Empty Golden Ticket #${idx + 1}</h4>
+              <p class="text-xs text-amber-100/60 max-w-[220px] leading-relaxed">
+                Reserved for one of your all-time Top 3 favorites. Open any watched movie and tap <strong>Mint Golden Ticket</strong>.
+              </p>
             </div>
-
-            <div class="px-3 py-2 rounded-xl bg-black/10 border border-amber-950/15 text-center text-xs font-semibold italic text-amber-950 leading-relaxed shadow-inner">
-              "${hookText}"
-            </div>
-
-            <div class="mt-4 pt-3 border-t-2 border-dashed border-amber-950/25 flex items-center justify-between text-xs font-black">
-              <div class="flex items-center gap-2 tracking-wide">
-                <span class="w-6 h-6 rounded-full bg-amber-950 text-amber-300 flex items-center justify-center text-[10px] shadow">
-                  <i class="fa-solid fa-stamp"></i>
-                </span>
-                <span class="truncate max-w-[130px] sm:max-w-[170px] uppercase font-mono">${esc(userName)}</span>
-              </div>
-              <div class="px-3 py-1 rounded-full bg-amber-950 text-amber-300 text-xs font-black shadow-md flex items-center gap-1.5 tracking-wider font-mono">
-                <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
-                <span>${userRating}</span>
-              </div>
-            </div>
+            <button type="button" onclick="openGoldenTicketPicker(${idx})" class="w-full py-2.5 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/35 text-amber-300 text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-plus text-[10px]"></i> <span>Select from Watched</span>
+            </button>
           </div>
         `;
       }).join('');
+
+      container.innerHTML = slotsHtml;
+    };
+
+    window.openGoldenTicketPicker = function(slotIndex) {
+      const watched = (watchedTitles || []).filter(t => globalDatabase[t]);
+      const currentMinted = getLocal('cs_golden_tickets', []);
+      const available = watched.filter(t => !currentMinted.includes(t));
+      if (!watched.length) {
+        showToast('Mark titles as Watched first to mint them into Top 3!', 'fa-ticket-simple', 'text-amber-400');
+        return;
+      }
+      if (!available.length) {
+        showToast('All your watched titles are already minted into your Top 3!', 'fa-circle-info', 'text-amber-300');
+        return;
+      }
+      const modal = $('goldenTicketModal');
+      const content = $('goldenTicketModalContent');
+      if (!modal || !content) return;
+      content.innerHTML = `
+        <div class="glass-card rounded-3xl p-6 border border-amber-400/40 space-y-4 bg-[#0c101c] text-white">
+          <div class="flex items-center gap-2.5 text-amber-300 font-extrabold text-sm border-b border-white/10 pb-3">
+            <i class="fa-solid fa-ticket-simple"></i>
+            <span>Select Watched Title for Top 3 (Slot #${slotIndex + 1})</span>
+          </div>
+          <div class="max-h-80 overflow-y-auto space-y-2 pr-1 no-scrollbar">
+            ${available.map(t => {
+              const item = globalDatabase[t];
+              const escT = t.replace(/'/g, "\\'");
+              return `
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <img src="${posterCache[item.type + ':' + item.title] || generateStylizedPosterDataURI(item)}" class="w-10 h-14 object-cover rounded-lg border border-white/15 shrink-0" alt="">
+                    <div class="min-w-0">
+                      <div class="text-xs font-bold truncate text-white">${esc(item.cleanName || item.title)}</div>
+                      <div class="text-[10px] text-gray-400">${item.genre} · ${item.year} · ★ ${item.rating}</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="toggleMintGoldenTicket('${escT}'); closeGoldenTicketModal();" class="px-3 py-1.5 rounded-xl bg-amber-400 text-amber-950 font-black text-xs hover:bg-amber-300 shrink-0">
+                    Mint
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    };
+
+    window.openGoldenTicketExpandModal = function(title) {
+      const it = globalDatabase[title];
+      if (!it) return;
+      const modal = $('goldenTicketModal');
+      const content = $('goldenTicketModalContent');
+      if (!modal || !content) return;
+
+      const userName = (typeof obProfile !== 'undefined' && obProfile.username) ? obProfile.username : 'Peak Cinephile';
+      const cleanRating = (myRatings && myRatings[it.title]) ? `${myRatings[it.title]} / 5` : `${it.rating} / 10`;
+      const posterSrc = posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it);
+      const hookText = VIP_HOOKS[it.cleanName] || VIP_HOOKS[it.title] || `A critically acclaimed ${it.genre.toLowerCase()} journey from ${it.year}.`;
+      const escT = it.title.replace(/'/g, "\\'");
+      const serialNum = 'PK-' + Math.abs(it.title.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase().padStart(8, '0');
+
+      content.innerHTML = `
+        <div class="golden-ticket-vip p-6 sm:p-8 text-amber-950 flex flex-col justify-between shadow-[0_25px_60px_rgba(0,0,0,0.95)] relative select-none">
+          <div class="flex items-center justify-between border-b-2 border-dashed border-amber-950/30 pb-3">
+            <div class="flex items-center gap-2 font-black text-xs sm:text-sm tracking-widest uppercase font-mono">
+              <i class="fa-solid fa-crown text-amber-900"></i>
+              <span>TOP 3 COLLECTOR'S PASS</span>
+            </div>
+            <span class="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded bg-amber-950/15 border border-amber-950/30 font-mono">${it.type}</span>
+          </div>
+
+          <div class="my-5 flex flex-col items-center">
+            <div class="w-48 sm:w-56 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-950/50 shadow-2xl bg-black relative">
+              <img src="${posterSrc}" class="w-full h-full object-cover" alt="${esc(it.cleanName || it.title)}">
+            </div>
+            <h3 class="font-black text-amber-950 text-xl sm:text-2xl text-center mt-4 leading-tight">${esc(it.cleanName || it.title)}</h3>
+            <div class="text-xs font-bold text-amber-900/85 tracking-wide mt-1">${it.genre} · ${it.year}</div>
+          </div>
+
+          <div class="px-4 py-3 rounded-2xl bg-black/10 border border-amber-950/20 text-center text-xs sm:text-sm font-semibold italic text-amber-950 leading-relaxed shadow-inner my-2">
+            "${hookText}"
+          </div>
+
+          <div class="mt-4 pt-3.5 border-t-2 border-dashed border-amber-950/30 flex items-center justify-between text-xs font-black">
+            <div class="flex items-center gap-2.5 tracking-wide">
+              <span class="w-7 h-7 rounded-full bg-amber-950 text-amber-300 flex items-center justify-center text-xs shadow">
+                <i class="fa-solid fa-stamp"></i>
+              </span>
+              <div class="flex flex-col text-left">
+                <span class="text-[9px] uppercase tracking-wider text-amber-900/70 font-mono">Collector</span>
+                <span class="truncate max-w-[140px] uppercase font-mono">${esc(userName)}</span>
+              </div>
+            </div>
+            <div class="px-3.5 py-1.5 rounded-full bg-amber-950 text-amber-300 text-xs font-black shadow-md flex items-center gap-1.5 tracking-wider font-mono">
+              <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+              <span>${cleanRating}</span>
+            </div>
+          </div>
+
+          <!-- Barcode & Serial -->
+          <div class="mt-4 pt-2 flex items-center justify-between text-[10px] font-mono text-amber-950/70">
+            <span>SERIAL: ${serialNum}</span>
+            <span>VERIFIED COLLECTIBLE</span>
+          </div>
+
+          <!-- Action Buttons Row Inside Modal -->
+          <div class="mt-5 pt-3 border-t-2 border-dashed border-amber-950/30 flex items-center gap-2">
+            <button type="button" onclick="downloadGoldenTicket('${escT}')" class="flex-1 py-2.5 rounded-xl bg-amber-950 text-amber-200 hover:text-white font-black text-xs flex items-center justify-center gap-2 border border-amber-900 shadow transition-all">
+              <i class="fa-solid fa-download"></i> <span>Download Pass</span>
+            </button>
+            <button type="button" onclick="toggleMintGoldenTicket('${escT}'); closeGoldenTicketModal();" class="px-3 py-2.5 rounded-xl bg-red-950/30 hover:bg-red-950/50 text-red-950 font-bold text-xs flex items-center justify-center gap-1 border border-red-900/30 transition-all">
+              <i class="fa-solid fa-trash-can"></i> <span>Unmint</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    };
+
+    window.closeGoldenTicketModal = function() {
+      const modal = $('goldenTicketModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    };
+
+    window.downloadGoldenTicket = function(title) {
+      const it = globalDatabase[title];
+      if (!it) return;
+      const userName = (typeof obProfile !== 'undefined' && obProfile.username) ? obProfile.username : 'Peak Cinephile';
+      const cleanRating = (myRatings && myRatings[it.title]) ? `${myRatings[it.title]} / 5` : `${it.rating} / 10`;
+      const posterSrc = posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it);
+      const hookText = VIP_HOOKS[it.cleanName] || VIP_HOOKS[it.title] || `A critically acclaimed ${it.genre.toLowerCase()} journey from ${it.year}.`;
+      const serialNum = 'PK-' + Math.abs(it.title.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase().padStart(8, '0');
+
+      const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Peak Media Golden Ticket - ${esc(it.cleanName || it.title)}</title>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #050811;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .ticket {
+    position: relative;
+    width: 380px;
+    background: linear-gradient(135deg, #fbe897 0%, #d4af37 32%, #b58927 68%, #f8df81 100%);
+    border: 3px solid #855806;
+    border-radius: 24px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(212,175,55,0.4);
+    padding: 24px;
+    box-sizing: border-box;
+    color: #451a03;
+  }
+  .ticket::before, .ticket::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 26px;
+    height: 26px;
+    background: #050811;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    border: 3px solid #855806;
+  }
+  .ticket::before { left: -16px; }
+  .ticket::after { right: -16px; }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed rgba(69,26,3,0.3);
+    padding-bottom: 12px;
+    font-family: monospace;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+  .poster-wrap {
+    text-align: center;
+    margin: 18px 0;
+  }
+  .poster-wrap img {
+    width: 170px;
+    height: 255px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 2px solid rgba(69,26,3,0.4);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+  }
+  .title {
+    font-size: 20px;
+    font-weight: 900;
+    margin: 12px 0 2px 0;
+    text-align: center;
+  }
+  .meta {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.8;
+    text-align: center;
+  }
+  .hook {
+    background: rgba(0,0,0,0.08);
+    border: 1px solid rgba(69,26,3,0.2);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-style: italic;
+    font-size: 12px;
+    text-align: center;
+    margin: 14px 0;
+    line-height: 1.4;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px dashed rgba(69,26,3,0.3);
+    padding-top: 14px;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .pill {
+    background: #451a03;
+    color: #fde68a;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-family: monospace;
+  }
+  .serial {
+    margin-top: 12px;
+    font-family: monospace;
+    font-size: 10px;
+    opacity: 0.7;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+  <div class="ticket">
+    <div class="header">
+      <span>★ TOP 3 GOLDEN TICKET</span>
+      <span>${it.type.toUpperCase()}</span>
+    </div>
+    <div class="poster-wrap">
+      <img src="${posterSrc}" alt="">
+      <div class="title">${esc(it.cleanName || it.title)}</div>
+      <div class="meta">${it.genre} · ${it.year}</div>
+    </div>
+    <div class="hook">"${hookText}"</div>
+    <div class="footer">
+      <span>STAMP: ${esc(userName.toUpperCase())}</span>
+      <span class="pill">★ ${cleanRating}</span>
+    </div>
+    <div class="serial">
+      <span>SERIAL: ${serialNum}</span>
+      <span>PEAK MEDIA VIP</span>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const u = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = u;
+      const cleanFileTitle = (it.cleanName || it.title).replace(/[^a-zA-Z0-9_-]/g, '_');
+      a.download = `golden-ticket-${cleanFileTitle}.html`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(u), 1000);
+      showToast(`Downloaded Golden Ticket collector pass for "${it.cleanName || it.title}"!`, 'fa-download', 'text-brand-gold');
     };
 
     window.exportCinePassLedger = function() {
-      const watched = (watchedTitles || []).map(t => globalDatabase[t]).filter(Boolean);
+      const minted = getLocal('cs_golden_tickets', []).map(t => globalDatabase[t]).filter(Boolean);
       const userName = (typeof obProfile !== 'undefined' && obProfile.username) ? obProfile.username : 'Peak Cinephile';
-      if (!watched.length) {
-        showToast('Mark titles as watched first to generate your Golden Ticket Ledger!', 'fa-ticket', 'text-amber-400');
+      if (!minted.length) {
+        showToast('Mint at least one title to your Top 3 Golden Tickets first!', 'fa-ticket', 'text-amber-400');
         return;
       }
       const lines = [
         "==================================================",
-        "      PEAK MEDIA · OFFICIAL GOLDEN TICKET LEDGER  ",
+        "  PEAK MEDIA · TOP 3 GOLDEN TICKET HALL OF FAME   ",
         "==================================================",
         `Issued To: ${userName}`,
         `Generated on: ${new Date().toLocaleDateString()}`,
-        `Total Golden Tickets Minted: ${watched.length}`,
+        `Total Top 3 Passes Minted: ${minted.length}/3`,
         "",
-        ...watched.map((it, i) => `${i + 1}. [${it.type.toUpperCase()}] ${it.cleanName || it.title} (${it.year}) - User Rating: ${myRatings[it.title] ? myRatings[it.title] + '★' : it.rating + '★'} - Genre: ${it.genre}`)
+        ...minted.map((it, i) => `${i + 1}. [${it.type.toUpperCase()}] ${it.cleanName || it.title} (${it.year}) - User Rating: ${myRatings[it.title] ? myRatings[it.title] + ' / 5' : it.rating + ' / 10'} - Genre: ${it.genre}`)
       ];
       const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
       const u = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = u;
-      a.download = `peak-golden-tickets-${new Date().toISOString().slice(0, 10)}.txt`;
+      a.download = `peak-top3-golden-tickets-${new Date().toISOString().slice(0, 10)}.txt`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(u), 1000);
-      showToast('Exported Golden Ticket Ledger archive!', 'fa-download', 'text-brand-gold');
+      showToast('Exported Top 3 Golden Tickets archive!', 'fa-download', 'text-brand-gold');
     };
 
     // ---------------------------------------------------------

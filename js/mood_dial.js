@@ -18,7 +18,7 @@
 
   let currentAngle = 45; // starts on Mind-Bending (sector index 1)
   let activeSectorIdx = 1;
-  let currentIntensity = 2; // 1 = Mild, 2 = Balanced, 3 = Peak
+  let currentIntensity = 50; // Continuous spectrum: 0 to 100%
   let isDragging = false;
   let startAngle = 0;
   let startDialAngle = 0;
@@ -205,15 +205,20 @@
   };
 
   window.setMoodDialIntensity = function(lvl) {
-    currentIntensity = parseInt(lvl, 10) || 2;
+    currentIntensity = Math.min(100, Math.max(0, parseInt(lvl, 10) || 50));
     const lbl = $('moodDialIntensityLbl');
     if (lbl) {
-      const texts = {
-        1: '🌿 Gentle & Light',
-        2: '⚖️ Deep & Immersive',
-        3: '🔥 Peak Intensity'
-      };
-      lbl.textContent = texts[currentIntensity] || 'Balanced';
+      let icon = '⚖️', text = 'Mellow & Balanced';
+      if (currentIntensity <= 25) {
+        icon = '🌿'; text = 'Gentle & Chill';
+      } else if (currentIntensity <= 50) {
+        icon = '⚖️'; text = 'Mellow & Balanced';
+      } else if (currentIntensity <= 75) {
+        icon = '⚡'; text = 'Deep & Immersive';
+      } else {
+        icon = '🔥'; text = 'Peak Adrenaline';
+      }
+      lbl.textContent = `${icon} ${currentIntensity}% · ${text}`;
     }
     const sector = MOOD_SECTORS[activeSectorIdx];
     if (sector) renderMoodDialRecommendations(sector);
@@ -268,8 +273,8 @@
       return item.lang === window.globalLangFilter;
     };
 
-    // Filter by intensity
-    const minRating = currentIntensity === 1 ? 7.2 : currentIntensity === 2 ? 7.6 : 8.1;
+    // Filter by intensity continuous spectrum (7.0 at 0% up to 8.4 at 100%)
+    const minRating = 7.0 + (currentIntensity / 100) * 1.4;
 
     let pool = items.filter(i => {
       return matchesLang(i) &&
@@ -279,7 +284,7 @@
     });
 
     if (pool.length < 6) {
-      // Fallback: relax rating
+      // Fallback: relax rating gracefully
       pool = items.filter(i => matchesLang(i) && i.thumb && sector.genres.includes(i.genre) && parseFloat(i.rating || 0) >= 7.0);
     }
 

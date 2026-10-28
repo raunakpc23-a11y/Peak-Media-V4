@@ -165,9 +165,9 @@
       <label class="flex items-center justify-between gap-3 cursor-pointer" onclick="toggleReduce()">
         <span>
           <span class="block text-sm font-bold text-white">Calm Mode</span>
-          <span class="block text-[11px] text-gray-400">Disables background particles & continuous motion loops</span>
+          <span class="block text-[11px] text-gray-400">Disables background particles &amp; continuous motion loops</span>
         </span>
-        <span id="reduceTgl" class="tgl on"></span>
+        <span id="reduceTgl" class="tgl"></span>
       </label>
       <label class="flex items-center justify-between gap-3 cursor-pointer pt-2 border-t border-white/10" onclick="toggleCinemaLightsOut()">
         <span>
@@ -588,17 +588,17 @@
             </div>
           </div>
 
-          <!-- Intensity Calibration Slider -->
+          <!-- Intensity Calibration Slider (Continuous Spectrum 0% - 100%) -->
           <div class="space-y-1.5 pt-3 border-t border-white/10">
             <div class="flex items-center justify-between text-xs">
-              <span class="text-gray-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-sliders text-brand-gold"></i> Intensity Calibration:</span>
-              <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold">⚖️ Deep &amp; Immersive</span>
+              <span class="text-gray-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-sliders text-brand-gold"></i> Intensity Spectrum:</span>
+              <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold">⚖️ 50% · Mellow &amp; Balanced</span>
             </div>
-            <input id="moodDialIntensitySlider" type="range" min="1" max="3" step="1" value="2" oninput="setMoodDialIntensity(this.value)" class="w-full accent-brand-gold cursor-grab active:cursor-grabbing">
+            <input id="moodDialIntensitySlider" type="range" min="0" max="100" step="1" value="50" oninput="setMoodDialIntensity(this.value)" class="w-full spectrum-slider cursor-grab active:cursor-grabbing">
             <div class="flex justify-between text-[10px] text-gray-500 font-semibold px-0.5">
-              <span>Gentle / Chill</span>
-              <span>Balanced</span>
-              <span>Peak / Hardcore</span>
+              <span>0% Gentle / Chill</span>
+              <span>50% Balanced</span>
+              <span>100% Peak / Hardcore</span>
             </div>
           </div>
 
@@ -1594,13 +1594,13 @@
           <div>
             <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Personal Cinema Heritage</span>
             <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2.5 mt-0.5">
-              <i class="fa-solid fa-ticket text-brand-gold"></i> ★ Official Golden Ticket Ledger
+              <i class="fa-solid fa-ticket text-brand-gold"></i> Top 3 Golden Ticket Hall of Fame
             </h3>
-            <p class="text-xs text-gray-400 mt-1">Every title you mark as watched stamps an authentic golden ticket stub with your username and rating.</p>
+            <p class="text-xs text-gray-400 mt-1">Curate your definitive Top 3 films or shows of all time. Tap any watched title's Scorecard to mint it into your personal showcase.</p>
           </div>
           <div class="flex items-center gap-2">
             <button type="button" onclick="exportCinePassLedger()" class="px-3 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/35 text-xs font-bold text-brand-gold flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-download"></i> <span>Export Ledger</span>
+              <i class="fa-solid fa-download"></i> <span>Export Top 3 Passes</span>
             </button>
             <button type="button" onclick="switchTab('space')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 flex items-center gap-1.5 transition-all">
               <i class="fa-solid fa-dna text-cyan-300"></i> <span>Taste DNA Radar</span>
@@ -1715,6 +1715,16 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
       <div id="detailModalContent"></div>
+    </div>
+  </div>
+
+  <!-- MODAL 1B: GOLDEN TICKET EXPAND & COLLECTOR STUDIO -->
+  <div id="goldenTicketModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/85 backdrop-blur-md" onclick="if(event.target.id==='goldenTicketModal')closeGoldenTicketModal()">
+    <div class="w-full max-w-md max-h-[92vh] overflow-y-auto no-scrollbar relative animate-fadeIn">
+      <button onclick="closeGoldenTicketModal()" aria-label="Close golden ticket" title="Close" class="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-amber-950/90 hover:bg-black text-amber-200 flex items-center justify-center border border-amber-500/40 transition-transform hover:scale-105 shadow-xl">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+      <div id="goldenTicketModalContent"></div>
     </div>
   </div>
 
