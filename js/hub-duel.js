@@ -386,11 +386,11 @@
         });
         if (D.mode === 'classic') D.size = 2;
         else if (D.mode === 'royale') D.size = 8;
-        else if (D.mode === 'matchmaker') D.size = 4;
+        else if (D.mode === 'matchmaker') D.size = 16;
         $('duelSize').querySelectorAll('button').forEach(x => {
           x.className = 'flex-1 py-2 rounded-xl text-xs font-bold ' + (+x.dataset.v === D.size ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-300');
         });
-        const modeLabels = { classic: 'Classic Duel', royale: 'Battle Royale Tournament', matchmaker: 'Rapid Matchmaker' };
+        const modeLabels = { classic: 'Classic Duel', royale: 'Battle Royale Tournament', matchmaker: 'CineSwipe (Swipe Left/Right)' };
         showToast(`Mode: ${modeLabels[D.mode] || D.mode}`, 'fa-trophy', 'text-brand-gold');
       });
     }
@@ -434,9 +434,15 @@
     }
     function startDuel() {
       stopDuelAuto();
+      if (D.mode === 'matchmaker') {
+        startCineSwipe();
+        return;
+      }
       D.entrants = pickEntrants(); D.path = {};
       D.rounds = [D.entrants.slice()]; D.r = 0; D.m = 0; D.matches = []; D.winners = [];
-      $('duelSetup').classList.add('hidden'); $('duelChamp').classList.add('hidden'); $('duelArena').classList.remove('hidden');
+      $('duelSetup').classList.add('hidden'); $('duelChamp').classList.add('hidden');
+      if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden');
+      $('duelArena').classList.remove('hidden');
       showMatch();
     }
     const roundName = n => n === 2 ? 'Grand Final' : n === 4 ? 'Semi-finals' : n === 8 ? 'Quarter-finals' : n === 16 ? 'Round of 16' : n === 32 ? 'Round of 32' : `Round of ${n}`;
@@ -532,24 +538,324 @@
       }, 900);
     }
     function crown(champ) {
-      $('duelArena').classList.add('hidden'); const el = $('duelChamp'); el.classList.remove('hidden');
+      $('duelArena').classList.add('hidden');
+      if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden');
+      const el = $('duelChamp'); el.classList.remove('hidden');
       const p = D.path[champ.title] || [], fin = p[p.length - 1];
       const beaten = p.map(x => x.beat.cleanName).join(', ');
+
+      const escChamp = champ.title.replace(/'/g, "\\'");
+      const cinejoyStreamUrl = (window.getCinejoyUrl && window.getCinejoyUrl(champ.title, champ.type)) ? window.getCinejoyUrl(champ.title, champ.type) : null;
+      const hasBracket = D.rounds && D.rounds.length > 1;
+      const bracketHtml = $('duelBracket') ? $('duelBracket').innerHTML : '';
+
       el.innerHTML = `<div class="crown-drop text-6xl text-brand-gold"><i class="fa-solid fa-crown"></i></div>
         <div class="text-[11px] font-bold uppercase tracking-widest text-brand-gold">Champion</div>
-        <div class="flex justify-center"><div class="duel-card win" style="cursor:default"><img class="lazy-poster" data-title="${esc(champ.title)}" src="${poster(champ)}" alt=""></div></div>
-        <h2 class="text-3xl font-display font-extrabold text-white">${esc(champ.cleanName)}</h2>
-        <div class="max-w-xl mx-auto text-sm text-gray-300 p-4 rounded-2xl bg-black/40 border border-white/10"><b class="text-brand-gold">Why it won:</b> ${esc(champ.cleanName)} took the crown because ${esc(fin ? fin.reason : 'it was the last one standing')}. It beat ${esc(beaten)} along the way.</div>
-        <div class="flex flex-wrap justify-center gap-2">
-          <button id="chAdd" class="px-4 py-2.5 rounded-xl bg-rose-500 text-white text-sm font-bold"><i class="fa-solid fa-heart mr-1.5"></i>Add to watchlist</button>
+        <div class="flex justify-center"><div class="duel-card win cursor-pointer" onclick="window.openDetailModal('${escChamp}')"><img class="lazy-poster" data-title="${esc(champ.title)}" src="${poster(champ)}" alt=""></div></div>
+        <h2 class="text-3xl font-display font-extrabold text-white">${esc(champ.cleanName || champ.title)}</h2>
+        <div class="max-w-xl mx-auto text-sm text-gray-300 p-4 rounded-2xl bg-black/40 border border-white/10"><b class="text-brand-gold">Why it won:</b> ${esc(champ.cleanName || champ.title)} took the crown because ${esc(fin ? fin.reason : 'it outshone all contenders')}.${beaten ? ' It beat ' + esc(beaten) + ' along the way.' : ''}</div>
+        <div class="flex flex-wrap justify-center gap-2.5 pt-2">
+          ${cinejoyStreamUrl ? `
+          <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-sm flex items-center gap-2 shadow-lg shadow-amber-500/25 transition-all">
+            <i class="fa-solid fa-circle-play text-base"></i> <span>Watch on Cinejoy</span>
+          </a>` : ''}
+          <button onclick="window.openDetailModal('${escChamp}')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white text-sm font-bold flex items-center gap-2 transition-all">
+            <i class="fa-solid fa-circle-info"></i> <span>View ScoreCard</span>
+          </button>
+          <button id="chAdd" class="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white border border-rose-500/30 text-sm font-bold flex items-center gap-1.5 transition-all"><i class="fa-solid fa-heart mr-1.5"></i>Add to watchlist</button>
+          ${hasBracket ? `
+          <button id="chViewBracket" class="px-4 py-2.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 text-sm font-bold flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-sitemap mr-1.5"></i> View Full Bracket
+          </button>` : ''}
           <button id="chRe" class="px-4 py-2.5 rounded-xl bg-brand-gold text-black text-sm font-bold"><i class="fa-solid fa-rotate mr-1.5"></i>Rematch</button>
-          <button id="chNew" class="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-200 text-sm font-semibold">New bracket</button>
+          <button id="chNew" class="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-200 text-sm font-semibold">New Play Session</button>
+        </div>
+        <div id="champBracketWrap" class="hidden mt-6 pt-6 border-t border-white/10 text-left">
+          <div class="flex items-center justify-between mb-3 px-2">
+            <div class="text-xs font-black uppercase tracking-wider text-purple-300 flex items-center gap-2">
+              <i class="fa-solid fa-trophy"></i>
+              <span>Complete Tournament Bracket Progression</span>
+            </div>
+            <span class="text-[11px] text-gray-400 font-mono">Winner: ${esc(champ.cleanName || champ.title)}</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-black/60 border border-purple-500/25 overflow-x-auto">
+            ${bracketHtml}
+          </div>
         </div>`;
       attachThumbObservers(el); setTimeout(confetti, 700); setTimeout(confetti, 1600);
-      $('chAdd').onclick = () => { if (wishlistTitles.includes(champ.title)) showToast('Already on your watchlist', 'fa-heart', 'text-rose-400'); else { wishlistTitles.push(champ.title); showToast(`Added "${champ.cleanName}" to your Watchlist!`, 'fa-heart', 'text-rose-400'); updateAllCountersAndViews(); } };
-      $('chRe').onclick = () => { const e = shuffle(D.entrants); D.rounds = [e]; D.r = 0; D.m = 0; D.winners = []; D.path = {}; el.classList.add('hidden'); $('duelArena').classList.remove('hidden'); showMatch(); };
+      $('chAdd').onclick = () => { if (wishlistTitles.includes(champ.title)) showToast('Already on your watchlist', 'fa-heart', 'text-rose-400'); else { wishlistTitles.push(champ.title); showToast(`Added "${champ.cleanName || champ.title}" to your Watchlist!`, 'fa-heart', 'text-rose-400'); updateAllCountersAndViews(); } };
+      $('chRe').onclick = () => {
+        if (D.mode === 'matchmaker') {
+          startCineSwipe();
+        } else {
+          const e = shuffle(D.entrants); D.rounds = [e]; D.r = 0; D.m = 0; D.winners = []; D.path = {}; el.classList.add('hidden'); $('duelArena').classList.remove('hidden'); showMatch();
+        }
+      };
       $('chNew').onclick = () => { el.classList.add('hidden'); $('duelSetup').classList.remove('hidden'); };
+      if ($('chViewBracket')) {
+        $('chViewBracket').onclick = () => {
+          const bw = $('champBracketWrap');
+          if (bw) {
+            const isHidden = bw.classList.toggle('hidden');
+            $('chViewBracket').innerHTML = isHidden ? '<i class="fa-solid fa-sitemap mr-1.5"></i> View Full Bracket' : '<i class="fa-solid fa-chevron-up mr-1.5"></i> Hide Bracket';
+            if (!isHidden) bw.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        };
+      }
     }
+
+    // ==========================================
+    // CINESWIPE ENGINE (SWIPE LEFT/RIGHT MATCHMAKER)
+    // ==========================================
+    let csDeck = [];
+    let csIndex = 0;
+    let csShortlist = [];
+
+    function startCineSwipe() {
+      stopDuelAuto();
+      const count = Math.max(12, D.size || 16);
+      let pool = [];
+      if (D.src === 'wish') pool = shuffle(wishlistTitles.map(t => globalDatabase[t]).filter(Boolean));
+      else if (D.src === 'mood') { const gs = moods[$('duelMood').value] || []; pool = shuffle(allTitles.map(t => globalDatabase[t]).filter(i => gs.includes(i.genre) && i.thumb && i.rating >= 7.6)); }
+      else pool = popPool();
+
+      csDeck = pool.slice(0, count);
+      if (csDeck.length < 8) {
+        const have = new Set(csDeck.map(i => i.title));
+        popPool().forEach(i => { if (csDeck.length < count && !have.has(i.title)) { csDeck.push(i); have.add(i.title); } });
+      }
+      csIndex = 0;
+      csShortlist = [];
+
+      $('duelSetup').classList.add('hidden');
+      $('duelArena').classList.add('hidden');
+      $('duelChamp').classList.add('hidden');
+      if ($('cineSwipeArena')) $('cineSwipeArena').classList.remove('hidden');
+
+      renderCineSwipeCard();
+      renderCineSwipeShortlist();
+      showToast('CineSwipe Ready! Swipe Right (👉) to shortlist, Left (👈) to pass.', 'fa-fire', 'text-rose-400');
+    }
+
+    function renderCineSwipeCard() {
+      const stage = $('csCardStage');
+      const counter = $('csDeckCounter');
+      if (!stage) return;
+
+      if (csIndex >= csDeck.length) {
+        if (csShortlist.length > 0) {
+          csPickTonight();
+        } else {
+          stage.innerHTML = `
+            <div class="w-full h-full rounded-3xl bg-[#0c101c] border border-white/15 p-6 flex flex-col items-center justify-center text-center space-y-4">
+              <div class="w-16 h-16 rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 text-3xl">
+                <i class="fa-solid fa-rotate-left"></i>
+              </div>
+              <h3 class="text-xl font-display font-extrabold text-white">Deck Complete!</h3>
+              <p class="text-xs text-gray-300 max-w-xs leading-relaxed">You passed on all contenders in this batch. Ready to reload with a fresh deck?</p>
+              <button onclick="window.csRestart()" class="px-5 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs">
+                <i class="fa-solid fa-shuffle mr-1.5"></i> Deal New Deck
+              </button>
+            </div>
+          `;
+          if (counter) counter.textContent = `${csDeck.length} / ${csDeck.length}`;
+        }
+        return;
+      }
+
+      const it = csDeck[csIndex];
+      if (counter) counter.textContent = `${csIndex + 1} / ${csDeck.length}`;
+
+      const escT = esc(it.cleanName || it.title);
+      const posterSrc = poster(it);
+      const genreColor = th(it.genre).accent || '#F5C518';
+
+      const nextIt = csDeck[csIndex + 1];
+      const bgCardHtml = nextIt ? `
+        <div class="absolute inset-0 rounded-3xl bg-[#080b14] border border-white/10 scale-95 translate-y-3 opacity-60 pointer-events-none overflow-hidden transition-all">
+          <img src="${poster(nextIt)}" class="w-full h-full object-cover opacity-30 blur-xs" alt="">
+        </div>
+      ` : '';
+
+      stage.innerHTML = `
+        ${bgCardHtml}
+        <div id="csActiveCard" class="absolute inset-0 rounded-3xl bg-[#0c101c] border-2 border-white/20 shadow-2xl overflow-hidden flex flex-col cursor-grab active:cursor-grabbing select-none transition-transform duration-200">
+          <div class="relative w-full flex-1 overflow-hidden">
+            <img src="${posterSrc}" class="w-full h-full object-cover transition-transform duration-700" alt="${escT}">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0c101c] via-[#0c101c]/30 to-transparent"></div>
+            <div id="csPassBadge" class="absolute top-4 right-4 px-3 py-1 rounded-xl bg-rose-600/90 text-white font-black text-sm uppercase tracking-wider border-2 border-white/30 rotate-12 opacity-0 transition-opacity">PASS</div>
+            <div id="csKeepBadge" class="absolute top-4 left-4 px-3 py-1 rounded-xl bg-emerald-600/90 text-white font-black text-sm uppercase tracking-wider border-2 border-white/30 -rotate-12 opacity-0 transition-opacity">KEEP</div>
+            <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs font-bold text-white">
+              <span class="px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md border border-white/15" style="color:${genreColor}">
+                ${it.genre} · ${it.year}
+              </span>
+              <span class="px-2.5 py-1 rounded-lg bg-brand-gold text-black font-mono font-black shadow">
+                ★ ${it.rating}
+              </span>
+            </div>
+          </div>
+          <div class="p-4 bg-[#0c101c] border-t border-white/10 space-y-1.5 shrink-0">
+            <h3 class="text-lg sm:text-xl font-display font-extrabold text-white leading-tight truncate">${escT}</h3>
+            <p class="text-xs text-gray-400 line-clamp-2 leading-relaxed">
+              ${(window.globalDatabase && window.globalDatabase[it.title] && window.globalDatabase[it.title].overview) ? esc(window.globalDatabase[it.title].overview) : 'Top-tier cinematic recommendation curated for tonight.'}
+            </p>
+          </div>
+        </div>
+      `;
+
+      attachCineSwipeInteractions();
+    }
+
+    function attachCineSwipeInteractions() {
+      const card = $('csActiveCard');
+      if (!card) return;
+
+      let startX = 0, currentX = 0, isDragging = false;
+
+      const onPointerDown = e => {
+        isDragging = true;
+        startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+        card.style.transition = 'none';
+      };
+
+      const onPointerMove = e => {
+        if (!isDragging) return;
+        currentX = (e.clientX || (e.touches && e.touches[0].clientX) || 0) - startX;
+        const rot = currentX * 0.08;
+        card.style.transform = `translateX(${currentX}px) rotate(${rot}deg)`;
+
+        const keepB = $('csKeepBadge'), passB = $('csPassBadge');
+        if (currentX > 30) {
+          if (keepB) keepB.style.opacity = Math.min(1, currentX / 80);
+          if (passB) passB.style.opacity = 0;
+        } else if (currentX < -30) {
+          if (passB) passB.style.opacity = Math.min(1, -currentX / 80);
+          if (keepB) keepB.style.opacity = 0;
+        } else {
+          if (keepB) keepB.style.opacity = 0;
+          if (passB) passB.style.opacity = 0;
+        }
+      };
+
+      const onPointerUp = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        card.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        if (currentX > 75) {
+          csSwipe('right');
+        } else if (currentX < -75) {
+          csSwipe('left');
+        } else {
+          card.style.transform = '';
+          const keepB = $('csKeepBadge'), passB = $('csPassBadge');
+          if (keepB) keepB.style.opacity = 0;
+          if (passB) passB.style.opacity = 0;
+        }
+      };
+
+      card.addEventListener('pointerdown', onPointerDown);
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp, { once: true });
+    }
+
+    function csSwipe(dir) {
+      if (csIndex >= csDeck.length) return;
+      const card = $('csActiveCard');
+      const it = csDeck[csIndex];
+
+      if (dir === 'right') {
+        if (!csShortlist.some(x => x.title === it.title)) {
+          csShortlist.push(it);
+          renderCineSwipeShortlist();
+        }
+        if (card) {
+          card.style.transition = 'transform 0.35s ease-out, opacity 0.35s';
+          card.style.transform = 'translateX(450px) rotate(25deg)';
+          card.style.opacity = '0';
+        }
+        showToast(`Added "${it.cleanName || it.title}" to Tonight's Shortlist`, 'fa-heart', 'text-emerald-400');
+      } else {
+        if (card) {
+          card.style.transition = 'transform 0.35s ease-out, opacity 0.35s';
+          card.style.transform = 'translateX(-450px) rotate(-25deg)';
+          card.style.opacity = '0';
+        }
+      }
+
+      setTimeout(() => {
+        csIndex++;
+        renderCineSwipeCard();
+      }, 300);
+    }
+
+    function renderCineSwipeShortlist() {
+      const tray = $('csShortlistTray');
+      const countEl = $('csShortlistCount');
+      if (!tray) return;
+
+      if (countEl) countEl.textContent = csShortlist.length;
+
+      if (!csShortlist.length) {
+        tray.innerHTML = `<div class="text-xs text-gray-500 py-3 w-full text-center">Swipe right on contenders to fill your shortlist tray</div>`;
+        return;
+      }
+
+      tray.innerHTML = csShortlist.map((it, idx) => {
+        const escT = esc(it.cleanName || it.title);
+        return `
+          <div class="relative shrink-0 flex items-center gap-2 p-1.5 pr-3 rounded-xl bg-black/60 border border-emerald-400/30 shadow-md group">
+            <img src="${poster(it)}" class="w-10 h-14 object-cover rounded-lg border border-white/10" alt="">
+            <div class="text-left text-xs">
+              <div class="font-bold text-white truncate max-w-[120px]">${escT}</div>
+              <div class="text-[10px] text-emerald-400 font-mono font-bold">★ ${it.rating}</div>
+            </div>
+            <button onclick="window.csRemoveFromShortlist(${idx})" class="ml-1 w-5 h-5 rounded-full bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white text-[10px] flex items-center justify-center transition-colors" title="Remove">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.csRemoveFromShortlist = function(idx) {
+      csShortlist.splice(idx, 1);
+      renderCineSwipeShortlist();
+    };
+
+    window.csRestart = function() {
+      startCineSwipe();
+    };
+
+    function csPickTonight() {
+      const pool = csShortlist.length ? csShortlist : [csDeck[csIndex] || csDeck[0]].filter(Boolean);
+      if (!pool.length) {
+        showToast('No contenders available to pick. Swipe right on a title first!', 'fa-triangle-exclamation', 'text-amber-400');
+        return;
+      }
+      const champ = pool.slice().sort((a, b) => b.rating - a.rating)[0];
+      D.path[champ.title] = [{ beat: { cleanName: `${pool.length - 1} other shortlisted contenders` }, reason: `it earned top rank (★ ${champ.rating}) across your CineSwipe shortlist session` }];
+
+      if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden');
+      crown(champ);
+    }
+
+    // Attach CineSwipe Button Handlers
+    if ($('csPassBtn')) $('csPassBtn').onclick = () => csSwipe('left');
+    if ($('csKeepBtn')) $('csKeepBtn').onclick = () => csSwipe('right');
+    if ($('csPickTonightBtn')) $('csPickTonightBtn').onclick = csPickTonight;
+    if ($('csQuit')) $('csQuit').onclick = () => { if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden'); $('duelSetup').classList.remove('hidden'); };
+    if ($('csClearShortlist')) $('csClearShortlist').onclick = () => { csShortlist = []; renderCineSwipeShortlist(); showToast('Shortlist cleared', 'fa-rotate-left', 'text-gray-400'); };
+
+    // Keyboard controls for CineSwipe & Duel
+    window.addEventListener('keydown', (e) => {
+      const isInput = /INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName);
+      if (isInput) return;
+      if ($('cineSwipeArena') && !$('cineSwipeArena').classList.contains('hidden')) {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); csSwipe('left'); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); csSwipe('right'); }
+        else if (e.key === 'Enter') { e.preventDefault(); csPickTonight(); }
+      }
+    });
     function autoOne() { if (D.busy) return; const cur = D.rounds[D.r]; choose(judge(cur[D.m * 2], cur[D.m * 2 + 1]).win, true); }
     $('duelAuto').onclick = autoOne;
     $('duelAutoAll').onclick = () => {

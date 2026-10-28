@@ -15704,6 +15704,13 @@ Odd Taxi|2021|87
     };
     window.getLocal = getLocal;
 
+    const setLocal = (key, val) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(val));
+      } catch (e) {}
+    };
+    window.setLocal = setLocal;
+
     let wishlistTitles = getLocal('cs_wishlist', ["Inception", "The Dark Knight", "Breaking Bad", "Spirited Away", "Dune: Part Two"]).filter(t => globalDatabase[t]);
     let watchedTitles = getLocal('cs_watched', ["The Shawshank Redemption", "Pulp Fiction", "Interstellar", "Stranger Things"]).filter(t => globalDatabase[t]);
     let favTitles = getLocal('cs_favs', ["Inception", "The Dark Knight"]).filter(t => globalDatabase[t]);
@@ -15785,23 +15792,33 @@ Odd Taxi|2021|87
     }
 
     window.toggleMintGoldenTicket = function(title) {
-      let tickets = getLocal('cs_golden_tickets', []);
-      const item = globalDatabase[title];
-      const name = item ? (item.cleanName || item.title) : title;
-      if (tickets.includes(title)) {
-        tickets = tickets.filter(t => t !== title);
-        setLocal('cs_golden_tickets', tickets);
-        showToast(`Removed "${name}" from Top 3 Golden Tickets`, 'fa-rotate-left', 'text-gray-300');
-      } else {
-        if (tickets.length >= 3) {
-          showToast('You can only have Top 3 Golden Tickets! Remove one first.', 'fa-triangle-exclamation', 'text-amber-400');
-          return;
+      try {
+        let tickets = getLocal('cs_golden_tickets', []);
+        const item = globalDatabase[title];
+        const name = item ? (item.cleanName || item.title) : title;
+        if (tickets.includes(title)) {
+          tickets = tickets.filter(t => t !== title);
+          setLocal('cs_golden_tickets', tickets);
+          showToast(`Removed "${name}" from Top 3 Golden Tickets`, 'fa-rotate-left', 'text-gray-300');
+        } else {
+          if (tickets.length >= 3) {
+            showToast('Top 3 limit reached! Unmint one ticket before minting a new one.', 'fa-triangle-exclamation', 'text-amber-400');
+            return;
+          }
+          tickets.push(title);
+          setLocal('cs_golden_tickets', tickets);
+          showToast(`✨ Minted "${name}" into your Top 3 Golden Ticket Hall of Fame!`, 'fa-ticket-simple', 'text-amber-300');
         }
-        tickets.push(title);
-        setLocal('cs_golden_tickets', tickets);
-        showToast(`✨ Minted "${name}" into your Top 3 Golden Ticket Hall of Fame!`, 'fa-ticket-simple', 'text-amber-300');
+        if (window.renderCinePassLedger) window.renderCinePassLedger();
+        const mBtn = document.getElementById('modalMintBtn');
+        if (mBtn) {
+          const isNowMinted = tickets.includes(title);
+          mBtn.className = `px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 transition-all ${isNowMinted ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 shadow-md' : 'bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/40'}`;
+          mBtn.innerHTML = `<i class="fa-solid fa-ticket-simple"></i><span>${isNowMinted ? 'In Top 3 Tickets (Remove)' : 'Mint Golden Ticket'}</span>`;
+        }
+      } catch (err) {
+        console.error('Error in toggleMintGoldenTicket:', err);
       }
-      if (window.renderCinePassLedger) window.renderCinePassLedger();
     };
 
     function rateTitle(title, stars) {
@@ -16792,7 +16809,7 @@ Odd Taxi|2021|87
         riftBadge = { text: 'Fan Favorite', icon: 'fa-bolt', color: 'bg-purple-500/20 text-purple-300 border-purple-400/40' };
       }
 
-      // 2. Curated or generated 15-word Inciting Hook
+      // 2. Curated or generated 15-word Inciting Hook (No synthetic repetitive templates)
       const HOOKS = {
         "The Dark Knight": "When a psychopathic anarchist unleashes chaos on Gotham, Batman must confront his darkest limits.",
         "Inception": "A thief who steals corporate secrets through subconscious dream-sharing is offered a chance at redemption.",
@@ -16809,7 +16826,15 @@ Odd Taxi|2021|87
         "Game of Thrones": "Nine noble families wage a bloody war for control over the mythical lands of Westeros.",
         "The Shawshank Redemption": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency."
       };
-      const hookText = HOOKS[item.cleanName] || HOOKS[item.title] || `When a turning point strikes in ${item.year}, a high-stakes fight for purpose and truth begins.`;
+      let hookText = HOOKS[item.cleanName] || HOOKS[item.title];
+      if (!hookText) {
+        if (cachedSynopsis && cachedSynopsis.length > 20) {
+          const firstSent = cachedSynopsis.split(/[.!?]\s+/)[0];
+          hookText = firstSent.length <= 130 ? firstSent + '.' : firstSent.slice(0, 120).trim() + '…';
+        } else {
+          hookText = `A landmark ${item.genre.toLowerCase()} journey crafted in ${item.year}, celebrated for its vision and storytelling.`;
+        }
+      }
 
       // 3. Season Consensus Section (Dedicated clean collapsible drawer; ONLY shown when special consensus exists)
       let seasonsHtml = '';
@@ -16864,28 +16889,28 @@ Odd Taxi|2021|87
       }
 
       // 4. Custom Streaming Platform for India (Post JioCinema + Disney+ Hotstar Merger: JioHotstar, Netflix, Prime Video)
-      const rawPlat = (item.platformName || 'Streaming').toLowerCase();
+      // Strict matching: Only show external platform if genuinely available in India; otherwise null (Cinejoy only)
+      const rawPlat = (item.platformName || '').toLowerCase();
       const rawTitle = (item.cleanName || item.title).toLowerCase();
-      let indiaPlatform = 'JioHotstar';
-      let platIcon = 'fa-solid fa-star text-amber-400';
-      let platClass = 'bg-gradient-to-r from-blue-700/25 to-pink-700/25 hover:from-blue-700/35 hover:to-pink-700/35 text-white border-blue-400/40';
-      let platLabel = 'Watch on JioHotstar';
-      let platSearchUrl = `https://www.hotstar.com/in/explore?search_query=${encodeURIComponent(item.cleanName || item.title)}`;
+      let indiaPlatform = null;
+      let platIcon = '';
+      let platClass = '';
+      let platLabel = '';
+      let platSearchUrl = '';
 
-      if (/netflix|stranger|breaking bad|saul|squid|dark|wednesday|peaky|black mirror|narcos|queen's gambit|crown|mindhunter|bojack|ozark|witcher|money heist/i.test(rawPlat) || /stranger|breaking bad|better call saul|squid game|dark|wednesday|peaky blinders|narcos|the crown|mindhunter|bojack|ozark|the witcher|money heist/i.test(rawTitle)) {
+      if (/netflix/i.test(rawPlat) || /stranger things|breaking bad|better call saul|squid game|dark|wednesday|peaky blinders|narcos|queen's gambit|the crown|mindhunter|bojack|ozark|the witcher|money heist|black mirror|arcane|cyberpunk|bridgerton|heartstopper|cobra kai|daredevil|lucifer|you|beef|baby reindeer/i.test(rawTitle)) {
         indiaPlatform = 'Netflix';
         platIcon = 'fa-solid fa-n text-red-500';
         platClass = 'bg-red-600/20 hover:bg-red-600/30 text-red-300 border-red-500/40';
         platLabel = 'Watch on Netflix';
         platSearchUrl = `https://www.netflix.com/search?q=${encodeURIComponent(item.cleanName || item.title)}`;
-      } else if (/prime|amazon|boys|fallout|reacher|fleabag|mirzapur|panchayat|lord of the rings|invincible|wheel of time|grand tour|family man/i.test(rawPlat) || /the boys|fallout|reacher|fleabag|mirzapur|panchayat|lord of the rings|invincible|the wheel of time|the grand tour|the family man/i.test(rawTitle)) {
+      } else if (/prime|amazon/i.test(rawPlat) || /the boys|fallout|reacher|fleabag|mirzapur|panchayat|lord of the rings|invincible|the wheel of time|the grand tour|the family man|paatal lok|farzi|made in heaven|bosch|jack ryan/i.test(rawTitle)) {
         indiaPlatform = 'Prime Video';
         platIcon = 'fa-brands fa-amazon text-sky-400';
         platClass = 'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-sky-400/40';
         platLabel = 'Watch on Prime Video';
         platSearchUrl = `https://www.primevideo.com/search/ref=atv_nb_sr?phrase=${encodeURIComponent(item.cleanName || item.title)}`;
-      } else {
-        // Unified JioHotstar (Reliance JioCinema + Disney+ Hotstar merger: HBO, Warner Bros, DC, Marvel, Disney, Pixar, Star Wars, FX, Showtime, Paramount, Jio)
+      } else if (/hotstar|jiocinema|jio|disney|hbo/i.test(rawPlat) || /game of thrones|house of the dragon|succession|the sopranos|the wire|the last of us|true detective|chernobyl|band of brothers|white lotus|barry|euphoria|loki|mandalorian|andor|shogun|wanda|marvel|avengers|star wars|pixar|disney/i.test(rawTitle)) {
         indiaPlatform = 'JioHotstar';
         platIcon = 'fa-solid fa-star text-amber-400';
         platClass = 'bg-gradient-to-r from-blue-700/25 to-pink-700/25 hover:from-blue-700/35 hover:to-pink-700/35 text-white border-blue-400/40';
@@ -16897,18 +16922,25 @@ Odd Taxi|2021|87
 
       content.innerHTML = `
         <div class="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 p-6 sm:p-8">
-          <!-- Poster Column (Locked 2:3 Aspect, Premium Frame & Direct IMDb Verification) -->
+          <!-- Poster Column (Locked 2:3 Aspect, Premium Frame & Technical Specs Tray) -->
           <div class="w-full sm:w-60 md:w-64 shrink-0 flex flex-col items-center">
             <div class="relative w-48 sm:w-56 md:w-60 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-400/25 shadow-2xl bg-[#0c101c] group/poster">
               <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover rounded-2xl block transition-transform duration-500 group-hover/poster:scale-105" alt="${item.title}">
               <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 pointer-events-none"></div>
             </div>
-            <!-- Direct IMDb Verification Button -->
-            <a href="https://www.imdb.com/find/?q=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="mt-3.5 w-48 sm:w-56 md:w-60 py-2 px-3 rounded-xl bg-[#f5c518]/15 hover:bg-[#f5c518]/25 border border-[#f5c518]/40 text-[#f5c518] text-xs font-black flex items-center justify-center gap-2 transition-all shadow-md group">
-              <i class="fa-brands fa-imdb text-base text-[#f5c518]"></i>
-              <span>Verify on IMDb (★ ${item.rating})</span>
-              <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-75 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
-            </a>
+            <!-- Technical Specs Tray under Poster -->
+            <div class="mt-3.5 w-48 sm:w-56 md:w-60 p-2.5 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-1.5 text-center shadow-md">
+              <div class="flex items-center justify-center gap-2 text-[11px] font-bold text-gray-300">
+                <span><i class="fa-solid fa-clock text-amber-400/80 mr-1"></i>${item.type === 'show' ? (item.seasons ? `${item.seasons} Seasons` : 'TV Series') : (item.runtime || '2h 15m')}</span>
+                <span>•</span>
+                <span class="text-amber-300/90 font-mono">${item.lang === 'hi' ? 'Hindi Audio' : 'English / Multi'}</span>
+              </div>
+              <div class="flex items-center justify-center gap-1.5 text-[10px] font-mono text-gray-400 tracking-wider">
+                <span class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10">4K UHD</span>
+                <span class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10">HDR10</span>
+                <span class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10">5.1 SOUND</span>
+              </div>
+            </div>
           </div>
 
           <div class="flex-1 w-full space-y-4">
@@ -16916,7 +16948,7 @@ Odd Taxi|2021|87
               <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-extrabold text-xs">★ ${item.rating}</span>
               <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-200 text-xs font-semibold">#${item.rank} Ranked</span>
               <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-300 text-xs">${item.genre} · ${item.year}</span>
-              <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] font-semibold">${indiaPlatform}</span>
+              ${indiaPlatform ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] font-semibold flex items-center gap-1.5"><i class="${platIcon}"></i> ${indiaPlatform}</span>` : ''}
             </div>
 
             <!-- Master Critics vs Crowd Scorecard (Spacious, Vibrant High-Def Metrics) -->
@@ -17013,7 +17045,7 @@ Odd Taxi|2021|87
               <span class="text-[11px] text-gray-500 ml-1">${userRating ? `${userRating}/5 Stars` : '(Tap star to rate)'}</span>
             </div>
 
-            <!-- Action Row: Heart, Watched/Unwatched, Fav, Trailer + JioHotstar/Netflix/Prime beside Cinejoy -->
+            <!-- Action Row: Heart, Watched/Unwatched, Fav, Trailer + Verified Streaming Platform beside Cinejoy -->
             <div class="pt-1 flex flex-wrap items-center gap-2.5">
               <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" title="${isW ? 'In Watchlist (Click to remove)' : 'Add to Watchlist'}" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isW ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40' : 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/15'}">
                 <i class="fa-solid fa-heart text-base ${isW ? 'text-white' : 'text-gray-300'}"></i>
@@ -17028,10 +17060,11 @@ Odd Taxi|2021|87
                 <i class="fa-brands fa-youtube"></i> Trailer
               </a>
 
-              <!-- Single Indian Streaming Platform Button (JioHotstar, Netflix, or Prime Video) -->
+              ${indiaPlatform ? `
+              <!-- Single Verified Indian Streaming Platform Button (JioHotstar, Netflix, or Prime Video) -->
               <a href="${platSearchUrl}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl ${platClass} border font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all">
                 <i class="${platIcon}"></i> <span>${platLabel}</span>
-              </a>
+              </a>` : ''}
 
               ${cinejoyStreamUrl ? `
               <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
@@ -17039,10 +17072,11 @@ Odd Taxi|2021|87
               </a>` : ''}
 
               ${isWatched ? `
-              <button onclick="toggleMintGoldenTicket('${escTitle}'); openDetailModal('${escTitle}');" class="px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 transition-all ${isMintedInTop3 ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 shadow-md' : 'bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/40'}">
+              <button id="modalMintBtn" onclick="toggleMintGoldenTicket('${escTitle}'); openDetailModal('${escTitle}');" class="px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 transition-all ${isMintedInTop3 ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 shadow-md' : 'bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/40'}">
                 <i class="fa-solid fa-ticket-simple"></i>
                 <span>${isMintedInTop3 ? 'In Top 3 Tickets (Remove)' : 'Mint Golden Ticket'}</span>
               </button>` : ''}
+            </div>
             </div>
 
             <!-- More in Genre -->
@@ -17086,6 +17120,13 @@ Odd Taxi|2021|87
       modal.classList.add('hidden');
       modal.classList.remove('flex');
     }
+
+    window.openDetailModal = openDetailModal;
+    window.closeDetailModal = closeDetailModal;
+    window.toggleWishlist = toggleWishlist;
+    window.toggleWatched = toggleWatched;
+    window.toggleFav = toggleFav;
+    window.rateTitle = rateTitle;
 
     // ==========================================
     // 10. REVAMPED SURPRISE ROULETTE STUDIO

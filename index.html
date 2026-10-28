@@ -40,10 +40,10 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="css/base.css?v=3.3">
-  <link rel="stylesheet" href="css/widgets.css?v=3.3">
-  <link rel="stylesheet" href="css/onboarding.css?v=3.3">
-  <link rel="stylesheet" href="css/responsive.css?v=3.3">
+  <link rel="stylesheet" href="css/base.css?v=3.4">
+  <link rel="stylesheet" href="css/widgets.css?v=3.4">
+  <link rel="stylesheet" href="css/onboarding.css?v=3.4">
+  <link rel="stylesheet" href="css/responsive.css?v=3.4">
 </head>
 <body data-theme="space" class="min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased">
 
@@ -681,7 +681,7 @@
               <i class="fa-solid fa-trophy mr-1.5 text-amber-400"></i> Battle Royale
             </button>
             <button type="button" data-m="matchmaker" class="py-2.5 px-3 rounded-xl text-xs font-bold transition-all bg-white/5 text-gray-300 hover:bg-white/10">
-              <i class="fa-solid fa-bolt mr-1.5 text-rose-400"></i> Rapid Matchmaker
+              <i class="fa-solid fa-fire mr-1.5 text-rose-400"></i> CineSwipe (Left/Right)
             </button>
           </div>
         </div>
@@ -717,13 +717,65 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div id="duelRound" class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-brand-gold">Semi-finals · Duel 1 of 2</div>
           <div class="flex flex-wrap gap-1.5 sm:gap-2">
-            <button id="duelAuto" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-200 text-xs font-bold"><i class="fa-solid fa-scale-balanced mr-1"></i>Auto-judge duel</button>
-            <button id="duelAutoAll" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-white/5 border border-white/10 text-gray-200 text-xs font-semibold">Auto-judge rest</button>
-            <button id="duelQuit" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-xs font-semibold">Reset</button>
+            <button id="duelAuto" class="px-2 py-1 rounded-lg bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-purple-300 text-[11px] font-semibold transition-all"><i class="fa-solid fa-scale-balanced mr-1"></i>Auto-judge</button>
+            <button id="duelAutoAll" class="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-[11px] font-medium transition-all">Auto-all</button>
+            <button id="duelQuit" class="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 text-[11px] font-medium transition-all">Reset</button>
           </div>
         </div>
         <div id="duelStage" class="flex items-center justify-center gap-3 sm:gap-8 py-2 min-h-[300px] sm:min-h-[360px]"></div>
         <div id="duelBracket" class="flex flex-wrap gap-x-5 gap-y-2 justify-center pt-2 border-t border-white/10"></div>
+      </div>
+
+      <!-- CineSwipe Arena (Tinder-style swipe deck with Left/Right triggers and Shortlist tray) -->
+      <div id="cineSwipeArena" class="hidden glass-card rounded-3xl p-5 sm:p-7 border border-rose-500/30 space-y-5 relative overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-rose-500/20 border border-rose-500/35 flex items-center justify-center text-rose-400 text-xs">
+              <i class="fa-solid fa-fire"></i>
+            </span>
+            <div>
+              <div class="text-xs sm:text-sm font-extrabold text-white">CineSwipe Deck</div>
+              <div class="text-[11px] text-gray-400">Swipe Right (or tap Heart) to Shortlist · Swipe Left to Pass</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="csDeckCounter" class="px-2.5 py-1 rounded-full bg-white/10 text-white font-mono text-xs font-bold">1 / 16</span>
+            <button id="csQuit" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 text-xs font-semibold">Exit</button>
+          </div>
+        </div>
+
+        <!-- Card Stage -->
+        <div class="relative flex items-center justify-center py-2 min-h-[380px] sm:min-h-[420px]">
+          <div id="csCardStage" class="relative w-full max-w-[340px] sm:max-w-[380px] aspect-[2/3] max-h-[500px]"></div>
+        </div>
+
+        <!-- Controls: Pass / Rewind / Shortlist -->
+        <div class="flex items-center justify-center gap-4 sm:gap-6 pt-1">
+          <button id="csPassBtn" type="button" class="w-14 h-14 rounded-full bg-rose-500/15 hover:bg-rose-500/25 border-2 border-rose-500/50 text-rose-400 text-xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95" title="Pass (Left Arrow)">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <button id="csPickTonightBtn" type="button" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-black text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all active:scale-95">
+            <i class="fa-solid fa-dice text-base"></i>
+            <span>Lock Tonight's Movie</span>
+          </button>
+          <button id="csKeepBtn" type="button" class="w-14 h-14 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border-2 border-emerald-500/50 text-emerald-400 text-xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95" title="Shortlist (Right Arrow)">
+            <i class="fa-solid fa-heart"></i>
+          </button>
+        </div>
+
+        <!-- Shortlist Tray -->
+        <div class="pt-4 border-t border-white/10">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-[11px] font-black uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-list-check"></i>
+              <span>Tonight's Shortlist (<span id="csShortlistCount">0</span>)</span>
+            </div>
+            <button id="csClearShortlist" class="text-[10px] text-gray-400 hover:text-white underline">Clear</button>
+          </div>
+          <div id="csShortlistTray" class="flex items-center gap-2 overflow-x-auto pb-2 min-h-[64px] scrollbar-thin">
+            <div class="text-xs text-gray-500 py-3 w-full text-center">Swipe right on contenders to fill your shortlist tray</div>
+          </div>
+        </div>
       </div>
       <div id="duelChamp" class="hidden glass-card rounded-3xl p-6 sm:p-10 border border-brand-gold/40 text-center space-y-4 relative overflow-hidden"></div>
     </section>
@@ -2084,15 +2136,15 @@
   </div>
 
 
-  <script src="js/data.js?v=3.3"></script>
-  <script src="js/constellation.js?v=3.3"></script>
-  <script src="js/hub-duel.js?v=3.3"></script>
-  <script src="js/ui.js?v=3.3"></script>
-  <script src="js/features.js?v=3.3"></script>
-  <script src="js/marathon.js?v=3.3"></script>
-  <script src="js/universes.js?v=3.3"></script>
-  <script src="js/mood_dial.js?v=3.3"></script>
-  <script src="js/main.js?v=3.3"></script>
-  <script src="js/pwa.js?v=3.3"></script>
+  <script src="js/data.js?v=3.4"></script>
+  <script src="js/constellation.js?v=3.4"></script>
+  <script src="js/hub-duel.js?v=3.4"></script>
+  <script src="js/ui.js?v=3.4"></script>
+  <script src="js/features.js?v=3.4"></script>
+  <script src="js/marathon.js?v=3.4"></script>
+  <script src="js/universes.js?v=3.4"></script>
+  <script src="js/mood_dial.js?v=3.4"></script>
+  <script src="js/main.js?v=3.4"></script>
+  <script src="js/pwa.js?v=3.4"></script>
 </body>
 </html>
