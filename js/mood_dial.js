@@ -263,6 +263,69 @@
     }, 2250);
   };
 
+  const GENRE_BASE_INTENSITY = {
+    Action: 88,
+    Horror: 86,
+    Thriller: 84,
+    War: 82,
+    Crime: 72,
+    Western: 66,
+    'Sci-Fi': 64,
+    Mystery: 60,
+    Fantasy: 56,
+    Drama: 48,
+    Animation: 36,
+    Romance: 32,
+    Comedy: 26,
+    Documentary: 30
+  };
+
+  const TITLE_INTENSITY_OVERRIDES = {
+    "Mad Max: Fury Road": 98,
+    "The Dark Knight": 92,
+    "Aliens": 94,
+    "Whiplash": 96,
+    "Fight Club": 90,
+    "Se7en": 93,
+    "Inception": 88,
+    "The Matrix": 90,
+    "John Wick": 94,
+    "Gladiator": 88,
+    "Saving Private Ryan": 92,
+    "Alien": 86,
+    "Terminator 2: Judgment Day": 90,
+    "Edge of Tomorrow": 86,
+    "Interstellar": 72,
+    "Blade Runner 2049": 65,
+    "Dune: Part Two": 85,
+    "Arrival": 46,
+    "2001: A Space Odyssey": 40,
+    "The Truman Show": 28,
+    "WALL-E": 22,
+    "Amelie": 18,
+    "Before Sunrise": 16,
+    "Cinema Paradiso": 18,
+    "La La Land": 38,
+    "Spirited Away": 32,
+    "Her": 20,
+    "Inside Out": 30,
+    "Coco": 34,
+    "Pulp Fiction": 82,
+    "The Shawshank Redemption": 50,
+    "The Godfather": 62
+  };
+
+  function getItemIntensity(it) {
+    if (!it) return 50;
+    const name = it.cleanName || it.title;
+    if (TITLE_INTENSITY_OVERRIDES[name] || TITLE_INTENSITY_OVERRIDES[it.title]) {
+      return TITLE_INTENSITY_OVERRIDES[name] || TITLE_INTENSITY_OVERRIDES[it.title];
+    }
+    let base = GENRE_BASE_INTENSITY[it.genre] || 50;
+    if (it.year && it.year < 1980 && base < 60) base -= 5;
+    return Math.min(100, Math.max(10, base));
+  }
+
   function renderMoodDialRecommendations(sector) {
     const row = $('moodRow');
     if (!row || !window.globalDatabase) return;
@@ -273,23 +336,33 @@
       return item.lang === window.globalLangFilter;
     };
 
-    // Filter by intensity continuous spectrum (7.0 at 0% up to 8.4 at 100%)
-    const minRating = 7.0 + (currentIntensity / 100) * 1.4;
-
+    // Filter candidate items matching the active sector's genres
     let pool = items.filter(i => {
       return matchesLang(i) &&
              i.thumb &&
              sector.genres.includes(i.genre) &&
-             parseFloat(i.rating || 0) >= minRating;
+             parseFloat(i.rating || 0) >= 6.8;
     });
 
-    if (pool.length < 6) {
-      // Fallback: relax rating gracefully
-      pool = items.filter(i => matchesLang(i) && i.thumb && sector.genres.includes(i.genre) && parseFloat(i.rating || 0) >= 7.0);
+    if (pool.length < 8) {
+      pool = items.filter(i => matchesLang(i) && i.thumb && sector.genres.includes(i.genre));
     }
 
-    // Sort by rating with subtle shuffle for variety
-    pool.sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0));
+    // Dynamic Intensity Spectrum Sorting:
+    // Ranks items based on proximity to target intensity + rating weighting
+    const targetIntensity = currentIntensity;
+    pool.sort((a, b) => {
+      const intA = getItemIntensity(a);
+      const intB = getItemIntensity(b);
+      const diffA = Math.abs(intA - targetIntensity);
+      const diffB = Math.abs(intB - targetIntensity);
+
+      // Score: high proximity (diff near 0) + quality rating
+      const scoreA = (100 - diffA * 1.65) + (parseFloat(a.rating || 0) * 4);
+      const scoreB = (100 - diffB * 1.65) + (parseFloat(b.rating || 0) * 4);
+      return scoreB - scoreA;
+    });
+
     const topPicks = pool.slice(0, 16);
 
     if (window.createCardHTML) {

@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v3.2';
+const CACHE_NAME = 'peak-media-v3.3';
 
 // All local files to pre-cache the moment the SW installs
 const PRE_CACHE = [
@@ -115,25 +115,23 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // 3. All local files: cache first (instant load), then network fallback
+  // 3. All local files: Network-first so updates reflect instantly; cache fallback when offline
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-
-      return fetch(event.request)
-        .then(response => {
-          if (response && response.status === 200 && response.type !== 'opaque') {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
-          }
-          return response;
-        })
-        .catch(() => {
-          // Offline fallback: return the app shell for navigation requests
+    fetch(event.request)
+      .then(response => {
+        if (response && response.status === 200 && response.type !== 'opaque') {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+        }
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request).then(cached => {
+          if (cached) return cached;
           if (event.request.mode === 'navigate') {
             return caches.match('./index.html');
           }
         });
-    })
+      })
   );
 });

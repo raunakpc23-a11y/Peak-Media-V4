@@ -16863,48 +16863,54 @@ Odd Taxi|2021|87
         }
       }
 
-      // 4. Custom Streaming Platform for India (Strictly the 4 real major Indian apps, 1 site beside Cinejoy)
+      // 4. Custom Streaming Platform for India (Post JioCinema + Disney+ Hotstar Merger: JioHotstar, Netflix, Prime Video)
       const rawPlat = (item.platformName || 'Streaming').toLowerCase();
-      let indiaPlatform = 'JioCinema';
-      let platIcon = 'fa-solid fa-play';
-      let platClass = 'bg-[#E11383]/20 hover:bg-[#E11383]/30 text-pink-300 border-[#E11383]/40';
-      let platLabel = 'Watch on JioCinema';
-      let platSearchUrl = `https://www.jiocinema.com/search/${encodeURIComponent(item.cleanName || item.title)}`;
+      const rawTitle = (item.cleanName || item.title).toLowerCase();
+      let indiaPlatform = 'JioHotstar';
+      let platIcon = 'fa-solid fa-star text-amber-400';
+      let platClass = 'bg-gradient-to-r from-blue-700/25 to-pink-700/25 hover:from-blue-700/35 hover:to-pink-700/35 text-white border-blue-400/40';
+      let platLabel = 'Watch on JioHotstar';
+      let platSearchUrl = `https://www.hotstar.com/in/explore?search_query=${encodeURIComponent(item.cleanName || item.title)}`;
 
-      if (/netflix|stranger|breaking bad|saul|squid|dark|wednesday|peaky|black mirror|narcos/i.test(rawPlat) || /stranger|breaking bad|better call saul|squid game|dark|wednesday|peaky blinders/i.test(item.title.toLowerCase())) {
+      if (/netflix|stranger|breaking bad|saul|squid|dark|wednesday|peaky|black mirror|narcos|queen's gambit|crown|mindhunter|bojack|ozark|witcher|money heist/i.test(rawPlat) || /stranger|breaking bad|better call saul|squid game|dark|wednesday|peaky blinders|narcos|the crown|mindhunter|bojack|ozark|the witcher|money heist/i.test(rawTitle)) {
         indiaPlatform = 'Netflix';
-        platIcon = 'fa-solid fa-n';
+        platIcon = 'fa-solid fa-n text-red-500';
         platClass = 'bg-red-600/20 hover:bg-red-600/30 text-red-300 border-red-500/40';
         platLabel = 'Watch on Netflix';
         platSearchUrl = `https://www.netflix.com/search?q=${encodeURIComponent(item.cleanName || item.title)}`;
-      } else if (/prime|amazon|boys|fallout|reacher|fleabag|mirzapur|panchayat/i.test(rawPlat) || /the boys|fallout|reacher|fleabag|mirzapur|panchayat|lord of the rings/i.test(item.title.toLowerCase())) {
+      } else if (/prime|amazon|boys|fallout|reacher|fleabag|mirzapur|panchayat|lord of the rings|invincible|wheel of time|grand tour|family man/i.test(rawPlat) || /the boys|fallout|reacher|fleabag|mirzapur|panchayat|lord of the rings|invincible|the wheel of time|the grand tour|the family man/i.test(rawTitle)) {
         indiaPlatform = 'Prime Video';
-        platIcon = 'fa-brands fa-amazon';
+        platIcon = 'fa-brands fa-amazon text-sky-400';
         platClass = 'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-sky-400/40';
         platLabel = 'Watch on Prime Video';
         platSearchUrl = `https://www.primevideo.com/search/ref=atv_nb_sr?phrase=${encodeURIComponent(item.cleanName || item.title)}`;
-      } else if (/disney|hotstar|hulu|marvel|star wars|shogun|bear|pixar/i.test(rawPlat) || /avengers|iron man|thor|star wars|mandalorian|shogun|the bear|modern family|loki/i.test(item.title.toLowerCase())) {
-        indiaPlatform = 'Disney+ Hotstar';
-        platIcon = 'fa-solid fa-star text-amber-400';
-        platClass = 'bg-blue-600/20 hover:bg-blue-600/30 text-blue-200 border-blue-400/40';
-        platLabel = 'Watch on Disney+ Hotstar';
-        platSearchUrl = `https://www.hotstar.com/in/explore?search_query=${encodeURIComponent(item.cleanName || item.title)}`;
       } else {
-        // Default premier destination for HBO, Warner, DC and blockbusters in India is JioCinema
-        indiaPlatform = 'JioCinema';
-        platIcon = 'fa-solid fa-play';
-        platClass = 'bg-[#E11383]/20 hover:bg-[#E11383]/30 text-pink-300 border-[#E11383]/40';
-        platLabel = 'Watch on JioCinema';
-        platSearchUrl = `https://www.jiocinema.com/search/${encodeURIComponent(item.cleanName || item.title)}`;
+        // Unified JioHotstar (Reliance JioCinema + Disney+ Hotstar merger: HBO, Warner Bros, DC, Marvel, Disney, Pixar, Star Wars, FX, Showtime, Paramount, Jio)
+        indiaPlatform = 'JioHotstar';
+        platIcon = 'fa-solid fa-star text-amber-400';
+        platClass = 'bg-gradient-to-r from-blue-700/25 to-pink-700/25 hover:from-blue-700/35 hover:to-pink-700/35 text-white border-blue-400/40';
+        platLabel = 'Watch on JioHotstar';
+        platSearchUrl = `https://www.hotstar.com/in/explore?search_query=${encodeURIComponent(item.cleanName || item.title)}`;
       }
 
       const cinejoyStreamUrl = (window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? window.getCinejoyUrl(item.title, item.type) : null;
 
       content.innerHTML = `
-        <div class="flex flex-col sm:flex-row items-start gap-6 p-6 sm:p-8">
-          <div class="w-48 sm:w-56 shrink-0 mx-auto sm:mx-0 rounded-2xl overflow-hidden border border-white/20 shadow-2xl poster-aspect self-start bg-[#0c101c] relative group/poster">
-            <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover rounded-2xl block transition-transform duration-500 group-hover/poster:scale-105" alt="${item.title}">
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 p-6 sm:p-8">
+          <!-- Poster Column (Locked 2:3 Aspect, Premium Frame & Direct IMDb Verification) -->
+          <div class="w-full sm:w-60 md:w-64 shrink-0 flex flex-col items-center">
+            <div class="relative w-48 sm:w-56 md:w-60 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-400/25 shadow-2xl bg-[#0c101c] group/poster">
+              <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover rounded-2xl block transition-transform duration-500 group-hover/poster:scale-105" alt="${item.title}">
+              <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 pointer-events-none"></div>
+            </div>
+            <!-- Direct IMDb Verification Button -->
+            <a href="https://www.imdb.com/find/?q=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="mt-3.5 w-48 sm:w-56 md:w-60 py-2 px-3 rounded-xl bg-[#f5c518]/15 hover:bg-[#f5c518]/25 border border-[#f5c518]/40 text-[#f5c518] text-xs font-black flex items-center justify-center gap-2 transition-all shadow-md group">
+              <i class="fa-brands fa-imdb text-base text-[#f5c518]"></i>
+              <span>Verify on IMDb (★ ${item.rating})</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-75 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+            </a>
           </div>
+
           <div class="flex-1 w-full space-y-4">
             <div class="flex flex-wrap items-center gap-2">
               <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-extrabold text-xs">★ ${item.rating}</span>
@@ -16916,9 +16922,9 @@ Odd Taxi|2021|87
             <!-- Master Critics vs Crowd Scorecard (Spacious, Vibrant High-Def Metrics) -->
             <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#121626] via-[#0c101c] to-[#0a0d18] border border-white/20 shadow-2xl space-y-3">
               <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/10 text-center">
-                <!-- IMDb Pillar -->
-                <div class="flex flex-col items-center justify-center px-1 sm:px-3">
-                  <div class="px-2.5 py-1 rounded-lg bg-gradient-to-b from-[#f5c518] to-[#d4a017] text-black font-black text-xs tracking-tight font-mono shadow-[0_0_12px_rgba(245,197,24,0.35)] flex items-center gap-1">
+                <!-- IMDb Pillar (Official Database Metric) -->
+                <a href="https://www.imdb.com/find/?q=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center px-1 sm:px-3 group/imdb transition-transform hover:scale-105">
+                  <div class="px-2.5 py-1 rounded-lg bg-gradient-to-b from-[#f5c518] to-[#d4a017] text-black font-black text-xs tracking-tight font-mono shadow-[0_0_12px_rgba(245,197,24,0.35)] flex items-center gap-1 group-hover/imdb:brightness-110">
                     <i class="fa-solid fa-star text-[10px]"></i>
                     <span>IMDb</span>
                   </div>
@@ -16926,8 +16932,11 @@ Odd Taxi|2021|87
                     <span class="text-white font-extrabold text-xl sm:text-2xl leading-none drop-shadow">${item.rating}</span>
                     <span class="text-gray-400 text-xs font-semibold">/10</span>
                   </div>
-                  <div class="text-[10px] text-amber-400/90 font-extrabold uppercase tracking-wider mt-1.5">#${item.rank} Ranked</div>
-                </div>
+                  <div class="text-[10px] text-amber-400/90 font-extrabold uppercase tracking-wider mt-1.5 flex items-center gap-1">
+                    <span>#${item.rank} Ranked</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-60"></i>
+                  </div>
+                </a>
 
                 <!-- Rotten Tomatoes Critics Meter Pillar -->
                 <div class="flex flex-col items-center justify-center px-1 sm:px-3 pl-2 sm:pl-4">
@@ -17004,7 +17013,7 @@ Odd Taxi|2021|87
               <span class="text-[11px] text-gray-500 ml-1">${userRating ? `${userRating}/5 Stars` : '(Tap star to rate)'}</span>
             </div>
 
-            <!-- Action Row: Heart, Watched/Unwatched, Fav, Trailer + Exactly ONE Indian Streaming button beside Cinejoy -->
+            <!-- Action Row: Heart, Watched/Unwatched, Fav, Trailer + JioHotstar/Netflix/Prime beside Cinejoy -->
             <div class="pt-1 flex flex-wrap items-center gap-2.5">
               <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" title="${isW ? 'In Watchlist (Click to remove)' : 'Add to Watchlist'}" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isW ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40' : 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/15'}">
                 <i class="fa-solid fa-heart text-base ${isW ? 'text-white' : 'text-gray-300'}"></i>
@@ -17019,7 +17028,7 @@ Odd Taxi|2021|87
                 <i class="fa-brands fa-youtube"></i> Trailer
               </a>
 
-              <!-- Single Indian Streaming Platform Button beside Cinejoy -->
+              <!-- Single Indian Streaming Platform Button (JioHotstar, Netflix, or Prime Video) -->
               <a href="${platSearchUrl}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl ${platClass} border font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all">
                 <i class="${platIcon}"></i> <span>${platLabel}</span>
               </a>
