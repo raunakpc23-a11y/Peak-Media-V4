@@ -15966,13 +15966,19 @@ Odd Taxi|2021|87
           </div>
         </div>
 
-        <!-- Clean Resting Metadata: Title + Year & Rating Only -->
-        <div class="p-3 flex-1 flex flex-col justify-between gap-1">
-          <h3 class="font-bold text-xs sm:text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-1" title="${attrTitle}">${item.cleanName || item.title}</h3>
-          <div class="flex items-center justify-between text-xs text-gray-400">
-            <span>${item.year}</span>
-            <span class="text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
+        <!-- Clean Resting Metadata: Title + Year & Rating + Watch Now Button -->
+        <div class="p-3 pt-2 flex-1 flex flex-col justify-between gap-2 border-t border-white/5">
+          <div>
+            <h3 class="font-bold text-xs sm:text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-1" title="${attrTitle}">${item.cleanName || item.title}</h3>
+            <div class="flex items-center justify-between text-xs text-gray-400 mt-0.5">
+              <span>${item.year}</span>
+              <span class="text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
+            </div>
           </div>
+          <button type="button" onclick="event.stopPropagation(); openDetailModal('${escTitle}')" class="w-full py-1.5 px-2.5 rounded-xl bg-white/5 hover:bg-brand-gold hover:text-black border border-white/10 hover:border-brand-gold text-xs font-bold text-gray-200 flex items-center justify-center gap-1.5 transition-all shadow-sm">
+            <i class="fa-solid fa-circle-play text-xs text-brand-gold group-hover:text-black"></i>
+            <span>Watch Now</span>
+          </button>
         </div>
       </div>`;
     }
@@ -16488,31 +16494,47 @@ Odd Taxi|2021|87
     function renderCategoriesTab() {
       const genres = Object.keys(categoryData).sort();
       const pillsEl = document.getElementById('genreQuickPills');
-      pillsEl.innerHTML = genres.map(g => {
-        return `<button onclick="document.getElementById('genre-sec-${g}').scrollIntoView({behavior:'smooth'})" class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-300 hover:text-white transition-all">
+      if (!pillsEl) return;
+      pillsEl.innerHTML = genres.map((g, idx) => {
+        return `<button onclick="selectGenreTab('${g}')" id="genrePill-${g}" class="genre-tab-pill px-3 py-1 rounded-lg ${idx === 0 ? 'bg-brand-gold text-black font-bold' : 'bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-300 hover:text-white'} transition-all">
           ${g}
         </button>`;
       }).join('');
+      if (genres.length) selectGenreTab(genres[0]);
+    }
+
+    window.selectGenreTab = function(genre) {
+      const pills = document.querySelectorAll('.genre-tab-pill');
+      pills.forEach(p => {
+        p.className = 'genre-tab-pill px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-300 hover:text-white transition-all';
+      });
+      const activePill = document.getElementById(`genrePill-${genre}`);
+      if (activePill) activePill.className = 'genre-tab-pill px-3 py-1 rounded-lg bg-brand-gold text-black font-bold text-xs transition-all shadow-sm';
 
       const catList = document.getElementById('categoriesList');
-      catList.innerHTML = genres.map(g => {
-        return `
-          <div id="genre-sec-${g}" class="space-y-3 scroll-mt-24">
-            <div class="flex items-center justify-between border-b border-white/10 pb-2">
-              <h2 class="text-base sm:text-lg font-display font-bold text-white">${g}</h2>
-            </div>
-            <div class="has-arrows">
-              <div class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x">
-                ${categoryData[g].slice(0, CAT_CAP).map(m => createCardHTML(m, true)).join('')}
-              </div>
-            </div>
-            ${categoryData[g].length > CAT_CAP ? `<button id="catmore-${g}" onclick="expandGenre('${g}')" class="mt-1 px-3.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-300 transition-all">Show more</button>` : ''}
-          </div>`;
-      }).join('');
-
+      if (!catList) return;
+      const items = categoryData[genre] || [];
+      catList.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <h2 class="text-base sm:text-lg font-display font-bold text-white">${genre}</h2>
+            <span class="text-xs text-gray-400 font-semibold">${items.length} titles</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 sm:gap-4">
+            ${items.map(m => createCardHTML(m, true)).join('')}
+          </div>
+        </div>`;
       attachThumbObservers(catList);
-      catList.querySelectorAll('.hscroll').forEach(addHorizontalArrows);
-    }
+    };
+
+    window.syncCatalogSearch = function(val) {
+      const m = document.getElementById('searchMovies');
+      const s = document.getElementById('searchShows');
+      if (m && m.value !== val) m.value = val;
+      if (s && s.value !== val) s.value = val;
+      filterAndRenderMovies(false);
+      filterAndRenderShows(false);
+    };
 
     // ==========================================
     // 8. PERSONAL HUB, DNA ANALYTICS & BACKUPS
@@ -17357,6 +17379,14 @@ Odd Taxi|2021|87
     let rejectsLeft = 3;
 
     function generateRecommendation() {
+      if (!activeTags.recTags.length) {
+        if (wishlistTitles.length >= 2) {
+          activeTags.recTags = wishlistTitles.slice(0, 3);
+        } else {
+          activeTags.recTags = ['Inception', 'Interstellar', 'The Dark Knight'];
+        }
+        renderTags('recTags');
+      }
       const selected = activeTags.recTags.map(t => globalDatabase[t]).filter(Boolean);
       if (!selected.length) {
         showToast("Please add at least 1 seed title first!", "fa-circle-exclamation", "text-amber-400");
@@ -17399,7 +17429,8 @@ Odd Taxi|2021|87
       recBatchOffset = 0;
       rejectsLeft = 4;
       renderRecommendationBatch();
-      const initP = document.getElementById('recInitialPrompt'); if (initP) initP.classList.add('hidden'); document.getElementById('recResultBox').classList.remove('hidden');
+      const initP = document.getElementById('recInitialPrompt'); if (initP) initP.classList.add('hidden');
+      const rBox = document.getElementById('recResultBox'); if (rBox) rBox.classList.remove('hidden');
     }
 
     function draftMatchForward(title, event) {
@@ -17416,9 +17447,11 @@ Odd Taxi|2021|87
     function renderRecommendationBatch() {
       const slice = rankedRecommendations.slice(recBatchOffset, recBatchOffset + 4);
       const container = document.getElementById('recCardsContainer');
-      document.getElementById('rejectCount').textContent = rejectsLeft;
+      if (!container) return;
+      const rCount = document.getElementById('rejectCount');
+      if (rCount) rCount.textContent = rejectsLeft;
       const rejectBtn = document.getElementById('rejectBtn');
-      rejectBtn.disabled = false;
+      if (rejectBtn) rejectBtn.disabled = false;
 
       container.innerHTML = slice.map(({ item, score, reason }, idx) => {
         const esc = item.title.replace(/'/g, "\\'");
@@ -17517,6 +17550,11 @@ Odd Taxi|2021|87
       const total = Math.min(100, matchScore + genreScore + eraScore + vibeScore);
 
       scoreEl.textContent = `${total}%`;
+      const circleSvg = document.getElementById('compatCircleSvg');
+      if (circleSvg) {
+        const offset = Math.max(0, 264 - (264 * total / 100));
+        circleSvg.style.strokeDashoffset = offset;
+      }
       if (total >= 80) msgEl.textContent = "🎬 Cinematic Soulmates!";
       else if (total >= 60) msgEl.textContent = "🍿 Great Co-Watching Crew";
       else msgEl.textContent = "⚡ Opposites Attract (Expect Lively Debates)";

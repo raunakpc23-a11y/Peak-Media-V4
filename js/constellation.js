@@ -1,4 +1,4 @@
-﻿  // ==========================================
+  // ==========================================
   // TASTE CONSTELLATION — force-directed taste web (canvas)
   // ==========================================
   (function () {
@@ -34,8 +34,13 @@
       if (S.wish) wishlistTitles.forEach(t => { const i = globalDatabase[t]; if (i && !have.has(t)) { have.add(t); seedItems.push({ i, kind: 'wish', w: .7 }); } });
       S.explored.forEach(t => { const i = globalDatabase[t]; if (i && !have.has(t)) { have.add(t); seedItems.push({ i, kind: 'explored', w: .9 }); } });
 
+      if (!seedItems.length) {
+        const starter = ['Inception', 'The Dark Knight', 'Interstellar', 'Parasite', 'Breaking Bad'];
+        starter.forEach(t => { const i = globalDatabase[t]; if (i) seedItems.push({ i, kind: 'seed', w: 1 }); });
+      }
+
       const empty = !seedItems.length;
-      document.getElementById('cxEmpty').classList.toggle('hidden', !empty);
+      const emptyEl = document.getElementById('cxEmpty'); if (emptyEl) emptyEl.classList.add('hidden');
 
       // ghost candidates scored against every seed
       const scored = [];
@@ -168,7 +173,8 @@
         '<span class="flex items-center gap-1"><i class="inline-block w-2 h-2 rounded-full border border-gray-400"></i>suggested</span>';
     }
     function sub(s, g) {
-      document.getElementById('cxSub').textContent = s ? `${s} titles in your web · ${g} suggestions ranked by how many of your picks they connect to (popular first).` : 'Your watched titles form a web. Glowing outer nodes are what to watch next.';
+      const el = document.getElementById('cxSub');
+      if (el) el.textContent = s ? `${s} titles in your web · ${g} suggestions ranked by how many of your picks they connect to (popular first).` : 'Your watched titles form a web. Glowing outer nodes are what to watch next.';
     }
 
     function panel() {

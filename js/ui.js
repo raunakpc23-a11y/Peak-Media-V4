@@ -13,17 +13,9 @@
     discover: { first: 'discover', subs: [] },
     browse: { first: 'movies', subs: [['movies', 'Movies', 'fa-clapperboard'], ['shows', 'Shows', 'fa-tv'], ['categories', 'Genres', 'fa-layer-group'], ['universes', 'Universes', 'fa-globe']] },
     music: { first: 'music', subs: [] },
-    decide: { first: 'mood', subs: [
-      ['mood', 'Mood Dial', 'fa-compass'],
-      ['duel', 'Duel', 'fa-trophy'],
-      ['match', 'Matchmaker', 'fa-wand-magic-sparkles'],
-      ['ricochet', 'Ricochet', 'fa-circle-dot'],
-      ['marathon', 'Marathon', 'fa-hourglass-half'],
-      ['compat', 'Compatibility', 'fa-people-arrows']
-    ] },
+    decide: { first: 'play', subs: [] },
     space: { first: 'hub', subs: [
       ['hub', 'Shelves', 'fa-bookmark'],
-      ['lists', 'Playlists', 'fa-list-check'],
       ['web', 'DNA', 'fa-circle-nodes'],
       ['profile', 'Profile', 'fa-user'],
       ['admin', 'Admin', 'fa-shield-halved']
@@ -36,6 +28,7 @@
     categories: 'browse',
     universes: 'browse',
     music: 'music',
+    play: 'decide',
     mood: 'decide',
     duel: 'decide',
     match: 'decide',
@@ -52,7 +45,10 @@
   const OFF = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative text-gray-300 hover:text-white hover:bg-white/5';
   window.switchTab = function (key) {
     if (key === 'roulette') { openSurpriseModal(); return; }
-    if (key === 'space') key = 'hub'; if (key === 'browse') key = 'movies'; if (key === 'decide') key = 'mood';
+    if (key === 'space') key = 'hub';
+    if (key === 'browse') key = 'movies';
+    if (key === 'decide') key = 'play';
+    if (key === 'lists') key = 'hub';
     if (!PANE_GROUP[key]) key = 'discover';
     const g = PANE_GROUP[key];
     Object.keys(PANE_GROUP).forEach(k => {
@@ -70,9 +66,33 @@
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
     if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
     if (key === 'music' && window.initMusicVault) window.initMusicVault();
-    if (key === 'lists' && window.renderCustomListsTab) window.renderCustomListsTab();
+    if (key === 'hub') {
+      if (window.renderShelves) window.renderShelves();
+      if (window.refreshDNA) window.refreshDNA();
+      if (window.renderCustomListsTab) window.renderCustomListsTab();
+    }
     if ((key === 'profile' || key === 'admin') && window.renderProfileTab) window.renderProfileTab();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.filterLibraryShelfView = function(view) {
+    const btns = ['all', 'watched', 'wish', 'fav', 'custom'];
+    btns.forEach(b => {
+      const el = document.getElementById('shelfViewBtn-' + b);
+      if (el) el.className = (b === view)
+        ? 'px-3 py-1 rounded-lg text-xs font-bold bg-brand-gold text-black shadow transition-all'
+        : 'px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all';
+    });
+    const watchedShelf = document.querySelector('[data-shelf="watched"]');
+    const wishShelf = document.querySelector('[data-shelf="wish"]');
+    const favShelf = document.querySelector('[data-shelf="fav"]');
+    const watchingShelf = document.querySelector('[data-shelf="watching"]');
+    const customSection = document.getElementById('shelf-custom');
+    if (watchedShelf) watchedShelf.classList.toggle('hidden', view !== 'all' && view !== 'watched');
+    if (wishShelf) wishShelf.classList.toggle('hidden', view !== 'all' && view !== 'wish');
+    if (favShelf) favShelf.classList.toggle('hidden', view !== 'all' && view !== 'fav');
+    if (watchingShelf) watchingShelf.classList.toggle('hidden', view !== 'all' && view !== 'watched');
+    if (customSection) customSection.classList.toggle('hidden', view !== 'all' && view !== 'custom');
   };
   switchTab('discover');
 

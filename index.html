@@ -326,12 +326,11 @@
 
     <!-- TAB 1: MOVIES -->
     <section id="tab-movies" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-        <h1 class="text-xl sm:text-2xl font-display font-bold text-white">Movies</h1>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-          <div class="relative flex-1 sm:w-64">
+      <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2 flex-1 max-w-md">
+          <div class="relative flex-1">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-            <input type="text" id="searchMovies" placeholder="Search movies..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+            <input type="text" id="searchMovies" oninput="syncCatalogSearch(this.value)" placeholder="Search catalog..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
           </div>
           <button type="button" id="moviesFilterToggleBtn" onclick="toggleCatalogFilterPanel('movies')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
             <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i>
@@ -379,12 +378,11 @@
 
     <!-- TAB 2: TV SHOWS -->
     <section id="tab-shows" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-        <h1 class="text-xl sm:text-2xl font-display font-bold text-white">TV Shows</h1>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-          <div class="relative flex-1 sm:w-64">
+      <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2 flex-1 max-w-md">
+          <div class="relative flex-1">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-            <input type="text" id="searchShows" placeholder="Search shows..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+            <input type="text" id="searchShows" oninput="syncCatalogSearch(this.value)" placeholder="Search catalog..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
           </div>
           <button type="button" id="showsFilterToggleBtn" onclick="toggleCatalogFilterPanel('shows')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
             <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i>
@@ -430,12 +428,11 @@
     </section>
 
     <!-- TAB 3: CATEGORIES -->
-    <section id="tab-categories" class="tab-pane hidden fade-in space-y-6">
-      <div class="border-b border-white/10 pb-4">
-        <h1 class="text-xl sm:text-2xl font-display font-bold text-white">Genres</h1>
-        <div id="genreQuickPills" class="flex flex-wrap gap-1.5 mt-3"></div>
+    <section id="tab-categories" class="tab-pane hidden fade-in space-y-4">
+      <div class="border-b border-white/10 pb-3">
+        <div id="genreQuickPills" class="flex flex-wrap gap-1.5 max-h-[76px] overflow-y-auto no-scrollbar py-1"></div>
       </div>
-      <div id="categoriesList" class="space-y-8"></div>
+      <div id="categoriesList" class="space-y-6"></div>
     </section>
 
     <!-- TAB: TASTE DNA (Library / Space subtab) -->
@@ -454,6 +451,7 @@
           <button id="cxReset" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-semibold text-gray-200 text-xs"><i class="fa-solid fa-rotate-left mr-1"></i> Reset</button>
         </div>
       </div>
+      <div id="cxSub" class="text-xs text-gray-400"></div>
       <div id="cxWrap" class="relative rounded-2xl overflow-hidden border border-white/10 h-[72vh] min-h-[480px]" style="background:radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%)">
         <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
         <div id="cxLegend" class="absolute top-3 left-3 flex flex-wrap gap-x-3 gap-y-1 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
@@ -472,12 +470,125 @@
       </div>
     </section>
 
-    <!-- TAB: CINEMA MOOD DIAL (Play Centerpiece) -->
-    <section id="tab-mood" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <!-- TAB: PLAY HUB (Interactive Experiences Landing Page) -->
+    <section id="tab-play" class="tab-pane hidden fade-in space-y-6">
+      <div class="border-b border-white/10 pb-4">
         <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
-          <i class="fa-solid fa-compass text-brand-gold"></i> Mood Dial
+          <i class="fa-solid fa-gamepad text-brand-gold"></i> Play
         </h1>
+        <p class="text-xs sm:text-sm text-gray-400 mt-1">Select an interactive experience to discover, duel, or analyze cinema.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- 1. Mood Dial -->
+        <div onclick="switchTab('mood')" class="glass-card group cursor-pointer rounded-2xl p-5 border border-white/10 hover:border-brand-gold/50 transition-all hover:-translate-y-1 shadow-lg flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/15 border border-brand-gold/30 text-brand-gold flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-compass"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-display font-bold text-white group-hover:text-brand-gold transition-colors">Mood Dial</h2>
+              <p class="text-xs text-gray-400 mt-1 leading-relaxed">Rotary dial & spectrum slider to calibrate movies by vibe, emotion, and intensity.</p>
+            </div>
+          </div>
+          <div class="pt-2 flex items-center text-xs font-bold text-brand-gold group-hover:translate-x-1 transition-transform">
+            <span>Launch Dial</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+          </div>
+        </div>
+
+        <!-- 2. Duel & CineSwipe -->
+        <div onclick="switchTab('duel')" class="glass-card group cursor-pointer rounded-2xl p-5 border border-white/10 hover:border-brand-gold/50 transition-all hover:-translate-y-1 shadow-lg flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-display font-bold text-white group-hover:text-brand-gold transition-colors">Duel &amp; CineSwipe</h2>
+              <p class="text-xs text-gray-400 mt-1 leading-relaxed">Tournament bracket elimination battles or rapid Tinder-style card swiping.</p>
+            </div>
+          </div>
+          <div class="pt-2 flex items-center text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform">
+            <span>Enter Arena</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+          </div>
+        </div>
+
+        <!-- 3. Matchmaker -->
+        <div onclick="switchTab('match')" class="glass-card group cursor-pointer rounded-2xl p-5 border border-white/10 hover:border-brand-gold/50 transition-all hover:-translate-y-1 shadow-lg flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-display font-bold text-white group-hover:text-brand-gold transition-colors">Matchmaker</h2>
+              <p class="text-xs text-gray-400 mt-1 leading-relaxed">Seed titles you love, analyze taste overlap, and vet suggestions with veto power.</p>
+            </div>
+          </div>
+          <div class="pt-2 flex items-center text-xs font-bold text-purple-400 group-hover:translate-x-1 transition-transform">
+            <span>Find Matches</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+          </div>
+        </div>
+
+        <!-- 4. Ricochet Lab -->
+        <div onclick="switchTab('ricochet')" class="glass-card group cursor-pointer rounded-2xl p-5 border border-white/10 hover:border-brand-gold/50 transition-all hover:-translate-y-1 shadow-lg flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-circle-dot"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-display font-bold text-white group-hover:text-brand-gold transition-colors">Ricochet Lab</h2>
+              <p class="text-xs text-gray-400 mt-1 leading-relaxed">Multi-ball pinball simulation with gravity bumpers that strike and reveal films.</p>
+            </div>
+          </div>
+          <div class="pt-2 flex items-center text-xs font-bold text-cyan-400 group-hover:translate-x-1 transition-transform">
+            <span>Launch Pinball</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+          </div>
+        </div>
+
+        <!-- 5. Marathon Architect -->
+        <div onclick="switchTab('marathon')" class="glass-card group cursor-pointer rounded-2xl p-5 border border-white/10 hover:border-brand-gold/50 transition-all hover:-translate-y-1 shadow-lg flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-display font-bold text-white group-hover:text-brand-gold transition-colors">Marathon Architect</h2>
+              <p class="text-xs text-gray-400 mt-1 leading-relaxed">Calculate exact runtimes, interval breaks, and structured timeline schedules.</p>
+            </div>
+          </div>
+          <div class="pt-2 flex items-center text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition-transform">
+            <span>Plan Marathon</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+          </div>
+        </div>
+
+        <!-- 6. Compatibility Analysis -->
+        <div onclick="switchTab('compat')" class="glass-card group cursor-pointer rounded-2xl p-5 border border-white/10 hover:border-brand-gold/50 transition-all hover:-translate-y-1 shadow-lg flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-people-arrows"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-display font-bold text-white group-hover:text-brand-gold transition-colors">Compatibility Analysis</h2>
+              <p class="text-xs text-gray-400 mt-1 leading-relaxed">Compare viewer taste profiles, determine synergy score, and pick joint watch films.</p>
+            </div>
+          </div>
+          <div class="pt-2 flex items-center text-xs font-bold text-rose-400 group-hover:translate-x-1 transition-transform">
+            <span>Run Analysis</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: CINEMA MOOD DIAL (Play Subtab) -->
+    <section id="tab-mood" class="tab-pane hidden fade-in space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="switchTab('play')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-semibold border border-white/10 transition-colors">
+            <i class="fa-solid fa-arrow-left text-xs"></i> <span>Play Hub</span>
+          </button>
+          <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-compass text-brand-gold"></i> Mood Dial
+          </h1>
+        </div>
         <button type="button" onclick="spinMoodDialRoulette()" id="moodDialSpinBtn" class="self-start sm:self-auto px-3.5 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-2 shadow hover:opacity-95 active:scale-95 transition-all">
           <i class="fa-solid fa-dice text-sm"></i> <span>Roulette</span>
         </button>
@@ -553,9 +664,19 @@
     <!-- TAB: TOURNAMENT & CINESWIPE -->
     <section id="tab-duel" class="tab-pane hidden fade-in space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-        <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
-          <i class="fa-solid fa-trophy text-brand-gold"></i> Tournament Bracket
-        </h1>
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="switchTab('play')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-semibold border border-white/10 transition-colors">
+            <i class="fa-solid fa-arrow-left text-xs"></i> <span>Play Hub</span>
+          </button>
+          <div class="flex items-center p-0.5 rounded-xl bg-black/50 border border-white/10" id="duelModeSwitchBar">
+            <button type="button" id="duelBtnTourney" onclick="window.setDuelSubMode('tourney')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-gold text-black shadow">
+              <i class="fa-solid fa-trophy mr-1 text-[11px]"></i> Tournament
+            </button>
+            <button type="button" id="duelBtnSwipe" onclick="window.setDuelSubMode('swipe')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white">
+              <i class="fa-solid fa-layer-group mr-1 text-[11px]"></i> CineSwipe
+            </button>
+          </div>
+        </div>
         <!-- Themed Curations Pills -->
         <div class="flex flex-wrap gap-1.5 items-center" id="duelPresetGrid">
           <button type="button" onclick="launchPresetDuel('pantheon')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Essential</button>
@@ -668,10 +789,15 @@
 
     <!-- TAB: MOOD RICOCHET -->
     <section id="tab-ricochet" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex items-center justify-between">
-        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white flex items-center gap-2.5">
-          <i class="fa-solid fa-circle-dot text-brand-gold"></i> Mood Ricochet
-        </h1>
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="switchTab('play')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-semibold border border-white/10 transition-colors">
+            <i class="fa-solid fa-arrow-left text-xs"></i> <span>Play Hub</span>
+          </button>
+          <h1 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-circle-dot text-brand-gold"></i> Mood Ricochet
+          </h1>
+        </div>
       </div>
 
       <div class="grid lg:grid-cols-[auto_1fr] gap-6 items-start">
@@ -744,10 +870,15 @@
 
     <!-- TAB: MARATHON ARCHITECT & BINGE CALCULATOR -->
     <section id="tab-marathon" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white flex items-center gap-2.5">
-          <i class="fa-solid fa-hourglass-half text-brand-gold"></i> Marathon Architect
-        </h1>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="switchTab('play')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-semibold border border-white/10 transition-colors">
+            <i class="fa-solid fa-arrow-left text-xs"></i> <span>Play Hub</span>
+          </button>
+          <h1 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-hourglass-half text-brand-gold"></i> Marathon Architect
+          </h1>
+        </div>
         <!-- Dual Mode Switcher -->
         <div class="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.05] border border-white/10 shrink-0">
           <button id="mhModeSessionBtn" type="button" onclick="switchMarathonMode('session')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-brand-gold text-black shadow transition-all">
@@ -922,11 +1053,16 @@
       </div>
     </section>
 
-    <!-- TAB: TASTE COMPATIBILITY (Play / Decide subtab) -->
+    <!-- TAB: TASTE COMPATIBILITY (Play Subtab) -->
     <section id="tab-compat" class="tab-pane hidden fade-in space-y-4">
       <div id="compatLab" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
         <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Taste Compatibility</h2>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="switchTab('play')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-semibold border border-white/10 transition-colors">
+              <i class="fa-solid fa-arrow-left text-xs"></i> <span>Play Hub</span>
+            </button>
+            <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Taste Compatibility</h2>
+          </div>
           <button onclick="loadDemoCompatibility()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
             Demo
           </button>
@@ -984,9 +1120,17 @@
           <div id="compatResults" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
               <div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-black/40 border border-white/10 text-center">
-                <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Overall Synergy</div>
-                <div id="compatScore" class="text-5xl font-display font-extrabold text-brand-gold my-2">0%</div>
-                <div id="compatMessage" class="text-sm font-semibold text-white"></div>
+                <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Overall Synergy</div>
+                <div class="relative w-28 h-28 flex items-center justify-center my-1">
+                  <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" class="text-white/10" fill="transparent" />
+                    <circle id="compatCircleSvg" cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" class="text-brand-gold transition-all duration-1000" stroke-dasharray="264" stroke-dashoffset="264" stroke-linecap="round" fill="transparent" />
+                  </svg>
+                  <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span id="compatScore" class="text-3xl font-display font-extrabold text-white">0%</span>
+                  </div>
+                </div>
+                <div id="compatMessage" class="text-xs font-semibold text-gray-200 mt-2"></div>
               </div>
               <div class="md:col-span-2">
                 <ul id="compatBreakdown" class="space-y-3"></ul>
@@ -1008,11 +1152,16 @@
       <div id="uniView" class="hidden space-y-4"></div>
     </section>
 
-    <!-- TAB: MATCHMAKER (Play / Decide subtab) -->
+    <!-- TAB: MATCHMAKER (Play Subtab) -->
     <section id="tab-match" class="tab-pane hidden fade-in space-y-4">
       <div id="recSection" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
         <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <h1 class="text-xl sm:text-2xl font-display font-bold text-white">Matchmaker</h1>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="switchTab('play')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-semibold border border-white/10 transition-colors">
+              <i class="fa-solid fa-arrow-left text-xs"></i> <span>Play Hub</span>
+            </button>
+            <h1 class="text-xl sm:text-2xl font-display font-bold text-white">Matchmaker</h1>
+          </div>
           <button onclick="prefillFromWishlist('recTags')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
             <i class="fa-solid fa-bolt text-brand-gold mr-1"></i> Watchlist
           </button>
@@ -1070,25 +1219,31 @@
         </div>
       </div>
 
-      <!-- Compact Single-Line Atmosphere Swatches in Library -->
-      <div class="p-3 rounded-2xl bg-black/40 border border-white/10 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-bold text-gray-300">Theme:</span>
-          <div id="hubQuickThemeSwatches" class="flex flex-wrap gap-2 items-center"></div>
+      <!-- Compact 1-Line Atmosphere Bar in Library -->
+      <div class="px-3.5 py-2 rounded-xl bg-black/30 border border-white/5 flex items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <span class="font-bold text-gray-400 shrink-0">Theme:</span>
+          <div id="hubQuickThemeSwatches" class="flex gap-1.5 items-center shrink-0"></div>
         </div>
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" class="px-3 py-1 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 flex items-center gap-1.5">
-            <span id="hubFxQuickText">Calm Mode: Off</span>
-          </button>
-        </div>
+        <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" class="shrink-0 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-300 flex items-center gap-1.5">
+          <span id="hubFxQuickText">Calm Mode: Off</span>
+        </button>
         <div id="hubAtmosphereModesGrid" class="hidden"></div>
       </div>
 
       <!-- Compact Shelves -->
       <div id="hubShelves" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h2 class="text-xl font-display font-bold text-white">Your Shelves</h2>
-          <div id="hubBadges" class="flex flex-wrap gap-1.5"></div>
+          <!-- Segmented Shelf Switcher -->
+          <div class="flex items-center gap-1 p-1 rounded-xl bg-black/40 border border-white/10 overflow-x-auto no-scrollbar">
+            <button type="button" onclick="window.filterLibraryShelfView('all')" id="shelfViewBtn-all" class="px-3 py-1 rounded-lg text-xs font-bold bg-brand-gold text-black shadow transition-all">All</button>
+            <button type="button" onclick="window.filterLibraryShelfView('watched')" id="shelfViewBtn-watched" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Watched</button>
+            <button type="button" onclick="window.filterLibraryShelfView('wish')" id="shelfViewBtn-wish" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Watchlist</button>
+            <button type="button" onclick="window.filterLibraryShelfView('fav')" id="shelfViewBtn-fav" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Favorites</button>
+            <button type="button" onclick="window.filterLibraryShelfView('custom')" id="shelfViewBtn-custom" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Custom Lists</button>
+          </div>
+          <div id="hubBadges" class="hidden"></div>
         </div>
         
         <div>
@@ -1128,6 +1283,25 @@
               <button onclick="clearShelf('fav')" class="text-[11px] text-gray-500 hover:text-rose-400 transition-colors">Clear</button>
             </div>
             <div id="shelf-fav" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[110px] items-start"></div>
+          </div>
+
+          <!-- Custom Film/Show Lists & Song Playlists (Integrated into Shelves) -->
+          <div id="shelf-custom" class="pt-4 border-t border-white/10 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-list-check text-brand-gold"></i> Custom Lists &amp; Playlists
+              </h3>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="createNewCustomMediaList()" class="px-3 py-1.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-1.5 shadow">
+                  <i class="fa-solid fa-folder-plus"></i> <span>New List</span>
+                </button>
+                <button type="button" onclick="openCreateSongPlaylistModal()" class="px-3 py-1.5 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-200 font-bold text-xs flex items-center gap-1.5">
+                  <i class="fa-solid fa-music"></i> <span>New Mix</span>
+                </button>
+              </div>
+            </div>
+            <div id="customMediaListsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
+            <div id="customSongListsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-2"></div>
           </div>
         </div>
       </div>
@@ -1300,57 +1474,11 @@
       <div id="musicPagination" class="flex justify-center items-center gap-3 pt-4"></div>
     </section>
 
-    <!-- TAB: LISTS & SHARING (Custom Movie/Show Lists + Song Playlists + Serverless URL Share) -->
-    <section id="tab-lists" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">Custom Lists &amp; Playlists</h1>
-        <div class="flex flex-wrap gap-2">
-          <button type="button" onclick="createNewCustomMediaList()" class="px-3.5 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-1.5">
-            <i class="fa-solid fa-folder-plus"></i> <span>New List</span>
-          </button>
-          <button type="button" onclick="openCreateSongPlaylistModal()" class="px-3.5 py-2 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-200 font-bold text-xs flex items-center gap-1.5">
-            <i class="fa-solid fa-music"></i> <span>New Mix</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Quick Status Lists: Currently Watching & Watch Later -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-400"><i class="fa-solid fa-play-circle mr-1.5"></i>Currently Watching (<span id="currWatchingCount">0</span>)</div>
-            <button type="button" onclick="shareBuiltInList('watching')" class="text-xs text-brand-gold hover:underline font-semibold">Share</button>
-          </div>
-          <div class="flex gap-2">
-            <input id="addCurrWatchingInput" type="text" placeholder="Add a title..." class="flex-1 px-3 py-1.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-cyan-400">
-            <button type="button" onclick="quickAddCurrentlyWatching()" class="px-3 py-1.5 rounded-xl bg-cyan-500 text-black font-bold text-xs">Add</button>
-          </div>
-          <div id="currWatchingList" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[100px] items-center"></div>
-        </div>
-
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="text-xs font-extrabold uppercase tracking-wider text-rose-400"><i class="fa-solid fa-bookmark mr-1.5"></i>Watchlist (<span id="watchLaterListCount">0</span>)</div>
-            <button type="button" onclick="shareBuiltInList('wishlist')" class="text-xs text-brand-gold hover:underline font-semibold">Share</button>
-          </div>
-          <div class="flex flex-wrap gap-2 pt-1">
-            <button type="button" onclick="shareBuiltInList('wishlist')" class="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs font-bold"><i class="fa-solid fa-link mr-1"></i>Share Watchlist</button>
-            <button type="button" onclick="shareBuiltInList('favs')" class="px-3 py-1.5 rounded-xl bg-brand-gold/20 border border-brand-gold/40 text-brand-gold text-xs font-bold"><i class="fa-solid fa-star mr-1"></i>Share Favorites</button>
-            <button type="button" onclick="shareBuiltInList('songfavs')" class="px-3 py-1.5 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-200 text-xs font-bold"><i class="fa-solid fa-music mr-1"></i>Share Songs</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Custom Named Film/TV Lists -->
-      <div class="space-y-4">
-        <h2 class="text-xl font-display font-bold text-white">Your Custom Film &amp; Show Lists</h2>
-        <div id="customMediaListsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </div>
-
-      <!-- Custom Named Song Playlists -->
-      <div class="space-y-4">
-        <h2 class="text-xl font-display font-bold text-white">Your Custom Music Playlists</h2>
-        <div id="customSongListsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    <!-- TAB: LISTS & SHARING (Merged into Shelves) -->
+    <section id="tab-lists" class="tab-pane hidden fade-in space-y-4">
+      <div class="hidden">
+        <input id="addCurrWatchingInput" type="text">
+        <span id="watchLaterListCount">0</span>
       </div>
     </section>
 
@@ -1942,15 +2070,15 @@
   </div>
 
 
-  <script src="js/data.js?v=3.8"></script>
-  <script src="js/constellation.js?v=3.8"></script>
-  <script src="js/hub-duel.js?v=3.8"></script>
-  <script src="js/ui.js?v=3.8"></script>
-  <script src="js/features.js?v=3.8"></script>
-  <script src="js/marathon.js?v=3.8"></script>
-  <script src="js/universes.js?v=3.8"></script>
-  <script src="js/mood_dial.js?v=3.8"></script>
-  <script src="js/main.js?v=3.8"></script>
-  <script src="js/pwa.js?v=3.8"></script>
+  <script src="js/data.js?v=3.9"></script>
+  <script src="js/constellation.js?v=3.9"></script>
+  <script src="js/hub-duel.js?v=3.9"></script>
+  <script src="js/ui.js?v=3.9"></script>
+  <script src="js/features.js?v=3.9"></script>
+  <script src="js/marathon.js?v=3.9"></script>
+  <script src="js/universes.js?v=3.9"></script>
+  <script src="js/mood_dial.js?v=3.9"></script>
+  <script src="js/main.js?v=3.9"></script>
+  <script src="js/pwa.js?v=3.9"></script>
 </body>
 </html>

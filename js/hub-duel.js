@@ -371,12 +371,32 @@
       el.innerHTML = `Compatibility with <b class="text-cyan-300">${esc(f.id)}</b>: <b class="text-brand-gold text-xl">${compat(tgt, f)}%</b>`; refreshDNA();
     };
     $('dnaClear').onclick = () => { friend = null; $('dnaCompat').classList.add('hidden'); refreshDNA(); };
+    window.refreshDNA = refreshDNA;
 
     // ======================================================
     // FEATURE 3 — WATCH DUEL (CLASSIC DUEL · BATTLE ROYALE · RAPID MATCHMAKER)
     // ======================================================
-    const D = { mode: 'classic', size: 4, src: 'wish', rounds: [], r: 0, m: 0, entrants: [], path: {}, busy: false };
+    const D = { mode: 'royale', size: 8, src: 'wish', rounds: [], r: 0, m: 0, entrants: [], path: {}, busy: false };
     if ($('duelMood')) $('duelMood').innerHTML = Object.keys(moods).map(k => `<option value="${esc(k)}">${esc(k)}</option>`).join('');
+    
+    window.setDuelSubMode = function(mode) {
+      const tBtn = $('duelBtnTourney');
+      const sBtn = $('duelBtnSwipe');
+      if (mode === 'swipe') {
+        if (tBtn) tBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white';
+        if (sBtn) sBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-gold text-black shadow';
+        D.mode = 'matchmaker';
+        D.size = 16;
+        startCineSwipe();
+      } else {
+        if (tBtn) tBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-gold text-black shadow';
+        if (sBtn) sBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white';
+        D.mode = 'royale';
+        D.size = 8;
+        if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden');
+        if ($('duelSetup')) $('duelSetup').classList.remove('hidden');
+      }
+    };
     
     if ($('duelGameMode')) {
       $('duelGameMode').querySelectorAll('button').forEach(b => b.onclick = () => {
@@ -823,7 +843,7 @@
     if ($('csPassBtn')) $('csPassBtn').onclick = () => csSwipe('left');
     if ($('csKeepBtn')) $('csKeepBtn').onclick = () => csSwipe('right');
     if ($('csPickTonightBtn')) $('csPickTonightBtn').onclick = csPickTonight;
-    if ($('csQuit')) $('csQuit').onclick = () => { if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden'); $('duelSetup').classList.remove('hidden'); };
+    if ($('csQuit')) $('csQuit').onclick = () => { if (window.setDuelSubMode) window.setDuelSubMode('tourney'); else { if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden'); $('duelSetup').classList.remove('hidden'); } };
 
     // Keyboard controls for CineSwipe & Duel
     window.addEventListener('keydown', (e) => {
@@ -876,6 +896,7 @@
     }, 60);
 
     // ---------- wiring ----------
+    window.renderShelves = renderShelves;
     const _upd = updateAllCountersAndViews;
     updateAllCountersAndViews = function () { _upd.apply(this, arguments); renderShelves(); refreshDNA(); };
     renderShelves(); refreshDNA();
