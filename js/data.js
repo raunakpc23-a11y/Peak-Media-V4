@@ -15948,12 +15948,6 @@ Odd Taxi|2021|87
             <span>${item.year}</span>
             <span class="text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
           </div>
-          ${(window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? `
-          <div class="pt-2 mt-1 border-t border-white/10" onclick="event.stopPropagation()">
-            <a href="${window.getCinejoyUrl(item.title, item.type)}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition-all">
-              <i class="fa-solid fa-circle-play text-xs"></i> <span>Watch Now</span>
-            </a>
-          </div>` : ''}
         </div>
       </div>`;
     }
@@ -16798,15 +16792,15 @@ Odd Taxi|2021|87
       const rNum = parseFloat(item.rating) || 8.0;
       const rtCritics = Math.min(100, Math.max(55, Math.round((rNum - 3) * 14.5 + (item.rank <= 100 ? 5 : 0))));
       const rtAudience = Math.min(100, Math.max(58, Math.round((rNum - 2.7) * 14)));
-      let riftBadge = { text: 'Universal Masterpiece', icon: 'fa-crown', color: 'bg-amber-400/20 text-amber-300 border-amber-400/40' };
+      let riftBadge = { text: 'Critically Acclaimed', icon: 'fa-award', color: 'bg-amber-400/15 text-amber-300 border-amber-400/30' };
       if (rtCritics >= 92 && rtAudience <= 72) {
-        riftBadge = { text: 'Critic Darling · Slow Burn', icon: 'fa-glasses', color: 'bg-sky-500/20 text-sky-300 border-sky-400/40' };
+        riftBadge = { text: 'Critics Pick', icon: 'fa-glasses', color: 'bg-sky-500/15 text-sky-300 border-sky-400/30' };
       } else if (rtCritics <= 68 && rtAudience >= 82) {
-        riftBadge = { text: 'Popcorn Crowd-Pleaser', icon: 'fa-fire-flame-curved', color: 'bg-rose-500/20 text-rose-300 border-rose-400/40' };
+        riftBadge = { text: 'Audience Favourite', icon: 'fa-thumbs-up', color: 'bg-rose-500/15 text-rose-300 border-rose-400/30' };
       } else if (rtCritics >= 88 && rtAudience >= 85) {
-        riftBadge = { text: 'Universal Masterpiece', icon: 'fa-crown', color: 'bg-amber-400/20 text-amber-300 border-amber-400/40' };
+        riftBadge = { text: 'Critically Acclaimed', icon: 'fa-award', color: 'bg-amber-400/15 text-amber-300 border-amber-400/30' };
       } else {
-        riftBadge = { text: 'Fan Favorite', icon: 'fa-bolt', color: 'bg-purple-500/20 text-purple-300 border-purple-400/40' };
+        riftBadge = { text: 'Popular Pick', icon: 'fa-fire', color: 'bg-purple-500/15 text-purple-300 border-purple-400/30' };
       }
 
       // 2. Curated or generated 15-word Inciting Hook (No synthetic repetitive templates)
@@ -17031,37 +17025,48 @@ Odd Taxi|2021|87
               <span class="text-[11px] text-gray-500 ml-1">${userRating ? `${userRating}/5 Stars` : '(Tap star to rate)'}</span>
             </div>
 
-            <!-- Action Row -->
-            <div class="pt-1 flex flex-wrap items-center gap-2.5">
-              <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" title="${isW ? 'In Watchlist (Click to remove)' : 'Add to Watchlist'}" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isW ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40' : 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/15'}">
-                <i class="fa-solid fa-heart text-base ${isW ? 'text-white' : 'text-gray-300'}"></i>
-              </button>
-              <button onclick="toggleWatched('${escTitle}', event); openDetailModal('${escTitle}');" title="${isWatched ? 'Mark as Unwatched' : 'Mark as Watched'}" class="px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${isWatched ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/25' : 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/15'}">
-                <i class="fa-solid ${isWatched ? 'fa-check' : 'fa-circle'}"></i> <span>${isWatched ? 'Watched' : 'Unwatched'}</span>
-              </button>
-              <button onclick="toggleFav('${escTitle}', event); openDetailModal('${escTitle}');" title="Toggle Favourite" class="px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${favTitles.includes(item.title) ? 'bg-brand-gold text-black shadow' : 'bg-white/10 hover:bg-white/20 text-white border border-white/15'}">
-                <i class="fa-solid fa-star"></i>
-              </button>
-              <a href="https://www.youtube.com/results?search_query=${encodeURIComponent((item.rawName || item.cleanName) + ' ' + item.year + ' official trailer')}" target="_blank" rel="noopener" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', 'trailer') : true" class="px-3.5 py-2 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 text-xs font-bold flex items-center gap-1.5 transition-all">
-                <i class="fa-brands fa-youtube"></i> Trailer
-              </a>
+            <!-- Action Row: Primary Watch, Secondary Platform/Trailer, Sleek User Toolbar -->
+            <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-white/10">
+              <!-- Streaming & Viewing Actions -->
+              <div class="flex flex-wrap items-center gap-2">
+                ${cinejoyStreamUrl ? `
+                <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
+                  <i class="fa-solid fa-circle-play text-sm"></i> <span>Watch on Cinejoy</span>
+                </a>` : ''}
 
-              ${indiaPlatform ? `
-              <!-- Single Verified Indian Streaming Platform Button -->
-              <a href="${platSearchUrl}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl ${platClass} border font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all">
-                <i class="${platIcon}"></i> <span>${platLabel}</span>
-              </a>` : ''}
+                ${indiaPlatform ? `
+                <a href="${platSearchUrl}" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl ${platClass} border font-bold text-xs flex items-center gap-1.5 transition-all">
+                  <i class="${platIcon}"></i> <span>${platLabel}</span>
+                </a>` : `
+                <a href="https://www.youtube.com/results?search_query=${encodeURIComponent((item.rawName || item.cleanName) + ' ' + item.year + ' official trailer')}" target="_blank" rel="noopener" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', 'trailer') : true" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition-all">
+                  <i class="fa-brands fa-youtube text-red-500"></i> <span>Trailer</span>
+                </a>`}
+              </div>
 
-              ${cinejoyStreamUrl ? `
-              <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
-                <i class="fa-solid fa-circle-play text-sm"></i> <span>Watch on Cinejoy</span>
-              </a>` : ''}
+              <!-- User Film Interaction Strip (Letterboxd Style) -->
+              <div class="flex items-center gap-1.5">
+                <!-- Watchlist Heart -->
+                <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" title="${isW ? 'In Watchlist (Click to remove)' : 'Add to Watchlist'}" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all ${isW ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10'}">
+                  <i class="fa-${isW ? 'solid' : 'regular'} fa-heart text-sm ${isW ? 'text-rose-400' : 'text-gray-400'}"></i>
+                </button>
 
-              ${isWatched ? `
-              <button id="modalMintBtn" onclick="toggleMintGoldenTicket('${escTitle}'); openDetailModal('${escTitle}');" class="px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 transition-all ${isMintedInTop3 ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 shadow-md' : 'bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/40'}">
-                <i class="fa-solid fa-ticket-simple"></i>
-                <span>${isMintedInTop3 ? 'In Top 3 Tickets (Remove)' : 'Mint Golden Ticket'}</span>
-              </button>` : ''}
+                <!-- Watched Toggle -->
+                <button onclick="toggleWatched('${escTitle}', event); openDetailModal('${escTitle}');" title="${isWatched ? 'Mark as Unwatched' : 'Mark as Watched'}" class="px-3 py-1.5 h-9 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${isWatched ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10'}">
+                  <i class="fa-solid ${isWatched ? 'fa-check' : 'fa-eye'}"></i> <span>${isWatched ? 'Watched' : 'Watch'}</span>
+                </button>
+
+                <!-- Favourite Star -->
+                <button onclick="toggleFav('${escTitle}', event); openDetailModal('${escTitle}');" title="Toggle Favourite" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all ${favTitles.includes(item.title) ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40' : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10'}">
+                  <i class="fa-${favTitles.includes(item.title) ? 'solid' : 'regular'} fa-star text-sm ${favTitles.includes(item.title) ? 'text-amber-300' : 'text-gray-400'}"></i>
+                </button>
+
+                ${isWatched ? `
+                <!-- Golden Ticket Top 3 Mint -->
+                <button id="modalMintBtn" onclick="toggleMintGoldenTicket('${escTitle}'); openDetailModal('${escTitle}');" title="Mint to Top 3 Golden Tickets" class="px-3 py-1.5 h-9 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${isMintedInTop3 ? 'bg-amber-400 text-black font-extrabold shadow-sm' : 'bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 border border-amber-400/30'}">
+                  <i class="fa-solid fa-ticket"></i>
+                  <span>${isMintedInTop3 ? 'Ticket #Minted' : 'Mint Ticket'}</span>
+                </button>` : ''}
+              </div>
             </div>
 
             <!-- More in Genre -->
