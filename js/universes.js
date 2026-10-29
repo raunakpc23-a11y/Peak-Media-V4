@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // FEATURE 10: UNIVERSES (Linear Card Sequence + Complete Film & Series Rosters)
 // ==========================================
 (function(){
@@ -454,27 +454,31 @@
     $('uniGrid').innerHTML=U.map((u,ui)=>{
       const n=u.N.length,w=u.N.filter((_,i)=>isSeen(u,i)).length;
       const filmCnt=u.N.filter(nd=>nd[5]==='movie').length,showCnt=u.N.filter(nd=>nd[5]==='show').length;
-      return`<button data-u="${ui}" class="text-left rounded-2xl p-4 border border-white/10 hover:border-white/25 hover:scale-[1.02] transition-all" style="background:linear-gradient(160deg,${u.c}38,#0b0d14 72%)">
-        <div class="flex items-start justify-between gap-2">
+      return `<div class="rounded-2xl p-5 border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between gap-4" style="background:linear-gradient(160deg,${u.c}25,#0b0d14 75%)">
+        <div class="flex items-start justify-between gap-3">
           <div>
-            <div class="text-base font-display font-extrabold text-white leading-tight">${esc(u.n)}</div>
-            <div class="text-[11px] text-gray-400 mt-1">${filmCnt} film${filmCnt===1?'':'s'}${showCnt?` · ${showCnt} series`:''}</div>
+            <div class="text-base font-display font-extrabold text-white leading-snug">${esc(u.n)}</div>
+            <div class="text-xs text-gray-400 mt-1">${filmCnt} film${filmCnt===1?'':'s'}${showCnt?` · ${showCnt} series`:''}</div>
           </div>
           <div class="relative shrink-0">${ring(w/n,u.c)}<span class="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-white">${w}/${n}</span></div>
         </div>
-        <div class="text-xs text-gray-400 mt-3">Start with <b class="text-gray-200">${esc(u.start)}</b></div>
-      </button>`;
+        <div class="pt-2 border-t border-white/10 flex items-center justify-between">
+          <span class="text-xs text-gray-400">Start: <strong class="text-gray-200">${esc(u.start)}</strong></span>
+          <button data-u="${ui}" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black font-bold text-xs text-white transition-all">
+            Show Titles →
+          </button>
+        </div>
+      </div>`;
     }).join('');
   }
 
-  let cur=null,order='release',typeFilter='all',layoutMode='line',sel=null;
+  let cur=null,order='release',typeFilter='all',layoutMode='grid',sel=null;
 
   function seq(u){
     let idx=u.N.map((_,i)=>i);
     if(typeFilter!=='all')idx=idx.filter(i=>u.N[i][5]===typeFilter);
-    if(order==='release')return idx.sort((a,b)=>u.N[a][1]-u.N[b][1]||u.N[a][2]-u.N[b][2]);
     if(order==='chrono')return idx.sort((a,b)=>u.N[a][2]-u.N[b][2]);
-    return idx.filter(i=>u.N[i][3]>0&&u.N[i][4]!=='skip').sort((a,b)=>u.N[a][3]-u.N[b][3]);
+    return idx.sort((a,b)=>u.N[a][1]-u.N[b][1]||u.N[a][2]-u.N[b][2]);
   }
 
   function view(){
@@ -487,104 +491,72 @@
       const nd=u.N[i],d=dbFind(nd[0],nd[5]),sn=isSeen(u,i),isNext=(i===next),isSel=(i===sel);
       const isW=d&&wishlistTitles.includes(d.title),isFav=d&&favTitles.includes(d.title);
       const fb=d?generateStylizedPosterDataURI(d):'';
-      const posterUrl=d?(posterCache[d.type+':'+d.title]||fb):'';
+      const rawPoster=d?(posterCache[d.type+':'+d.title]||fb):'';
+      const posterUrl=window.upgradePosterQuality ? window.upgradePosterQuality(rawPoster) : rawPoster;
       const attrT=d?esc(d.title):'';
       const escT=d?d.title.replace(/'/g,"\\'").replace(/"/g,"&quot;"):'';
-      const roleMeta={
-        start:{lbl:'Start Here',cls:'bg-brand-gold text-black'},
-        essential:{lbl:'Essential',cls:'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'},
-        skip:{lbl:'Optional',cls:'bg-white/10 text-gray-400'}
-      }[nd[4]]||{lbl:'Core Chapter',cls:'bg-white/10 text-gray-200'};
 
-      // Check relationship to next card in line
-      const nextNodeIdx=S[stepIdx+1];
-      const directEdge=nextNodeIdx!=null?u.E.find(([a,b])=>(a===i&&b===nextNodeIdx)||(b===i&&a===nextNodeIdx)):null;
-      const edgeType=directEdge?directEdge[2]:(stepIdx<S.length-1?'next in order':null);
-      const edgeColor=directEdge?(ECOL[directEdge[2]]||u.c):'#64748b';
-
-      const cardBox=`
-        <div class="uni-node group relative ${layoutMode==='line'?'w-48 sm:w-52 shrink-0 snap-start':'w-full'} rounded-2xl overflow-hidden bg-brand-card border-2 transition-all cursor-pointer flex flex-col ${isSel?'border-brand-gold shadow-xl shadow-brand-gold/20':sn?'border-emerald-500/50':'border-white/10 hover:border-white/30'} ${isNext?'uni-next-card':''}" data-i="${i}">
-          <div class="relative poster-aspect w-full overflow-hidden bg-[#0c0f16]">
+      return `
+        <div class="uni-node group relative w-full rounded-2xl overflow-hidden bg-brand-card border transition-all cursor-pointer flex flex-col ${isSel?'border-brand-gold shadow-lg shadow-brand-gold/10':sn?'border-emerald-500/40':'border-white/10 hover:border-white/30'}" data-i="${i}">
+          <div class="relative poster-aspect w-full overflow-hidden bg-[#0c0f16]" onclick="${d?`openDetailModal('${escT}')`:''}">
             ${d?`<img src="${posterUrl}" data-title="${attrT}" onerror="this.onerror=null;this.src='${fb}';" alt="${attrT}" class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"/>`:''}
-            <div class="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-transparent to-black/40 opacity-90"></div>
-            <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-              <span class="px-2 py-0.5 rounded-lg bg-black/85 text-white font-display font-extrabold text-xs border border-white/20">#${stepIdx+1}</span>
-              ${d?`<span class="px-2 py-0.5 rounded-lg bg-black/80 text-brand-gold font-extrabold text-[11px] border border-brand-gold/30">★ ${d.rating}</span>`:''}
+            <div class="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-transparent to-black/30 opacity-80"></div>
+            <div class="absolute top-2 left-2 flex items-center gap-1.5">
+              <span class="px-2 py-0.5 rounded-md bg-black/80 text-white font-mono font-bold text-[10px] border border-white/15">#${stepIdx+1}</span>
+              ${d?`<span class="px-2 py-0.5 rounded-md bg-black/80 text-brand-gold font-bold text-[10px] border border-brand-gold/30">★ ${d.rating}</span>`:''}
             </div>
-            <div class="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
-              ${d?`<button data-wish-btn="${attrT}" onclick="toggleWishlist('${escT}', event)" title="Toggle Watchlist" class="w-8 h-8 rounded-full flex items-center justify-center transition-all ${isW?'bg-rose-500 text-white shadow-lg':'bg-black/70 text-gray-300 hover:bg-black hover:text-white'}"><i class="fa-solid fa-heart text-xs"></i></button>`:''}
-              <button data-seen-idx="${i}" title="Mark Watched" class="uni-seen-btn w-8 h-8 rounded-full flex items-center justify-center transition-all ${sn?'bg-emerald-500 text-black shadow-lg':'bg-black/70 text-gray-300 hover:bg-black hover:text-white'}"><i class="fa-solid fa-check text-xs"></i></button>
-              ${d?`<button data-fav-btn="${attrT}" onclick="toggleFav('${escT}', event)" title="Toggle Favourite" class="w-8 h-8 rounded-full flex items-center justify-center transition-all ${isFav?'bg-brand-gold text-black shadow-lg':'bg-black/70 text-gray-300 hover:bg-black hover:text-white'}"><i class="fa-solid fa-star text-xs"></i></button>`:''}
+            <div class="absolute top-2 right-2 flex items-center gap-1 z-10">
+              <button data-seen-idx="${i}" title="${sn?'Watched':'Mark Watched'}" class="uni-seen-btn w-7 h-7 rounded-full flex items-center justify-center transition-all ${sn?'bg-emerald-500 text-black shadow-md':'bg-black/70 text-gray-300 hover:bg-black hover:text-white'}">
+                <i class="fa-solid fa-check text-[10px]"></i>
+              </button>
             </div>
-            <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-1">
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded ${roleMeta.cls}">${roleMeta.lbl}</span>
-              <span class="text-[10px] font-semibold text-gray-200 bg-black/75 px-2 py-0.5 rounded">${nd[5]==='show'?'TV Series':'Film'} · ${nd[1]}</span>
+            <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[10px] text-gray-300 font-medium">
+              <span>${nd[5]==='show'?'TV':'Film'} · ${nd[1]}</span>
+              <span class="${sn?'text-emerald-400 font-bold':''}"></span>
             </div>
           </div>
           <div class="p-3 flex-1 flex flex-col justify-between space-y-2">
             <div>
-              <div class="text-[10px] font-bold uppercase tracking-wider text-gray-400">${d?esc(d.genre):'Franchise'} · ${d?esc(d.platformName):''}</div>
               <h4 class="font-bold text-xs sm:text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-1" title="${esc(nd[0])}">${esc(nd[0])}</h4>
-              <p class="text-[11px] text-gray-400 line-clamp-1 mt-0.5">${esc(nd[6]||'')}</p>
             </div>
-            <div class="pt-1.5 border-t border-white/10 flex items-center justify-between text-[11px]">
-              <span class="${sn?'text-emerald-400 font-bold':isNext?'text-brand-gold font-bold':'text-gray-400'}">${sn?'✓ Watched':isNext?'▶ Up Next':'Unwatched'}</span>
-              ${d?`<button data-open-title="${attrT}" class="uni-card-open text-brand-gold hover:underline font-semibold">Details →</button>`:''}
+            <div class="pt-1.5 border-t border-white/10 flex items-center justify-between text-xs">
+              <span class="${sn?'text-emerald-400 font-semibold':'text-gray-400'}">${sn?'Watched':'Unwatched'}</span>
+              ${d?`<button data-open-title="${attrT}" class="uni-card-open text-brand-gold hover:underline font-semibold text-[11px]">Details →</button>`:''}
             </div>
           </div>
         </div>`;
-
-      if(layoutMode==='line'){
-        const arrow=stepIdx<S.length-1?`<div class="flex flex-col items-center justify-center px-1.5 shrink-0 select-none"><div class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 border border-white/10 mb-1 whitespace-nowrap" style="color:${edgeColor}">${esc(edgeType)}</div><div class="w-8 h-0.5 rounded" style="background:${edgeColor}"></div><i class="fa-solid fa-chevron-right text-xs mt-1" style="color:${edgeColor}"></i></div>`:'';
-        return`<div class="flex items-center shrink-0 snap-start">${cardBox}${arrow}</div>`;
-      }
-      return cardBox;
     }).join('');
 
-    const legend=Object.entries(ECOL).map(([t,c])=>`<span class="flex items-center gap-1.5"><i style="background:${c}" class="w-4 h-1 rounded"></i>${t}</span>`).join('');
-
     $('uniView').innerHTML=`
-      <div class="glass-card rounded-3xl border border-white/10 p-4 sm:p-5 space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-3">
+      <div class="glass-card rounded-2xl border border-white/10 p-4 sm:p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
           <div class="flex items-center gap-3">
-            <button id="uniBack" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs sm:text-sm font-bold text-gray-200"><i class="fa-solid fa-arrow-left mr-1.5"></i>All universes</button>
+            <button id="uniBack" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200"><i class="fa-solid fa-arrow-left mr-1.5"></i>Back</button>
             <div>
               <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white">${esc(u.n)}</h2>
-              <div class="text-xs text-gray-400">${totalW} of ${u.N.length} watched · Showing ${S.length} chapters in <b class="text-brand-gold">${order==='release'?'Release order':order==='chrono'?'Chronological order':'First-timer essential path'}</b></div>
+              <div class="text-xs text-gray-400 mt-0.5">${totalW} of ${u.N.length} watched · ${S.length} titles</div>
             </div>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <button id="uniWishAll" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-bold"><i class="fa-solid fa-heart mr-1"></i>Add Path to Watchlist</button>
-            <div class="flex gap-1 bg-black/40 p-1 rounded-xl border border-white/10">
-              ${[['line','fa-arrows-left-right','Line'],['grid','fa-grip','Grid']].map(([m,ic,lbl])=>`<button data-layout="${m}" class="px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 ${layoutMode===m?'bg-brand-gold text-black':'text-gray-300 hover:text-white'}"><i class="fa-solid ${ic}"></i>${lbl}</button>`).join('')}
-            </div>
+            <button id="uniWishAll" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-gray-300 text-xs font-semibold"><i class="fa-solid fa-heart mr-1 text-rose-400"></i>Save Unwatched</button>
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex flex-wrap gap-1.5">
-            ${[['release','Release order'],['chrono','Chronological'],['path','First-timer path']].map(([k,l])=>`<button data-o="${k}" class="sub-pill ${order===k?'on':''}" style="min-width:0;flex-direction:row;padding:6px 13px;font-size:12px">${l}</button>`).join('')}
+            ${[['release','Release Order'],['chrono','Chronological']].map(([k,l])=>`<button data-o="${k}" class="sub-pill ${order===k?'on':''}" style="min-width:0;flex-direction:row;padding:6px 12px;font-size:12px">${l}</button>`).join('')}
           </div>
           <div class="flex flex-wrap gap-1.5">
-            ${[['all','All ('+u.N.length+')'],['movie','Movies ('+u.N.filter(x=>x[5]==='movie').length+')'],['show','Series ('+u.N.filter(x=>x[5]==='show').length+')']].map(([k,l])=>`<button data-tf="${k}" class="sub-pill ${typeFilter===k?'on':''}" style="min-width:0;flex-direction:row;padding:6px 12px;font-size:12px">${l}</button>`).join('')}
+            ${[['all','All'],['movie','Movies'],['show','TV Shows']].map(([k,l])=>`<button data-tf="${k}" class="sub-pill ${typeFilter===k?'on':''}" style="min-width:0;flex-direction:row;padding:6px 12px;font-size:12px">${l}</button>`).join('')}
           </div>
         </div>
 
-        ${layoutMode==='line'
-          ? `<div class="has-arrows pt-1"><div id="uniTrack" class="hscroll flex items-stretch gap-1 overflow-x-auto pb-4 pt-2 snap-x">${cardsHTML}</div></div>`
-          : `<div id="uniTrack" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-2">${cardsHTML}</div>`
-        }
-
-        <div class="flex flex-wrap items-center justify-between gap-3 text-[11px] text-gray-400 pt-1 border-t border-white/10">
-          <div class="flex flex-wrap gap-4">${legend}</div>
-          <div>Click any card to inspect its story connections · Glowing card is your next unwatched chapter</div>
-        </div>
+        <div id="uniTrack" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 pt-1">${cardsHTML}</div>
       </div>
-      <div id="uniInfo" class="glass-card rounded-2xl border border-white/10 p-4 sm:p-5 text-sm text-gray-300"></div>`;
+      <div id="uniInfo" class="hidden"></div>`;
 
     const trackEl=$('uniTrack');
     attachThumbObservers(trackEl);
-    if(layoutMode==='line')addHorizontalArrows(trackEl);
     if(sel!=null)info(sel);
   }
 

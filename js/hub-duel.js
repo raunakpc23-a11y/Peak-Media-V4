@@ -625,7 +625,6 @@
         popPool().forEach(i => { if (csDeck.length < count && !have.has(i.title)) { csDeck.push(i); have.add(i.title); } });
       }
       csIndex = 0;
-      csShortlist = [];
 
       $('duelSetup').classList.add('hidden');
       $('duelArena').classList.add('hidden');
@@ -633,8 +632,7 @@
       if ($('cineSwipeArena')) $('cineSwipeArena').classList.remove('hidden');
 
       renderCineSwipeCard();
-      renderCineSwipeShortlist();
-      showToast('CineSwipe Ready! Swipe Right (👉) to shortlist, Left (👈) to pass.', 'fa-fire', 'text-rose-400');
+      showToast('CineSwipe Ready! Swipe Right to save, Left to pass.', 'fa-film', 'text-brand-gold');
     }
 
     function renderCineSwipeCard() {
@@ -781,16 +779,16 @@
       const it = csDeck[csIndex];
 
       if (dir === 'right') {
-        if (!csShortlist.some(x => x.title === it.title)) {
-          csShortlist.push(it);
-          renderCineSwipeShortlist();
+        if (!wishlistTitles.includes(it.title)) {
+          wishlistTitles.push(it.title);
+          updateAllCountersAndViews();
         }
         if (card) {
           card.style.transition = 'transform 0.35s ease-out, opacity 0.35s';
           card.style.transform = 'translateX(450px) rotate(25deg)';
           card.style.opacity = '0';
         }
-        showToast(`Added "${it.cleanName || it.title}" to Tonight's Shortlist`, 'fa-heart', 'text-emerald-400');
+        showToast(`Saved "${it.cleanName || it.title}" to Watchlist`, 'fa-heart', 'text-rose-400');
       } else {
         if (card) {
           card.style.transition = 'transform 0.35s ease-out, opacity 0.35s';
@@ -805,55 +803,20 @@
       }, 300);
     }
 
-    function renderCineSwipeShortlist() {
-      const tray = $('csShortlistTray');
-      const countEl = $('csShortlistCount');
-      if (!tray) return;
-
-      if (countEl) countEl.textContent = csShortlist.length;
-
-      if (!csShortlist.length) {
-        tray.innerHTML = `<div class="text-xs text-gray-500 py-3 w-full text-center">Swipe right on contenders to fill your shortlist tray</div>`;
-        return;
-      }
-
-      tray.innerHTML = csShortlist.map((it, idx) => {
-        const escT = esc(it.cleanName || it.title);
-        return `
-          <div class="relative shrink-0 flex items-center gap-2 p-1.5 pr-3 rounded-xl bg-black/60 border border-emerald-400/30 shadow-md group">
-            <img src="${poster(it)}" class="w-10 h-14 object-cover rounded-lg border border-white/10" alt="">
-            <div class="text-left text-xs">
-              <div class="font-bold text-white truncate max-w-[120px]">${escT}</div>
-              <div class="text-[10px] text-emerald-400 font-mono font-bold">★ ${it.rating}</div>
-            </div>
-            <button onclick="window.csRemoveFromShortlist(${idx})" class="ml-1 w-5 h-5 rounded-full bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white text-[10px] flex items-center justify-center transition-colors" title="Remove">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-        `;
-      }).join('');
-    }
-
-    window.csRemoveFromShortlist = function(idx) {
-      csShortlist.splice(idx, 1);
-      renderCineSwipeShortlist();
-    };
+    function renderCineSwipeShortlist() {}
 
     window.csRestart = function() {
       startCineSwipe();
     };
 
     function csPickTonight() {
-      const pool = csShortlist.length ? csShortlist : [csDeck[csIndex] || csDeck[0]].filter(Boolean);
-      if (!pool.length) {
-        showToast('No contenders available to pick. Swipe right on a title first!', 'fa-triangle-exclamation', 'text-amber-400');
-        return;
+      const it = csDeck[csIndex] || csDeck[0];
+      if (!it) return;
+      if (window.openDetailModal) {
+        openDetailModal(it.title);
+      } else {
+        crown(it);
       }
-      const champ = pool.slice().sort((a, b) => b.rating - a.rating)[0];
-      D.path[champ.title] = [{ beat: { cleanName: `${pool.length - 1} other shortlisted contenders` }, reason: `it earned top rank (★ ${champ.rating}) across your CineSwipe shortlist session` }];
-
-      if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden');
-      crown(champ);
     }
 
     // Attach CineSwipe Button Handlers
@@ -861,7 +824,6 @@
     if ($('csKeepBtn')) $('csKeepBtn').onclick = () => csSwipe('right');
     if ($('csPickTonightBtn')) $('csPickTonightBtn').onclick = csPickTonight;
     if ($('csQuit')) $('csQuit').onclick = () => { if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden'); $('duelSetup').classList.remove('hidden'); };
-    if ($('csClearShortlist')) $('csClearShortlist').onclick = () => { csShortlist = []; renderCineSwipeShortlist(); showToast('Shortlist cleared', 'fa-rotate-left', 'text-gray-400'); };
 
     // Keyboard controls for CineSwipe & Duel
     window.addEventListener('keydown', (e) => {
@@ -908,45 +870,9 @@
       showMatch();
     };
 
-    // Dedicated 1v1 Classic Duel Feature
-    let classicDuelPair = [];
-    window.startClassicDuel1v1 = function(src) {
-      if (src) D.src = src;
-      D.size = 2;
-      const pool = pickEntrants();
-      if (pool.length < 2) {
-        showToast('Need at least 2 titles to duel', 'fa-circle-info', 'text-amber-400');
-        return;
-      }
-      classicDuelPair = [pool[0], pool[1]];
-      renderClassicDuelStage();
-    };
-
-    function renderClassicDuelStage() {
-      const stage = $('classicDuelStage');
-      if (!stage || classicDuelPair.length < 2) return;
-      const a = classicDuelPair[0], b = classicDuelPair[1];
-      const card = (it, s) => `<div class="duel-card ${s} cursor-pointer hover:scale-[1.02] transition-transform" data-t="${esc(it.title)}"><img class="lazy-poster" data-title="${esc(it.title)}" src="${poster(it)}" alt=""><div class="p-3 text-left"><div class="text-[10px] font-bold uppercase" style="color:${th(it.genre).accent}">${it.genre} · ${it.year}</div><div class="font-bold text-sm text-white leading-tight line-clamp-2">${esc(it.cleanName)}</div><div class="text-xs text-gray-400 mt-0.5"><i class="fa-solid fa-star text-brand-gold text-[9px]"></i> ${it.rating}${myRatings[it.title] ? ' · you: ' + myRatings[it.title] + '★' : ''}</div></div></div>`;
-      stage.innerHTML = card(a, 'l') + '<div class="vs-flash">VS</div>' + card(b, 'r');
-      attachThumbObservers(stage);
-      stage.querySelectorAll('.duel-card').forEach(c => c.onclick = () => {
-        const chosen = globalDatabase[c.dataset.t];
-        showToast(`Winner: ${chosen.cleanName || chosen.title}!`, 'fa-crown', 'text-brand-gold');
-        setTimeout(() => window.startClassicDuel1v1(), 800);
-      });
-    }
-
-    window.autoJudgeClassicDuel = function() {
-      if (classicDuelPair.length < 2) return;
-      const j = judge(classicDuelPair[0], classicDuelPair[1]);
-      showToast(`Auto-Judge: ${j.win.cleanName || j.win.title} won because ${j.why}`, 'fa-gavel', 'text-brand-gold');
-      setTimeout(() => window.startClassicDuel1v1(), 1200);
-    };
-
     // Auto-start a live 4-title showdown on initial load so Watch Duel is never empty!
     setTimeout(() => {
       if (D.rounds.length === 0) window.launchPresetDuel('pantheon');
-      window.startClassicDuel1v1('pop');
     }, 60);
 
     // ---------- wiring ----------

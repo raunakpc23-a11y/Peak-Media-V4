@@ -15529,6 +15529,26 @@ Odd Taxi|2021|87
       'show:Kaun Banega Crorepati': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Kaun_Banega_Crorepati_Title.jpg'
     };
 
+    // Quality enhancer for poster image sources (TVMaze, iTunes, Wikipedia, TMDB)
+    function upgradePosterQuality(url) {
+      if (!url || typeof url !== 'string' || url.startsWith('data:image/svg')) return url;
+      let u = url;
+      if (u.includes('static.tvmaze.com') || u.includes('tvmaze.com')) {
+        u = u.replace('/medium_portrait/', '/original/').replace('/medium/', '/original/');
+      }
+      if (u.includes('mzstatic.com') || u.includes('apple.com')) {
+        u = u.replace(/\/\d+x\d+bb\./, '/1000x1500bb.');
+      }
+      if (u.includes('upload.wikimedia.org')) {
+        u = u.replace(/\/\d+px-/, '/1000px-');
+      }
+      if (u.includes('image.tmdb.org')) {
+        u = u.replace(/\/w\d+\//, '/w780/');
+      }
+      return u;
+    }
+    window.upgradePosterQuality = upgradePosterQuality;
+
     async function fetchPoster(item, forceSynopsis = false, isPriority = false) {
       if (!item) return null;
       const cacheKey = item.type + ':' + item.title;
@@ -16462,37 +16482,31 @@ Odd Taxi|2021|87
       if (!btn) return;
       const left = list.length - to;
       if (left <= 0) btn.remove();
-      else btn.innerHTML = `<i class="fa-solid fa-plus mr-1.5"></i>Show ${Math.min(CAT_STEP, left)} more of ${left} remaining`;
+      else btn.textContent = 'Show more';
     }
 
     function renderCategoriesTab() {
       const genres = Object.keys(categoryData).sort();
       const pillsEl = document.getElementById('genreQuickPills');
       pillsEl.innerHTML = genres.map(g => {
-        const theme = genreThemes[g] || genreThemes["Drama"];
-        return `<button onclick="document.getElementById('genre-sec-${g}').scrollIntoView({behavior:'smooth'})" class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 flex items-center gap-2 transition-all">
-          <i class="fa-solid ${theme.icon} cat-icon-anim" style="color:${theme.accent}"></i> <span>${g}</span> <span class="text-gray-500">(${categoryData[g].length})</span>
+        return `<button onclick="document.getElementById('genre-sec-${g}').scrollIntoView({behavior:'smooth'})" class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-300 hover:text-white transition-all">
+          ${g}
         </button>`;
       }).join('');
 
       const catList = document.getElementById('categoriesList');
       catList.innerHTML = genres.map(g => {
-        const theme = genreThemes[g] || genreThemes["Drama"];
         return `
           <div id="genre-sec-${g}" class="space-y-3 scroll-mt-24">
             <div class="flex items-center justify-between border-b border-white/10 pb-2">
-              <h2 class="text-xl font-display font-bold text-white flex items-center gap-2.5">
-                <span class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center"><i class="fa-solid ${theme.icon} cat-icon-anim" style="color:${theme.accent}"></i></span>
-                <span>${g}</span>
-                <span class="text-xs font-normal text-gray-400">(${categoryData[g].length} titles)</span>
-              </h2>
+              <h2 class="text-base sm:text-lg font-display font-bold text-white">${g}</h2>
             </div>
             <div class="has-arrows">
               <div class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x">
                 ${categoryData[g].slice(0, CAT_CAP).map(m => createCardHTML(m, true)).join('')}
               </div>
             </div>
-            ${categoryData[g].length > CAT_CAP ? `<button id="catmore-${g}" onclick="expandGenre('${g}')" class="mt-1 px-4 py-2 rounded-xl bg-white/5 hover:bg-brand-gold hover:text-black border border-white/10 text-xs font-semibold text-gray-300 transition-all"><i class="fa-solid fa-plus mr-1.5"></i>Show ${Math.min(CAT_STEP, categoryData[g].length - CAT_CAP)} more of ${categoryData[g].length - CAT_CAP} remaining</button>` : ''}
+            ${categoryData[g].length > CAT_CAP ? `<button id="catmore-${g}" onclick="expandGenre('${g}')" class="mt-1 px-3.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-300 transition-all">Show more</button>` : ''}
           </div>`;
       }).join('');
 
@@ -16782,7 +16796,7 @@ Odd Taxi|2021|87
         }
       }
 
-      const initialPoster = posterUrl || fallbackSvg;
+      const initialPoster = upgradePosterQuality(posterUrl) || fallbackSvg;
       const isW = wishlistTitles.includes(item.title);
       const isWatched = watchedTitles.includes(item.title);
       const isMintedInTop3 = getLocal('cs_golden_tickets', []).includes(item.title);
@@ -16990,7 +17004,7 @@ Odd Taxi|2021|87
             </div>
 
             <!-- Plot Synopsis -->
-            <p id="modalSynopsisText" class="text-xs sm:text-sm text-gray-300 leading-relaxed max-h-28 overflow-y-auto pr-1">${cachedSynopsis}</p>
+            <p id="modalSynopsisText" class="text-xs sm:text-sm text-gray-300 leading-relaxed">${cachedSynopsis}</p>
 
             ${seasonsHtml}
 
@@ -17050,19 +17064,6 @@ Odd Taxi|2021|87
                 </button>` : ''}
               </div>
             </div>
-
-            <!-- More in Genre -->
-            <div class="pt-3 border-t border-white/10">
-              <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">More Top Titles in ${item.genre}</div>
-              <div class="flex flex-wrap gap-2">
-                ${similar.map(s => {
-                  const escS = s.title.replace(/'/g, "\\'");
-                  return `<button onclick="openDetailModal('${escS}')" class="px-2.5 py-1.5 rounded-lg bg-black/50 hover:bg-brand-gold hover:text-black border border-white/10 text-xs font-medium text-gray-200 transition-colors">
-                    ${s.cleanName || s.title} <span class="opacity-70">★${s.rating}</span>
-                  </button>`;
-                }).join('')}
-              </div>
-            </div>
           </div>
         </div>
       `;
@@ -17074,7 +17075,7 @@ Odd Taxi|2021|87
       if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
         fetchPoster(item, false, true).then(realUrl => {
           const modalImg = document.getElementById('modalPosterImg');
-          if (realUrl && modalImg) modalImg.src = realUrl;
+          if (realUrl && modalImg) modalImg.src = upgradePosterQuality(realUrl);
         });
       }
       if (!summaryCache[item.type + ':' + item.title]) {

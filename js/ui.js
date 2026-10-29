@@ -15,10 +15,8 @@
     music: { first: 'music', subs: [] },
     decide: { first: 'mood', subs: [
       ['mood', 'Mood Dial', 'fa-compass'],
-      ['duel', 'Tournament', 'fa-trophy'],
-      ['classic', 'Classic Duel', 'fa-hand-fist'],
+      ['duel', 'Duel', 'fa-trophy'],
       ['match', 'Matchmaker', 'fa-wand-magic-sparkles'],
-      ['web', 'Sci-Web', 'fa-circle-nodes'],
       ['ricochet', 'Ricochet', 'fa-circle-dot'],
       ['marathon', 'Marathon', 'fa-hourglass-half'],
       ['compat', 'Compatibility', 'fa-people-arrows']
@@ -26,6 +24,7 @@
     space: { first: 'hub', subs: [
       ['hub', 'Shelves', 'fa-bookmark'],
       ['lists', 'Playlists', 'fa-list-check'],
+      ['web', 'DNA', 'fa-circle-nodes'],
       ['profile', 'Profile', 'fa-user'],
       ['admin', 'Admin', 'fa-shield-halved']
     ] }
@@ -39,14 +38,13 @@
     music: 'music',
     mood: 'decide',
     duel: 'decide',
-    classic: 'decide',
     match: 'decide',
-    web: 'decide',
     ricochet: 'decide',
     marathon: 'decide',
     compat: 'decide',
     hub: 'space',
     lists: 'space',
+    web: 'space',
     profile: 'space',
     admin: 'space'
   };

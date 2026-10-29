@@ -662,19 +662,22 @@
       // Populate Playlist Dropdown
       const plSel = $('musicFilterPlaylist');
       if (plSel && plSel.options.length <= 1) {
-        plSel.innerHTML = '<option value="all">All ' + musicPlaylists.length + ' Playlists (' + musicCatalog.length + ' unique songs)</option>' +
-          musicPlaylists.map(p => `<option value="${p.id}">${esc(p.title)} (${p.count})</option>`).join('');
+        plSel.innerHTML = '<option value="all">All Playlists</option>' +
+          musicPlaylists.map(p => {
+            const cleanTitle = p.title.split('|')[0].split('–')[0].split('-')[0].replace(/\(\d+.*?\)/g, '').trim();
+            return `<option value="${p.id}">${esc(cleanTitle)}</option>`;
+          }).join('');
       }
 
-      // Render Playlists as Simple, Less-Prominent Word Tabs (No Thumbnails on Phone or PC)
+      // Render Playlists as Simple Word Tabs
       const plRow = $('musicPlaylistsRow');
       if (plRow) {
         const activePl = ($('musicFilterPlaylist') && $('musicFilterPlaylist').value) || 'all';
-        plRow.innerHTML = `<button type="button" onclick="resetMusicFilters()" class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-lg text-xs font-bold transition-all border ${activePl === 'all' ? 'bg-brand-gold text-black border-brand-gold' : 'bg-white/[0.04] text-gray-300 border-white/10 hover:text-white'}">All Tracks</button>` +
+        plRow.innerHTML = `<button type="button" onclick="resetMusicFilters()" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${activePl === 'all' ? 'bg-brand-gold text-black border-brand-gold' : 'bg-white/[0.04] text-gray-300 border-white/10 hover:text-white'}">All</button>` +
           musicPlaylists.map(p => {
             const isSel = String(activePl) === String(p.id);
-            const shortTitle = p.title.split('|')[0].split('–')[0].split('-')[0].trim().slice(0, 28);
-            return `<button type="button" onclick="filterMusicByPlaylist(${p.id})" title="${esc(p.title)} (${p.count} tracks)" class="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border ${isSel ? 'bg-brand-gold text-black border-brand-gold font-bold' : 'bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white border-white/10'}">${esc(shortTitle)} <span class="opacity-60 text-[10px]">(${p.count})</span></button>`;
+            const shortTitle = p.title.split('|')[0].split('–')[0].split('-')[0].replace(/\(\d+.*?\)/g, '').trim().slice(0, 24);
+            return `<button type="button" onclick="filterMusicByPlaylist(${p.id})" title="${esc(p.title)}" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-medium transition-all border ${isSel ? 'bg-brand-gold text-black border-brand-gold font-bold' : 'bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white border-white/10'}">${esc(shortTitle)}</button>`;
           }).join('');
       }
 

@@ -326,28 +326,24 @@
 
     <!-- TAB 1: MOVIES -->
     <section id="tab-movies" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
-        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">Feature Films</h1>
-        <div class="text-xs text-gray-400 font-medium">
-          <span id="moviesCountBadge" class="text-white font-bold">0</span> titles
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <h1 class="text-xl sm:text-2xl font-display font-bold text-white">Movies</h1>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <div class="relative flex-1 sm:w-64">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+            <input type="text" id="searchMovies" placeholder="Search movies..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+          </div>
+          <button type="button" id="moviesFilterToggleBtn" onclick="toggleCatalogFilterPanel('movies')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i>
+            <span>Filter</span>
+            <i id="moviesFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+          </button>
         </div>
-      </div>
-
-      <!-- Collapsible Filter Trigger Bar -->
-      <div class="flex items-center gap-2">
-        <button type="button" id="moviesFilterToggleBtn" onclick="toggleCatalogFilterPanel('movies')" class="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/40 text-xs font-bold text-brand-gold flex items-center gap-2 shadow-sm transition-all">
-          <i class="fa-solid fa-sliders"></i>
-          <span>Filter &amp; Sort</span>
-          <i id="moviesFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
-        </button>
+        <span id="moviesCountBadge" class="hidden">0</span>
         <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()" class="hidden"><span id="cinejoySyncStateBadge">Off</span></button>
       </div>
 
-      <div id="moviesFilterGrid" class="hidden grid glass-card p-3 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2 border border-white/10 animate-fadeIn">
-        <div class="sm:col-span-2 relative">
-          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-          <input type="text" id="searchMovies" placeholder="Search films..." class="w-full pl-8 pr-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-        </div>
+      <div id="moviesFilterGrid" class="hidden grid p-3 rounded-2xl bg-black/40 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 border border-white/10 animate-fadeIn">
         <select id="filterMoviesGenre" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="All">All Genres</option>
         </select>
@@ -383,27 +379,23 @@
 
     <!-- TAB 2: TV SHOWS -->
     <section id="tab-shows" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
-        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">TV Series</h1>
-        <div class="text-xs text-gray-400 font-medium">
-          <span id="showsCountBadge" class="text-white font-bold">0</span> titles
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <h1 class="text-xl sm:text-2xl font-display font-bold text-white">TV Shows</h1>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <div class="relative flex-1 sm:w-64">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+            <input type="text" id="searchShows" placeholder="Search shows..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+          </div>
+          <button type="button" id="showsFilterToggleBtn" onclick="toggleCatalogFilterPanel('shows')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i>
+            <span>Filter</span>
+            <i id="showsFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+          </button>
         </div>
+        <span id="showsCountBadge" class="hidden">0</span>
       </div>
 
-      <!-- Collapsible Filter Trigger Bar -->
-      <div class="flex items-center gap-2">
-        <button type="button" id="showsFilterToggleBtn" onclick="toggleCatalogFilterPanel('shows')" class="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/40 text-xs font-bold text-brand-gold flex items-center gap-2 shadow-sm transition-all">
-          <i class="fa-solid fa-sliders"></i>
-          <span>Filter &amp; Sort</span>
-          <i id="showsFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
-        </button>
-      </div>
-
-      <div id="showsFilterGrid" class="hidden grid glass-card p-3 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2 border border-white/10 animate-fadeIn">
-        <div class="sm:col-span-2 relative">
-          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-          <input type="text" id="searchShows" placeholder="Search series..." class="w-full pl-8 pr-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-        </div>
+      <div id="showsFilterGrid" class="hidden grid p-3 rounded-2xl bg-black/40 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 border border-white/10 animate-fadeIn">
         <select id="filterShowsGenre" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="All">All Genres</option>
         </select>
@@ -437,26 +429,20 @@
       <div id="showsPagination" class="flex justify-center items-center gap-3 pt-4"></div>
     </section>
 
-      <!-- Shows Grid -->
-      <div id="showsResults" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5"></div>
-      <div id="showsPagination" class="flex justify-center items-center gap-3 pt-6"></div>
-    </section>
-
     <!-- TAB 3: CATEGORIES -->
-    <section id="tab-categories" class="tab-pane hidden fade-in space-y-8">
-      <div class="border-b border-white/10 pb-6">
-        <h1 class="text-3xl sm:text-4xl font-display font-bold text-white">Curated Genre Collections</h1>
-        <p class="text-sm text-gray-400 mt-1">Browse our complete 2,700+ title archive grouped by cinematic theme.</p>
-        <div id="genreQuickPills" class="flex flex-wrap gap-2 mt-4"></div>
+    <section id="tab-categories" class="tab-pane hidden fade-in space-y-6">
+      <div class="border-b border-white/10 pb-4">
+        <h1 class="text-xl sm:text-2xl font-display font-bold text-white">Genres</h1>
+        <div id="genreQuickPills" class="flex flex-wrap gap-1.5 mt-3"></div>
       </div>
-      <div id="categoriesList" class="space-y-12"></div>
+      <div id="categoriesList" class="space-y-8"></div>
     </section>
 
-    <!-- TAB 5: SCI-WEB (TASTE CONSTELLATION) -->
+    <!-- TAB: TASTE DNA (Library / Space subtab) -->
     <section id="tab-web" class="tab-pane hidden fade-in space-y-3">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
-          <i class="fa-solid fa-circle-nodes text-brand-gold"></i> Sci-Web
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
+        <h1 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-circle-nodes text-brand-gold"></i> Taste DNA
         </h1>
         <div class="flex flex-wrap items-center gap-2 text-xs">
           <select id="cxType" class="px-3 py-1.5 bg-black/50 border border-white/15 rounded-xl text-white focus:outline-none focus:border-brand-gold cursor-pointer">
@@ -663,67 +649,20 @@
             </button>
 
             <button id="csPickTonightBtn" type="button" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
-              <i class="fa-solid fa-check"></i>
-              <span>Pick Tonight</span>
+              <i class="fa-solid fa-play"></i>
+              <span>Watch Now</span>
             </button>
 
             <button id="csKeepBtn" type="button" class="group flex flex-col items-center gap-1 focus:outline-none" title="Keep">
               <div class="w-12 h-12 rounded-full bg-emerald-500/15 group-hover:bg-emerald-500/25 border-2 border-emerald-500/50 text-emerald-400 text-lg flex items-center justify-center shadow transition-transform group-hover:scale-105 active:scale-95">
                 <i class="fa-solid fa-heart"></i>
               </div>
-              <span class="text-[10px] font-bold text-emerald-400/80 uppercase tracking-wider">Keep</span>
+              <span class="text-[10px] font-bold text-emerald-400/80 uppercase tracking-wider">Save</span>
             </button>
           </div>
         </div>
-
-        <!-- Shortlist Tray -->
-        <div id="csShortlistTray" class="pt-3 border-t border-white/10 space-y-2">
-          <div class="flex items-center justify-between text-xs font-bold text-gray-300">
-            <span>Shortlisted</span>
-            <span id="csShortlistCount" class="text-brand-gold font-mono">0</span>
-          </div>
-          <div id="csShortlistCards" class="flex gap-2.5 overflow-x-auto pb-1 min-h-[64px] items-center"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB: CLASSIC DUEL (Separate Dedicated 1v1 Feature) -->
-    <section id="tab-classic" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-        <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
-          <i class="fa-solid fa-hand-fist text-brand-gold"></i> Classic Duel
-        </h1>
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="startClassicDuel1v1('wish')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300">Watchlist</button>
-          <button type="button" onclick="startClassicDuel1v1('pop')" class="px-3 py-1.5 rounded-xl bg-brand-gold text-black font-bold text-xs">Popular</button>
-        </div>
       </div>
 
-      <div id="classicDuelArena" class="glass-card rounded-2xl p-4 sm:p-6 border border-white/10 space-y-4">
-        <div class="flex items-center justify-between border-b border-white/10 pb-3">
-          <div class="text-xs font-bold text-gray-300">Head-to-Head Showdown</div>
-          <button type="button" onclick="autoJudgeClassicDuel()" class="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-medium text-gray-200">Auto-Judge</button>
-        </div>
-        <div id="classicDuelStage" class="flex items-center justify-center gap-4 sm:gap-8 py-4 min-h-[320px]">
-          <!-- Injected dynamically -->
-        </div>
-      </div>
-    </section>
-
-        <!-- Shortlist Tray -->
-        <div class="pt-4 border-t border-white/10">
-          <div class="flex items-center justify-between mb-2">
-            <div class="text-[11px] font-black uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
-              <i class="fa-solid fa-list-check"></i>
-              <span>Tonight's Shortlist (<span id="csShortlistCount">0</span>)</span>
-            </div>
-            <button id="csClearShortlist" class="text-[10px] text-gray-400 hover:text-white underline">Clear</button>
-          </div>
-          <div id="csShortlistTray" class="flex items-center gap-2 overflow-x-auto pb-2 min-h-[64px] scrollbar-thin">
-            <div class="text-xs text-gray-500 py-3 w-full text-center">Swipe right on contenders to fill your shortlist tray</div>
-          </div>
-        </div>
-      </div>
       <div id="duelChamp" class="hidden glass-card rounded-3xl p-6 sm:p-10 border border-brand-gold/40 text-center space-y-4 relative overflow-hidden"></div>
     </section>
 
@@ -982,46 +921,134 @@
         </div>
       </div>
     </section>
+
+    <!-- TAB: TASTE COMPATIBILITY (Play / Decide subtab) -->
+    <section id="tab-compat" class="tab-pane hidden fade-in space-y-4">
+      <div id="compatLab" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
+        <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+          <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Taste Compatibility</h2>
+          <button onclick="loadDemoCompatibility()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
+            Demo
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- User 1 Column -->
+          <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-brand-gold flex items-center gap-1.5">
+                <i class="fa-solid fa-user"></i> Your Picks (3–10)
+              </label>
+              <button onclick="prefillFromWishlist('myTags')" class="text-[11px] text-gray-400 hover:text-brand-gold">From Watchlist</button>
+            </div>
+            <div id="myTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
+            <div class="relative autocomplete-wrapper">
+              <input type="text" id="myInput" placeholder="Add favorites..."
+                oninput="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
+                onfocus="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
+                class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+              <div id="mySuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
+            </div>
+          </div>
+
+          <!-- User 2 Column -->
+          <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-user-group"></i> Friend's Picks (3–10)
+              </label>
+              <button onclick="surpriseFriendList()" class="text-[11px] text-gray-400 hover:text-cyan-400">Randomize</button>
+            </div>
+            <div id="friendTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
+            <div class="relative autocomplete-wrapper">
+              <input type="text" id="friendInput" placeholder="Add friend's favorites..."
+                oninput="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
+                onfocus="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
+                class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400">
+              <div id="friendSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
+            </div>
           </div>
         </div>
 
-        <!-- Calculated KPI Cards -->
-        <div id="bingeKpiGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
+        <button onclick="calculateCompatibility()" class="w-full py-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95">
+          Compare Compatibility
+        </button>
 
-        <!-- Day-by-Day Interactive Schedule & Episode Checklist -->
-        <div class="space-y-3">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <div class="text-base font-display font-extrabold text-white flex items-center gap-2">
-                <i class="fa-solid fa-list-check text-brand-gold"></i> Day-by-Day Schedule &amp; Episode Checklist
-              </div>
-              <div class="text-xs text-gray-400">Tick episodes as you finish watching to keep real-time progress saved in your browser</div>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <button type="button" onclick="copyBingeSchedule()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-gray-200 text-xs font-bold transition-all"><i class="fa-solid fa-copy mr-1.5"></i>Copy Schedule</button>
-              <button type="button" onclick="exportBingeICal()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-brand-gold text-xs font-bold transition-all"><i class="fa-solid fa-calendar-arrow-down mr-1.5"></i>Add to Calendar (.ics)</button>
-              <button type="button" onclick="addBingeSeriesToWatchlist()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 text-xs font-bold transition-all"><i class="fa-solid fa-heart mr-1.5"></i>Add to Watchlist</button>
-              <button type="button" onclick="resetBingeProgress()" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-gray-200 text-xs transition-all" title="Reset Episode Checks"><i class="fa-solid fa-rotate-left"></i></button>
-            </div>
+        <!-- Compatibility Results Panel -->
+        <div id="compatScoreBox" class="hidden pt-6 border-t border-white/10 space-y-6">
+          <div class="flex items-center justify-between gap-3">
+            <div class="text-[11px] font-bold uppercase tracking-widest text-purple-300">Live compatibility analysis <span id="compatStatus" class="text-gray-500 normal-case tracking-normal font-medium ml-1"></span></div>
+            <button id="compatReplay" onclick="calculateCompatibility()" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-300"><i class="fa-solid fa-rotate-right mr-1"></i>Replay</button>
           </div>
-
-          <div id="bingeScheduleList" class="space-y-3 max-h-[600px] overflow-y-auto pr-1"></div>
+          <div id="compatStage"></div>
+          <div id="compatResults" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+              <div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-black/40 border border-white/10 text-center">
+                <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Overall Synergy</div>
+                <div id="compatScore" class="text-5xl font-display font-extrabold text-brand-gold my-2">0%</div>
+                <div id="compatMessage" class="text-sm font-semibold text-white"></div>
+              </div>
+              <div class="md:col-span-2">
+                <ul id="compatBreakdown" class="space-y-3"></ul>
+              </div>
+            </div>
+            <!-- Joint Watch Night Pick -->
+            <div id="jointMoviePick" class="p-5 rounded-2xl bg-gradient-to-r from-brand-gold/15 via-purple-500/10 to-cyan-500/15 border border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4"></div>
+          </div>
         </div>
       </div>
     </section>
 
-        <section id="tab-compat" class="tab-pane hidden fade-in space-y-6"></section>
-
-    <section id="tab-universes" class="tab-pane hidden fade-in space-y-6">
-      <div><h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-3"><i class="fa-solid fa-globe text-brand-gold"></i> Universes</h1>
-        <p class="text-sm text-gray-400 mt-1">Shared worlds, mapped. Open one to see how every film and series connects.</p></div>
-      <div id="uniGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+    <!-- TAB: UNIVERSES (Cinematic Universes & Franchises) -->
+    <section id="tab-universes" class="tab-pane hidden fade-in space-y-5">
+      <div class="border-b border-white/10 pb-3 flex items-center justify-between">
+        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">Universes</h1>
+      </div>
+      <div id="uniGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
       <div id="uniView" class="hidden space-y-4"></div>
     </section>
 
-    <!-- TAB 4: MY HUB -->
-    <section id="tab-match" class="tab-pane hidden fade-in space-y-6">
-      <div><h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white">Matchmaker</h1><p class="text-sm text-gray-400">Seed up to 5 favourites and get ranked matches.</p></div>
+    <!-- TAB: MATCHMAKER (Play / Decide subtab) -->
+    <section id="tab-match" class="tab-pane hidden fade-in space-y-4">
+      <div id="recSection" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
+        <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+          <h1 class="text-xl sm:text-2xl font-display font-bold text-white">Matchmaker</h1>
+          <button onclick="prefillFromWishlist('recTags')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
+            <i class="fa-solid fa-bolt text-brand-gold mr-1"></i> Watchlist
+          </button>
+        </div>
+
+        <!-- Selected Seed Chips -->
+        <div id="recTags" class="flex flex-wrap gap-2 min-h-[44px] p-2.5 rounded-xl bg-black/45 border border-white/10 items-center"></div>
+
+        <!-- Autocomplete Input -->
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <div class="relative flex-1 autocomplete-wrapper">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            <input type="text" id="recInput" placeholder="Add a title you love..."
+              oninput="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
+              onfocus="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
+              class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+            <div id="recSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-30 divide-y divide-white/5"></div>
+          </div>
+          <button onclick="generateRecommendation()" class="px-5 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95 whitespace-nowrap">
+            Find Matches
+          </button>
+        </div>
+
+        <div id="recInitialPrompt" class="hidden"></div>
+
+        <!-- Output Results -->
+        <div id="recResultBox" class="hidden pt-3 border-t border-white/10 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="text-xs sm:text-sm font-bold text-white">Top Matches</h3>
+            <button id="rejectBtn" onclick="rejectRecommendation()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 border border-white/15 transition-all">
+              <i class="fa-solid fa-rotate mr-1"></i> Next
+            </button>
+          </div>
+          <div id="recCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+        </div>
+      </div>
     </section>
 
     <section id="tab-hub" class="tab-pane hidden fade-in space-y-6">
@@ -1166,122 +1193,6 @@
           <div id="wishlistContainer" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 min-h-[220px] items-center snap-x"></div>
         </div>
       </div>
-
-      <!-- SMART MATCHMAKER -->
-      <div id="recSection" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
-        <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Matchmaker</h2>
-          <button onclick="prefillFromWishlist('recTags')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
-            <i class="fa-solid fa-bolt text-brand-gold mr-1"></i> Watchlist
-          </button>
-        </div>
-
-        <!-- Selected Seed Chips -->
-        <div id="recTags" class="flex flex-wrap gap-2 min-h-[44px] p-2.5 rounded-xl bg-black/45 border border-white/10 items-center"></div>
-
-        <!-- Autocomplete Input -->
-        <div class="flex flex-col sm:flex-row gap-2.5">
-          <div class="relative flex-1 autocomplete-wrapper">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-            <input type="text" id="recInput" placeholder="Add a title you love..."
-              oninput="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
-              onfocus="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
-              class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-            <div id="recSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-30 divide-y divide-white/5"></div>
-          </div>
-          <button onclick="generateRecommendation()" class="px-5 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95 whitespace-nowrap">
-            Find Matches
-          </button>
-        </div>
-
-        <div id="recInitialPrompt" class="hidden"></div>
-
-        <!-- Output Results -->
-        <div id="recResultBox" class="hidden pt-3 border-t border-white/10 space-y-3">
-          <div class="flex items-center justify-between gap-2">
-            <h3 class="text-xs sm:text-sm font-bold text-white">Top Matches</h3>
-            <button id="rejectBtn" onclick="rejectRecommendation()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 border border-white/15 transition-all">
-              <i class="fa-solid fa-rotate mr-1"></i> Next Matches
-            </button>
-          </div>
-          <div id="recCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
-        </div>
-      </div>
-
-      <!-- SOCIAL COMPATIBILITY LAB -->
-      <div id="compatLab" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
-        <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Taste Compatibility</h2>
-          <button onclick="loadDemoCompatibility()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
-            Demo
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- User 1 Column -->
-          <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <label class="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                <i class="fa-solid fa-user"></i> Your Picks (3–10)
-              </label>
-              <button onclick="prefillFromWishlist('myTags')" class="text-[11px] text-gray-400 hover:text-brand-gold">From Watchlist</button>
-            </div>
-            <div id="myTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
-            <div class="relative autocomplete-wrapper">
-              <input type="text" id="myInput" placeholder="Add favorites..."
-                oninput="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
-                onfocus="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
-                class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-              <div id="mySuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
-            </div>
-          </div>
-
-          <!-- User 2 Column -->
-          <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <label class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
-                <i class="fa-solid fa-user-group"></i> Friend's Picks (3–10)
-              </label>
-              <button onclick="surpriseFriendList()" class="text-[11px] text-gray-400 hover:text-cyan-400">Randomize</button>
-            </div>
-            <div id="friendTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
-            <div class="relative autocomplete-wrapper">
-              <input type="text" id="friendInput" placeholder="Add friend's favorites..."
-                oninput="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
-                onfocus="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
-                class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400">
-              <div id="friendSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
-            </div>
-          </div>
-        </div>
-
-        <button onclick="calculateCompatibility()" class="w-full py-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95">
-          Compare Compatibility
-        </button>
-
-        <!-- Compatibility Results Panel -->
-        <div id="compatScoreBox" class="hidden pt-6 border-t border-white/10 space-y-6">
-          <div class="flex items-center justify-between gap-3">
-            <div class="text-[11px] font-bold uppercase tracking-widest text-purple-300">Live compatibility analysis <span id="compatStatus" class="text-gray-500 normal-case tracking-normal font-medium ml-1"></span></div>
-            <button id="compatReplay" onclick="calculateCompatibility()" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-300"><i class="fa-solid fa-rotate-right mr-1"></i>Replay</button>
-          </div>
-          <div id="compatStage"></div>
-          <div id="compatResults" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-            <div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-black/40 border border-white/10 text-center">
-              <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Overall Synergy</div>
-              <div id="compatScore" class="text-5xl font-display font-extrabold text-brand-gold my-2">0%</div>
-              <div id="compatMessage" class="text-sm font-semibold text-white"></div>
-            </div>
-            <div class="md:col-span-2">
-              <ul id="compatBreakdown" class="space-y-3"></ul>
-            </div>
-          </div>
-          <!-- Joint Watch Night Pick -->
-          <div id="jointMoviePick" class="p-5 rounded-2xl bg-gradient-to-r from-brand-gold/15 via-purple-500/10 to-cyan-500/15 border border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4"></div>
-          </div>
-        </div>
-      </div>
     </section>
 
 
@@ -1317,7 +1228,7 @@
         <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2">
           <div class="relative flex-1 min-w-0">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-gold text-xs sm:text-sm"></i>
-            <input type="text" id="musicSearchInput" placeholder="Search 4,552 songs, singers, or soundtracks..." class="w-full pl-9 pr-3 py-2 bg-black/60 border border-white/15 rounded-xl text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold">
+            <input type="text" id="musicSearchInput" placeholder="Search songs, artists, or soundtracks..." class="w-full pl-9 pr-3 py-2 bg-black/60 border border-white/15 rounded-xl text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold">
           </div>
 
           <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
@@ -1325,7 +1236,7 @@
             <button type="button" onclick="setSimpleMusicLang('hi')" id="mlang-hi" class="shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">Hindi</button>
             <button type="button" onclick="setSimpleMusicLang('en')" id="mlang-en" class="shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">English</button>
             <button type="button" onclick="setMusicViewMode(musicViewMode === 'favs' ? 'all' : 'favs')" id="mview-favs" class="shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">
-              <i class="fa-solid fa-heart text-rose-400 mr-1"></i>Favs (<span id="musicFavCountBadge">0</span>)
+              <i class="fa-solid fa-heart text-rose-400 mr-1"></i>Favs
             </button>
             <button type="button" onclick="document.getElementById('musicAdvancedFilters').classList.toggle('hidden')" class="shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-brand-gold border border-brand-gold/30 transition-all flex items-center gap-1">
               <i class="fa-solid fa-sliders"></i> <span>Filters</span>
@@ -1342,7 +1253,7 @@
               <option value="en">English &amp; Global</option>
             </select>
             <select id="musicFilterPlaylist" class="dark-select px-3 py-2 bg-[#0d111a] border border-brand-gold/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-gold cursor-pointer">
-              <option value="all">All 70 Playlists</option>
+              <option value="all">All Playlists</option>
             </select>
             <select id="musicFilterMood" class="dark-select px-3 py-2 bg-[#0d111a] border border-brand-gold/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-gold cursor-pointer">
               <option value="all">All Moods</option>
@@ -2031,15 +1942,15 @@
   </div>
 
 
-  <script src="js/data.js?v=3.7"></script>
-  <script src="js/constellation.js?v=3.7"></script>
-  <script src="js/hub-duel.js?v=3.7"></script>
-  <script src="js/ui.js?v=3.7"></script>
-  <script src="js/features.js?v=3.7"></script>
-  <script src="js/marathon.js?v=3.7"></script>
-  <script src="js/universes.js?v=3.7"></script>
-  <script src="js/mood_dial.js?v=3.7"></script>
-  <script src="js/main.js?v=3.7"></script>
-  <script src="js/pwa.js?v=3.7"></script>
+  <script src="js/data.js?v=3.8"></script>
+  <script src="js/constellation.js?v=3.8"></script>
+  <script src="js/hub-duel.js?v=3.8"></script>
+  <script src="js/ui.js?v=3.8"></script>
+  <script src="js/features.js?v=3.8"></script>
+  <script src="js/marathon.js?v=3.8"></script>
+  <script src="js/universes.js?v=3.8"></script>
+  <script src="js/mood_dial.js?v=3.8"></script>
+  <script src="js/main.js?v=3.8"></script>
+  <script src="js/pwa.js?v=3.8"></script>
 </body>
 </html>
