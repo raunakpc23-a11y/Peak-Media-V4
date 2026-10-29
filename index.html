@@ -148,50 +148,44 @@
       </div>
     </div>
 
-    <!-- Settings Drawer (Moved into Library / Header Settings as requested by Roadmap) -->
-    <div id="vibePanel" class="hidden fixed right-3 sm:right-6 top-16 sm:top-20 w-[min(94vw,24rem)] z-[95] glass-card rounded-2xl border border-brand-gold/40 p-5 space-y-4 shadow-2xl animate-fadeIn">
+    <!-- Settings Drawer -->
+    <div id="vibePanel" class="hidden fixed right-3 sm:right-6 top-16 sm:top-20 w-[min(94vw,22rem)] z-[95] glass-card rounded-2xl border border-white/15 p-4 sm:p-5 space-y-4 shadow-2xl animate-fadeIn">
       <div class="flex items-center justify-between">
-        <div class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Settings &amp; Atmosphere</div>
+        <span class="text-xs font-bold uppercase tracking-wider text-white">Atmosphere &amp; Settings</span>
         <button type="button" onclick="document.getElementById('vibePanel').classList.add('hidden')" aria-label="Close settings panel" title="Close" class="text-gray-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div>
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-bold text-white">Theme Palette</span>
-          <button type="button" id="autoBtn" class="text-[11px] font-bold px-2 py-1 rounded-lg border border-white/15 text-gray-300">Auto · follows forecast</button>
+          <span class="text-xs font-bold text-gray-300">Theme</span>
+          <button type="button" id="autoBtn" class="text-[11px] font-bold px-2 py-0.5 rounded-lg border border-white/15 text-gray-300 hover:text-white">Auto</button>
         </div>
-        <div id="swatchRow" class="flex flex-wrap gap-2.5"></div>
-        <div id="swatchName" class="text-[11px] text-gray-400 mt-2"></div>
+        <div id="swatchRow" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1"></div>
+        <div id="swatchName" class="text-[11px] text-gray-400 mt-1"></div>
       </div>
       <label class="flex items-center justify-between gap-3 cursor-pointer" onclick="toggleReduce()">
-        <span>
-          <span class="block text-sm font-bold text-white">Calm Mode</span>
-          <span class="block text-[11px] text-gray-400">Disables background particles &amp; continuous motion loops</span>
-        </span>
+        <span class="text-xs font-bold text-gray-200">Calm Mode</span>
         <span id="reduceTgl" class="tgl"></span>
       </label>
       <label class="flex items-center justify-between gap-3 cursor-pointer pt-2 border-t border-white/10" onclick="toggleCinemaLightsOut()">
-        <span>
-          <span class="block text-sm font-bold text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-moon text-amber-400"></i> Cinema Hall Lights-Out</span>
-          <span class="block text-[11px] text-gray-400">100% OLED pitch-black deep focus mode</span>
-        </span>
+        <span class="text-xs font-bold text-gray-200 flex items-center gap-1.5"><i class="fa-solid fa-moon text-brand-gold"></i> Lights Out</span>
         <span id="lightsOutTgl" class="tgl"></span>
       </label>
       <div class="pt-3 border-t border-white/10 text-xs text-gray-300 space-y-2">
-        <button type="button" onclick="tmOpen()" class="w-full flex justify-between items-center py-1.5 px-2 rounded-lg hover:bg-white/5 text-left">
-          <span><i class="fa-solid fa-clock-rotate-left mr-2 text-brand-gold"></i>Time Machine Dial</span>
-          <span id="tmState" class="text-brand-gold font-bold">Off</span>
+        <button type="button" onclick="tmOpen()" class="w-full flex justify-between items-center py-2 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
+          <span class="flex items-center gap-2 font-semibold text-white"><i class="fa-solid fa-clock-rotate-left text-brand-gold"></i> Time Machine</span>
+          <span id="tmState" class="text-brand-gold text-xs font-bold">Launch</span>
         </button>
-        <button type="button" onclick="oppToggle()" class="w-full flex justify-between items-center py-1.5 px-2 rounded-lg hover:bg-white/5 text-left">
-          <span><i class="fa-solid fa-shuffle mr-2 text-fuchsia-400"></i>Opposite Day Mode</span>
-          <span id="oppState" class="text-brand-gold font-bold">Off</span>
+        <button type="button" onclick="oppToggle()" class="w-full flex justify-between items-center py-2 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
+          <span class="flex items-center gap-2 font-semibold text-white"><i class="fa-solid fa-shuffle text-fuchsia-400"></i> Opposite Day</span>
+          <span id="oppState" class="text-fuchsia-300 text-xs font-bold">Try It</span>
         </button>
-        <button type="button" onclick="openLangCompareModal(); document.getElementById('vibePanel').classList.add('hidden');" class="w-full flex justify-between items-center py-1.5 px-2 rounded-lg hover:bg-white/5 text-left">
-          <span><i class="fa-solid fa-scale-unbalanced mr-2 text-cyan-400"></i>English vs Hindi Compare</span>
-          <span class="text-cyan-300 font-bold">Open →</span>
+        <button type="button" onclick="openLangCompareModal(); document.getElementById('vibePanel').classList.add('hidden');" class="w-full flex justify-between items-center py-2 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
+          <span class="flex items-center gap-2 font-semibold text-white"><i class="fa-solid fa-scale-unbalanced text-cyan-400"></i> Compare</span>
+          <span class="text-cyan-300 text-xs font-bold">View</span>
         </button>
-        <button type="button" onclick="openOnboardingWizard(true); document.getElementById('vibePanel').classList.add('hidden');" class="w-full flex justify-between items-center py-1.5 px-2 rounded-lg hover:bg-white/5 text-left">
-          <span><i class="fa-solid fa-user-pen mr-2 text-emerald-400"></i>Taste Setup</span>
-          <span class="text-emerald-300 font-bold">Edit →</span>
+        <button type="button" onclick="openOnboardingWizard(true); document.getElementById('vibePanel').classList.add('hidden');" class="w-full flex justify-between items-center py-2 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
+          <span class="flex items-center gap-2 font-semibold text-white"><i class="fa-solid fa-sliders text-emerald-400"></i> Taste Setup</span>
+          <span class="text-emerald-300 text-xs font-bold">Tune</span>
         </button>
       </div>
     </div>
@@ -331,55 +325,41 @@
     </section>
 
     <!-- TAB 1: MOVIES -->
-    <section id="tab-movies" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
-        <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/25 text-brand-gold text-xs font-semibold mb-2">
-            <i class="fa-solid fa-star"></i> Curated & Popular Cinema
-          </div>
-          <h1 class="text-3xl sm:text-4xl font-display font-bold text-white">Feature Films Catalog</h1>
-          <p class="text-sm text-gray-400 mt-1">Explore 1,580+ iconic movies. Filter by genre, decade, or streaming platform, or sort by popularity, rating, year, or title.</p>
-        </div>
-        <div class="text-xs sm:text-sm text-gray-400 font-medium">
-          Showing <span id="moviesCountBadge" class="text-white font-bold">0</span> movies
+    <section id="tab-movies" class="tab-pane hidden fade-in space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
+        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">Feature Films</h1>
+        <div class="text-xs text-gray-400 font-medium">
+          <span id="moviesCountBadge" class="text-white font-bold">0</span> titles
         </div>
       </div>
 
-      <!-- Collapsible Filter Trigger Bar (Hidden by Default on All Screens Until Clicked) -->
-      <div class="flex flex-wrap items-center justify-between gap-2.5">
-        <button type="button" id="moviesFilterToggleBtn" onclick="toggleCatalogFilterPanel('movies')" class="px-4 py-2.5 rounded-xl glass-card border border-brand-gold/35 hover:border-brand-gold text-xs sm:text-sm font-bold text-brand-gold flex items-center gap-2.5 shadow-md transition-all">
+      <!-- Collapsible Filter Trigger Bar -->
+      <div class="flex items-center gap-2">
+        <button type="button" id="moviesFilterToggleBtn" onclick="toggleCatalogFilterPanel('movies')" class="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/40 text-xs font-bold text-brand-gold flex items-center gap-2 shadow-sm transition-all">
           <i class="fa-solid fa-sliders"></i>
-          <span>Filters &amp; Sort</span>
-          <span class="px-2 py-0.5 rounded-full bg-brand-gold/15 text-[10px] text-white font-semibold">Search · Genre · Decade · Platform</span>
+          <span>Filter &amp; Sort</span>
           <i id="moviesFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
         </button>
-
-        <!-- All Movies Cinejoy Watch Indicator Pill -->
-        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-bold">
-          <i class="fa-solid fa-circle-play text-amber-400"></i>
-          <span>All Movies Vault: "Watch Now" linked to Cinejoy</span>
-        </div>
         <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()" class="hidden"><span id="cinejoySyncStateBadge">Off</span></button>
       </div>
-      <div id="moviesFilterGrid" class="hidden grid glass-card p-3.5 sm:p-4 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 sm:gap-3 border border-brand-gold/25 animate-fadeIn" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.07), rgba(17, 21, 32, 0.85))">
+
+      <div id="moviesFilterGrid" class="hidden grid glass-card p-3 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2 border border-white/10 animate-fadeIn">
         <div class="sm:col-span-2 relative">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="text" id="searchMovies" placeholder="Filter movies by title, year, or genre..." class="w-full pl-10 pr-4 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold transition-colors">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+          <input type="text" id="searchMovies" placeholder="Search films..." class="w-full pl-8 pr-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
         </div>
-        <select id="filterMoviesGenre" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+        <select id="filterMoviesGenre" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="All">All Genres</option>
         </select>
-        <select id="filterMoviesDecade" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+        <select id="filterMoviesDecade" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="All">All Decades</option>
           <option value="2020">2020s</option>
           <option value="2010">2010s</option>
           <option value="2000">2000s</option>
           <option value="1990">1990s</option>
-          <option value="1980">1980s</option>
-          <option value="1970">1970s</option>
-          <option value="1960">1960s &amp; Before</option>
+          <option value="1980">1980s &amp; Before</option>
         </select>
-        <select id="filterMoviesPlatform" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+        <select id="filterMoviesPlatform" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="All">All Platforms</option>
           <option value="Netflix">Netflix</option>
           <option value="Max">Max</option>
@@ -387,69 +367,55 @@
           <option value="Disney+">Disney+</option>
           <option value="Hulu">Hulu</option>
         </select>
-        <select id="sortMovies" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
-          <option value="popular">Sort: Most Popular</option>
-          <option value="rating_desc">Sort: Highest Rated (★)</option>
-          <option value="top100_watch">Filter: Watch Now on Cinejoy (Highest Rated)</option>
-          <option value="year_desc">Sort: Newest First</option>
-          <option value="year_asc">Sort: Oldest Classics First</option>
-          <option value="title">Sort: Alphabetical (A–Z)</option>
+        <select id="sortMovies" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+          <option value="popular">Most Popular</option>
+          <option value="rating_desc">Highest Rated</option>
+          <option value="year_desc">Newest First</option>
+          <option value="year_asc">Oldest First</option>
+          <option value="title">Alphabetical (A–Z)</option>
         </select>
       </div>
 
       <!-- Movies Grid -->
-      <div id="moviesResults" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5"></div>
-      <div id="moviesPagination" class="flex justify-center items-center gap-3 pt-6"></div>
+      <div id="moviesResults" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 sm:gap-4"></div>
+      <div id="moviesPagination" class="flex justify-center items-center gap-3 pt-4"></div>
     </section>
 
     <!-- TAB 2: TV SHOWS -->
-    <section id="tab-shows" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
-        <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-xs font-semibold mb-2">
-            <i class="fa-solid fa-tv"></i> Television Vault
-          </div>
-          <h1 class="text-3xl sm:text-4xl font-display font-bold text-white">TV Series & Shows</h1>
-          <p class="text-sm text-gray-400 mt-1">Explore 1,150+ binge-worthy series, anime, limited dramas, and comedy favorites across every era and platform.</p>
-        </div>
-        <div class="text-xs sm:text-sm text-gray-400 font-medium">
-          Showing <span id="showsCountBadge" class="text-white font-bold">0</span> series
+    <section id="tab-shows" class="tab-pane hidden fade-in space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
+        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">TV Series</h1>
+        <div class="text-xs text-gray-400 font-medium">
+          <span id="showsCountBadge" class="text-white font-bold">0</span> titles
         </div>
       </div>
 
-      <!-- Collapsible Filter Trigger Bar (Hidden by Default on All Screens Until Clicked) -->
-      <div class="flex flex-wrap items-center justify-between gap-2.5">
-        <button type="button" id="showsFilterToggleBtn" onclick="toggleCatalogFilterPanel('shows')" class="px-4 py-2.5 rounded-xl glass-card border border-brand-gold/35 hover:border-brand-gold text-xs sm:text-sm font-bold text-brand-gold flex items-center gap-2.5 shadow-md transition-all">
+      <!-- Collapsible Filter Trigger Bar -->
+      <div class="flex items-center gap-2">
+        <button type="button" id="showsFilterToggleBtn" onclick="toggleCatalogFilterPanel('shows')" class="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/40 text-xs font-bold text-brand-gold flex items-center gap-2 shadow-sm transition-all">
           <i class="fa-solid fa-sliders"></i>
-          <span>Filters &amp; Sort</span>
-          <span class="px-2 py-0.5 rounded-full bg-brand-gold/15 text-[10px] text-white font-semibold">Search · Genre · Decade · Platform</span>
+          <span>Filter &amp; Sort</span>
           <i id="showsFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
         </button>
-
-        <!-- All Series Cinejoy Watch Indicator Pill -->
-        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-500/10 border border-purple-400/30 text-purple-300 text-xs font-bold">
-          <i class="fa-solid fa-circle-play text-purple-400"></i>
-          <span>All Series Vault: "Watch Now" linked to Cinejoy</span>
-        </div>
       </div>
-      <div id="showsFilterGrid" class="hidden grid glass-card p-3.5 sm:p-4 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 sm:gap-3 border border-brand-gold/25 animate-fadeIn" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.07), rgba(17, 21, 32, 0.85))">
+
+      <div id="showsFilterGrid" class="hidden grid glass-card p-3 rounded-2xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2 border border-white/10 animate-fadeIn">
         <div class="sm:col-span-2 relative">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="text" id="searchShows" placeholder="Filter TV series by title, year, or genre..." class="w-full pl-10 pr-4 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold transition-colors">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+          <input type="text" id="searchShows" placeholder="Search series..." class="w-full pl-8 pr-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
         </div>
-        <select id="filterShowsGenre" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+        <select id="filterShowsGenre" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="All">All Genres</option>
         </select>
-        <select id="filterShowsDecade" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+        <select id="filterShowsDecade" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="All">All Decades</option>
           <option value="2020">2020s</option>
           <option value="2010">2010s</option>
           <option value="2000">2000s</option>
           <option value="1990">1990s</option>
-          <option value="1980">1980s</option>
-          <option value="1970">1970s & Older</option>
+          <option value="1980">1980s &amp; Before</option>
         </select>
-        <select id="filterShowsPlatform" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+        <select id="filterShowsPlatform" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
           <option value="All">All Platforms</option>
           <option value="Netflix">Netflix</option>
           <option value="Max">Max</option>
@@ -457,15 +423,19 @@
           <option value="Disney+">Disney+</option>
           <option value="Hulu">Hulu</option>
         </select>
-        <select id="sortShows" class="px-3.5 py-2.5 bg-black/50 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-brand-gold cursor-pointer">
-          <option value="popular">Sort: Most Popular</option>
-          <option value="rating_desc">Sort: Highest Rated (★)</option>
-          <option value="top500_watch">Filter: Watch Now on Cinejoy (Highest Rated)</option>
-          <option value="year_desc">Sort: Newest First</option>
-          <option value="year_asc">Sort: Oldest First</option>
-          <option value="title">Sort: Alphabetical (A–Z)</option>
+        <select id="sortShows" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+          <option value="popular">Most Popular</option>
+          <option value="rating_desc">Highest Rated</option>
+          <option value="year_desc">Newest First</option>
+          <option value="year_asc">Oldest First</option>
+          <option value="title">Alphabetical (A–Z)</option>
         </select>
       </div>
+
+      <!-- Shows Grid -->
+      <div id="showsResults" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 sm:gap-4"></div>
+      <div id="showsPagination" class="flex justify-center items-center gap-3 pt-4"></div>
+    </section>
 
       <!-- Shows Grid -->
       <div id="showsResults" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5"></div>
@@ -482,91 +452,76 @@
       <div id="categoriesList" class="space-y-12"></div>
     </section>
 
-    <!-- TAB 5: TASTE CONSTELLATION -->
-    <section id="tab-web" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-3"><i class="fa-solid fa-circle-nodes text-brand-gold"></i> Taste Constellation</h1>
-          <p id="cxSub" class="text-sm text-gray-400 mt-1">Your watched titles form a web. Glowing outer nodes are what to watch next.</p>
-        </div>
+    <!-- TAB 5: SCI-WEB (TASTE CONSTELLATION) -->
+    <section id="tab-web" class="tab-pane hidden fade-in space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-circle-nodes text-brand-gold"></i> Sci-Web
+        </h1>
         <div class="flex flex-wrap items-center gap-2 text-xs">
-          <select id="cxType" class="px-3 py-2 bg-black/50 border border-white/15 rounded-xl text-white focus:outline-none focus:border-brand-gold cursor-pointer">
-            <option value="all">Suggest: Movies + TV</option>
-            <option value="movie">Suggest: Movies only</option>
-            <option value="show">Suggest: TV only</option>
+          <select id="cxType" class="px-3 py-1.5 bg-black/50 border border-white/15 rounded-xl text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+            <option value="all">Movies + TV</option>
+            <option value="movie">Movies only</option>
+            <option value="show">TV only</option>
           </select>
-          <label class="flex items-center gap-2 px-3 py-2 bg-black/50 border border-white/15 rounded-xl text-gray-300 cursor-pointer"><input id="cxWish" type="checkbox" checked class="accent-yellow-400"> Include watchlist</label>
-          <button id="cxReset" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-semibold text-gray-200"><i class="fa-solid fa-rotate-left mr-1"></i> Reset web</button>
+          <label class="flex items-center gap-1.5 px-3 py-1.5 bg-black/50 border border-white/15 rounded-xl text-gray-300 cursor-pointer text-xs"><input id="cxWish" type="checkbox" checked class="accent-yellow-400"> Watchlist</label>
+          <button id="cxReset" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-semibold text-gray-200 text-xs"><i class="fa-solid fa-rotate-left mr-1"></i> Reset</button>
         </div>
       </div>
-      <div id="cxWrap" class="relative rounded-3xl overflow-hidden border border-white/10 h-[72vh] min-h-[480px]" style="background:radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%)">
+      <div id="cxWrap" class="relative rounded-2xl overflow-hidden border border-white/10 h-[72vh] min-h-[480px]" style="background:radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%)">
         <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
         <div id="cxLegend" class="absolute top-3 left-3 flex flex-wrap gap-x-3 gap-y-1 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
         <div class="absolute top-3 right-3 flex flex-col gap-1.5">
-          <button id="cxZin" aria-label="Zoom in constellation" title="Zoom in" class="w-9 h-9 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white"><i class="fa-solid fa-plus"></i></button>
-          <button id="cxZout" aria-label="Zoom out constellation" title="Zoom out" class="w-9 h-9 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white"><i class="fa-solid fa-minus"></i></button>
-          <button id="cxFit" title="Fit to view" class="w-9 h-9 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white"><i class="fa-solid fa-expand"></i></button>
+          <button id="cxZin" aria-label="Zoom in constellation" title="Zoom in" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs"><i class="fa-solid fa-plus"></i></button>
+          <button id="cxZout" aria-label="Zoom out constellation" title="Zoom out" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs"><i class="fa-solid fa-minus"></i></button>
+          <button id="cxFit" title="Fit to view" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs"><i class="fa-solid fa-expand"></i></button>
         </div>
         <div id="cxPanel" class="hidden absolute bottom-3 left-3 w-[min(330px,calc(100%-1.5rem))] glass-card rounded-2xl p-3 shadow-2xl"></div>
         <div id="cxEmpty" class="hidden absolute inset-0 flex items-center justify-center text-center p-6">
-          <div><i class="fa-solid fa-circle-nodes text-5xl text-gray-600 mb-3"></i>
-          <p class="text-gray-300 font-semibold">Your web is empty</p>
-          <p class="text-sm text-gray-500 mt-1 mb-4">Mark a few titles as Watched (the ✓ on any poster) and your constellation will grow.</p>
-          <button onclick="switchTab('movies')" class="px-4 py-2 rounded-xl bg-brand-gold text-black text-sm font-bold">Browse movies</button></div>
+          <div><i class="fa-solid fa-circle-nodes text-4xl text-gray-600 mb-2"></i>
+          <p class="text-gray-300 font-semibold text-sm">Your web is empty</p>
+          <p class="text-xs text-gray-500 mt-1 mb-3">Mark titles as Watched to grow your Sci-Web.</p>
+          <button onclick="switchTab('movies')" class="px-3.5 py-1.5 rounded-xl bg-brand-gold text-black text-xs font-bold">Browse films</button></div>
         </div>
       </div>
-      <p class="text-xs text-gray-500">Drag nodes to rearrange · scroll or pinch buttons to zoom · click a glowing outer node, then <b class="text-gray-300">Explore from here</b> to grow the web in that direction.</p>
     </section>
 
     <!-- TAB: CINEMA MOOD DIAL (Play Centerpiece) -->
-    <section id="tab-mood" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-        <div>
-          <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Haptic Rotary Vibe Engine</span>
-          <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-3 mt-0.5">
-            <i class="fa-solid fa-compass text-brand-gold"></i> Cinema Mood Dial
-          </h1>
-          <p class="text-xs sm:text-sm text-gray-400 mt-1">Spin the rotary dial, drag the smooth mood slider, or calibrate intensity to find tonight's ideal cinematic vibe.</p>
-        </div>
-        <button type="button" onclick="spinMoodDialRoulette()" id="moodDialSpinBtn" class="self-start sm:self-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-gold to-amber-400 text-black font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-brand-gold/20 hover:scale-[1.02] active:scale-95 transition-all">
-          <i class="fa-solid fa-dice text-sm"></i> <span>Spin Mood Roulette</span>
+    <section id="tab-mood" class="tab-pane hidden fade-in space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-compass text-brand-gold"></i> Mood Dial
+        </h1>
+        <button type="button" onclick="spinMoodDialRoulette()" id="moodDialSpinBtn" class="self-start sm:self-auto px-3.5 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-2 shadow hover:opacity-95 active:scale-95 transition-all">
+          <i class="fa-solid fa-dice text-sm"></i> <span>Roulette</span>
         </button>
       </div>
 
       <!-- Rotary Dial & Active Mood Card Deck -->
-      <div class="glass-card rounded-3xl p-4 sm:p-7 border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-6 shadow-2xl">
+      <div class="glass-card rounded-2xl p-4 sm:p-6 border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-5 shadow-2xl">
         <!-- Circular Interactive Dial -->
         <div class="relative flex items-center justify-center shrink-0">
           <svg id="moodDialSvg" width="280" height="280" class="select-none cursor-grab active:cursor-grabbing touch-none transition-transform"></svg>
-          <div class="absolute -bottom-2 text-[10px] text-gray-500 font-bold uppercase tracking-wider select-none pointer-events-none">
-            <i class="fa-solid fa-arrows-rotate mr-1 text-brand-gold"></i> Drag Wheel or Slide Below
-          </div>
         </div>
 
         <!-- Active Sector Info & Interactive Sliders Deck -->
-        <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-4 p-5 sm:p-6 rounded-2xl bg-black/40 border border-white/15 transition-all w-full">
-          <div class="flex items-start justify-between gap-3">
-            <div class="space-y-1">
-              <div class="flex items-center gap-2.5">
-                <span id="moodDialActiveIcon" class="text-3xl">🌌</span>
-                <h3 id="moodDialActiveName" class="text-xl sm:text-2xl font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
-              </div>
-              <p id="moodDialActiveDesc" class="text-xs sm:text-sm text-gray-300 leading-relaxed">Reality-bending paradoxes, space odysseys, and psychological twists</p>
-            </div>
+        <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-3.5 p-4 sm:p-5 rounded-xl bg-black/40 border border-white/10 transition-all w-full">
+          <div class="flex items-center gap-2.5">
+            <span id="moodDialActiveIcon" class="text-2xl">🌌</span>
+            <h3 id="moodDialActiveName" class="text-lg sm:text-xl font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
           </div>
+          <p id="moodDialActiveDesc" class="text-xs text-gray-300 leading-relaxed">Reality-bending paradoxes, space odysseys, and psychological twists</p>
 
           <!-- PRIMARY INTERACTIVE LIVE MOOD SLIDER -->
-          <div class="space-y-2 pt-3 border-t border-white/10">
+          <div class="space-y-1.5 pt-2 border-t border-white/10">
             <div class="flex items-center justify-between text-xs">
-              <span class="text-gray-300 font-bold flex items-center gap-1.5">
-                <i class="fa-solid fa-gauge-high text-brand-gold"></i> Live Mood Slider:
-              </span>
-              <span id="moodDialSliderSectorLbl" class="font-extrabold text-brand-gold text-xs">🌌 Mind-Bending</span>
+              <span class="text-gray-300 font-bold">Mood:</span>
+              <span id="moodDialSliderSectorLbl" class="font-extrabold text-brand-gold text-xs">Mind-Bending</span>
             </div>
             <div class="relative px-1">
               <input id="moodDialSectorSlider" type="range" min="0" max="7" step="1" value="0" oninput="onMoodDialSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab active:cursor-grabbing">
             </div>
-            <div class="flex justify-between text-[10px] text-gray-400 font-semibold px-1">
+            <div class="flex justify-between text-[10px] text-gray-400 font-medium px-1">
               <span>Mind-Bending</span>
               <span>Comedy</span>
               <span>Action</span>
@@ -578,135 +533,101 @@
             </div>
           </div>
 
-          <!-- Intensity Calibration Slider (Continuous Spectrum 0% - 100%) -->
-          <div class="space-y-1.5 pt-3 border-t border-white/10">
+          <!-- Intensity Calibration Slider -->
+          <div class="space-y-1.5 pt-2 border-t border-white/10">
             <div class="flex items-center justify-between text-xs">
-              <span class="text-gray-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-sliders text-brand-gold"></i> Intensity Spectrum:</span>
-              <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold">⚖️ 50% · Mellow &amp; Balanced</span>
+              <span class="text-gray-300 font-bold">Intensity:</span>
+              <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold text-xs">50% Balanced</span>
             </div>
             <input id="moodDialIntensitySlider" type="range" min="0" max="100" step="1" value="50" oninput="setMoodDialIntensity(this.value)" class="w-full spectrum-slider cursor-grab active:cursor-grabbing">
-            <div class="flex justify-between text-[10px] text-gray-500 font-semibold px-0.5">
-              <span>0% Gentle / Chill</span>
+            <div class="flex justify-between text-[10px] text-gray-500 font-medium px-0.5">
+              <span>0% Chill</span>
               <span>50% Balanced</span>
-              <span>100% Peak / Hardcore</span>
+              <span>100% Hardcore</span>
             </div>
           </div>
 
           <!-- Quick Mood Sector Pills -->
-          <div class="space-y-1.5 pt-2 border-t border-white/10">
-            <div class="text-[11px] font-bold text-gray-400">Quick Mood Jump:</div>
+          <div class="pt-1.5 border-t border-white/10">
             <div id="moodDialPillsBox" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
             <div id="moodPills" class="hidden"></div>
           </div>
         </div>
       </div>
 
-      <!-- Live Curated Recommendations Track -->
+      <!-- Recommendations Track -->
       <div class="space-y-2">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg sm:text-xl font-display font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-film text-brand-gold"></i> Live Calibrated Recommendations
-          </h2>
-          <span class="text-xs text-gray-400">Updates instantly as you adjust dial or slider</span>
-        </div>
+        <h2 class="text-lg font-display font-bold text-white">Recommendations</h2>
         <div class="has-arrows">
           <div id="moodRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB: WATCH DUEL -->
-    <section id="tab-duel" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-        <div>
-          <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Head-to-Head Bracket Showdown</span>
-          <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-3 mt-0.5"><i class="fa-solid fa-trophy text-brand-gold"></i> Watch Duel Arena</h1>
-          <p class="text-sm text-gray-400 mt-1">Launch a 1-click themed showdown below, customize your own bracket, or let the Auto-Judge crown tonight's winner.</p>
-        </div>
-        <button type="button" onclick="document.getElementById('duelSetup').classList.toggle('hidden')" class="self-start sm:self-auto px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-brand-gold flex items-center gap-1.5">
-          <i class="fa-solid fa-sliders"></i> <span>Customize Bracket</span>
-        </button>
-      </div>
-
-      <!-- Curated Showdown Themes -->
-      <div class="space-y-2">
-        <div class="text-xs font-semibold text-gray-400">Curated Showdowns</div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2" id="duelPresetGrid">
-          <button type="button" onclick="launchPresetDuel('pantheon')" class="p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-left space-y-0.5 transition-all group">
-            <div class="text-xs font-bold text-white flex items-center justify-between"><span>Essential Cinema</span><i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white transition-colors"></i></div>
-            <div class="text-[11px] text-gray-400 truncate">Godfather, Dark Knight, Shawshank</div>
-          </button>
-          <button type="button" onclick="launchPresetDuel('scifi')" class="p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-left space-y-0.5 transition-all group">
-            <div class="text-xs font-bold text-white flex items-center justify-between"><span>Sci-Fi &amp; Space</span><i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white transition-colors"></i></div>
-            <div class="text-[11px] text-gray-400 truncate">Inception, Interstellar, Matrix, Dune 2</div>
-          </button>
-          <button type="button" onclick="launchPresetDuel('bollywood')" class="p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-left space-y-0.5 transition-all group">
-            <div class="text-xs font-bold text-white flex items-center justify-between"><span>Indian Cinema</span><i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white transition-colors"></i></div>
-            <div class="text-[11px] text-gray-400 truncate">3 Idiots, Dangal, Sholay, Tumbbad</div>
-          </button>
-          <button type="button" onclick="launchPresetDuel('tv')" class="p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-left space-y-0.5 transition-all group">
-            <div class="text-xs font-bold text-white flex items-center justify-between"><span>Prestige Television</span><i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white transition-colors"></i></div>
-            <div class="text-[11px] text-gray-400 truncate">Breaking Bad, GOT, Arcane, Dark</div>
-          </button>
-          <button type="button" onclick="launchPresetDuel('action')" class="p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-left space-y-0.5 transition-all group">
-            <div class="text-xs font-bold text-white flex items-center justify-between"><span>Action Epics</span><i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white transition-colors"></i></div>
-            <div class="text-[11px] text-gray-400 truncate">Gladiator, Mad Max, John Wick, Top Gun</div>
-          </button>
-          <button type="button" onclick="launchPresetDuel('thriller')" class="p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-left space-y-0.5 transition-all group">
-            <div class="text-xs font-bold text-white flex items-center justify-between"><span>Psychological Thrillers</span><i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white transition-colors"></i></div>
-            <div class="text-[11px] text-gray-400 truncate">Se7en, Parasite, Prestige, Shutter Island</div>
-          </button>
+    <!-- TAB: TOURNAMENT & CINESWIPE -->
+    <section id="tab-duel" class="tab-pane hidden fade-in space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-trophy text-brand-gold"></i> Tournament Bracket
+        </h1>
+        <!-- Themed Curations Pills -->
+        <div class="flex flex-wrap gap-1.5 items-center" id="duelPresetGrid">
+          <button type="button" onclick="launchPresetDuel('pantheon')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Essential</button>
+          <button type="button" onclick="launchPresetDuel('scifi')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Sci-Fi</button>
+          <button type="button" onclick="launchPresetDuel('bollywood')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Indian</button>
+          <button type="button" onclick="launchPresetDuel('tv')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Series</button>
+          <button type="button" onclick="launchPresetDuel('action')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Action</button>
+          <button type="button" onclick="launchPresetDuel('thriller')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Thriller</button>
         </div>
       </div>
 
-      <div id="duelSetup" class="glass-card rounded-2xl p-5 border border-white/10 space-y-4">
-        <!-- Duel Mode Switcher -->
-        <div>
-          <label class="text-xs font-semibold text-gray-400">Play Mode</label>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1.5" id="duelGameMode">
-            <button type="button" data-m="classic" class="py-2 px-3 rounded-xl text-xs font-bold transition-all bg-brand-gold text-black">
-              Classic Duel
-            </button>
-            <button type="button" data-m="royale" class="py-2 px-3 rounded-xl text-xs font-bold transition-all bg-white/5 text-gray-300 hover:bg-white/10">
-              Tournament
-            </button>
-            <button type="button" data-m="matchmaker" class="py-2 px-3 rounded-xl text-xs font-bold transition-all bg-white/5 text-gray-300 hover:bg-white/10">
-              CineSwipe
-            </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Clean Integrated Controls Bar for Mode, Contenders, Source -->
+      <div id="duelSetup" class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
           <div>
-            <label class="text-xs font-semibold text-gray-400">Contenders</label>
-            <div class="flex gap-1.5 mt-1.5" id="duelSize">
-              <button data-v="2" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">2</button>
+            <div class="text-[11px] font-bold text-gray-400 mb-1">Play Mode</div>
+            <div class="flex gap-1.5" id="duelGameMode">
+              <button type="button" data-m="royale" class="flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all bg-brand-gold text-black">
+                Tournament
+              </button>
+              <button type="button" data-m="matchmaker" class="flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all bg-white/5 text-gray-300 hover:bg-white/10">
+                CineSwipe
+              </button>
+              <button type="button" data-m="classic" class="hidden"></button>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-[11px] font-bold text-gray-400 mb-1">Contenders</div>
+            <div class="flex gap-1.5" id="duelSize">
               <button data-v="4" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-brand-gold text-black">4</button>
               <button data-v="8" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">8</button>
               <button data-v="16" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">16</button>
               <button data-v="32" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">32</button>
             </div>
           </div>
+
           <div>
-            <label class="text-xs font-semibold text-gray-400">Source</label>
-            <div class="flex gap-2 mt-1.5" id="duelSrc">
+            <div class="text-[11px] font-bold text-gray-400 mb-1">Source</div>
+            <div class="flex gap-1.5" id="duelSrc">
               <button data-v="wish" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-brand-gold text-black">Watchlist</button>
               <button data-v="mood" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">Mood</button>
               <button data-v="pop" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">Popular</button>
             </div>
           </div>
-          <div id="duelMoodWrap" class="hidden">
-            <label class="text-xs font-semibold text-gray-400">Mood Filter</label>
-            <select id="duelMood" class="mt-1.5 w-full px-3 py-1.5 bg-black/50 border border-white/15 rounded-xl text-xs text-white"></select>
-          </div>
         </div>
-        <button id="duelBuild" class="w-full py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-bold text-xs transition-opacity">Start Session</button>
+
+        <div id="duelMoodWrap" class="hidden pt-1">
+          <select id="duelMood" class="w-full px-3 py-1.5 bg-black/50 border border-white/15 rounded-xl text-xs text-white"></select>
+        </div>
+
+        <button id="duelBuild" class="w-full py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs transition-opacity shadow">Start Tournament</button>
       </div>
 
-      <div id="duelArena" class="glass-card rounded-2xl p-4 sm:p-6 border border-white/10 space-y-5 relative overflow-hidden">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div id="duelRound" class="text-xs font-bold tracking-wide text-gray-300">Face-Off</div>
-          <div class="flex flex-wrap gap-1.5 sm:gap-2">
+      <div id="duelArena" class="glass-card rounded-2xl p-4 sm:p-6 border border-white/10 space-y-4 relative overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+          <div id="duelRound" class="text-xs font-bold tracking-wide text-gray-200">Face-Off</div>
+          <div class="flex flex-wrap gap-1.5">
             <button id="duelAuto" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-gray-200 text-xs font-medium transition-all">Auto-judge</button>
             <button id="duelAutoAll" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-xs font-medium transition-all">Auto-all</button>
             <button id="duelQuit" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 text-xs font-medium transition-all">Reset</button>
@@ -717,19 +638,12 @@
       </div>
 
       <!-- CineSwipe Arena -->
-      <div id="cineSwipeArena" class="hidden glass-card rounded-2xl p-5 border border-white/10 space-y-4 relative overflow-hidden">
+      <div id="cineSwipeArena" class="hidden glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4 relative overflow-hidden">
         <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <div class="flex items-center gap-2">
-            <div class="text-sm font-bold text-white">CineSwipe</div>
-          </div>
+          <div class="text-sm font-bold text-white">CineSwipe</div>
           <div class="flex items-center gap-2">
             <span id="csDeckCounter" class="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-mono text-xs font-semibold">1 / 16</span>
             <button id="csQuit" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 text-xs font-medium">Exit</button>
-          </div>
-        </div>
-          <div class="flex items-center gap-2">
-            <span id="csDeckCounter" class="px-2.5 py-1 rounded-full bg-white/10 text-white font-mono text-xs font-bold">1 / 16</span>
-            <button id="csQuit" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 text-xs font-semibold">Exit</button>
           </div>
         </div>
 
@@ -741,27 +655,60 @@
         <!-- Controls: Pass / Lock / Keep -->
         <div class="flex flex-col items-center gap-2 pt-1">
           <div class="flex items-center justify-center gap-4 sm:gap-6">
-            <button id="csPassBtn" type="button" class="group flex flex-col items-center gap-1 focus:outline-none" title="Pass (Left Arrow)">
-              <div class="w-14 h-14 rounded-full bg-rose-500/15 group-hover:bg-rose-500/25 border-2 border-rose-500/50 text-rose-400 text-xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 active:scale-95">
+            <button id="csPassBtn" type="button" class="group flex flex-col items-center gap-1 focus:outline-none" title="Pass">
+              <div class="w-12 h-12 rounded-full bg-rose-500/15 group-hover:bg-rose-500/25 border-2 border-rose-500/50 text-rose-400 text-lg flex items-center justify-center shadow transition-transform group-hover:scale-105 active:scale-95">
                 <i class="fa-solid fa-xmark"></i>
               </div>
-              <span class="text-[10px] font-bold text-rose-400/80 uppercase tracking-wider">Pass (←)</span>
+              <span class="text-[10px] font-bold text-rose-400/80 uppercase tracking-wider">Pass</span>
             </button>
 
-            <button id="csPickTonightBtn" type="button" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 hover:brightness-110 text-black font-black text-xs sm:text-sm flex items-center gap-2 shadow-xl shadow-amber-500/25 transition-all active:scale-95">
-              <i class="fa-solid fa-dice text-base"></i>
-              <span>Lock Tonight's Movie</span>
+            <button id="csPickTonightBtn" type="button" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
+              <i class="fa-solid fa-check"></i>
+              <span>Pick Tonight</span>
             </button>
 
-            <button id="csKeepBtn" type="button" class="group flex flex-col items-center gap-1 focus:outline-none" title="Keep / Shortlist (Right Arrow)">
-              <div class="w-14 h-14 rounded-full bg-emerald-500/15 group-hover:bg-emerald-500/25 border-2 border-emerald-500/50 text-emerald-400 text-xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 active:scale-95">
+            <button id="csKeepBtn" type="button" class="group flex flex-col items-center gap-1 focus:outline-none" title="Keep">
+              <div class="w-12 h-12 rounded-full bg-emerald-500/15 group-hover:bg-emerald-500/25 border-2 border-emerald-500/50 text-emerald-400 text-lg flex items-center justify-center shadow transition-transform group-hover:scale-105 active:scale-95">
                 <i class="fa-solid fa-heart"></i>
               </div>
-              <span class="text-[10px] font-bold text-emerald-400/80 uppercase tracking-wider">Keep (→)</span>
+              <span class="text-[10px] font-bold text-emerald-400/80 uppercase tracking-wider">Keep</span>
             </button>
           </div>
-          <div class="text-[10px] text-gray-500 font-mono tracking-wide">Tip: Use keyboard ← / → arrows or swipe cards</div>
         </div>
+
+        <!-- Shortlist Tray -->
+        <div id="csShortlistTray" class="pt-3 border-t border-white/10 space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold text-gray-300">
+            <span>Shortlisted</span>
+            <span id="csShortlistCount" class="text-brand-gold font-mono">0</span>
+          </div>
+          <div id="csShortlistCards" class="flex gap-2.5 overflow-x-auto pb-1 min-h-[64px] items-center"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: CLASSIC DUEL (Separate Dedicated 1v1 Feature) -->
+    <section id="tab-classic" class="tab-pane hidden fade-in space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-hand-fist text-brand-gold"></i> Classic Duel
+        </h1>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="startClassicDuel1v1('wish')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300">Watchlist</button>
+          <button type="button" onclick="startClassicDuel1v1('pop')" class="px-3 py-1.5 rounded-xl bg-brand-gold text-black font-bold text-xs">Popular</button>
+        </div>
+      </div>
+
+      <div id="classicDuelArena" class="glass-card rounded-2xl p-4 sm:p-6 border border-white/10 space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+          <div class="text-xs font-bold text-gray-300">Head-to-Head Showdown</div>
+          <button type="button" onclick="autoJudgeClassicDuel()" class="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-medium text-gray-200">Auto-Judge</button>
+        </div>
+        <div id="classicDuelStage" class="flex items-center justify-center gap-4 sm:gap-8 py-4 min-h-[320px]">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+    </section>
 
         <!-- Shortlist Tray -->
         <div class="pt-4 border-t border-white/10">
@@ -780,21 +727,19 @@
       <div id="duelChamp" class="hidden glass-card rounded-3xl p-6 sm:p-10 border border-brand-gold/40 text-center space-y-4 relative overflow-hidden"></div>
     </section>
 
-    <!-- TAB: MOOD RICOCHET (Multi-Ball & Physics Lab) -->
+    <!-- TAB: MOOD RICOCHET -->
     <section id="tab-ricochet" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-        <div>
-          <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Pinball Discovery Physics</span>
-          <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-3 mt-0.5"><i class="fa-solid fa-circle-dot text-brand-gold"></i> Mood Ricochet · Multi-Ball Lab</h1>
-          <p class="text-sm text-gray-400 mt-1">Launch 1 to 5 pinballs at once! Genre bumpers, era walls, and gravity modes shape your single pick or Multi-Ball Combo Feature.</p>
-        </div>
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-circle-dot text-brand-gold"></i> Mood Ricochet
+        </h1>
       </div>
 
       <div class="grid lg:grid-cols-[auto_1fr] gap-6 items-start">
         <div class="space-y-3 mx-auto w-full max-w-[520px]">
           <canvas id="rcCv" width="520" height="693"></canvas>
           <div class="flex gap-2 items-center flex-wrap">
-            <button id="rcLaunch" class="px-5 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm shadow-lg"><i class="fa-solid fa-rocket mr-1.5"></i>Launch Balls</button>
+            <button id="rcLaunch" class="px-5 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm shadow-lg"><i class="fa-solid fa-rocket mr-1.5"></i>Launch</button>
             <button id="rcShuffle" class="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold text-xs"><i class="fa-solid fa-shuffle mr-1"></i>Shuffle Bumpers</button>
             <div class="flex items-center gap-2 ml-auto">
               <span class="text-[11px] text-gray-400 font-semibold">Power</span>
@@ -804,60 +749,53 @@
         </div>
 
         <div class="space-y-4">
-          <!-- Creative Multi-Ball & Physics Lab Controls (Replaces permanent Best Shots box) -->
-          <div class="glass-card rounded-3xl p-5 border border-brand-gold/30 space-y-4">
+          <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
             <div class="flex items-center justify-between">
-              <div>
-                <div class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold"><i class="fa-solid fa-atom mr-1"></i>Multi-Ball &amp; Table Physics Lab</div>
-                <h3 class="text-base font-display font-bold text-white mt-0.5">Customize Your Launch</h3>
-              </div>
-              <span id="rcActiveModeBadge" class="px-2.5 py-1 rounded-full bg-brand-gold/15 border border-brand-gold/40 text-brand-gold text-[11px] font-bold">1 Ball · Normal G</span>
+              <span class="text-xs font-bold text-white">Physics Controls</span>
+              <span id="rcActiveModeBadge" class="px-2.5 py-1 rounded-full bg-brand-gold/15 border border-brand-gold/40 text-brand-gold text-[11px] font-bold">1 Ball · Normal</span>
             </div>
 
-            <!-- Ball Count Selector (1, 2, 3, or 5 Balls) -->
+            <!-- Ball Count Selector (1, 2, 3, 4) -->
             <div class="space-y-1.5">
-              <label class="text-xs font-bold text-gray-300 flex items-center justify-between">
-                <span>How many balls to launch at once?</span>
-                <span class="text-[11px] text-gray-400">Multi-ball builds a Double/Triple Feature!</span>
-              </label>
+              <label class="text-xs font-bold text-gray-400">Balls</label>
               <div class="grid grid-cols-4 gap-2" id="rcBallCountGroup">
-                <button type="button" data-balls="1" class="rc-ball-btn py-2 rounded-xl text-xs font-extrabold bg-brand-gold text-black shadow">1 Ball</button>
-                <button type="button" data-balls="2" class="rc-ball-btn py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">2 Balls</button>
-                <button type="button" data-balls="3" class="rc-ball-btn py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">3 Balls</button>
-                <button type="button" data-balls="5" class="rc-ball-btn py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">5 Chaos!</button>
+                <button type="button" data-balls="1" class="rc-ball-btn py-2 rounded-xl text-xs font-extrabold bg-brand-gold text-black shadow">1</button>
+                <button type="button" data-balls="2" class="rc-ball-btn py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">2</button>
+                <button type="button" data-balls="3" class="rc-ball-btn py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">3</button>
+                <button type="button" data-balls="4" class="rc-ball-btn py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">4</button>
               </div>
             </div>
 
             <!-- Gravity & Bounce Physics Selector -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div class="space-y-1.5">
-                <label class="text-xs font-bold text-gray-300">Gravity Field</label>
+                <label class="text-xs font-bold text-gray-400">Gravity</label>
                 <div class="grid grid-cols-3 gap-1.5" id="rcGravGroup">
-                  <button type="button" data-grav="normal" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-bold bg-cyan-500/25 border border-cyan-400/50 text-cyan-200">🌍 Normal</button>
-                  <button type="button" data-grav="moon" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">🌙 Low-G</button>
-                  <button type="button" data-grav="hyper" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">⚡ Hyper</button>
+                  <button type="button" data-grav="normal" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-bold bg-cyan-500/25 border border-cyan-400/50 text-cyan-200">Normal</button>
+                  <button type="button" data-grav="moon" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">Low</button>
+                  <button type="button" data-grav="hyper" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">Hyper</button>
                 </div>
               </div>
               <div class="space-y-1.5">
-                <label class="text-xs font-bold text-gray-300">Bumper Layout</label>
+                <label class="text-xs font-bold text-gray-400">Bumpers</label>
                 <div class="grid grid-cols-2 gap-1.5" id="rcBumperLayoutGroup">
-                  <button type="button" data-layout="standard" class="rc-layout-btn py-1.5 rounded-lg text-[11px] font-bold bg-purple-500/25 border border-purple-400/50 text-purple-200">10 Classic</button>
-                  <button type="button" data-layout="mega" class="rc-layout-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">14 Mega Ring</button>
+                  <button type="button" data-layout="standard" class="rc-layout-btn py-1.5 rounded-lg text-[11px] font-bold bg-purple-500/25 border border-purple-400/50 text-purple-200">10</button>
+                  <button type="button" data-layout="mega" class="rc-layout-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">14</button>
                 </div>
               </div>
             </div>
           </div>
 
           <div id="rcTags" class="flex flex-wrap gap-2 min-h-[2rem]"></div>
-          <div id="rcResult" class="glass-card rounded-3xl p-5 border border-white/10 text-sm text-gray-300">Press <strong>Launch Balls</strong> (or tap anywhere on the pinball table) to fire your shot!</div>
+          <div id="rcResult" class="glass-card rounded-2xl p-4 border border-white/10 text-xs text-gray-400">Launch to reveal selection</div>
 
-          <!-- Optional Toggleable Shot History (Hidden by Default as Requested) -->
+          <!-- Optional Toggleable Shot History -->
           <div>
             <button type="button" onclick="document.getElementById('rcOptionalHistoryBox').classList.toggle('hidden')" class="text-xs text-gray-400 hover:text-brand-gold font-semibold flex items-center gap-1.5">
-              <i class="fa-solid fa-clock-rotate-left"></i> <span>Toggle Recent Shot History (Optional)</span>
+              <i class="fa-solid fa-clock-rotate-left"></i> <span>Recent Shots</span>
             </button>
             <div id="rcOptionalHistoryBox" class="hidden mt-2 glass-card rounded-2xl p-4 border border-white/10">
-              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold mb-2">Recent Ricochet Shots</div>
+              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold mb-2">Recent Shots</div>
               <div id="rcBest" class="space-y-2 text-xs text-gray-300"></div>
             </div>
           </div>
@@ -865,70 +803,67 @@
       </div>
     </section>
 
-    <!-- TAB: MARATHON ARCHITECT -->
     <!-- TAB: MARATHON ARCHITECT & BINGE CALCULATOR -->
     <section id="tab-marathon" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-        <div>
-          <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Binge Intelligence &amp; Watch Time Planner</span>
-          <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-3 mt-0.5"><i class="fa-solid fa-hourglass-half text-brand-gold"></i> Marathon Architect</h1>
-          <p class="text-sm text-gray-400 mt-1">Design single-session movie marathons with curated energy curves, or calculate day-by-day binge schedules and completion ETAs for multi-season TV shows and sagas.</p>
-        </div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white flex items-center gap-2.5">
+          <i class="fa-solid fa-hourglass-half text-brand-gold"></i> Marathon Architect
+        </h1>
         <!-- Dual Mode Switcher -->
-        <div class="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.05] border border-white/10 shrink-0">
-          <button id="mhModeSessionBtn" type="button" onclick="switchMarathonMode('session')" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-2 bg-brand-gold text-black shadow-md transition-all">
-            <i class="fa-solid fa-stopwatch"></i> <span>Session Architect</span>
+        <div class="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.05] border border-white/10 shrink-0">
+          <button id="mhModeSessionBtn" type="button" onclick="switchMarathonMode('session')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-brand-gold text-black shadow transition-all">
+            <i class="fa-solid fa-stopwatch"></i> <span>Session</span>
           </button>
-          <button id="mhModeBingeBtn" type="button" onclick="switchMarathonMode('binge')" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-2 text-gray-300 hover:text-white transition-all">
-            <i class="fa-solid fa-calendar-days text-brand-gold"></i> <span>Binge Calculator</span>
+          <button id="mhModeBingeBtn" type="button" onclick="switchMarathonMode('binge')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 text-gray-300 hover:text-white transition-all">
+            <i class="fa-solid fa-calendar-days text-brand-gold"></i> <span>Binge</span>
           </button>
         </div>
       </div>
 
       <!-- MODE 1: SINGLE-SESSION MARATHON ARCHITECT -->
       <div id="mhSessionSection" class="space-y-6">
-        <!-- 1-Click Ready-Made Marathon Templates (Makes Marathon Fuller & Instant) -->
+        <!-- Blueprints -->
         <div class="space-y-2">
-          <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400"><i class="fa-solid fa-wand-magic-sparkles text-brand-gold mr-1.5"></i>1-Click Marathon Blueprints</div>
+          <div class="text-xs font-bold text-gray-400">Curated Blueprints</div>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
-            <button type="button" onclick="applyMarathonPreset(6, '19:00', 'cosy', 'Horror')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-brand-gold">🌧️ Cozy Sunday</div>
-              <div class="text-[11px] text-gray-300">6 hrs · Starts 19:00 · Warm &amp; Feel-Good</div>
+            <button type="button" onclick="applyMarathonPreset(4, '20:00', 'cosy', 'Horror')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Double Feature</div>
+              <div class="text-[11px] text-gray-400">4 hrs · 20:00 · Classic</div>
             </button>
-            <button type="button" onclick="applyMarathonPreset(9, '18:00', 'epic', '')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-cyan-400/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-cyan-300">🚀 Sci-Fi Odyssey</div>
-              <div class="text-[11px] text-gray-300">9 hrs · Starts 18:00 · Epic World-Building</div>
+            <button type="button" onclick="applyMarathonPreset(6, '18:00', 'epic', '')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Weekend Retrospective</div>
+              <div class="text-[11px] text-gray-400">6 hrs · 18:00 · Epic</div>
             </button>
-            <button type="button" onclick="applyMarathonPreset(8, '20:00', 'thrilling', 'Comedy')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-rose-400/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-rose-300">🔪 Late-Night Thrills</div>
-              <div class="text-[11px] text-gray-300">8 hrs · Starts 20:00 · High-Tension Arc</div>
+            <button type="button" onclick="applyMarathonPreset(6, '21:00', 'thrilling', 'Comedy')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Midnight Suspense</div>
+              <div class="text-[11px] text-gray-400">6 hrs · 21:00 · Tension</div>
             </button>
-            <button type="button" onclick="applyMarathonPreset(7, '17:00', 'funny', 'Horror')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-emerald-400/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-emerald-300">😂 Comedy Fiesta</div>
-              <div class="text-[11px] text-gray-300">7 hrs · Starts 17:00 · Pure Laughs</div>
+            <button type="button" onclick="applyMarathonPreset(5, '19:00', 'funny', 'Horror')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Comedy Showcase</div>
+              <div class="text-[11px] text-gray-400">5 hrs · 19:00 · Light</div>
             </button>
-            <button type="button" onclick="applyMarathonPreset(10, '16:00', 'thoughtful', '')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-purple-400/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-purple-300">🎭 Prestige All-Day</div>
-              <div class="text-[11px] text-gray-300">10 hrs · Starts 16:00 · Deep Cinema</div>
+            <button type="button" onclick="applyMarathonPreset(8, '16:00', 'thoughtful', '')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Director's Cut</div>
+              <div class="text-[11px] text-gray-400">8 hrs · 16:00 · Prestige</div>
             </button>
           </div>
         </div>
 
-        <div class="glass-card rounded-3xl p-5 border border-white/10 space-y-4">
+        <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
           <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 items-end">
             <label class="text-xs text-gray-400 font-bold">Total Hours<input id="mhHours" type="number" min="2" max="16" value="8" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
             <label class="text-xs text-gray-400 font-bold">Start Time<input id="mhStart" type="time" value="18:00" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
             <label class="text-xs text-gray-400 font-bold">Core Vibe<select id="mhMood" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="cosy">Cosy &amp; Warm</option><option value="thrilling">Thrilling &amp; Tense</option><option value="thoughtful">Thoughtful &amp; Deep</option><option value="epic" selected>Epic &amp; Grand</option><option value="funny">Pure Comedy</option></select></label>
-            <label class="text-xs text-gray-400 font-bold">Energy Timeline Arc<select id="mhArcShape" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="wave" selected>Classic Wave (Warm-up → Peak → Chill)</option><option value="escalate">Escalator (Steady Climb to Climax)</option><option value="frontload">Front-Loaded (Peak First → Wind-Down)</option><option value="coaster">Rollercoaster (Alternating High/Chill)</option><option value="latepeak">Midnight Adrenaline (Late Peak)</option></select></label>
-            <label class="text-xs text-gray-400 font-bold">Intermission Breaks<select id="mhBreakLen" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="0">0 min (Back-to-Back)</option><option value="10">10 min (Quick Stretch)</option><option value="15" selected>15 min (Snack &amp; Refill)</option><option value="25">25 min (Meal Break)</option></select></label>
-            <label class="text-xs text-gray-400 font-bold">Exclude Genre<select id="mhNo" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="">Nothing</option><option>Horror</option><option>Thriller</option><option>Crime</option><option>Romance</option><option>Animation</option><option>Action</option><option>Sci-Fi</option><option>Drama</option><option>Comedy</option><option>Fantasy</option><option>Western</option><option>War</option><option>Documentary</option></select></label>
-            <button id="mhBuild" class="col-span-2 sm:col-span-4 lg:col-span-1 px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm shadow-lg hover:opacity-95 transition-all"><i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>Build Timeline</button>
+            <label class="text-xs text-gray-400 font-bold">Energy Curve<select id="mhArcShape" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="wave" selected>Classic Wave</option><option value="escalate">Escalator</option><option value="frontload">Front-Loaded</option><option value="coaster">Rollercoaster</option><option value="latepeak">Late Peak</option></select></label>
+            <label class="text-xs text-gray-400 font-bold">Intermission<select id="mhBreakLen" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="0">0 min</option><option value="10">10 min</option><option value="15" selected>15 min</option><option value="25">25 min</option></select></label>
+            <label class="text-xs text-gray-400 font-bold">Exclude Genre<select id="mhNo" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="">None</option><option>Horror</option><option>Thriller</option><option>Crime</option><option>Romance</option><option>Animation</option><option>Action</option><option>Sci-Fi</option><option>Drama</option><option>Comedy</option><option>Fantasy</option><option>Western</option><option>War</option><option>Documentary</option></select></label>
+            <button id="mhBuild" class="col-span-2 sm:col-span-4 lg:col-span-1 px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm shadow hover:opacity-95 transition-all">Build Timeline</button>
           </div>
-          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10 text-[11px] text-gray-400">
-            <span><i class="fa-solid fa-sliders text-brand-gold mr-1.5"></i><strong>Timeline Sculptor:</strong> Adjust any slot's energy slider below (Chill ↔ Peak) to raise or lower that moment's intensity, swap individual titles, or add/remove slots.</span>
+          <div class="flex items-center justify-between gap-2 pt-2 border-t border-white/10 text-xs text-gray-400">
+            <span>Adjust any slot's energy or swap titles below</span>
             <div class="flex items-center gap-1.5">
               <button type="button" onclick="mhAddSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-brand-gold"><i class="fa-solid fa-plus mr-1"></i>Add Slot</button>
-              <button type="button" onclick="mhRemoveSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-300"><i class="fa-solid fa-minus mr-1"></i>Remove Last</button>
+              <button type="button" onclick="mhRemoveSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-300"><i class="fa-solid fa-minus mr-1"></i>Remove</button>
             </div>
           </div>
         </div>
@@ -936,61 +871,57 @@
           <div id="mhCurve" class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3"></div>
           <div id="mhList" class="space-y-2.5"></div>
           <div class="flex gap-2 flex-wrap">
-            <button id="mhCopy" class="px-4 py-2 rounded-xl border border-white/15 text-xs sm:text-sm font-bold text-gray-200"><i class="fa-solid fa-copy mr-1.5"></i>Copy plan</button>
-            <button id="mhWish" class="px-4 py-2 rounded-xl bg-rose-500 text-white text-xs sm:text-sm font-bold"><i class="fa-solid fa-heart mr-1.5"></i>Add to watchlist in order</button>
+            <button id="mhCopy" class="px-4 py-2 rounded-xl border border-white/15 text-xs sm:text-sm font-bold text-gray-200"><i class="fa-solid fa-copy mr-1.5"></i>Copy Plan</button>
+            <button id="mhWish" class="px-4 py-2 rounded-xl bg-rose-500 text-white text-xs sm:text-sm font-bold"><i class="fa-solid fa-heart mr-1.5"></i>Add to Watchlist</button>
           </div>
-          <p class="text-[11px] text-gray-500">Use each slot's Energy Slider or Chill / Peak buttons to sculpt which moment hits hardest, or click ↻ Swap to roll a different title for that exact slot.</p>
         </div>
       </div>
 
-      <!-- MODE 2: SERIES BINGE CALCULATOR & ETA PLANNER -->
+      <!-- MODE 2: SERIES BINGE CALCULATOR -->
       <div id="mhBingeSection" class="hidden space-y-6">
-        <!-- Quick Preset Badges -->
+        <!-- Targets -->
         <div class="space-y-2">
-          <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400"><i class="fa-solid fa-fire text-amber-400 mr-1.5"></i>Popular Binge Targets (1-Click)</div>
+          <div class="text-xs font-bold text-gray-400">Popular Targets</div>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-            <button type="button" onclick="selectBingePresetCard('breaking-bad')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-brand-gold">🧪 Breaking Bad</div>
+            <button type="button" onclick="selectBingePresetCard('breaking-bad')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Breaking Bad</div>
               <div class="text-[11px] text-gray-400">5 Seasons · 62 Eps</div>
             </button>
-            <button type="button" onclick="selectBingePresetCard('game-of-thrones')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-amber-300">👑 Game of Thrones</div>
+            <button type="button" onclick="selectBingePresetCard('game-of-thrones')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Game of Thrones</div>
               <div class="text-[11px] text-gray-400">8 Seasons · 73 Eps</div>
             </button>
-            <button type="button" onclick="selectBingePresetCard('stranger-things')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-rose-300">🧇 Stranger Things</div>
+            <button type="button" onclick="selectBingePresetCard('stranger-things')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Stranger Things</div>
               <div class="text-[11px] text-gray-400">4 Seasons · 34 Eps</div>
             </button>
-            <button type="button" onclick="selectBingePresetCard('ramayan-1987')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-yellow-300">🏹 Ramayan (1987)</div>
+            <button type="button" onclick="selectBingePresetCard('ramayan-1987')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Ramayan (1987)</div>
               <div class="text-[11px] text-gray-400">1 Season · 78 Eps</div>
             </button>
-            <button type="button" onclick="selectBingePresetCard('mcu-infinity')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-red-400">🛡️ MCU Infinity Saga</div>
-              <div class="text-[11px] text-gray-400">23 Films · Epic Arc</div>
+            <button type="button" onclick="selectBingePresetCard('mcu-infinity')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">MCU Infinity Saga</div>
+              <div class="text-[11px] text-gray-400">23 Films</div>
             </button>
-            <button type="button" onclick="selectBingePresetCard('harry-potter')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-extrabold text-cyan-300">⚡ Harry Potter</div>
-              <div class="text-[11px] text-gray-400">8 Films · Wizarding</div>
+            <button type="button" onclick="selectBingePresetCard('harry-potter')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+              <div class="text-xs font-bold text-white">Harry Potter</div>
+              <div class="text-[11px] text-gray-400">8 Films</div>
             </button>
           </div>
         </div>
 
         <!-- Binge Configuration Form -->
-        <div class="glass-card rounded-3xl p-5 border border-white/10 space-y-5">
+        <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="sm:col-span-2 space-y-1.5">
-              <label class="text-xs text-gray-400 font-bold flex items-center justify-between">
-                <span>Select Series or Saga</span>
-                <span class="text-[11px] text-brand-gold font-normal">Choose from top presets or entire TV shows vault</span>
-              </label>
+              <label class="text-xs text-gray-400 font-bold">Series or Saga</label>
               <select id="bingeShowSelect" onchange="onBingeShowSelected()" class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-semibold text-sm"></select>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <label class="text-xs text-gray-400 font-bold">Start Date
                 <input id="bingeStartDate" type="date" onchange="calculateBingeSchedule()" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs">
               </label>
-              <label class="text-xs text-gray-400 font-bold">Daily Start Time
+              <label class="text-xs text-gray-400 font-bold">Daily Time
                 <input id="bingeStartTime" type="time" value="20:00" onchange="calculateBingeSchedule()" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs">
               </label>
             </div>
@@ -998,38 +929,59 @@
 
           <!-- Pace Presets -->
           <div class="space-y-2 pt-2 border-t border-white/10">
-            <div class="text-xs text-gray-400 font-bold flex items-center justify-between">
-              <span>Viewing Pace Presets</span>
-              <span class="text-[11px] text-gray-500">Pick your daily schedule commitment</span>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-              <button type="button" data-pace="casual" onclick="setBingePace('casual')" class="binge-pace-btn p-3 rounded-2xl bg-brand-gold text-black font-extrabold text-left border border-brand-gold shadow-md transition-all">
-                <div class="text-xs font-black">🛋️ Casual Evenings</div>
-                <div class="text-[11px] opacity-80 mt-0.5">2.0 hrs / day after work</div>
+            <label class="text-xs text-gray-400 font-bold">Viewing Pace</label>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              <button type="button" data-pace="casual" onclick="setBingePace('casual')" class="binge-pace-btn p-2.5 rounded-xl bg-brand-gold text-black font-bold text-left border border-brand-gold shadow transition-all">
+                <div class="text-xs font-bold">Casual</div>
+                <div class="text-[11px] opacity-80 mt-0.5">2 hrs / day</div>
               </button>
-              <button type="button" data-pace="speedrun" onclick="setBingePace('speedrun')" class="binge-pace-btn p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
-                <div class="text-xs font-black text-rose-300">⚡ Speedrun Mode</div>
-                <div class="text-[11px] opacity-80 mt-0.5">5.0 hrs / day sprint</div>
+              <button type="button" data-pace="speedrun" onclick="setBingePace('speedrun')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                <div class="text-xs font-bold">Sprint</div>
+                <div class="text-[11px] opacity-80 mt-0.5">5 hrs / day</div>
               </button>
-              <button type="button" data-pace="weekend" onclick="setBingePace('weekend')" class="binge-pace-btn p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
-                <div class="text-xs font-black text-cyan-300">🍿 Weekend Warrior</div>
-                <div class="text-[11px] opacity-80 mt-0.5">6h Sat/Sun · 1.5h Weekdays</div>
+              <button type="button" data-pace="weekend" onclick="setBingePace('weekend')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                <div class="text-xs font-bold">Weekend</div>
+                <div class="text-[11px] opacity-80 mt-0.5">Sat &amp; Sun focus</div>
               </button>
-              <button type="button" data-pace="bite" onclick="setBingePace('bite')" class="binge-pace-btn p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
-                <div class="text-xs font-black text-emerald-300">☕ 1 Episode / Day</div>
-                <div class="text-[11px] opacity-80 mt-0.5">Bite-sized daily habit</div>
+              <button type="button" data-pace="bite" onclick="setBingePace('bite')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                <div class="text-xs font-bold">Daily Episode</div>
+                <div class="text-[11px] opacity-80 mt-0.5">1 ep / day</div>
               </button>
-              <button type="button" data-pace="custom" onclick="setBingePace('custom')" class="binge-pace-btn p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
-                <div class="text-xs font-black text-purple-300">🎯 Custom Hours</div>
-                <div class="text-[11px] opacity-80 mt-0.5">Slider fine-tuning</div>
+              <button type="button" data-pace="custom" onclick="setBingePace('custom')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                <div class="text-xs font-bold">Custom</div>
+                <div class="text-[11px] opacity-80 mt-0.5">Manual slider</div>
               </button>
             </div>
 
             <div id="bingeCustomHoursRow" class="hidden pt-2 flex items-center gap-4">
-              <span class="text-xs text-gray-400 font-bold shrink-0">Custom Daily Hours:</span>
+              <span class="text-xs text-gray-400 font-bold shrink-0">Daily Hours:</span>
               <input id="bingeCustomHoursSlider" type="range" min="0.5" max="10" step="0.5" value="2.5" oninput="onBingeCustomHoursChange(this.value)" class="flex-1 accent-brand-gold cursor-pointer">
-              <span id="bingeCustomHoursLbl" class="text-xs font-extrabold text-brand-gold w-24 text-right">2.5 hrs/day</span>
+              <span id="bingeCustomHoursLbl" class="text-xs font-bold text-brand-gold w-24 text-right">2.5 hrs/day</span>
             </div>
+          </div>
+        </div>
+
+        <!-- Calculated KPI Cards -->
+        <div id="bingeKpiGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
+
+        <!-- Day-by-Day Interactive Schedule & Episode Checklist -->
+        <div class="space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h3 class="text-base font-display font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-brand-gold"></i> Schedule &amp; Progress
+            </h3>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="copyBingeSchedule()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-gray-200 text-xs font-bold transition-all"><i class="fa-solid fa-copy mr-1.5"></i>Copy</button>
+              <button type="button" onclick="exportBingeICal()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-brand-gold text-xs font-bold transition-all"><i class="fa-solid fa-calendar-arrow-down mr-1.5"></i>Export .ics</button>
+              <button type="button" onclick="addBingeSeriesToWatchlist()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 text-xs font-bold transition-all"><i class="fa-solid fa-heart mr-1.5"></i>Watchlist</button>
+              <button type="button" onclick="resetBingeProgress()" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-gray-200 text-xs transition-all" title="Reset Episode Checks"><i class="fa-solid fa-rotate-left"></i></button>
+            </div>
+          </div>
+
+          <div id="bingeScheduleList" class="space-y-3 max-h-[600px] overflow-y-auto pr-1"></div>
+        </div>
+      </div>
+    </section>
           </div>
         </div>
 
@@ -1072,93 +1024,83 @@
       <div><h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white">Matchmaker</h1><p class="text-sm text-gray-400">Seed up to 5 favourites and get ranked matches.</p></div>
     </section>
 
-    <section id="tab-hub" class="tab-pane hidden fade-in space-y-10">
+    <section id="tab-hub" class="tab-pane hidden fade-in space-y-6">
       
-      <!-- Hub Header & Profile Actions -->
-      <div class="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 class="text-3xl sm:text-4xl font-display font-bold text-white flex items-center gap-3">
-            <span>Your Personal Cinema Hub</span>
-          </h1>
-          <p class="text-sm text-gray-400 mt-1">Track watchlists, mark watched titles, analyze your cinema DNA, and generate customized algorithmic recommendations.</p>
-        </div>
+      <!-- Hub Header & Actions -->
+      <div class="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">Library</h1>
         <div class="flex flex-wrap items-center gap-2">
-          <button type="button" onclick="openThemeEffectsModal(event)" class="px-3.5 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-1.5 shadow-md hover:opacity-95 transition-all">
-            <i class="fa-solid fa-palette"></i> <span>Theme &amp; Visual Effects</span>
+          <button type="button" onclick="openThemeEffectsModal(event)" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-brand-gold flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-palette"></i> <span>Atmosphere</span>
           </button>
-          <button onclick="exportUserData()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 flex items-center gap-1.5 transition-all">
-            <i class="fa-solid fa-download text-brand-gold"></i> <span>Export Backup</span>
+          <button onclick="exportUserData()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-download text-brand-gold"></i> <span>Export</span>
           </button>
-          <label class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 flex items-center gap-1.5 cursor-pointer transition-all">
-            <i class="fa-solid fa-upload text-cyan-400"></i> <span>Import Backup</span>
+          <label class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 flex items-center gap-1.5 cursor-pointer transition-all">
+            <i class="fa-solid fa-upload text-cyan-400"></i> <span>Import</span>
             <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event)">
           </label>
         </div>
       </div>
 
-      <!-- Space-Filling Compact Adaptive Theme & Atmosphere Studio inside Library -->
-      <div class="glass-card rounded-2xl p-3 sm:p-4 border border-brand-gold/30 bg-gradient-to-br from-sky-500/10 via-black/70 to-purple-500/10 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2.5">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center text-brand-gold shrink-0">
-              <i class="fa-solid fa-cloud-moon text-sm"></i>
-            </div>
-            <div>
-              <div class="text-xs font-extrabold uppercase tracking-wider text-brand-gold">Theme &amp; Atmosphere Palette</div>
-              <div class="text-[11px] text-gray-300">Quick palette &amp; visual atmosphere toggles.</div>
-            </div>
-          </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <button type="button" onclick="openThemeEffectsModal(event)" id="hubMoreThemesBtn" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200 flex items-center gap-1.5">
-              <i class="fa-solid fa-sliders text-brand-gold"></i> <span>All Themes</span>
-            </button>
-            <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" class="px-3.5 py-1.5 rounded-xl bg-brand-gold/20 hover:bg-brand-gold/30 border border-brand-gold/45 text-xs font-extrabold text-white flex items-center gap-1.5">
-              <i class="fa-solid fa-wand-magic-sparkles text-brand-gold"></i>
-              <span id="hubFxQuickText">Effects: On</span>
-            </button>
-          </div>
+      <!-- Compact Single-Line Atmosphere Swatches in Library -->
+      <div class="p-3 rounded-2xl bg-black/40 border border-white/10 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-gray-300">Theme:</span>
+          <div id="hubQuickThemeSwatches" class="flex flex-wrap gap-2 items-center"></div>
         </div>
-        <!-- Compact Fitted Grid: Exactly 6 core themes that fit in a clean row without overflow -->
-        <div id="hubQuickThemeSwatches" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 w-full"></div>
-        <!-- Atmosphere & Lens Effects Bar -->
-        <div id="hubAtmosphereModesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-2 border-t border-white/10"></div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" class="px-3 py-1 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 flex items-center gap-1.5">
+            <span id="hubFxQuickText">Calm Mode: Off</span>
+          </button>
+        </div>
+        <div id="hubAtmosphereModesGrid" class="hidden"></div>
       </div>
-      <!-- NEW: ANIMATED SHELVES -->
-      <div id="hubShelves" class="glass-card rounded-3xl p-6 sm:p-8 space-y-5 border border-white/10">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <span class="text-[11px] font-bold uppercase tracking-widest text-brand-gold">Animated Hub</span>
-            <h2 class="text-2xl font-display font-bold text-white mt-0.5">Your Shelves</h2>
-            <p class="text-xs text-gray-400">Drag posters between shelves. Rate a title for a star burst. Hover a card for ✕ to remove.</p>
-          </div>
 
+      <!-- Compact Shelves -->
+      <div id="hubShelves" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-display font-bold text-white">Your Shelves</h2>
+          <div id="hubBadges" class="flex flex-wrap gap-1.5"></div>
         </div>
-        <div id="hubBadges" class="flex flex-wrap gap-2"></div>
+        
         <div>
-          <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2"><i class="fa-solid fa-film mr-1"></i>Film-reel timeline · fills as you add titles from each decade</div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Timeline · by decade</div>
           <div id="reelStrip" class="reel"></div>
         </div>
-        <div class="grid grid-cols-1 gap-4">
-          <div class="shelf-drop rounded-2xl p-3 bg-black/30 border border-white/10" data-shelf="watched">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i>Watched (<span id="shelfCnt-watched">0</span>)</div>
-              <button onclick="clearShelf('watched')" class="text-[11px] text-gray-500 hover:text-rose-400 transition-colors"><i class="fa-solid fa-trash-can mr-1"></i>Clear</button>
+
+        <div class="grid grid-cols-1 gap-3">
+          <!-- Watched Shelf -->
+          <div class="shelf-drop rounded-xl p-3 bg-black/30 border border-white/10" data-shelf="watched">
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-check"></i> Watched (<span id="shelfCnt-watched">0</span>)
+              </div>
+              <button onclick="clearShelf('watched')" class="text-[11px] text-gray-500 hover:text-rose-400 transition-colors">Clear</button>
             </div>
-            <div id="shelf-watched" class="flex gap-3 overflow-x-auto pb-2 min-h-[150px] items-start"></div>
+            <div id="shelf-watched" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[110px] items-start"></div>
           </div>
-          <div class="shelf-drop rounded-2xl p-3 bg-black/30 border border-white/10" data-shelf="wish">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-xs font-extrabold uppercase tracking-wider text-rose-400"><i class="fa-solid fa-heart mr-1"></i>Watchlist (<span id="shelfCnt-wish">0</span>)</div>
-              <button onclick="clearShelf('wish')" class="text-[11px] text-gray-500 hover:text-rose-400 transition-colors"><i class="fa-solid fa-trash-can mr-1"></i>Clear</button>
+
+          <!-- Watchlist Shelf -->
+          <div class="shelf-drop rounded-xl p-3 bg-black/30 border border-white/10" data-shelf="wish">
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-heart"></i> Watchlist (<span id="shelfCnt-wish">0</span>)
+              </div>
+              <button onclick="clearShelf('wish')" class="text-[11px] text-gray-500 hover:text-rose-400 transition-colors">Clear</button>
             </div>
-            <div id="shelf-wish" class="flex gap-3 overflow-x-auto pb-2 min-h-[150px] items-start"></div>
+            <div id="shelf-wish" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[110px] items-start"></div>
           </div>
-          <div class="shelf-drop rounded-2xl p-3 bg-black/30 border border-white/10" data-shelf="fav">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-xs font-extrabold uppercase tracking-wider text-brand-gold"><i class="fa-solid fa-star mr-1"></i>Favourites (<span id="shelfCnt-fav">0</span>) · <span class="text-[10px] font-normal normal-case text-gray-400">Tap ★ on any card or drag here</span></div>
-              <button onclick="clearShelf('fav')" class="text-[11px] text-gray-500 hover:text-rose-400 transition-colors"><i class="fa-solid fa-trash-can mr-1"></i>Clear</button>
+
+          <!-- Favourites Shelf -->
+          <div class="shelf-drop rounded-xl p-3 bg-black/30 border border-white/10" data-shelf="fav">
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-brand-gold flex items-center gap-1.5">
+                <i class="fa-solid fa-star"></i> Favourites (<span id="shelfCnt-fav">0</span>)
+              </div>
+              <button onclick="clearShelf('fav')" class="text-[11px] text-gray-500 hover:text-rose-400 transition-colors">Clear</button>
             </div>
-            <div id="shelf-fav" class="flex gap-3 overflow-x-auto pb-2 min-h-[150px] items-start"></div>
+            <div id="shelf-fav" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[110px] items-start"></div>
           </div>
         </div>
       </div>
@@ -1225,110 +1167,96 @@
         </div>
       </div>
 
-      <!-- 3. SMART MULTI-FACTOR 4-CARD FORWARD DRAFT MATCHMAKER -->
-      <div id="recSection" class="glass-card rounded-3xl p-5 sm:p-8 space-y-5 border border-brand-gold/35" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.08), rgba(14, 18, 28, 0.90) 65%)">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <span class="text-[11px] font-bold uppercase tracking-widest text-brand-gold">4-Card Forward Draft Matchmaker</span>
-            <h2 class="text-2xl font-display font-bold text-white mt-0.5">Draft Your Next Watch Forward</h2>
-            <p class="text-xs sm:text-sm text-gray-300">Seed up to 5 favorites. Our engine drafts <strong>4 top matches at a time</strong>—tap <strong>Draft Forward (+Seed)</strong> on any match to evolve your draft board live!</p>
-          </div>
-          <button onclick="prefillFromWishlist('recTags')" class="self-start sm:self-center px-3.5 py-2 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/40 text-xs font-bold text-brand-gold transition-all">
-            <i class="fa-solid fa-bolt mr-1"></i> Seed from Watchlist
+      <!-- SMART MATCHMAKER -->
+      <div id="recSection" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
+        <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+          <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Matchmaker</h2>
+          <button onclick="prefillFromWishlist('recTags')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
+            <i class="fa-solid fa-bolt text-brand-gold mr-1"></i> Watchlist
           </button>
         </div>
 
         <!-- Selected Seed Chips -->
-        <div id="recTags" class="flex flex-wrap gap-2 min-h-[48px] p-3 rounded-2xl bg-black/45 border border-white/10 items-center"></div>
+        <div id="recTags" class="flex flex-wrap gap-2 min-h-[44px] p-2.5 rounded-xl bg-black/45 border border-white/10 items-center"></div>
 
         <!-- Autocomplete Input -->
-        <div class="flex flex-col sm:flex-row gap-3">
+        <div class="flex flex-col sm:flex-row gap-2.5">
           <div class="relative flex-1 autocomplete-wrapper">
-            <i class="fa-solid fa-plus-circle absolute left-4 top-1/2 -translate-y-1/2 text-brand-gold"></i>
-            <input type="text" id="recInput" placeholder="Add a title you love (e.g. Inception, 3 Idiots, Breaking Bad, Dark)..."
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            <input type="text" id="recInput" placeholder="Add a title you love..."
               oninput="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
               onfocus="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
-              class="w-full pl-11 pr-4 py-3 rounded-2xl bg-black/60 border border-white/15 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-            <div id="recSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-2 bg-[#121622] border border-white/15 rounded-2xl shadow-2xl max-h-64 overflow-y-auto z-30 divide-y divide-white/5"></div>
+              class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+            <div id="recSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-30 divide-y divide-white/5"></div>
           </div>
-          <button onclick="generateRecommendation()" class="px-6 py-3 rounded-2xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-sm shadow-lg transition-all active:scale-95 whitespace-nowrap">
-            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Deal 4-Card Draft
+          <button onclick="generateRecommendation()" class="px-5 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95 whitespace-nowrap">
+            Find Matches
           </button>
         </div>
 
-        <!-- Initial Prompt State Before Dealing 4-Card Draft -->
-        <div id="recInitialPrompt" class="p-4 rounded-2xl bg-black/40 border border-dashed border-brand-gold/30 text-center space-y-1">
-          <div class="text-xs font-extrabold uppercase tracking-wider text-brand-gold"><i class="fa-solid fa-layer-group mr-1.5"></i>Ready to Deal Your 4-Card Draft</div>
-          <p class="text-xs text-gray-400">Your seed titles are loaded above. Tap <strong class="text-white">Deal 4-Card Draft</strong> whenever you're ready to deal 4 tailored recommendations.</p>
-        </div>
+        <div id="recInitialPrompt" class="hidden"></div>
 
-        <!-- 4-Card Forward Draft Output Results -->
-        <div id="recResultBox" class="hidden pt-4 border-t border-white/10 space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-brand-gold flex items-center gap-2">
-              <i class="fa-solid fa-layer-group"></i> 4-Card Forward Draft Board
-            </h3>
-            <button id="rejectBtn" onclick="rejectRecommendation()" class="text-xs font-bold px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-brand-gold hover:text-black text-gray-200 border border-white/15 transition-all">
-              <i class="fa-solid fa-forward mr-1"></i> Deal Next 4 Cards (<span id="rejectCount">4</span> refreshes)
+        <!-- Output Results -->
+        <div id="recResultBox" class="hidden pt-3 border-t border-white/10 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="text-xs sm:text-sm font-bold text-white">Top Matches</h3>
+            <button id="rejectBtn" onclick="rejectRecommendation()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 border border-white/15 transition-all">
+              <i class="fa-solid fa-rotate mr-1"></i> Next Matches
             </button>
           </div>
-          <div id="recCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"></div>
+          <div id="recCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
         </div>
       </div>
 
-      <!-- 4. SOCIAL COMPATIBILITY LAB -->
-      <div id="compatLab" class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-white/10">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <span class="text-[11px] font-bold uppercase tracking-widest text-purple-400">Social Cinema Lab</span>
-            <h2 class="text-2xl font-display font-bold text-white mt-0.5">Deep Taste Compatibility Test</h2>
-            <p class="text-sm text-gray-400">Compare your favorite picks against a friend's (min 3 titles each) for a multidimensional breakdown and a joint movie-night pick.</p>
-          </div>
-          <button onclick="loadDemoCompatibility()" class="self-start sm:self-center px-3.5 py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-xs font-semibold text-purple-300 transition-all">
-            <i class="fa-solid fa-flask mr-1"></i> Load Demo Profiles
+      <!-- SOCIAL COMPATIBILITY LAB -->
+      <div id="compatLab" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
+        <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+          <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Taste Compatibility</h2>
+          <button onclick="loadDemoCompatibility()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
+            Demo
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- User 1 Column -->
-          <div class="p-5 rounded-2xl bg-black/35 border border-white/10 space-y-3">
+          <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
             <div class="flex items-center justify-between">
-              <label class="text-xs font-extrabold uppercase tracking-wider text-brand-gold flex items-center gap-2">
-                <i class="fa-solid fa-user-astronaut"></i> Your Favorites (3–10)
+              <label class="text-xs font-bold text-brand-gold flex items-center gap-1.5">
+                <i class="fa-solid fa-user"></i> Your Picks (3–10)
               </label>
-              <button onclick="prefillFromWishlist('myTags')" class="text-[11px] text-gray-400 hover:text-brand-gold">Import Watchlist</button>
+              <button onclick="prefillFromWishlist('myTags')" class="text-[11px] text-gray-400 hover:text-brand-gold">From Watchlist</button>
             </div>
-            <div id="myTags" class="flex flex-wrap gap-2 min-h-[44px] p-2.5 rounded-xl bg-black/50 border border-white/5 items-center"></div>
+            <div id="myTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
             <div class="relative autocomplete-wrapper">
-              <input type="text" id="myInput" placeholder="Search & add your favorites..."
+              <input type="text" id="myInput" placeholder="Add favorites..."
                 oninput="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
                 onfocus="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
-                class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+                class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
               <div id="mySuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
             </div>
           </div>
 
           <!-- User 2 Column -->
-          <div class="p-5 rounded-2xl bg-black/35 border border-white/10 space-y-3">
+          <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
             <div class="flex items-center justify-between">
-              <label class="text-xs font-extrabold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
-                <i class="fa-solid fa-user-group"></i> Friend's Favorites (3–10)
+              <label class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-user-group"></i> Friend's Picks (3–10)
               </label>
-              <button onclick="surpriseFriendList()" class="text-[11px] text-gray-400 hover:text-cyan-400">Randomize Friend</button>
+              <button onclick="surpriseFriendList()" class="text-[11px] text-gray-400 hover:text-cyan-400">Randomize</button>
             </div>
-            <div id="friendTags" class="flex flex-wrap gap-2 min-h-[44px] p-2.5 rounded-xl bg-black/50 border border-white/5 items-center"></div>
+            <div id="friendTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
             <div class="relative autocomplete-wrapper">
-              <input type="text" id="friendInput" placeholder="Search & add friend's favorites..."
+              <input type="text" id="friendInput" placeholder="Add friend's favorites..."
                 oninput="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
                 onfocus="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
-                class="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400">
+                class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400">
               <div id="friendSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
             </div>
           </div>
         </div>
 
-        <button onclick="calculateCompatibility()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:opacity-95 text-white font-extrabold text-sm shadow-lg shadow-purple-600/25 transition-all active:scale-[0.99]">
-          <i class="fa-solid fa-chart-pie mr-2"></i> Run Deep Compatibility Analysis
+        <button onclick="calculateCompatibility()" class="w-full py-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95">
+          Compare Compatibility
         </button>
 
         <!-- Compatibility Results Panel -->
@@ -1357,17 +1285,12 @@
     </section>
 
 
-    <!-- TAB: MUSIC (Compact Mobile Header, Search First, Word-Tab Playlists & Prominent Cut Control) -->
+    <!-- TAB: MUSIC -->
     <section id="tab-music" class="tab-pane hidden fade-in space-y-3.5 sm:space-y-4">
-      <!-- Compact Header so Song List Sits High on Phones -->
-      <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-brand-gold/30 p-3.5 sm:p-5 shadow-xl" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.12), rgba(11, 14, 23, 0.95) 65%)">
+      <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-white/10 p-3.5 sm:p-5 shadow-xl bg-gradient-to-r from-black/80 to-[#0e121c]/90">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div class="flex flex-wrap items-center gap-2 min-w-0">
-            <h1 class="text-lg sm:text-2xl font-display font-extrabold text-white tracking-tight">Music Vault</h1>
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 text-[10px] sm:text-xs font-bold">
-              <i class="fa-solid fa-circle-check text-[10px]"></i>
-              <span>Ad-Free Stream · Zero Interruptions</span>
-            </span>
+          <div class="flex items-center gap-2 min-w-0">
+            <h1 class="text-xl sm:text-2xl font-display font-bold text-white tracking-tight">Music</h1>
           </div>
 
           <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
@@ -1467,47 +1390,42 @@
     </section>
 
     <!-- TAB: LISTS & SHARING (Custom Movie/Show Lists + Song Playlists + Serverless URL Share) -->
-    <section id="tab-lists" class="tab-pane hidden fade-in space-y-8">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-5">
-        <div>
-          <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Collections &amp; Serverless Sharing</span>
-          <h1 class="text-3xl sm:text-4xl font-display font-bold text-white mt-0.5">Custom Lists &amp; Playlists</h1>
-          <p class="text-sm text-gray-400 mt-1">Build named collections of Movies, TV Shows, or Songs and share them via a self-contained link.</p>
-        </div>
+    <section id="tab-lists" class="tab-pane hidden fade-in space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">Custom Lists &amp; Playlists</h1>
         <div class="flex flex-wrap gap-2">
-          <button type="button" onclick="createNewCustomMediaList()" class="px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm flex items-center gap-2">
-            <i class="fa-solid fa-folder-plus"></i> <span>New Film/TV List</span>
+          <button type="button" onclick="createNewCustomMediaList()" class="px-3.5 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-folder-plus"></i> <span>New List</span>
           </button>
-          <button type="button" onclick="openCreateSongPlaylistModal()" class="px-4 py-2.5 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-200 font-bold text-xs sm:text-sm flex items-center gap-2">
-            <i class="fa-solid fa-music"></i> <span>New Song Playlist</span>
+          <button type="button" onclick="openCreateSongPlaylistModal()" class="px-3.5 py-2 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-200 font-bold text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-music"></i> <span>New Mix</span>
           </button>
         </div>
       </div>
 
       <!-- Quick Status Lists: Currently Watching & Watch Later -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="glass-card rounded-3xl p-5 border border-white/10 space-y-3">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
           <div class="flex items-center justify-between">
-            <div class="text-sm font-extrabold uppercase tracking-wider text-cyan-400"><i class="fa-solid fa-play-circle mr-1.5"></i>Currently Watching (<span id="currWatchingCount">0</span>)</div>
-            <button type="button" onclick="shareBuiltInList('watching')" class="text-xs text-brand-gold hover:underline font-semibold"><i class="fa-solid fa-share-nodes mr-1"></i>Share Link</button>
+            <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-400"><i class="fa-solid fa-play-circle mr-1.5"></i>Currently Watching (<span id="currWatchingCount">0</span>)</div>
+            <button type="button" onclick="shareBuiltInList('watching')" class="text-xs text-brand-gold hover:underline font-semibold">Share</button>
           </div>
           <div class="flex gap-2">
-            <input id="addCurrWatchingInput" type="text" placeholder="Add a movie or series you're currently watching..." class="flex-1 px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-cyan-400">
-            <button type="button" onclick="quickAddCurrentlyWatching()" class="px-3.5 py-2 rounded-xl bg-cyan-500 text-black font-bold text-xs">Add</button>
+            <input id="addCurrWatchingInput" type="text" placeholder="Add a title..." class="flex-1 px-3 py-1.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-cyan-400">
+            <button type="button" onclick="quickAddCurrentlyWatching()" class="px-3 py-1.5 rounded-xl bg-cyan-500 text-black font-bold text-xs">Add</button>
           </div>
-          <div id="currWatchingList" class="flex gap-3 overflow-x-auto pb-2 min-h-[120px] items-center"></div>
+          <div id="currWatchingList" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[100px] items-center"></div>
         </div>
 
-        <div class="glass-card rounded-3xl p-5 border border-white/10 space-y-3">
+        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
           <div class="flex items-center justify-between">
-            <div class="text-sm font-extrabold uppercase tracking-wider text-rose-400"><i class="fa-solid fa-bookmark mr-1.5"></i>Watchlist / Watch Later (<span id="watchLaterListCount">0</span>)</div>
-            <button type="button" onclick="shareBuiltInList('wishlist')" class="text-xs text-brand-gold hover:underline font-semibold"><i class="fa-solid fa-share-nodes mr-1"></i>Share Watchlist Link</button>
+            <div class="text-xs font-extrabold uppercase tracking-wider text-rose-400"><i class="fa-solid fa-bookmark mr-1.5"></i>Watchlist (<span id="watchLaterListCount">0</span>)</div>
+            <button type="button" onclick="shareBuiltInList('wishlist')" class="text-xs text-brand-gold hover:underline font-semibold">Share</button>
           </div>
-          <p class="text-xs text-gray-400">Generate a read-only shareable URL for your Watchlist or Favorites that friends can open and import with 1 click.</p>
           <div class="flex flex-wrap gap-2 pt-1">
-            <button type="button" onclick="shareBuiltInList('wishlist')" class="px-3.5 py-2 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs font-bold"><i class="fa-solid fa-link mr-1"></i>Copy Watchlist Share URL</button>
-            <button type="button" onclick="shareBuiltInList('favs')" class="px-3.5 py-2 rounded-xl bg-brand-gold/20 border border-brand-gold/40 text-brand-gold text-xs font-bold"><i class="fa-solid fa-star mr-1"></i>Copy Favorites Share URL</button>
-            <button type="button" onclick="shareBuiltInList('songfavs')" class="px-3.5 py-2 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-200 text-xs font-bold"><i class="fa-solid fa-music mr-1"></i>Copy Favorite Songs Share URL</button>
+            <button type="button" onclick="shareBuiltInList('wishlist')" class="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs font-bold"><i class="fa-solid fa-link mr-1"></i>Share Watchlist</button>
+            <button type="button" onclick="shareBuiltInList('favs')" class="px-3 py-1.5 rounded-xl bg-brand-gold/20 border border-brand-gold/40 text-brand-gold text-xs font-bold"><i class="fa-solid fa-star mr-1"></i>Share Favorites</button>
+            <button type="button" onclick="shareBuiltInList('songfavs')" class="px-3 py-1.5 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-200 text-xs font-bold"><i class="fa-solid fa-music mr-1"></i>Share Songs</button>
           </div>
         </div>
       </div>
@@ -1567,73 +1485,59 @@
           </div>
         </div>
 
-        <!-- User Activity & Direct Theme / Visual Effects Studio -->
-        <div class="lg:col-span-2 glass-card rounded-3xl p-6 border border-white/10 space-y-6 flex flex-col justify-between">
-          <div class="space-y-5">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Activity &amp; Appearance</span>
-                <h3 class="text-xl font-display font-bold text-white mt-0.5">Your Library Stats &amp; Theme Studio</h3>
-              </div>
-              <button type="button" onclick="openThemeEffectsModal(event)" class="px-3.5 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-1.5 shadow">
-                <i class="fa-solid fa-palette"></i> <span>Theme &amp; Visual Effects</span>
-              </button>
+        <!-- User Activity & Atmosphere -->
+        <div class="lg:col-span-2 glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-5 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <h3 class="text-lg sm:text-xl font-display font-bold text-white">Collection Activity</h3>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div class="p-3.5 rounded-2xl bg-black/40 border border-white/5">
-                <div id="profStatWatched" class="text-2xl font-display font-extrabold text-emerald-400">0</div>
-                <div class="text-xs text-gray-400">Watched Titles</div>
+              <div class="p-3.5 rounded-xl bg-black/40 border border-white/10">
+                <div id="profStatWatched" class="text-2xl font-display font-bold text-emerald-400">0</div>
+                <div class="text-xs text-gray-400 mt-0.5">Watched</div>
               </div>
-              <div class="p-3.5 rounded-2xl bg-black/40 border border-white/5">
-                <div id="profStatWish" class="text-2xl font-display font-extrabold text-rose-400">0</div>
-                <div class="text-xs text-gray-400">Watchlist</div>
+              <div class="p-3.5 rounded-xl bg-black/40 border border-white/10">
+                <div id="profStatWish" class="text-2xl font-display font-bold text-rose-400">0</div>
+                <div class="text-xs text-gray-400 mt-0.5">Watchlist</div>
               </div>
-              <div class="p-3.5 rounded-2xl bg-black/40 border border-white/5">
-                <div id="profStatFavs" class="text-2xl font-display font-extrabold text-brand-gold">0</div>
-                <div class="text-xs text-gray-400">Film/TV Favorites</div>
+              <div class="p-3.5 rounded-xl bg-black/40 border border-white/10">
+                <div id="profStatFavs" class="text-2xl font-display font-bold text-brand-gold">0</div>
+                <div class="text-xs text-gray-400 mt-0.5">Favorites</div>
               </div>
-              <div class="p-3.5 rounded-2xl bg-black/40 border border-white/5">
-                <div id="profStatSongFavs" class="text-2xl font-display font-extrabold text-purple-400">0</div>
-                <div class="text-xs text-gray-400">Favorite Songs</div>
+              <div class="p-3.5 rounded-xl bg-black/40 border border-white/10">
+                <div id="profStatSongFavs" class="text-2xl font-display font-bold text-purple-400">0</div>
+                <div class="text-xs text-gray-400 mt-0.5">Songs</div>
               </div>
             </div>
 
-            <!-- Direct Embedded Theme & Visual Effects Studio Card (Space-Filling Adaptive Grid) -->
-            <div class="p-4 sm:p-5 rounded-2xl bg-black/45 border border-brand-gold/30 space-y-4">
-              <div class="flex flex-wrap items-center justify-between gap-2">
+            <!-- Atmosphere Palette -->
+            <div class="p-4 rounded-xl bg-black/40 border border-white/10 space-y-3">
+              <div class="flex items-center justify-between">
                 <div>
-                  <div class="text-xs font-extrabold uppercase tracking-wider text-brand-gold"><i class="fa-solid fa-sparkles mr-1.5"></i>Color Theme &amp; Visual Atmosphere Cloud</div>
-                  <div id="profileActiveThemeLabel" class="text-xs text-gray-300 mt-0.5">Active Theme: Deep Cosmos (Blue)</div>
+                  <span class="text-xs font-bold text-white">Atmosphere</span>
+                  <div id="profileActiveThemeLabel" class="text-[11px] text-gray-400">Deep Cosmos</div>
                 </div>
-                <div class="flex items-center gap-2">
-                  <button type="button" onclick="toggleMoreAtmosphereThemes()" class="xl:hidden px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-[11px] font-bold text-gray-300">All 12</button>
-                  <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" id="profileFxToggleBtn" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-white flex items-center gap-2 transition-all">
-                    <i class="fa-solid fa-wand-magic-sparkles text-brand-gold"></i>
-                    <span id="profileFxStateText">Visual Effects: Off (Calm Mode)</span>
-                  </button>
-                </div>
+                <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" id="profileFxToggleBtn" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-200 transition-all">
+                  <span id="profileFxStateText">Calm Mode</span>
+                </button>
               </div>
-              <div id="profileThemeSwatchGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2.5 w-full"></div>
+              <div id="profileThemeSwatchGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 w-full"></div>
             </div>
 
-            <!-- Quick Interactive Modes -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <button type="button" onclick="tmOpen()" class="p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
-                <div class="text-xs font-bold text-cyan-300"><i class="fa-solid fa-clock-rotate-left mr-1.5"></i>Time Machine Dial</div>
-                <div class="text-[11px] text-gray-400">Filter by any release year (1930–2026)</div>
+            <!-- Interactive Features -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <button type="button" onclick="tmOpen()" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
+                <div class="text-xs font-bold text-brand-gold flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left"></i> Time Machine</div>
               </button>
-              <button type="button" onclick="oppToggle()" class="p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
-                <div class="text-xs font-bold text-fuchsia-300"><i class="fa-solid fa-shuffle mr-1.5"></i>Opposite Day Mode</div>
-                <div class="text-[11px] text-gray-400">Flip recommendations to opposite genres</div>
+              <button type="button" onclick="oppToggle()" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
+                <div class="text-xs font-bold text-fuchsia-400 flex items-center gap-1.5"><i class="fa-solid fa-shuffle"></i> Opposite Day</div>
               </button>
-              <button type="button" onclick="openLangCompareModal()" class="p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
-                <div class="text-xs font-bold text-emerald-300"><i class="fa-solid fa-scale-unbalanced mr-1.5"></i>English vs Hindi</div>
-                <div class="text-[11px] text-gray-400">Compare ratings across both catalogs</div>
+              <button type="button" onclick="openLangCompareModal()" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
+                <div class="text-xs font-bold text-cyan-400 flex items-center gap-1.5"><i class="fa-solid fa-scale-unbalanced"></i> Compare</div>
               </button>
-              <button type="button" onclick="toggleCinemaLightsOut()" class="p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-amber-400/30 text-left space-y-1 transition-all">
-                <div class="text-xs font-bold text-amber-300"><i class="fa-solid fa-moon mr-1.5"></i>Cinema Lights-Out</div>
-                <div class="text-[11px] text-gray-400">Toggle 100% OLED pitch-black screen</div>
+              <button type="button" onclick="toggleCinemaLightsOut()" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
+                <div class="text-xs font-bold text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-moon"></i> Lights Out</div>
               </button>
             </div>
           </div>
@@ -1780,48 +1684,42 @@
     </div>
   </div>
 
-  <!-- MODAL 2: REVAMPED SURPRISE ME ROULETTE STUDIO -->
-  <div id="surpriseModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-    <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl space-y-6 relative animate-fadeIn">
-      <button onclick="closeSurpriseModal()" aria-label="Close surprise roulette" title="Close" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center">
-        <i class="fa-solid fa-xmark"></i>
+  <!-- MODAL 2: CINEMA ROULETTE (Single-Screen Fit) -->
+  <div id="surpriseModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md">
+    <div class="glass-card w-full max-w-md rounded-2xl p-4 sm:p-5 border border-white/20 shadow-2xl space-y-3.5 relative animate-fadeIn max-h-[92vh] overflow-y-auto">
+      <button onclick="closeSurpriseModal()" aria-label="Close roulette" title="Close" class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center">
+        <i class="fa-solid fa-xmark text-xs"></i>
       </button>
 
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-brand-gold/15 border border-brand-gold/30 flex items-center justify-center text-brand-gold text-2xl">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-brand-gold/15 border border-brand-gold/30 flex items-center justify-center text-brand-gold text-sm">
           <i class="fa-solid fa-dice"></i>
         </div>
-        <div>
-          <h3 class="text-2xl font-display font-extrabold text-white">Cinema Roulette</h3>
-          <p class="text-xs text-gray-400">Let fate pick your next cinematic experience</p>
-        </div>
+        <h3 class="text-base sm:text-lg font-display font-bold text-white">Cinema Roulette</h3>
       </div>
 
-      <!-- Quick Roulette Filters -->
-      <div class="space-y-2">
-        <label class="text-[11px] font-extrabold uppercase tracking-wider text-gray-400">Filter By Vibe (Optional)</label>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-          <button data-sfilter="all" onclick="setSurpriseFilter('all')" class="sfilter-btn px-3 py-2 rounded-xl bg-brand-gold text-black font-bold">🎲 Anything Goes</button>
-          <button data-sfilter="movies" onclick="setSurpriseFilter('movies')" class="sfilter-btn px-3 py-2 rounded-xl bg-white/5 text-gray-300 hover:text-white font-medium">🎬 Feature Films</button>
-          <button data-sfilter="shows" onclick="setSurpriseFilter('shows')" class="sfilter-btn px-3 py-2 rounded-xl bg-white/5 text-gray-300 hover:text-white font-medium">📺 TV Series</button>
-          <button data-sfilter="pantheon" onclick="setSurpriseFilter('pantheon')" class="sfilter-btn px-3 py-2 rounded-xl bg-white/5 text-gray-300 hover:text-white font-medium">👑 8.5+ Pantheon</button>
-          <button data-sfilter="blockbuster" onclick="setSurpriseFilter('blockbuster')" class="sfilter-btn px-3 py-2 rounded-xl bg-white/5 text-gray-300 hover:text-white font-medium">🍿 Crowd Pleaser</button>
-          <button data-sfilter="hidden" onclick="setSurpriseFilter('hidden')" class="sfilter-btn px-3 py-2 rounded-xl bg-white/5 text-gray-300 hover:text-white font-medium">💎 Hidden Gem</button>
-        </div>
+      <!-- Quick Roulette Filters (Single compact grid) -->
+      <div class="grid grid-cols-3 gap-1.5 text-xs">
+        <button data-sfilter="all" onclick="setSurpriseFilter('all')" class="sfilter-btn py-1.5 px-2 rounded-lg bg-brand-gold text-black font-bold text-[11px] truncate">All</button>
+        <button data-sfilter="movies" onclick="setSurpriseFilter('movies')" class="sfilter-btn py-1.5 px-2 rounded-lg bg-white/5 text-gray-300 hover:text-white font-medium text-[11px] truncate">Films</button>
+        <button data-sfilter="shows" onclick="setSurpriseFilter('shows')" class="sfilter-btn py-1.5 px-2 rounded-lg bg-white/5 text-gray-300 hover:text-white font-medium text-[11px] truncate">TV Shows</button>
+        <button data-sfilter="pantheon" onclick="setSurpriseFilter('pantheon')" class="sfilter-btn py-1.5 px-2 rounded-lg bg-white/5 text-gray-300 hover:text-white font-medium text-[11px] truncate">Top 8.5+</button>
+        <button data-sfilter="blockbuster" onclick="setSurpriseFilter('blockbuster')" class="sfilter-btn py-1.5 px-2 rounded-lg bg-white/5 text-gray-300 hover:text-white font-medium text-[11px] truncate">Popular</button>
+        <button data-sfilter="hidden" onclick="setSurpriseFilter('hidden')" class="sfilter-btn py-1.5 px-2 rounded-lg bg-white/5 text-gray-300 hover:text-white font-medium text-[11px] truncate">Hidden Gems</button>
       </div>
 
       <!-- Spinning Reel Display -->
-      <div id="rouletteDisplay" class="p-4 rounded-2xl bg-black/60 border border-white/10 min-h-[170px] flex items-center gap-4 transition-all">
+      <div id="rouletteDisplay" class="p-3 rounded-xl bg-black/60 border border-white/10 min-h-[130px] flex items-center gap-3 transition-all">
         <!-- Injected dynamically -->
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-3">
-        <button id="spinBtn" onclick="spinSurpriseWheel()" class="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-brand-gold via-amber-500 to-amber-600 hover:opacity-95 text-black font-extrabold text-sm shadow-lg shadow-brand-gold/25 transition-all active:scale-95 flex items-center justify-center gap-2">
-          <i class="fa-solid fa-rotate text-base"></i> <span>Roll Roulette</span>
+      <div class="flex items-center gap-2 pt-1">
+        <button id="spinBtn" onclick="spinSurpriseWheel()" class="flex-1 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs shadow transition-all active:scale-95 flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-rotate"></i> <span>Spin</span>
         </button>
-        <button id="inspectSurpriseBtn" onclick="inspectCurrentSurprise()" class="px-4 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/15 transition-all">
-          Inspect Title
+        <button id="inspectSurpriseBtn" onclick="inspectCurrentSurprise()" class="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/15 transition-all">
+          Inspect
         </button>
       </div>
     </div>
@@ -1999,11 +1897,8 @@
   <div id="langCompareModal" class="fixed inset-0 z-[70] hidden items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='langCompareModal')closeLangCompareModal()">
     <div class="glass-card w-full max-w-4xl rounded-t-3xl sm:rounded-3xl max-h-[88vh] overflow-y-auto border border-white/20 p-5 sm:p-7 space-y-5 shadow-2xl animate-fadeIn">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <div>
-          <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Side-by-Side Vault Comparison</span>
-          <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white">English vs Hindi Top 10s</h3>
-        </div>
-        <button type="button" onclick="closeLangCompareModal()" aria-label="Close language comparison modal" title="Close" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        <h3 class="text-xl sm:text-2xl font-display font-bold text-white">Compare</h3>
+        <button type="button" onclick="closeLangCompareModal()" aria-label="Close comparison modal" title="Close" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="flex flex-wrap gap-2 items-center text-xs">
         <span class="text-gray-400 font-semibold">Compare by:</span>
@@ -2136,15 +2031,15 @@
   </div>
 
 
-  <script src="js/data.js?v=3.6"></script>
-  <script src="js/constellation.js?v=3.6"></script>
-  <script src="js/hub-duel.js?v=3.6"></script>
-  <script src="js/ui.js?v=3.6"></script>
-  <script src="js/features.js?v=3.6"></script>
-  <script src="js/marathon.js?v=3.6"></script>
-  <script src="js/universes.js?v=3.6"></script>
-  <script src="js/mood_dial.js?v=3.6"></script>
-  <script src="js/main.js?v=3.6"></script>
-  <script src="js/pwa.js?v=3.6"></script>
+  <script src="js/data.js?v=3.7"></script>
+  <script src="js/constellation.js?v=3.7"></script>
+  <script src="js/hub-duel.js?v=3.7"></script>
+  <script src="js/ui.js?v=3.7"></script>
+  <script src="js/features.js?v=3.7"></script>
+  <script src="js/marathon.js?v=3.7"></script>
+  <script src="js/universes.js?v=3.7"></script>
+  <script src="js/mood_dial.js?v=3.7"></script>
+  <script src="js/main.js?v=3.7"></script>
+  <script src="js/pwa.js?v=3.7"></script>
 </body>
 </html>

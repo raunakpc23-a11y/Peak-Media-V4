@@ -72,49 +72,49 @@
     PeakIDB.init();
 
     // ---------------------------------------------------------
-    // 2. IMMERSIVE FIRST-RUN TASTE SETUP & ANIMAL AVATARS
+    // 2. IMMERSIVE FIRST-RUN TASTE SETUP & CINEMA EMBLEM AVATARS
     // ---------------------------------------------------------
     const AVATAR_PRESETS = ['cinephile', 'director', 'nightowl', 'detective', 'voyager', 'dreamer', 'maverick', 'maestro'];
     const AVATAR_META = {
       cinephile: {
-        name: 'Cinephile',
-        role: 'Movie Buff',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg1" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#451a03"/></radialGradient><linearGradient id="hSkin1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffd7ba"/><stop offset="100%" stop-color="#fec89a"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg1)"/><path d="M18 56 C18 45 23 43 32 43 C41 43 46 45 46 56 Z" fill="#1e293b"/><path d="M25 43 L32 52 L39 43 Z" fill="#f8fafc"/><circle cx="32" cy="31" r="13" fill="url(#hSkin1)"/><path d="M19 28 C19 17 26 15 32 15 C39 15 45 18 45 25 C45 27 43 27 42 24 C40 20 37 18 32 18 C26 18 21 21 20 28 Z" fill="#331800"/><path d="M21 29 H30 V35 H21 Z" fill="#ef4444" rx="2"/><path d="M34 29 H43 V35 H34 Z" fill="#38bdf8" rx="2"/><rect x="20" y="28" width="11" height="8" rx="2" stroke="#fff" stroke-width="1.6" fill="none"/><rect x="33" y="28" width="11" height="8" rx="2" stroke="#fff" stroke-width="1.6" fill="none"/><line x1="31" y1="31" x2="33" y2="31" stroke="#fff" stroke-width="2"/><path d="M29 39 Q32 41.5 35 39" stroke="#9a3412" stroke-width="1.6" stroke-linecap="round"/></svg>`
+        name: 'Film Reel',
+        role: 'Archivist',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" fill="#18181b" stroke="#f59e0b" stroke-width="2"/><circle cx="32" cy="32" r="21" fill="none" stroke="#f59e0b" stroke-width="2.5"/><circle cx="32" cy="32" r="7" fill="#27272a" stroke="#f59e0b" stroke-width="2"/><circle cx="32" cy="32" r="2.5" fill="#f59e0b"/><circle cx="32" cy="18" r="3.5" fill="#09090b" stroke="#f59e0b" stroke-width="1.2"/><circle cx="32" cy="46" r="3.5" fill="#09090b" stroke="#f59e0b" stroke-width="1.2"/><circle cx="18" cy="32" r="3.5" fill="#09090b" stroke="#f59e0b" stroke-width="1.2"/><circle cx="46" cy="32" r="3.5" fill="#09090b" stroke="#f59e0b" stroke-width="1.2"/></svg>`
       },
       director: {
         name: 'Director',
         role: 'Auteur',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg2" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#1e1b4b"/></radialGradient><linearGradient id="hSkin2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffedd5"/><stop offset="100%" stop-color="#fed7aa"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg2)"/><path d="M18 56 C18 46 24 43 32 43 C40 43 46 46 46 56 Z" fill="#0f172a"/><circle cx="32" cy="31" r="12.5" fill="url(#hSkin2)"/><ellipse cx="32" cy="19" rx="16" ry="6" transform="rotate(-6 32 19)" fill="#18181b"/><circle cx="28" cy="15" r="2" fill="#27272a"/><circle cx="27" cy="29" r="2" fill="#1e293b"/><circle cx="37" cy="29" r="2" fill="#1e293b"/><circle cx="27" cy="29" r="4.2" stroke="#e5a93c" stroke-width="1.5" fill="none"/><circle cx="37" cy="29" r="4.2" stroke="#e5a93c" stroke-width="1.5" fill="none"/><line x1="31.2" y1="29" x2="32.8" y2="29" stroke="#e5a93c" stroke-width="1.5"/><path d="M27 36 C29 37.5 35 37.5 37 36 C35 39.5 29 39.5 27 36 Z" fill="#451a03"/></svg>`
+        svg: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" fill="#0f172a" stroke="#6366f1" stroke-width="2"/><line x1="20" y1="48" x2="44" y2="28" stroke="#818cf8" stroke-width="2.2" stroke-linecap="round"/><line x1="44" y1="48" x2="20" y2="28" stroke="#818cf8" stroke-width="2.2" stroke-linecap="round"/><line x1="18" y1="36" x2="46" y2="36" stroke="#c7d2fe" stroke-width="3" stroke-linecap="round"/><line x1="20" y1="36" x2="20" y2="18" stroke="#818cf8" stroke-width="2"/><line x1="44" y1="36" x2="44" y2="18" stroke="#818cf8" stroke-width="2"/><rect x="19" y="19" width="26" height="7" rx="1.5" fill="#6366f1"/></svg>`
       },
       nightowl: {
-        name: 'Night Owl',
-        role: 'Binger',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg3" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#2e1065"/></radialGradient><linearGradient id="hSkin3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fae8ff"/><stop offset="100%" stop-color="#f5d0fe"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg3)"/><path d="M17 56 C17 44 23 42 32 42 C41 42 47 44 47 56 Z" fill="#3b0764"/><path d="M19 32 C17 44 22 47 32 47 C42 47 47 44 45 32 C43 21 39 17 32 17 C25 17 21 21 19 32 Z" fill="#4c1d95"/><circle cx="32" cy="32" r="11.5" fill="url(#hSkin3)"/><path d="M22 25 C25 21 39 21 42 25 C39 24 25 24 22 25 Z" fill="#2e1065"/><circle cx="28" cy="30" r="1.8" fill="#1e1b4b"/><circle cx="36" cy="30" r="1.8" fill="#1e1b4b"/><path d="M29 36 Q32 38 35 36" stroke="#a21caf" stroke-width="1.6" stroke-linecap="round"/><circle cx="21" cy="48" r="3.5" fill="#f59e0b"/><path d="M21 43 Q22 41 21 39" stroke="#f59e0b" stroke-width="1.2" stroke-linecap="round"/></svg>`
+        name: 'Marquee Star',
+        role: 'Cineaste',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" fill="#1e1b4b" stroke="#a855f7" stroke-width="2"/><line x1="32" y1="12" x2="32" y2="8" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/><line x1="32" y1="52" x2="32" y2="56" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="32" x2="8" y2="32" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/><line x1="52" y1="32" x2="56" y2="32" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/><polygon points="32,15 36.5,26.5 49,27 39.5,35 42.5,47 32,40.5 21.5,47 24.5,35 15,27 27.5,26.5" fill="#f59e0b" stroke="#fbbf24" stroke-width="1.5" stroke-linejoin="round"/></svg>`
       },
       detective: {
-        name: 'Detective',
-        role: 'Noir Critic',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg4" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#64748b"/><stop offset="100%" stop-color="#090d16"/></radialGradient><linearGradient id="hSkin4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="100%" stop-color="#fcd34d"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg4)"/><path d="M17 56 C17 45 22 43 32 43 C42 43 47 45 47 56 Z" fill="#1e293b"/><path d="M23 43 L32 53 L41 43 Z" fill="#0f172a"/><circle cx="32" cy="32" r="12" fill="url(#hSkin4)"/><path d="M14 25 C18 20 46 20 50 25 L45 24 C41 15 23 15 19 24 Z" fill="#0f172a"/><path d="M20 23 C22 17 42 17 44 23 Z" fill="#334155"/><rect x="22" y="21" width="20" height="2.5" fill="#e5a93c"/><path d="M24 28 L30 29 M40 28 L34 29" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/><circle cx="28" cy="32" r="1.8" fill="#0f172a"/><circle cx="36" cy="32" r="1.8" fill="#0f172a"/><line x1="28" y1="37" x2="36" y2="37" stroke="#78350f" stroke-width="1.8" stroke-linecap="round"/></svg>`
+        name: 'Aperture Lens',
+        role: 'Observer',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" fill="#090d16" stroke="#64748b" stroke-width="2"/><circle cx="32" cy="32" r="22" stroke="#94a3b8" stroke-width="1.5" fill="none"/><circle cx="32" cy="32" r="9" fill="#020617" stroke="#38bdf8" stroke-width="1.5"/><line x1="23" y1="23" x2="35" y2="23" stroke="#94a3b8" stroke-width="1.5"/><line x1="39" y1="24" x2="39" y2="36" stroke="#94a3b8" stroke-width="1.5"/><line x1="37" y1="40" x2="25" y2="40" stroke="#94a3b8" stroke-width="1.5"/><line x1="21" y1="38" x2="21" y2="26" stroke="#94a3b8" stroke-width="1.5"/></svg>`
       },
       voyager: {
-        name: 'Voyager',
-        role: 'Sci-Fi Dreamer',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg5" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#082f49"/></radialGradient><linearGradient id="hSkin5" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#cffafe"/><stop offset="100%" stop-color="#a5f3fc"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg5)"/><path d="M18 56 C18 44 24 42 32 42 C40 42 46 44 46 56 Z" fill="#083344"/><circle cx="32" cy="31" r="12.5" fill="url(#hSkin5)"/><path d="M20 26 C20 16 44 16 44 26 C40 22 24 22 20 26 Z" fill="#0e7490"/><path d="M21 27 C23 26 41 26 43 27 C44 31 43 33 41 33 H23 C21 33 20 31 21 27 Z" fill="#06b6d4" fill-opacity="0.85" stroke="#ec4899" stroke-width="1.5"/><line x1="24" y1="30" x2="40" y2="30" stroke="#fff" stroke-width="1" stroke-dasharray="2 1"/><path d="M29 38 H35" stroke="#0e7490" stroke-width="1.8" stroke-linecap="round"/><circle cx="18" cy="32" r="2" fill="#ec4899"/><circle cx="46" cy="32" r="2" fill="#ec4899"/></svg>`
+        name: 'Projector',
+        role: 'Visionary',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" fill="#082f49" stroke="#06b6d4" stroke-width="2"/><circle cx="21" cy="22" r="5.5" stroke="#38bdf8" stroke-width="1.5" fill="#0c4a6e"/><circle cx="31" cy="22" r="5.5" stroke="#38bdf8" stroke-width="1.5" fill="#0c4a6e"/><rect x="18" y="27" width="16" height="14" rx="2" fill="#0284c7"/><polygon points="34,31 52,22 52,44 34,37" fill="#38bdf8" fill-opacity="0.35" stroke="#38bdf8" stroke-width="1"/><line x1="26" y1="41" x2="21" y2="52" stroke="#0284c7" stroke-width="2"/><line x1="26" y1="41" x2="31" y2="52" stroke="#0284c7" stroke-width="2"/></svg>`
       },
       dreamer: {
-        name: 'Dreamer',
-        role: 'Indie & Romance',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg6" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#f43f5e"/><stop offset="100%" stop-color="#4c0519"/></radialGradient><linearGradient id="hSkin6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffe4e6"/><stop offset="100%" stop-color="#fecdd3"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg6)"/><path d="M18 56 C18 45 23 43 32 43 C41 43 46 45 46 56 Z" fill="#be123c"/><circle cx="32" cy="31" r="12.5" fill="url(#hSkin6)"/><path d="M18 28 C17 19 23 16 32 16 C41 16 47 19 46 28 C44 23 41 21 32 21 C23 21 20 23 18 28 Z" fill="#581c87"/><circle cx="27" cy="29" r="2" fill="#4c0519"/><circle cx="37" cy="29" r="2" fill="#4c0519"/><circle cx="26.3" cy="28.3" r="0.7" fill="#fff"/><circle cx="36.3" cy="28.3" r="0.7" fill="#fff"/><ellipse cx="23" cy="34" rx="2.5" ry="1.4" fill="#fb7185" fill-opacity="0.5"/><ellipse cx="41" cy="34" rx="2.5" ry="1.4" fill="#fb7185" fill-opacity="0.5"/><path d="M29 36 Q32 39 35 36" stroke="#be123c" stroke-width="1.8" stroke-linecap="round"/></svg>`
+        name: 'Clapperboard',
+        role: 'Creator',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" fill="#2e1065" stroke="#ec4899" stroke-width="2"/><rect x="16" y="29" width="32" height="21" rx="2" fill="#18181b" stroke="#ec4899" stroke-width="1.5"/><path d="M16 26 L48 20 L48 27 L16 29 Z" fill="#27272a" stroke="#ec4899" stroke-width="1.5"/><polygon points="21,25 24,24.5 22,28 19,28.5" fill="#f43f5e"/><polygon points="29,23.5 32,23 30,27 27,27.5" fill="#f43f5e"/><polygon points="37,22 40,21.5 38,25.5 35,26" fill="#f43f5e"/><line x1="20" y1="35" x2="32" y2="35" stroke="#94a3b8" stroke-width="1.5"/><line x1="20" y1="41" x2="44" y2="41" stroke="#94a3b8" stroke-width="1.5"/></svg>`
       },
       maverick: {
-        name: 'Maverick',
-        role: 'Action Hero',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg7" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#450a0a"/></radialGradient><linearGradient id="hSkin7" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffedd5"/><stop offset="100%" stop-color="#fed7aa"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg7)"/><path d="M17 56 C17 44 22 42 32 42 C42 42 47 44 47 56 Z" fill="#27272a"/><path d="M27 42 L32 49 L37 42 Z" fill="#e5a93c"/><circle cx="32" cy="31" r="12.5" fill="url(#hSkin7)"/><path d="M20 25 C23 17 41 17 44 25 C41 21 23 21 20 25 Z" fill="#1c1917"/><path d="M22 28 H30 L29 33 H23 Z" fill="#18181b" stroke="#e5a93c" stroke-width="1.2"/><path d="M34 28 H42 L41 33 H35 Z" fill="#18181b" stroke="#e5a93c" stroke-width="1.2"/><line x1="30" y1="29" x2="34" y2="29" stroke="#e5a93c" stroke-width="1.4"/><path d="M28 37 Q32 39 36 37" stroke="#78350f" stroke-width="1.8" stroke-linecap="round"/></svg>`
+        name: 'Cinemascope',
+        role: 'Purist',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" fill="#18181b" stroke="#ef4444" stroke-width="2"/><rect x="13" y="24" width="38" height="16" rx="2" fill="#09090b" stroke="#f59e0b" stroke-width="1.8"/><rect x="13" y="20" width="38" height="4" fill="#ef4444" opacity="0.6"/><rect x="13" y="40" width="38" height="4" fill="#ef4444" opacity="0.6"/><circle cx="32" cy="32" r="3" stroke="#f59e0b" stroke-width="1.2" fill="none"/><line x1="32" y1="27" x2="32" y2="37" stroke="#f59e0b" stroke-width="1"/><line x1="27" y1="32" x2="37" y2="32" stroke="#f59e0b" stroke-width="1"/></svg>`
       },
       maestro: {
-        name: 'Maestro',
-        role: 'Soundtrack & Score',
-        svg: `<svg viewBox="0 0 64 64" fill="none"><defs><radialGradient id="hBg8" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#022c22"/></radialGradient><linearGradient id="hSkin8" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fef3c7"/><stop offset="100%" stop-color="#fde68a"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#hBg8)"/><path d="M18 56 C18 45 23 43 32 43 C41 43 46 45 46 56 Z" fill="#064e3b"/><circle cx="32" cy="31" r="12" fill="url(#hSkin8)"/><path d="M20 26 C22 18 42 18 44 26 C40 22 24 22 20 26 Z" fill="#1e293b"/><path d="M16 28 C16 16 48 16 48 28" stroke="#10b981" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="15" y="27" width="5.5" height="10" rx="2.5" fill="#10b981"/><rect x="43.5" y="27" width="5.5" height="10" rx="2.5" fill="#10b981"/><circle cx="28" cy="30" r="1.8" fill="#064e3b"/><circle cx="36" cy="30" r="1.8" fill="#064e3b"/><path d="M28 36 Q32 39 36 36" stroke="#064e3b" stroke-width="1.8" stroke-linecap="round"/></svg>`
+        name: 'Soundwave',
+        role: 'Composer',
+        svg: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" fill="#022c22" stroke="#10b981" stroke-width="2"/><line x1="16" y1="32" x2="16" y2="32" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"/><line x1="21" y1="26" x2="21" y2="38" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"/><line x1="26" y1="20" x2="26" y2="44" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="32" y2="50" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/><line x1="38" y1="18" x2="38" y2="46" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/><line x1="43" y1="24" x2="43" y2="40" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"/><line x1="48" y1="30" x2="48" y2="34" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"/></svg>`
       }
     };
     const LEGACY_EMOJI_MAP = {
@@ -1859,74 +1859,31 @@
     window.syncProfileThemeStudio = function() {
       const curTheme = document.body.getAttribute('data-theme') || 'space';
       const isCalm = document.body.classList.contains('reduce-fx');
-      // Responsive visibility classes so items fill the exact grid rows cleanly at every breakpoint:
-      // 0..3 (4 items): always visible (fills 2x2 on mobile)
-      // 4..5 (6 items total): visible from sm+ (fills 2x3 on sm)
-      // 6..7 (8 items total): visible from md+ (fills 2x4 on md)
-      // 8..11 (12 items total): visible from xl+ (fills 2x6 on xl) or when "All 12 Themes" is toggled
-      const visClass = idx => {
-        if (showAllAtmosphereThemes) return 'flex';
-        if (idx < 4) return 'flex';
-        if (idx < 6) return 'hidden sm:flex';
-        if (idx < 8) return 'hidden md:flex';
-        return 'hidden xl:flex';
-      };
 
-      const buildThemeCard = ([id, name, col, sub], idx) => {
+      const buildThemeCard = ([id, name, col]) => {
         const active = curTheme === id;
-        return `<button type="button" onclick="selectThemeDirect('${id}')" class="${visClass(idx)} p-2.5 rounded-xl border text-left items-center justify-between gap-2 transition-all w-full ${active ? 'border-brand-gold bg-brand-gold/20 shadow-md' : 'border-white/10 bg-black/50 hover:bg-white/10'}">
+        return `<button type="button" onclick="selectThemeDirect('${id}')" class="p-2 rounded-xl border text-left flex items-center justify-between gap-1.5 transition-all w-full ${active ? 'border-brand-gold bg-brand-gold/15' : 'border-white/10 bg-black/40 hover:bg-white/10'}">
           <div class="flex items-center gap-2 min-w-0">
-            <span class="w-4 h-4 rounded-full shrink-0 border border-white/40 shadow-sm" style="background:${col}"></span>
-            <div class="min-w-0">
-              <div class="text-xs font-bold ${active ? 'text-white' : 'text-gray-200'} truncate">${name}</div>
-              <div class="text-[10px] text-gray-400 truncate">${sub}</div>
-            </div>
+            <span class="w-3.5 h-3.5 rounded-full shrink-0 border border-white/30" style="background:${col}"></span>
+            <span class="text-xs font-bold ${active ? 'text-white' : 'text-gray-300'} truncate">${name}</span>
           </div>
-          ${active ? '<i class="fa-solid fa-circle-check text-brand-gold text-xs shrink-0"></i>' : ''}
+          ${active ? '<i class="fa-solid fa-check text-brand-gold text-[10px] shrink-0"></i>' : ''}
         </button>`;
       };
 
+      const fitThemes = PROFILE_THEMES_LIST.slice(0, 6);
       const grid = $('profileThemeSwatchGrid');
-      if (grid) grid.innerHTML = PROFILE_THEMES_LIST.map(buildThemeCard).join('');
+      if (grid) grid.innerHTML = fitThemes.map(buildThemeCard).join('');
       const hubGrid = $('hubQuickThemeSwatches');
-      if (hubGrid) {
-        // Show only the 6 core themes that fit neatly in the box without overflowing
-        const fitThemes = showAllAtmosphereThemes ? PROFILE_THEMES_LIST : PROFILE_THEMES_LIST.slice(0, 6);
-        hubGrid.innerHTML = fitThemes.map(buildThemeCard).join('');
-      }
-
-      const modesGrid = $('hubAtmosphereModesGrid');
-      if (modesGrid) {
-        const hasGrain = document.body.classList.contains('tm-grain');
-        const hasSepia = document.body.classList.contains('tm-sepia');
-        const hasNeon = document.body.classList.contains('tm-neon');
-        const hasGlass = document.body.classList.contains('tm-glass');
-        const modes = [
-          { label: isCalm ? 'Particles: Off' : 'Particles: On', sub: 'Ambient Canvas', active: !isCalm, fn: "toggleReduce(); syncProfileThemeStudio();", ic: 'fa-wand-magic-sparkles', vis: 'flex' },
-          { label: 'Film Grain', sub: '35mm Texture', active: hasGrain, fn: "toggleBodyLensMode('tm-grain')", ic: 'fa-film', vis: 'flex' },
-          { label: 'Frosted Glass', sub: 'Blur Lens', active: hasGlass, fn: "toggleBodyLensMode('tm-glass')", ic: 'fa-layer-group', vis: 'hidden sm:flex' },
-          { label: 'Vintage Warm', sub: 'Classic Tone', active: hasSepia, fn: "toggleBodyLensMode('tm-sepia')", ic: 'fa-camera-retro', vis: 'hidden lg:flex' },
-          { label: 'Cyber Glow', sub: 'Vivid Saturation', active: hasNeon, fn: "toggleBodyLensMode('tm-neon')", ic: 'fa-bolt', vis: 'hidden lg:flex' },
-          { label: 'Time Machine', sub: 'Era Matrix', active: false, fn: "tmOpen()", ic: 'fa-clock-rotate-left', vis: 'hidden lg:flex' }
-        ];
-        modesGrid.innerHTML = modes.map(m => `
-          <button type="button" onclick="${m.fn}" class="${showAllAtmosphereThemes ? 'flex' : m.vis} p-1.5 sm:p-2 rounded-xl border text-left items-center gap-2 transition-all w-full ${m.active ? 'border-brand-gold bg-brand-gold/15 text-white' : 'border-white/10 bg-black/40 text-gray-300 hover:bg-white/5'}">
-            <i class="fa-solid ${m.ic} text-brand-gold text-xs shrink-0"></i>
-            <div class="min-w-0">
-              <div class="text-[11px] font-bold truncate">${m.label}</div>
-              <div class="text-[9px] text-gray-400 truncate">${m.sub}</div>
-            </div>
-          </button>
-        `).join('');
-      }
+      if (hubGrid) hubGrid.innerHTML = fitThemes.map(buildThemeCard).join('');
 
       const lbl = $('profileActiveThemeLabel');
       const found = PROFILE_THEMES_LIST.find(x => x[0] === curTheme);
-      if (lbl && found) lbl.textContent = `Active Theme: ${found[1]} (${found[3]}) · Effects ${isCalm ? 'Off' : 'On'}`;
+      if (lbl && found) lbl.textContent = found[1];
       const fxTxt = $('profileFxStateText');
-      if (fxTxt) fxTxt.textContent = isCalm ? 'Visual Effects: Off' : 'Visual Effects: On';
+      if (fxTxt) fxTxt.textContent = isCalm ? 'Calm Mode: On' : 'Calm Mode: Off';
       const hubFx = $('hubFxQuickText');
-      if (hubFx) hubFx.textContent = isCalm ? 'Effects: Off' : 'Effects: On';
+      if (hubFx) hubFx.textContent = isCalm ? 'Calm Mode: On' : 'Calm Mode: Off';
     };
     setTimeout(() => { if (window.syncProfileThemeStudio) window.syncProfileThemeStudio(); }, 200);
 

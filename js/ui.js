@@ -6,20 +6,50 @@
   const ls = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
 
   // ---------- move existing blocks to their new homes ----------
-  const taste = document.createElement('div'); taste.id = 'tasteExtras'; taste.className = 'space-y-8 mt-8';
-  ['dnaSection', 'hubAnalytics', 'compatLab'].forEach(id => { const e = $(id); if (e) taste.appendChild(e); });
-  $('tab-web').appendChild(taste);
-  const rec = $('recSection'); if (rec) $('tab-match').appendChild(rec);
+  const rec = $('recSection'); if (rec && $('tab-match')) $('tab-match').appendChild(rec);
 
   // ---------- navigation ----------
   const GROUPS = {
     discover: { first: 'discover', subs: [] },
     browse: { first: 'movies', subs: [['movies', 'Movies', 'fa-clapperboard'], ['shows', 'Shows', 'fa-tv'], ['categories', 'Genres', 'fa-layer-group'], ['universes', 'Universes', 'fa-globe']] },
     music: { first: 'music', subs: [] },
-    decide: { first: 'mood', subs: [['mood', 'Mood Dial', 'fa-compass'], ['duel', 'Duel', 'fa-trophy'], ['match', 'Matchmaker', 'fa-wand-magic-sparkles'], ['ricochet', 'Ricochet', 'fa-circle-dot'], ['marathon', 'Marathon', 'fa-hourglass-half'], ['compat', 'Compatibility', 'fa-people-arrows']] },
-    space: { first: 'hub', subs: [['hub', 'Shelves', 'fa-bookmark'], ['lists', 'Playlists', 'fa-list-check'], ['web', 'DNA', 'fa-circle-nodes'], ['profile', 'Profile', 'fa-user'], ['admin', 'Admin', 'fa-shield-halved']] }
+    decide: { first: 'mood', subs: [
+      ['mood', 'Mood Dial', 'fa-compass'],
+      ['duel', 'Tournament', 'fa-trophy'],
+      ['classic', 'Classic Duel', 'fa-hand-fist'],
+      ['match', 'Matchmaker', 'fa-wand-magic-sparkles'],
+      ['web', 'Sci-Web', 'fa-circle-nodes'],
+      ['ricochet', 'Ricochet', 'fa-circle-dot'],
+      ['marathon', 'Marathon', 'fa-hourglass-half'],
+      ['compat', 'Compatibility', 'fa-people-arrows']
+    ] },
+    space: { first: 'hub', subs: [
+      ['hub', 'Shelves', 'fa-bookmark'],
+      ['lists', 'Playlists', 'fa-list-check'],
+      ['profile', 'Profile', 'fa-user'],
+      ['admin', 'Admin', 'fa-shield-halved']
+    ] }
   };
-  const PANE_GROUP = { discover: 'discover', movies: 'browse', shows: 'browse', categories: 'browse', universes: 'browse', music: 'music', mood: 'decide', duel: 'decide', match: 'decide', ricochet: 'decide', marathon: 'decide', compat: 'decide', hub: 'space', lists: 'space', web: 'space', profile: 'space', admin: 'space' };
+  const PANE_GROUP = {
+    discover: 'discover',
+    movies: 'browse',
+    shows: 'browse',
+    categories: 'browse',
+    universes: 'browse',
+    music: 'music',
+    mood: 'decide',
+    duel: 'decide',
+    classic: 'decide',
+    match: 'decide',
+    web: 'decide',
+    ricochet: 'decide',
+    marathon: 'decide',
+    compat: 'decide',
+    hub: 'space',
+    lists: 'space',
+    profile: 'space',
+    admin: 'space'
+  };
   const ON = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative bg-brand-gold text-black shadow-md';
   const OFF = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative text-gray-300 hover:text-white hover:bg-white/5';
   window.switchTab = function (key) {
@@ -157,7 +187,11 @@
   }
 
   // ---------- Vibe menu ----------
-  $('swatchRow').innerHTML = Object.entries(THEMES).map(([id, t]) => `<button class="swatch" data-id="${id}" title="${t.n}" style="background:${t.c}"></button>`).join('');
+  const CORE_THEME_IDS = ['space', 'clear', 'noir', 'neon', 'aurora', 'blood'];
+  $('swatchRow').innerHTML = CORE_THEME_IDS.map(id => {
+    const t = THEMES[id];
+    return t ? `<button class="swatch" data-id="${id}" title="${t.n}" style="background:${t.c}"></button>` : '';
+  }).join('');
   $('swatchRow').onclick = e => { const b = e.target.closest('.swatch'); if (!b) return; pin = b.dataset.id; ls.set('cs_theme_v2', pin); refresh(); };
   $('autoBtn').onclick = () => { pin = 'auto'; ls.set('cs_theme_v2', pin); refresh(); };
   window.toggleReduce = () => { reduce = !reduce; ls.set('cs_reduce', reduce); refresh(); };
@@ -179,7 +213,7 @@
   const BROWSE = ['movies', 'shows', 'categories', 'universes'];
   let kind = 'all';
   const chips = [
-    ['all', 'All World'],
+    ['all', 'All'],
     ['movie', 'Movies'],
     ['show', 'TV Shows'],
     ['song', 'Songs']

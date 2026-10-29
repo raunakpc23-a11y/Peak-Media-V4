@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // FEATURES 4 & 11: TIME MACHINE · MOOD RICOCHET
 // ==========================================
 (function(){
@@ -87,7 +87,7 @@
   function updateRcModeBadge(){
     const b = $('rcActiveModeBadge');
     if(!b) return;
-    const gLabel = rcGravMode === 'moon' ? 'Moon Low-G' : rcGravMode === 'hyper' ? 'Hyper-Bounce' : 'Normal G';
+    const gLabel = rcGravMode === 'moon' ? 'Low' : rcGravMode === 'hyper' ? 'Hyper' : 'Normal';
     b.textContent = `${rcBallCount} Ball${rcBallCount>1?'s':''} · ${gLabel}`;
   }
 

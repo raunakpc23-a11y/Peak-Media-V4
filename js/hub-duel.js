@@ -172,20 +172,20 @@
       if (fresh.length) { fresh.forEach(b => seenBadges.add(b[0])); save('cs_badges', [...seenBadges]); showToast(`Badge unlocked: ${fresh[0][1]}`, 'fa-medal', 'text-brand-gold'); }
     }
 
-    // film-reel timeline (7 buckets: <=1960s, 1970s, 1980s, 1990s, 2000s, 2010s, 2020s)
-    const REEL = [1960, 1970, 1980, 1990, 2000, 2010, 2020];
+    // film-reel timeline (5 buckets: <=1980s, 1990s, 2000s, 2010s, 2020s)
+    const REEL = [1980, 1990, 2000, 2010, 2020];
     let reelPrev = {};
     function renderReel() {
       const all = [...new Set([...watchedTitles, ...wishlistTitles, ...favTitles])].map(t => globalDatabase[t]).filter(Boolean);
       const by = {}; REEL.forEach(d => by[d] = []);
       all.forEach(i => {
-        const bucket = i.year < 1970 ? 1960 : clamp(Math.floor(i.year / 10) * 10, 1970, 2020);
+        const bucket = i.year < 1990 ? 1980 : clamp(Math.floor(i.year / 10) * 10, 1990, 2020);
         by[bucket].push(i);
       });
       const strip = $('reelStrip');
       strip.innerHTML = REEL.map(d => {
         const l = by[d], grew = l.length > (reelPrev[d] || 0) && reelPrev[d] !== undefined;
-        const label = d === 1960 ? '&le;1960s' : d + 's';
+        const label = d === 1980 ? '&le;1980s' : d + 's';
         return `<div class="reel-frame" style="flex:1 1 92px;min-width:82px"><div class="reel-box ${l.length ? 'filled' : ''} ${grew ? 'pop' : ''}">${l.slice(0, 3).map(i => `<img class="lazy-poster" data-title="${esc(i.title)}" src="${poster(i)}" alt="">`).join('')}</div><div class="text-[10px] font-bold mt-1 ${l.length ? 'text-brand-gold' : 'text-gray-500'}">${label}${l.length ? ' · ' + l.length : ''}</div></div>`;
       }).join('');
       attachThumbObservers(strip);
@@ -273,13 +273,13 @@
     // FEATURE 2 — TASTE DNA CARD
     // ======================================================
     const DG = ['Drama', 'Crime', 'Action', 'Sci-Fi', 'Fantasy', 'Thriller', 'Comedy', 'Animation', 'Romance', 'Horror', 'Western', 'War', 'Documentary'];
-    const ER = ['≤1960s', '70s', '80s', '90s', '2000s', '2010s', '2020s'];
-    const ERC = ['#c2813a', '#f59e0b', '#ec4899', '#a855f7', '#38bdf8', '#2dd4bf', '#4ade80'];
-    const eraB = y => y <= 1969 ? 0 : Math.min(6, Math.floor((y - 1960) / 10));
+    const ER = ['≤1980s', '90s', '2000s', '2010s', '2020s'];
+    const ERC = ['#f59e0b', '#ec4899', '#38bdf8', '#2dd4bf', '#4ade80'];
+    const eraB = y => y <= 1989 ? 0 : Math.min(4, Math.floor((y - 1980) / 10));
     const NOUN = { 'Sci-Fi': 'Mind-Bender', Drama: 'Feeler', Crime: 'Detective', Action: 'Adrenaline Chaser', Fantasy: 'Dreamer', Thriller: 'Edge-Sitter', Comedy: 'Joker', Animation: 'Wide-Eyed Wanderer', Romance: 'Hopeless Romantic', Horror: 'Night Owl', Western: 'Gunslinger', War: 'Strategist', Documentary: 'Truth-Seeker' };
     function computeDNA() {
       const w = watchedTitles.map(t => globalDatabase[t]).filter(Boolean);
-      const gc = Object.fromEntries(DG.map(g => [g, 0])), ec = Array(7).fill(0); let ps = 0, ys = 0;
+      const gc = Object.fromEntries(DG.map(g => [g, 0])), ec = Array(ER.length).fill(0); let ps = 0, ys = 0;
       w.forEach(i => { gc[DG.includes(i.genre) ? i.genre : 'Drama']++; ec[eraB(i.year)]++; ps += pop(i); ys += i.year; });
       const mx = Math.max(1, ...Object.values(gc)), n = w.length;
       const g = DG.map(k => gc[k] / mx), e = ec.map(x => n ? x / n : 0), p = n ? ps / n : .5;
@@ -292,7 +292,7 @@
       }
       return { g, e, p, n, id, era };
     }
-    const cur = { g: Array(DG.length).fill(0), e: Array(7).fill(0), p: .5 };
+    const cur = { g: Array(DG.length).fill(0), e: Array(ER.length).fill(0), p: .5 };
     let tgt = computeDNA(), friend = null, dnaAnim = false;
     const dcv = $('dnaCv'), dctx = dcv.getContext('2d'); dcv.width = 1200; dcv.height = 1520;
     function drawDNA() {
@@ -907,9 +907,46 @@
       $('duelArena').classList.remove('hidden');
       showMatch();
     };
+
+    // Dedicated 1v1 Classic Duel Feature
+    let classicDuelPair = [];
+    window.startClassicDuel1v1 = function(src) {
+      if (src) D.src = src;
+      D.size = 2;
+      const pool = pickEntrants();
+      if (pool.length < 2) {
+        showToast('Need at least 2 titles to duel', 'fa-circle-info', 'text-amber-400');
+        return;
+      }
+      classicDuelPair = [pool[0], pool[1]];
+      renderClassicDuelStage();
+    };
+
+    function renderClassicDuelStage() {
+      const stage = $('classicDuelStage');
+      if (!stage || classicDuelPair.length < 2) return;
+      const a = classicDuelPair[0], b = classicDuelPair[1];
+      const card = (it, s) => `<div class="duel-card ${s} cursor-pointer hover:scale-[1.02] transition-transform" data-t="${esc(it.title)}"><img class="lazy-poster" data-title="${esc(it.title)}" src="${poster(it)}" alt=""><div class="p-3 text-left"><div class="text-[10px] font-bold uppercase" style="color:${th(it.genre).accent}">${it.genre} · ${it.year}</div><div class="font-bold text-sm text-white leading-tight line-clamp-2">${esc(it.cleanName)}</div><div class="text-xs text-gray-400 mt-0.5"><i class="fa-solid fa-star text-brand-gold text-[9px]"></i> ${it.rating}${myRatings[it.title] ? ' · you: ' + myRatings[it.title] + '★' : ''}</div></div></div>`;
+      stage.innerHTML = card(a, 'l') + '<div class="vs-flash">VS</div>' + card(b, 'r');
+      attachThumbObservers(stage);
+      stage.querySelectorAll('.duel-card').forEach(c => c.onclick = () => {
+        const chosen = globalDatabase[c.dataset.t];
+        showToast(`Winner: ${chosen.cleanName || chosen.title}!`, 'fa-crown', 'text-brand-gold');
+        setTimeout(() => window.startClassicDuel1v1(), 800);
+      });
+    }
+
+    window.autoJudgeClassicDuel = function() {
+      if (classicDuelPair.length < 2) return;
+      const j = judge(classicDuelPair[0], classicDuelPair[1]);
+      showToast(`Auto-Judge: ${j.win.cleanName || j.win.title} won because ${j.why}`, 'fa-gavel', 'text-brand-gold');
+      setTimeout(() => window.startClassicDuel1v1(), 1200);
+    };
+
     // Auto-start a live 4-title showdown on initial load so Watch Duel is never empty!
     setTimeout(() => {
       if (D.rounds.length === 0) window.launchPresetDuel('pantheon');
+      window.startClassicDuel1v1('pop');
     }, 60);
 
     // ---------- wiring ----------

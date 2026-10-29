@@ -15637,10 +15637,15 @@ Odd Taxi|2021|87
                 if (data.extract && !summaryCache[cacheKey]) {
                   summaryCache[cacheKey] = data.extract;
                 }
-                if (data.thumbnail && data.thumbnail.source) {
-                  posterCache[cacheKey] = data.thumbnail.source;
+                if (data.originalimage && data.originalimage.source) {
+                  posterCache[cacheKey] = data.originalimage.source;
                   scheduleSavePosterCache();
-                  return data.thumbnail.source;
+                  return data.originalimage.source;
+                } else if (data.thumbnail && data.thumbnail.source) {
+                  const highRes = data.thumbnail.source.replace(/\/\d+px-/, '/640px-');
+                  posterCache[cacheKey] = highRes;
+                  scheduleSavePosterCache();
+                  return highRes;
                 }
               }
             }
@@ -16046,7 +16051,7 @@ Odd Taxi|2021|87
             <span class="text-gray-400">Spotlight ${currentSpotlightIdx + 1} of ${spotlightTitles.length}</span>
           </div>
           <div class="flex items-center gap-3 text-[11px] text-gray-400">
-            <button type="button" onclick="openLangCompareModal()" class="text-brand-gold hover:underline font-semibold"><i class="fa-solid fa-scale-unbalanced mr-1"></i>EN vs HI Top 10s</button>
+            <button type="button" onclick="openLangCompareModal()" class="text-brand-gold hover:underline font-semibold"><i class="fa-solid fa-scale-unbalanced mr-1"></i>Compare</button>
             <span>·</span>
             <span>Press <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-gray-300 font-mono text-[10px]">/</kbd> to search</span>
           </div>
@@ -16743,6 +16748,9 @@ Odd Taxi|2021|87
 
       // Instant poster resolution:
       let posterUrl = posterCache[item.type + ':' + item.title];
+      if (posterUrl && typeof posterUrl === 'string' && posterUrl.includes('/thumb/')) {
+        posterUrl = posterUrl.replace(/\/\d+px-/, '/640px-');
+      }
 
       // Check if clicked card or any card in DOM already has a rendered image for this title
       if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
@@ -16935,75 +16943,49 @@ Odd Taxi|2021|87
               <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-white leading-tight tracking-tight">${item.cleanName || item.title}</h2>
             </div>
 
-            <!-- Master Critics vs Crowd Scorecard -->
-            <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#121626] via-[#0c101c] to-[#0a0d18] border border-white/20 shadow-2xl space-y-3">
-              <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/10 text-center">
+            <!-- Editorial Scorecard Ribbon (Clean matte 3-pillar layout) -->
+            <div class="p-3.5 sm:p-4 rounded-2xl bg-white/[0.04] border border-white/10 space-y-2.5">
+              <div class="grid grid-cols-3 gap-2 divide-x divide-white/10 text-center items-center">
                 <!-- IMDb Pillar -->
-                <a href="https://www.imdb.com/find/?q=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center px-1 sm:px-3 group/imdb transition-transform hover:scale-105" title="View on IMDb">
-                  <div class="px-2.5 py-1 rounded-lg bg-gradient-to-b from-[#f5c518] to-[#d4a017] text-black font-black text-xs tracking-tight font-mono shadow-[0_0_12px_rgba(245,197,24,0.35)] flex items-center gap-1 group-hover/imdb:brightness-110">
-                    <i class="fa-solid fa-star text-[10px]"></i>
-                    <span>IMDb</span>
+                <a href="https://www.imdb.com/find/?q=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center px-1 group/imdb hover:opacity-85 transition-opacity" title="View on IMDb">
+                  <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">IMDb</span>
+                  <div class="flex items-baseline gap-1 mt-0.5">
+                    <span class="text-white font-extrabold text-lg sm:text-xl leading-none">${item.rating}</span>
+                    <span class="text-gray-500 text-[10px] font-semibold">/10</span>
                   </div>
-                  <div class="flex items-baseline gap-1 mt-2">
-                    <span class="text-white font-extrabold text-xl sm:text-2xl leading-none drop-shadow">${item.rating}</span>
-                    <span class="text-gray-400 text-xs font-semibold">/10</span>
-                  </div>
-                  <div class="text-[10px] text-amber-400/90 font-extrabold uppercase tracking-wider mt-1.5">#${item.rank} Ranked</div>
+                  <span class="text-[10px] text-brand-gold font-bold mt-1">#${item.rank} Ranked</span>
                 </a>
 
                 <!-- Rotten Tomatoes Critics Meter Pillar -->
-                <div class="flex flex-col items-center justify-center px-1 sm:px-3 pl-2 sm:pl-4">
-                  <div class="relative w-8 h-8 flex items-center justify-center drop-shadow-[0_0_10px_rgba(250,50,20,0.5)]">
-                    <svg viewBox="0 0 32 32" class="w-7 h-7" fill="none">
-                      <path d="M16 6C11 6 5 9 5 18C5 25 11 28 16 28C21 28 27 25 27 18C27 9 21 6 16 6Z" fill="url(#rtRedGrad)" />
-                      <ellipse cx="12" cy="13" rx="3.5" ry="2" fill="white" fill-opacity="0.35" transform="rotate(-25 12 13)" />
-                      <path d="M16 7V3C16 3 14 4.5 13 4" stroke="#22C55E" stroke-width="2" stroke-linecap="round" />
-                      <path d="M16 6C14.5 4 11 5 11 5C13 6.5 14 7 14 7" fill="#16A34A" />
-                      <path d="M16 6C17.5 4 21 5 21 5C19 6.5 18 7 18 7" fill="#16A34A" />
-                      <defs>
-                        <radialGradient id="rtRedGrad" cx="35%" cy="35%" r="65%">
-                          <stop offset="0%" stop-color="#FF5A36" />
-                          <stop offset="70%" stop-color="#E11D48" />
-                          <stop offset="100%" stop-color="#9F1239" />
-                        </radialGradient>
-                      </defs>
-                    </svg>
+                <div class="flex flex-col items-center justify-center px-1 pl-2">
+                  <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Critics</span>
+                  <div class="flex items-baseline gap-1 mt-0.5">
+                    <span class="text-rose-400 font-extrabold text-lg sm:text-xl leading-none">${rtCritics}%</span>
                   </div>
-                  <div class="text-rose-400 font-extrabold text-xl sm:text-2xl leading-none mt-2 drop-shadow">${rtCritics}%</div>
-                  <div class="text-[10px] text-rose-300 font-extrabold uppercase tracking-wider mt-1.5">Critics Meter</div>
+                  <span class="text-[10px] text-gray-400 mt-1">Tomatometer</span>
                 </div>
 
                 <!-- Audience Popcorn Meter Pillar -->
-                <div class="flex flex-col items-center justify-center px-1 sm:px-3 pl-2 sm:pl-4">
-                  <div class="relative w-8 h-8 flex items-center justify-center drop-shadow-[0_0_10px_rgba(245,197,24,0.45)]">
-                    <svg viewBox="0 0 32 32" class="w-7 h-7" fill="none">
-                      <path d="M8 12L10 28H22L24 12H8Z" fill="#DC2626" />
-                      <path d="M11.5 12L13 28H15L13.8 12H11.5Z" fill="#F8FAFC" />
-                      <path d="M17 12L18.2 28H20.2L19.3 12H17Z" fill="#F8FAFC" />
-                      <circle cx="11" cy="11" r="3" fill="#FBBF24" />
-                      <circle cx="16" cy="9.5" r="3.5" fill="#FDE047" />
-                      <circle cx="21" cy="11" r="3" fill="#FBBF24" />
-                      <circle cx="13.5" cy="8" r="2.5" fill="#FEF08A" />
-                      <circle cx="18.5" cy="8" r="2.5" fill="#FDE047" />
-                    </svg>
+                <div class="flex flex-col items-center justify-center px-1 pl-2">
+                  <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Audience</span>
+                  <div class="flex items-baseline gap-1 mt-0.5">
+                    <span class="text-amber-400 font-extrabold text-lg sm:text-xl leading-none">${rtAudience}%</span>
                   </div>
-                  <div class="text-amber-400 font-extrabold text-xl sm:text-2xl leading-none mt-2 drop-shadow">${rtAudience}%</div>
-                  <div class="text-[10px] text-amber-300 font-extrabold uppercase tracking-wider mt-1.5">Audience Popcorn</div>
+                  <span class="text-[10px] text-gray-400 mt-1">Popcornmeter</span>
                 </div>
               </div>
 
-              <!-- Verdict Banner -->
-              <div class="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
-                <span class="text-[11px] text-gray-300 font-medium">Consensus Verdict:</span>
-                <span class="px-3 py-1 rounded-full border text-xs font-extrabold flex items-center gap-1.5 shadow-sm ${riftBadge.color}">
-                  <i class="fa-solid ${riftBadge.icon} text-[11px]"></i>
-                  <span>${riftBadge.text}</span>
+              <!-- Verdict -->
+              <div class="pt-2 border-t border-white/10 flex items-center justify-between">
+                <span class="text-[11px] text-gray-400 font-medium">Consensus:</span>
+                <span class="px-2.5 py-0.5 rounded-full border text-[11px] font-bold ${riftBadge.color}">
+                  ${riftBadge.text}
                 </span>
               </div>
             </div>
 
-            <!-- 15-Word Inciting Hook -->
-            <div class="p-2.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-black/40 to-transparent border-l-4 border-brand-gold text-xs sm:text-sm text-gray-200 font-medium italic">
+            <!-- Curated Inciting Hook (Clean Typography Pullquote) -->
+            <div class="py-1 text-xs sm:text-sm text-gray-200 italic border-l-2 border-brand-gold/60 pl-3">
               "${hookText}"
             </div>
 
