@@ -15966,19 +15966,13 @@ Odd Taxi|2021|87
           </div>
         </div>
 
-        <!-- Clean Resting Metadata: Title + Year & Rating + Watch Now Button -->
-        <div class="p-3 pt-2 flex-1 flex flex-col justify-between gap-2 border-t border-white/5">
-          <div>
-            <h3 class="font-bold text-xs sm:text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-1" title="${attrTitle}">${item.cleanName || item.title}</h3>
-            <div class="flex items-center justify-between text-xs text-gray-400 mt-0.5">
-              <span>${item.year}</span>
-              <span class="text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
-            </div>
+        <!-- Clean Resting Metadata: Title + Year & Rating Only -->
+        <div class="p-3 flex-1 flex flex-col justify-between gap-1 border-t border-white/5">
+          <h3 class="font-bold text-xs sm:text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-1" title="${attrTitle}">${item.cleanName || item.title}</h3>
+          <div class="flex items-center justify-between text-xs text-gray-400">
+            <span>${item.year}</span>
+            <span class="text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
           </div>
-          <button type="button" onclick="event.stopPropagation(); openDetailModal('${escTitle}')" class="w-full py-1.5 px-2.5 rounded-xl bg-white/5 hover:bg-brand-gold hover:text-black border border-white/10 hover:border-brand-gold text-xs font-bold text-gray-200 flex items-center justify-center gap-1.5 transition-all shadow-sm">
-            <i class="fa-solid fa-circle-play text-xs text-brand-gold group-hover:text-black"></i>
-            <span>Watch Now</span>
-          </button>
         </div>
       </div>`;
     }
