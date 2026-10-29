@@ -40,10 +40,10 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="css/base.css?v=3.4">
-  <link rel="stylesheet" href="css/widgets.css?v=3.4">
-  <link rel="stylesheet" href="css/onboarding.css?v=3.4">
-  <link rel="stylesheet" href="css/responsive.css?v=3.4">
+  <link rel="stylesheet" href="css/base.css?v=3.5">
+  <link rel="stylesheet" href="css/widgets.css?v=3.5">
+  <link rel="stylesheet" href="css/onboarding.css?v=3.5">
+  <link rel="stylesheet" href="css/responsive.css?v=3.5">
 </head>
 <body data-theme="space" class="min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased">
 
@@ -745,22 +745,33 @@
         </div>
 
         <!-- Card Stage -->
-        <div class="relative flex items-center justify-center py-2 min-h-[380px] sm:min-h-[420px]">
-          <div id="csCardStage" class="relative w-full max-w-[340px] sm:max-w-[380px] aspect-[2/3] max-h-[500px]"></div>
+        <div class="relative flex items-center justify-center py-2 min-h-[460px] sm:min-h-[500px]">
+          <div id="csCardStage" class="relative w-full max-w-[320px] sm:max-w-[350px] h-[450px] sm:h-[480px]"></div>
         </div>
 
-        <!-- Controls: Pass / Rewind / Shortlist -->
-        <div class="flex items-center justify-center gap-4 sm:gap-6 pt-1">
-          <button id="csPassBtn" type="button" class="w-14 h-14 rounded-full bg-rose-500/15 hover:bg-rose-500/25 border-2 border-rose-500/50 text-rose-400 text-xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95" title="Pass (Left Arrow)">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-          <button id="csPickTonightBtn" type="button" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-black text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all active:scale-95">
-            <i class="fa-solid fa-dice text-base"></i>
-            <span>Lock Tonight's Movie</span>
-          </button>
-          <button id="csKeepBtn" type="button" class="w-14 h-14 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border-2 border-emerald-500/50 text-emerald-400 text-xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95" title="Shortlist (Right Arrow)">
-            <i class="fa-solid fa-heart"></i>
-          </button>
+        <!-- Controls: Pass / Lock / Keep -->
+        <div class="flex flex-col items-center gap-2 pt-1">
+          <div class="flex items-center justify-center gap-4 sm:gap-6">
+            <button id="csPassBtn" type="button" class="group flex flex-col items-center gap-1 focus:outline-none" title="Pass (Left Arrow)">
+              <div class="w-14 h-14 rounded-full bg-rose-500/15 group-hover:bg-rose-500/25 border-2 border-rose-500/50 text-rose-400 text-xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 active:scale-95">
+                <i class="fa-solid fa-xmark"></i>
+              </div>
+              <span class="text-[10px] font-bold text-rose-400/80 uppercase tracking-wider">Pass (←)</span>
+            </button>
+
+            <button id="csPickTonightBtn" type="button" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 hover:brightness-110 text-black font-black text-xs sm:text-sm flex items-center gap-2 shadow-xl shadow-amber-500/25 transition-all active:scale-95">
+              <i class="fa-solid fa-dice text-base"></i>
+              <span>Lock Tonight's Movie</span>
+            </button>
+
+            <button id="csKeepBtn" type="button" class="group flex flex-col items-center gap-1 focus:outline-none" title="Keep / Shortlist (Right Arrow)">
+              <div class="w-14 h-14 rounded-full bg-emerald-500/15 group-hover:bg-emerald-500/25 border-2 border-emerald-500/50 text-emerald-400 text-xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 active:scale-95">
+                <i class="fa-solid fa-heart"></i>
+              </div>
+              <span class="text-[10px] font-bold text-emerald-400/80 uppercase tracking-wider">Keep (→)</span>
+            </button>
+          </div>
+          <div class="text-[10px] text-gray-500 font-mono tracking-wide">Tip: Use keyboard ← / → arrows or swipe cards</div>
         </div>
 
         <!-- Shortlist Tray -->
@@ -2136,15 +2147,15 @@
   </div>
 
 
-  <script src="js/data.js?v=3.4"></script>
-  <script src="js/constellation.js?v=3.4"></script>
-  <script src="js/hub-duel.js?v=3.4"></script>
-  <script src="js/ui.js?v=3.4"></script>
-  <script src="js/features.js?v=3.4"></script>
-  <script src="js/marathon.js?v=3.4"></script>
-  <script src="js/universes.js?v=3.4"></script>
-  <script src="js/mood_dial.js?v=3.4"></script>
-  <script src="js/main.js?v=3.4"></script>
-  <script src="js/pwa.js?v=3.4"></script>
+  <script src="js/data.js?v=3.5"></script>
+  <script src="js/constellation.js?v=3.5"></script>
+  <script src="js/hub-duel.js?v=3.5"></script>
+  <script src="js/ui.js?v=3.5"></script>
+  <script src="js/features.js?v=3.5"></script>
+  <script src="js/marathon.js?v=3.5"></script>
+  <script src="js/universes.js?v=3.5"></script>
+  <script src="js/mood_dial.js?v=3.5"></script>
+  <script src="js/main.js?v=3.5"></script>
+  <script src="js/pwa.js?v=3.5"></script>
 </body>
 </html>

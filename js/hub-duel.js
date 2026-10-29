@@ -647,13 +647,13 @@
           csPickTonight();
         } else {
           stage.innerHTML = `
-            <div class="w-full h-full rounded-3xl bg-[#0c101c] border border-white/15 p-6 flex flex-col items-center justify-center text-center space-y-4">
+            <div class="w-full h-full rounded-3xl bg-[#0c101c] border border-white/15 p-6 flex flex-col items-center justify-center text-center space-y-4 shadow-2xl">
               <div class="w-16 h-16 rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 text-3xl">
                 <i class="fa-solid fa-rotate-left"></i>
               </div>
               <h3 class="text-xl font-display font-extrabold text-white">Deck Complete!</h3>
-              <p class="text-xs text-gray-300 max-w-xs leading-relaxed">You passed on all contenders in this batch. Ready to reload with a fresh deck?</p>
-              <button onclick="window.csRestart()" class="px-5 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs">
+              <p class="text-xs text-gray-300 max-w-xs leading-relaxed">You passed on all contenders in this batch. Ready to deal a fresh deck?</p>
+              <button onclick="window.csRestart()" class="px-5 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs shadow-lg transition-transform hover:scale-105">
                 <i class="fa-solid fa-shuffle mr-1.5"></i> Deal New Deck
               </button>
             </div>
@@ -672,33 +672,37 @@
 
       const nextIt = csDeck[csIndex + 1];
       const bgCardHtml = nextIt ? `
-        <div class="absolute inset-0 rounded-3xl bg-[#080b14] border border-white/10 scale-95 translate-y-3 opacity-60 pointer-events-none overflow-hidden transition-all">
-          <img src="${poster(nextIt)}" class="w-full h-full object-cover opacity-30 blur-xs" alt="">
+        <div class="absolute inset-0 rounded-3xl bg-[#080b14] border border-white/10 scale-95 translate-y-3 opacity-50 pointer-events-none overflow-hidden transition-all">
+          <img src="${poster(nextIt)}" class="w-full h-full object-cover opacity-25 blur-xs" alt="">
         </div>
       ` : '';
 
       stage.innerHTML = `
         ${bgCardHtml}
-        <div id="csActiveCard" class="absolute inset-0 rounded-3xl bg-[#0c101c] border-2 border-white/20 shadow-2xl overflow-hidden flex flex-col cursor-grab active:cursor-grabbing select-none transition-transform duration-200">
-          <div class="relative w-full flex-1 overflow-hidden">
-            <img src="${posterSrc}" class="w-full h-full object-cover transition-transform duration-700" alt="${escT}">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0c101c] via-[#0c101c]/30 to-transparent"></div>
-            <div id="csPassBadge" class="absolute top-4 right-4 px-3 py-1 rounded-xl bg-rose-600/90 text-white font-black text-sm uppercase tracking-wider border-2 border-white/30 rotate-12 opacity-0 transition-opacity">PASS</div>
-            <div id="csKeepBadge" class="absolute top-4 left-4 px-3 py-1 rounded-xl bg-emerald-600/90 text-white font-black text-sm uppercase tracking-wider border-2 border-white/30 -rotate-12 opacity-0 transition-opacity">KEEP</div>
-            <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs font-bold text-white">
-              <span class="px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md border border-white/15" style="color:${genreColor}">
-                ${it.genre} · ${it.year}
-              </span>
-              <span class="px-2.5 py-1 rounded-lg bg-brand-gold text-black font-mono font-black shadow">
-                ★ ${it.rating}
-              </span>
+        <div id="csActiveCard" class="absolute inset-0 rounded-3xl bg-[#0c101c] border border-white/20 shadow-2xl overflow-hidden flex flex-col cursor-grab active:cursor-grabbing select-none transition-transform duration-200">
+          <div class="relative w-full h-full overflow-hidden">
+            <img src="${posterSrc}" class="w-full h-full object-cover" alt="${escT}">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+            
+            <!-- Dynamic Swipe Stamps -->
+            <div id="csPassBadge" class="absolute top-5 right-5 px-3.5 py-1 rounded-xl bg-rose-600/90 text-white font-black text-sm uppercase tracking-wider border-2 border-white/40 rotate-12 opacity-0 pointer-events-none transition-opacity shadow-xl">PASS</div>
+            <div id="csKeepBadge" class="absolute top-5 left-5 px-3.5 py-1 rounded-xl bg-emerald-600/90 text-white font-black text-sm uppercase tracking-wider border-2 border-white/40 -rotate-12 opacity-0 pointer-events-none transition-opacity shadow-xl">KEEP</div>
+
+            <!-- Card Bottom Glass Tray -->
+            <div class="absolute bottom-0 inset-x-0 p-4 sm:p-5 bg-gradient-to-t from-black via-black/85 to-transparent space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold text-white">
+                <span class="px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md border border-white/15" style="color:${genreColor}">
+                  ${it.genre} · ${it.year}
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-brand-gold text-black font-mono font-black shadow">
+                  ★ ${it.rating}
+                </span>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white leading-tight">${escT}</h3>
+              <p class="text-xs text-gray-300 line-clamp-2 leading-relaxed">
+                ${(window.globalDatabase && window.globalDatabase[it.title] && window.globalDatabase[it.title].overview) ? esc(window.globalDatabase[it.title].overview) : 'Top-tier cinematic recommendation curated for your tonight session.'}
+              </p>
             </div>
-          </div>
-          <div class="p-4 bg-[#0c101c] border-t border-white/10 space-y-1.5 shrink-0">
-            <h3 class="text-lg sm:text-xl font-display font-extrabold text-white leading-tight truncate">${escT}</h3>
-            <p class="text-xs text-gray-400 line-clamp-2 leading-relaxed">
-              ${(window.globalDatabase && window.globalDatabase[it.title] && window.globalDatabase[it.title].overview) ? esc(window.globalDatabase[it.title].overview) : 'Top-tier cinematic recommendation curated for tonight.'}
-            </p>
           </div>
         </div>
       `;
@@ -712,24 +716,19 @@
 
       let startX = 0, currentX = 0, isDragging = false;
 
-      const onPointerDown = e => {
-        isDragging = true;
-        startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-        card.style.transition = 'none';
-      };
-
       const onPointerMove = e => {
         if (!isDragging) return;
-        currentX = (e.clientX || (e.touches && e.touches[0].clientX) || 0) - startX;
-        const rot = currentX * 0.08;
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+        currentX = clientX - startX;
+        const rot = currentX * 0.07;
         card.style.transform = `translateX(${currentX}px) rotate(${rot}deg)`;
 
         const keepB = $('csKeepBadge'), passB = $('csPassBadge');
-        if (currentX > 30) {
-          if (keepB) keepB.style.opacity = Math.min(1, currentX / 80);
+        if (currentX > 25) {
+          if (keepB) keepB.style.opacity = Math.min(1, currentX / 70);
           if (passB) passB.style.opacity = 0;
-        } else if (currentX < -30) {
-          if (passB) passB.style.opacity = Math.min(1, -currentX / 80);
+        } else if (currentX < -25) {
+          if (passB) passB.style.opacity = Math.min(1, -currentX / 70);
           if (keepB) keepB.style.opacity = 0;
         } else {
           if (keepB) keepB.style.opacity = 0;
@@ -740,6 +739,8 @@
       const onPointerUp = () => {
         if (!isDragging) return;
         isDragging = false;
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
         card.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
         if (currentX > 75) {
           csSwipe('right');
@@ -753,9 +754,25 @@
         }
       };
 
+      const onPointerDown = e => {
+        isDragging = true;
+        startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+        card.style.transition = 'none';
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+      };
+
       card.addEventListener('pointerdown', onPointerDown);
-      window.addEventListener('pointermove', onPointerMove);
-      window.addEventListener('pointerup', onPointerUp, { once: true });
+
+      const passBtn = $('csPassBtn'), keepBtn = $('csKeepBtn');
+      if (passBtn) {
+        passBtn.onmouseenter = () => { if (!isDragging && $('csActiveCard')) $('csActiveCard').style.transform = 'translateX(-12px) rotate(-2deg)'; };
+        passBtn.onmouseleave = () => { if (!isDragging && $('csActiveCard')) $('csActiveCard').style.transform = ''; };
+      }
+      if (keepBtn) {
+        keepBtn.onmouseenter = () => { if (!isDragging && $('csActiveCard')) $('csActiveCard').style.transform = 'translateX(12px) rotate(2deg)'; };
+        keepBtn.onmouseleave = () => { if (!isDragging && $('csActiveCard')) $('csActiveCard').style.transform = ''; };
+      }
     }
 
     function csSwipe(dir) {

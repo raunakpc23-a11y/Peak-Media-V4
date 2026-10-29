@@ -16921,41 +16921,31 @@ Odd Taxi|2021|87
       const cinejoyStreamUrl = (window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? window.getCinejoyUrl(item.title, item.type) : null;
 
       content.innerHTML = `
-        <div class="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 p-6 sm:p-8">
-          <!-- Poster Column (Locked 2:3 Aspect, Premium Frame & Technical Specs Tray) -->
-          <div class="w-full sm:w-60 md:w-64 shrink-0 flex flex-col items-center">
-            <div class="relative w-48 sm:w-56 md:w-60 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-400/25 shadow-2xl bg-[#0c101c] group/poster">
-              <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover rounded-2xl block transition-transform duration-500 group-hover/poster:scale-105" alt="${item.title}">
-              <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 pointer-events-none"></div>
-            </div>
-            <!-- Technical Specs Tray under Poster -->
-            <div class="mt-3.5 w-48 sm:w-56 md:w-60 p-2.5 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-1.5 text-center shadow-md">
-              <div class="flex items-center justify-center gap-2 text-[11px] font-bold text-gray-300">
-                <span><i class="fa-solid fa-clock text-amber-400/80 mr-1"></i>${item.type === 'show' ? (item.seasons ? `${item.seasons} Seasons` : 'TV Series') : (item.runtime || '2h 15m')}</span>
-                <span>•</span>
-                <span class="text-amber-300/90 font-mono">${item.lang === 'hi' ? 'Hindi Audio' : 'English / Multi'}</span>
-              </div>
-              <div class="flex items-center justify-center gap-1.5 text-[10px] font-mono text-gray-400 tracking-wider">
-                <span class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10">4K UHD</span>
-                <span class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10">HDR10</span>
-                <span class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10">5.1 SOUND</span>
-              </div>
-            </div>
+        <div class="flex flex-col sm:flex-row gap-6 sm:gap-8 p-6 sm:p-8">
+          <!-- Poster Column (Locked 2:3 Aspect, Elegant Border & Soft Shadow) -->
+          <div class="w-48 sm:w-56 md:w-60 shrink-0 mx-auto sm:mx-0 rounded-2xl overflow-hidden border border-white/20 shadow-2xl aspect-[2/3] bg-[#0c101c] relative group/poster">
+            <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover/poster:scale-105" alt="${item.title}">
+            <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 pointer-events-none"></div>
           </div>
 
+          <!-- Details Column: Clear & Organized Visual Hierarchy -->
           <div class="flex-1 w-full space-y-4">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-extrabold text-xs">★ ${item.rating}</span>
-              <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-200 text-xs font-semibold">#${item.rank} Ranked</span>
-              <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-300 text-xs">${item.genre} · ${item.year}</span>
-              ${indiaPlatform ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] font-semibold flex items-center gap-1.5"><i class="${platIcon}"></i> ${indiaPlatform}</span>` : ''}
+            <!-- Header: Badges & Title -->
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-extrabold text-xs">★ ${item.rating}</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-200 text-xs font-semibold">#${item.rank} Ranked</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-300 text-xs">${item.genre} · ${item.year}</span>
+                ${indiaPlatform ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] font-semibold flex items-center gap-1.5"><i class="${platIcon}"></i> ${indiaPlatform}</span>` : ''}
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-white leading-tight tracking-tight">${item.cleanName || item.title}</h2>
             </div>
 
-            <!-- Master Critics vs Crowd Scorecard (Spacious, Vibrant High-Def Metrics) -->
+            <!-- Master Critics vs Crowd Scorecard -->
             <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#121626] via-[#0c101c] to-[#0a0d18] border border-white/20 shadow-2xl space-y-3">
               <div class="grid grid-cols-3 gap-2 sm:gap-4 divide-x divide-white/10 text-center">
-                <!-- IMDb Pillar (Official Database Metric) -->
-                <a href="https://www.imdb.com/find/?q=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center px-1 sm:px-3 group/imdb transition-transform hover:scale-105">
+                <!-- IMDb Pillar -->
+                <a href="https://www.imdb.com/find/?q=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center px-1 sm:px-3 group/imdb transition-transform hover:scale-105" title="View on IMDb">
                   <div class="px-2.5 py-1 rounded-lg bg-gradient-to-b from-[#f5c518] to-[#d4a017] text-black font-black text-xs tracking-tight font-mono shadow-[0_0_12px_rgba(245,197,24,0.35)] flex items-center gap-1 group-hover/imdb:brightness-110">
                     <i class="fa-solid fa-star text-[10px]"></i>
                     <span>IMDb</span>
@@ -16964,10 +16954,7 @@ Odd Taxi|2021|87
                     <span class="text-white font-extrabold text-xl sm:text-2xl leading-none drop-shadow">${item.rating}</span>
                     <span class="text-gray-400 text-xs font-semibold">/10</span>
                   </div>
-                  <div class="text-[10px] text-amber-400/90 font-extrabold uppercase tracking-wider mt-1.5 flex items-center gap-1">
-                    <span>#${item.rank} Ranked</span>
-                    <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-60"></i>
-                  </div>
+                  <div class="text-[10px] text-amber-400/90 font-extrabold uppercase tracking-wider mt-1.5">#${item.rank} Ranked</div>
                 </a>
 
                 <!-- Rotten Tomatoes Critics Meter Pillar -->
@@ -17021,13 +17008,12 @@ Odd Taxi|2021|87
               </div>
             </div>
 
-            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-white leading-tight">${item.cleanName || item.title}</h2>
-
             <!-- 15-Word Inciting Hook -->
             <div class="p-2.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-black/40 to-transparent border-l-4 border-brand-gold text-xs sm:text-sm text-gray-200 font-medium italic">
               "${hookText}"
             </div>
 
+            <!-- Plot Synopsis -->
             <p id="modalSynopsisText" class="text-xs sm:text-sm text-gray-300 leading-relaxed max-h-28 overflow-y-auto pr-1">${cachedSynopsis}</p>
 
             ${seasonsHtml}
@@ -17045,7 +17031,7 @@ Odd Taxi|2021|87
               <span class="text-[11px] text-gray-500 ml-1">${userRating ? `${userRating}/5 Stars` : '(Tap star to rate)'}</span>
             </div>
 
-            <!-- Action Row: Heart, Watched/Unwatched, Fav, Trailer + Verified Streaming Platform beside Cinejoy -->
+            <!-- Action Row -->
             <div class="pt-1 flex flex-wrap items-center gap-2.5">
               <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" title="${isW ? 'In Watchlist (Click to remove)' : 'Add to Watchlist'}" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isW ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40' : 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/15'}">
                 <i class="fa-solid fa-heart text-base ${isW ? 'text-white' : 'text-gray-300'}"></i>
@@ -17061,7 +17047,7 @@ Odd Taxi|2021|87
               </a>
 
               ${indiaPlatform ? `
-              <!-- Single Verified Indian Streaming Platform Button (JioHotstar, Netflix, or Prime Video) -->
+              <!-- Single Verified Indian Streaming Platform Button -->
               <a href="${platSearchUrl}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl ${platClass} border font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all">
                 <i class="${platIcon}"></i> <span>${platLabel}</span>
               </a>` : ''}
@@ -17076,7 +17062,6 @@ Odd Taxi|2021|87
                 <i class="fa-solid fa-ticket-simple"></i>
                 <span>${isMintedInTop3 ? 'In Top 3 Tickets (Remove)' : 'Mint Golden Ticket'}</span>
               </button>` : ''}
-            </div>
             </div>
 
             <!-- More in Genre -->
