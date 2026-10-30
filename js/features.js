@@ -322,7 +322,7 @@
 })();
 
 // ==========================================
-// FEATURES 5 & 6: OPPOSITE DAY · SPOILER-PROOF CAPSULE
+// FEATURE 5: OPPOSITE DAY
 // ==========================================
 (function(){
   const $=id=>document.getElementById(id);
@@ -395,78 +395,7 @@
   };
   // constellation: flip suggested branches by re-opening it with banner visible
   window.oppOn=()=>on; window.oppBlend=()=>blend; window.oppGenre=g=>on&&blend>=.5?(OPPG[g]||g):g;
-  // ---------- SPOILER-PROOF CAPSULE ----------
-  let caps=jget('cs_capsules',{});
-  const stars=n=>'★'.repeat(n)+'☆'.repeat(5-n);
-  function saveCaps(){jset('cs_capsules',caps);capRender();}
-  const _od=window.openDetailModal;
-  window.openDetailModal=async function(title){
-    await _od.apply(this,arguments);
-    const it=db(title);if(!it)return;
-    const host=$('detailModalContent');
-    if(!host)return;
-    host.querySelectorAll('#capBox').forEach(el=>el.remove());
-    const c=caps[title],box=document.createElement('div');
-    box.className='mx-6 mb-6 p-4 rounded-2xl border border-red-400/30 bg-red-500/5 space-y-3';box.id='capBox';
-    if(c&&!c.opened)box.innerHTML=`<div class="flex items-center justify-between gap-3"><div class="flex items-center gap-3"><div class="wax" style="width:40px;height:40px;font-size:16px"><i class="fa-solid fa-lock"></i></div><div class="text-sm text-gray-300"><b class="text-white">Capsule sealed.</b> It opens when you mark this watched.</div></div><button id="capDel" class="text-xs text-gray-400 hover:text-rose-400 px-2 py-1 rounded border border-white/10">Delete</button></div>`;
-    else if(c&&c.opened)box.innerHTML=`<div class="flex items-center justify-between gap-3"><div class="text-sm text-gray-300"><b class="text-white">Capsule opened:</b> you predicted ${stars(c.stars)}, real ${stars(c.real)} · vibe <b>${esc(c.vibe)}</b> → <b>${esc(c.realVibe||'—')}</b>.</div><button id="capDel" class="text-xs text-gray-400 hover:text-rose-400 px-2 py-1 rounded border border-white/10">Reset</button></div>`;
-    else if(!watchedTitles.includes(title))box.innerHTML=`<div class="text-[11px] font-extrabold uppercase tracking-widest text-red-300"><i class="fa-solid fa-hourglass-half mr-1"></i>Spoiler-proof capsule</div>
-      <input id="capGuess" maxlength="120" placeholder="Guess the ending…" class="w-full px-3 py-2 rounded-lg bg-black/50 border border-white/15 text-sm text-white">
-      <div class="flex items-center gap-3 flex-wrap"><span id="capStars" class="text-xl text-brand-gold cursor-pointer select-none" data-n="3">★★★☆☆</span><input id="capVibe" maxlength="14" placeholder="One-word vibe" class="px-3 py-2 rounded-lg bg-black/50 border border-white/15 text-sm text-white w-36"><button id="capSeal" class="px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-bold">Seal prediction</button></div>`;
-    else return;
-    host.appendChild(box);
-    const delBtn=box.querySelector('#capDel');
-    if(delBtn)delBtn.onclick=()=>{delete caps[title];saveCaps();openDetailModal(title);};
-    const st=$('capStars');if(st){st.onclick=e=>{const r=st.getBoundingClientRect(),n=Math.max(1,Math.min(5,Math.ceil((e.clientX-r.left)/r.width*5)));st.dataset.n=n;st.textContent=stars(n);};
-      $('capSeal').onclick=()=>{const g=$('capGuess').value.trim(),v=$('capVibe').value.trim();if(!g||!v){showToast('Add a guess and a one-word vibe','fa-pen','text-gray-300');return;}
-        caps[title]={guess:g,stars:+st.dataset.n,vibe:v,genre:it.genre,at:Date.now(),opened:false};jset('cs_capsules',caps);
-        openDetailModal(title);capRender();};}
-  };
-  const _tw=window.toggleWatched;
-  window.toggleWatched=function(title){
-    const was=watchedTitles.includes(title);_tw.apply(this,arguments);
-    if(!was&&caps[title]&&!caps[title].opened)setTimeout(()=>capOpen(title),250);
-  };
-  function capOpen(title){
-    const c=caps[title],it=db(title);if(!c||!it)return;
-    const ov=document.createElement('div');ov.className='fixed inset-0 z-[120] bg-black/80 flex items-center justify-center p-4';
-    ov.innerHTML=`<div class="glass-card crack rounded-3xl border border-red-400/40 p-6 max-w-md w-full space-y-4 relative"><button id="rlCancel" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 flex items-center justify-center" title="Keep sealed for later"><i class="fa-solid fa-xmark"></i></button><div class="flex items-center gap-3"><div class="wax"><i class="fa-solid fa-lock-open"></i></div><div><div class="text-[11px] font-extrabold uppercase tracking-widest text-red-300">Capsule cracked open</div><div class="text-lg font-display font-bold text-white">${esc(it.cleanName||it.title)}</div></div></div>
-      <div class="text-sm text-gray-300 space-y-1"><div>You guessed: <i class="text-white">"${esc(c.guess)}"</i></div><div>Predicted ${stars(c.stars)} · vibe <b class="text-brand-gold">${esc(c.vibe)}</b></div></div>
-      <div class="text-sm text-gray-300">Now your real reaction:</div>
-      <div class="flex items-center gap-3 flex-wrap"><span id="rlStars" class="text-2xl text-brand-gold cursor-pointer select-none" data-n="${myRatings[title]||3}">${stars(myRatings[title]||3)}</span><input id="rlVibe" maxlength="14" placeholder="Real vibe" class="px-3 py-2 rounded-lg bg-black/50 border border-white/15 text-sm text-white w-32"></div>
-      <div id="rlOut"></div><div class="flex gap-2"><button id="rlGo" class="flex-1 py-2.5 rounded-xl bg-red-600 text-white text-sm font-bold">Reveal</button><button id="rlLater" class="px-4 py-2.5 rounded-xl border border-white/15 text-gray-300 text-sm font-semibold">Later</button></div></div>`;
-    document.body.appendChild(ov);
-    ov.querySelector('#rlCancel').onclick=()=>ov.remove();
-    ov.querySelector('#rlLater').onclick=()=>ov.remove();
-    const st=ov.querySelector('#rlStars');
-    st.onclick=e=>{const r=st.getBoundingClientRect(),n=Math.max(1,Math.min(5,Math.ceil((e.clientX-r.left)/r.width*5)));st.dataset.n=n;st.textContent=stars(n);};
-    ov.querySelector('#rlGo').onclick=function(){
-      if(c.opened){ov.remove();return;}
-      const real=+st.dataset.n,v=ov.querySelector('#rlVibe').value.trim()||'—';
-      Object.assign(c,{opened:true,real,realVibe:v});myRatings[title]=real;updateAllCountersAndViews();saveCaps();
-      const d=c.stars-real;ov.querySelector('#rlOut').innerHTML=`<div class="p-3 rounded-xl bg-black/40 text-sm text-gray-200">${d===0?'Spot on, you read yourself perfectly.':d>0?`You overrated it by ${d} ★.`:`You underrated it by ${-d} ★.`} Vibe: <b>${esc(c.vibe)}</b> → <b>${esc(v)}</b>. Oracle score now <b class="text-brand-gold">${oracle().score}%</b>.</div>`;
-      this.textContent='Close';
-      const lBtn=ov.querySelector('#rlLater');if(lBtn)lBtn.remove();
-    };
-  }
-  function oracle(){
-    const o=Object.entries(caps).filter(([,c])=>c.opened);if(!o.length)return{score:null,n:0,pat:[]};
-    const err=o.reduce((a,[,c])=>a+Math.abs(c.stars-c.real),0)/o.length,g={};
-    o.forEach(([,c])=>{(g[c.genre]=g[c.genre]||[]).push(c.stars-c.real);});
-    const pat=Object.entries(g).map(([k,v])=>[k,v.reduce((a,b)=>a+b,0)/v.length]).filter(x=>Math.abs(x[1])>=.5).map(([k,d])=>`You ${d>0?'overrate':'underrate'} ${k.toLowerCase()} by ${Math.abs(d).toFixed(1)} stars`);
-    return{score:Math.round(100-err*25),n:o.length,pat};
-  }
-  const shelf=document.createElement('div');shelf.className='glass-card rounded-3xl p-6 border border-white/10 space-y-3';shelf.id='capShelf';
-  $('hubShelves').parentNode.insertBefore(shelf,$('hubShelves').nextSibling);
-  const orc=document.createElement('div');orc.className='glass-card rounded-3xl p-5 border border-red-400/30 space-y-2';orc.id='oracleBox';
-  $('tab-web').insertBefore(orc,$('tab-web').firstChild);
-  function capRender(){
-    const un=Object.entries(caps).filter(([,c])=>!c.opened);
-    shelf.innerHTML=`<div class="text-[11px] font-bold uppercase tracking-widest text-red-300">Capsule shelf</div>`+(un.length?`<div class="flex flex-wrap gap-3">${un.map(([t])=>`<button onclick="openDetailModal('${t.replace(/'/g,"\\'")}')" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-400/30 text-sm text-white"><span class="wax" style="width:26px;height:26px;font-size:11px;animation:none"><i class="fa-solid fa-lock"></i></span>${esc(db(t)?.cleanName||t)}</button>`).join('')}</div>`:'<div class="text-xs text-gray-500">No sealed capsules. Open any title and seal a prediction before you watch.</div>');
-    const o=oracle();
-    orc.innerHTML=`<div class="text-[11px] font-extrabold uppercase tracking-widest text-red-300">Oracle · how well you predict yourself</div>`+(o.n?`<div class="flex items-end gap-3"><span class="text-4xl font-display font-extrabold text-white">${o.score}%</span><span class="text-xs text-gray-400 pb-1">from ${o.n} opened capsule${o.n>1?'s':''}</span></div>${o.pat.map(p=>`<div class="text-sm text-gray-300">• ${esc(p)}</div>`).join('')||'<div class="text-xs text-gray-500">No strong bias yet.</div>'}`:'<div class="text-xs text-gray-500">Seal and open a capsule to start your Oracle score.</div>');
-  }
-  capRender();oppRender();if(on)discoverFlip();
+  oppRender();if(on)discoverFlip();
 })();
 
 (function(){const l=document.getElementById('compatLab'),p=document.getElementById('tab-compat');if(l&&p)p.appendChild(l);})();

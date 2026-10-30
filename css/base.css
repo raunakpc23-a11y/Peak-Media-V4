@@ -212,27 +212,7 @@
       0% { transform: scaleY(0.3); opacity: 0.5; }
       100% { transform: scaleY(1.15); opacity: 1; }
     }
-    .cinema-sheet {
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform;
-    }
-    .wax-seal {
-      background: radial-gradient(circle at 35% 35%, #f59e0b 0%, #b45309 60%, #78350f 100%);
-      box-shadow: 0 4px 15px rgba(180, 83, 9, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
-      position: relative;
-    }
-    .wax-seal::after {
-      content: "";
-      position: absolute;
-      inset: 3px;
-      border: 1.5px dashed rgba(255, 255, 255, 0.4);
-      border-radius: 9999px;
-    }
-    .wax-seal-cracked {
-      background: radial-gradient(circle at 40% 40%, #1e293b 0%, #0f172a 100%);
-      border: 1.5px dashed rgba(245, 197, 24, 0.5);
-    }
     @media (prefers-reduced-motion: reduce) {
-      .dynamic-island, .cinema-sheet, .soundwave-bar { animation: none !important; transition: none !important; }
+      .dynamic-island, .soundwave-bar { animation: none !important; transition: none !important; }
     }
     @media (prefers-reduced-motion: reduce) { .hub-card.land, .duel-card.l, .duel-card.r, .crown-drop { animation-duration: .01s; } }

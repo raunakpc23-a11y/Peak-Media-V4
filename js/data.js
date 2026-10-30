@@ -16655,7 +16655,7 @@ Odd Taxi|2021|87
       a.download = `cinesphere-backup-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      showToast("Exported complete cinema backup (Watchlist, Watched, Favourites, Capsules & Universes)!", "fa-download", "text-brand-gold");
+      showToast("Exported complete cinema backup (Watchlist, Watched, Favourites & Universes)!", "fa-download", "text-brand-gold");
     }
 
     function importUserData(e) {
@@ -16952,91 +16952,6 @@ Odd Taxi|2021|87
 
       const cinejoyStreamUrl = (window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? window.getCinejoyUrl(item.title, item.type) : null;
 
-      const allPredictions = getLocal('cs_predictions', {});
-      const prediction = allPredictions[item.title];
-      const allReflections = getLocal('cs_reflections', {});
-      const personalReflection = allReflections[item.title] || '';
-      const actualScore = userRating ? parseFloat(userRating).toFixed(1) : (parseFloat(item.rating) / 2).toFixed(1);
-      const predictedScore = prediction ? parseFloat(prediction.rating) : 0;
-      const scoreDelta = prediction ? (parseFloat(actualScore) - predictedScore).toFixed(1) : null;
-
-      // Tactile Wax Seal & Spoiler Capsule Markup
-      let spoilerCapsuleHtml = '';
-      if (!isWatched) {
-        spoilerCapsuleHtml = `
-          <div class="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-amber-500/25 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span class="wax-seal w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-amber-950 font-black shadow"><i class="fa-solid fa-stamp"></i></span>
-                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-300">Curator's Pre-Watch Capsule</span>
-              </div>
-              <span class="text-[10px] font-mono text-gray-400 font-semibold">${prediction ? 'SEALED & HASHED' : 'UNSEALED'}</span>
-            </div>
-            ${prediction ? `
-              <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1">
-                <div class="flex items-center justify-between text-xs">
-                  <span class="text-gray-300 font-medium">Locked Expectation:</span>
-                  <span class="text-brand-gold font-bold">★ ${prediction.rating} Expected</span>
-                </div>
-                <p class="text-xs text-white italic font-serif">"${prediction.guess}"</p>
-                <div class="text-[10px] text-gray-500 font-mono mt-1">Sealed on ${prediction.sealedAt} · Will crack upon watch</div>
-              </div>
-            ` : `
-              <div class="space-y-2 pt-1">
-                <div class="flex items-center justify-between text-xs text-gray-300">
-                  <span class="text-[11px] font-semibold">Expected Star Rating:</span>
-                  <select id="preWatchExpectedRate" class="bg-black/60 border border-white/15 rounded-lg px-2 py-0.5 text-xs text-brand-gold font-bold focus:outline-none">
-                    <option value="5.0">★ 5.0 (Masterpiece)</option>
-                    <option value="4.5" selected>★ 4.5 (Must Watch)</option>
-                    <option value="4.0">★ 4.0 (Great)</option>
-                    <option value="3.5">★ 3.5 (Decent)</option>
-                    <option value="3.0">★ 3.0 (Average)</option>
-                  </select>
-                </div>
-                <input id="preWatchGuessInput" type="text" placeholder="Your ending guess, vibe prediction, or hype level..." class="w-full px-3 py-1.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-                <button type="button" onclick="sealPreWatchPrediction('${escTitle}')" class="w-full py-2 rounded-xl wax-seal text-amber-950 font-extrabold text-xs flex items-center justify-center gap-1.5 shadow hover:opacity-95 active:scale-95 transition-all">
-                  <i class="fa-solid fa-stamp"></i> <span>Stamp &amp; Seal Prediction</span>
-                </button>
-              </div>
-            `}
-          </div>`;
-      } else {
-        spoilerCapsuleHtml = `
-          <div class="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span class="wax-seal-cracked w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-brand-gold font-black"><i class="fa-solid fa-bolt"></i></span>
-                <span class="text-xs font-extrabold uppercase tracking-wider text-white">Post-Watch Dossier &amp; Review</span>
-              </div>
-              ${prediction ? `<span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">SEAL CRACKED</span>` : ''}
-            </div>
-            ${prediction ? `
-              <div class="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-center items-center">
-                <div>
-                  <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Predicted</div>
-                  <div class="text-sm font-bold text-gray-300">★ ${prediction.rating}</div>
-                </div>
-                <div class="border-x border-white/10">
-                  <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Actual</div>
-                  <div class="text-sm font-bold text-brand-gold">★ ${actualScore}</div>
-                </div>
-                <div>
-                  <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Delta</div>
-                  <div class="text-xs font-bold ${parseFloat(scoreDelta) >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${parseFloat(scoreDelta) >= 0 ? '+' : ''}${scoreDelta} ${parseFloat(scoreDelta) > 0 ? '(Exceeded)' : parseFloat(scoreDelta) === 0 ? '(Spot On)' : ''}</div>
-                </div>
-              </div>
-              <p class="text-xs text-gray-300 italic font-serif px-1">"${prediction.guess}"</p>
-            ` : ''}
-            <div class="space-y-1.5 pt-1">
-              <div class="flex items-center justify-between text-xs text-gray-400 font-semibold">
-                <span>Personal Reflection &amp; Notes:</span>
-                <button type="button" onclick="savePersonalReflection('${escTitle}')" class="text-[11px] text-brand-gold hover:underline font-bold">Save Note</button>
-              </div>
-              <textarea id="personalReflectionInput" rows="2" placeholder="Record your personal memories, standout scenes, or verdict..." class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold leading-relaxed font-sans">${personalReflection}</textarea>
-            </div>
-          </div>`;
-      }
-
       content.innerHTML = `
         <div class="flex flex-col sm:flex-row gap-5 sm:gap-6">
           <!-- Poster Column (Locked 2:3 Aspect, Elegant Border & Soft Shadow) -->
@@ -17109,9 +17024,6 @@ Odd Taxi|2021|87
 
             ${seasonsHtml}
 
-            <!-- Tactile Spoiler Capsule & Prediction Dossier -->
-            ${spoilerCapsuleHtml}
-
             <!-- Star Rating Tracker -->
             <div class="flex items-center gap-2 pt-1 border-t border-white/10">
               <span class="text-xs font-semibold text-gray-400">Your Rating:</span>
@@ -17174,10 +17086,6 @@ Odd Taxi|2021|87
 
       modal.classList.remove('hidden');
       modal.classList.add('flex');
-      setTimeout(() => {
-        const sheet = document.getElementById('cinemaSheet');
-        if (sheet) sheet.classList.remove('translate-x-full');
-      }, 15);
 
       // Fetch poster & synopsis asynchronously with priority if not cached
       if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
@@ -17197,42 +17105,12 @@ Odd Taxi|2021|87
     }
 
     function closeDetailModal() {
-      const sheet = document.getElementById('cinemaSheet');
-      if (sheet) sheet.classList.add('translate-x-full');
-      setTimeout(() => {
-        const modal = document.getElementById('detailModal');
-        if (modal) {
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
-        }
-      }, 280);
+      const modal = document.getElementById('detailModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
     }
-
-    window.sealPreWatchPrediction = function(title) {
-      const rateEl = document.getElementById('preWatchExpectedRate');
-      const guessEl = document.getElementById('preWatchGuessInput');
-      const rating = rateEl ? rateEl.value : '4.5';
-      const guess = (guessEl && guessEl.value.trim()) ? guessEl.value.trim() : 'Highly anticipated viewing';
-      const allPredictions = getLocal('cs_predictions', {});
-      allPredictions[title] = {
-        rating,
-        guess,
-        sealedAt: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
-      };
-      saveLocal('cs_predictions', allPredictions);
-      showToast(`Stamped and sealed prediction for "${title}"!`, 'fa-stamp', 'text-brand-gold');
-      openDetailModal(title);
-    };
-
-    window.savePersonalReflection = function(title) {
-      const inp = document.getElementById('personalReflectionInput');
-      if (!inp) return;
-      const allReflections = getLocal('cs_reflections', {});
-      allReflections[title] = inp.value.trim();
-      saveLocal('cs_reflections', allReflections);
-      showToast(`Saved reflection for "${title}"`, 'fa-pen-nib', 'text-brand-gold');
-      openDetailModal(title);
-    };
 
     window.openDetailModal = openDetailModal;
     window.closeDetailModal = closeDetailModal;

@@ -111,7 +111,7 @@
           <i class="fa-solid fa-music text-xs"></i> <span>Music</span>
         </button>
         <button type="button" onclick="switchTab('decide')" id="nav-decide" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
-          <i class="fa-solid fa-gamepad text-xs"></i> <span>Play</span>
+          <span>Play</span>
         </button>
         <button type="button" onclick="switchTab('space')" id="nav-space" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
           <i class="fa-solid fa-bookmark text-xs"></i> <span>Library</span>
@@ -1690,19 +1690,13 @@
 
   </main>
 
-  <!-- ARCHIVAL CINEMA SHEET & TACTILE SPOILER DRAWER (Right Slide-Over) -->
-  <div id="detailModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm transition-opacity duration-300" onclick="if(event.target.id==='detailModal')closeDetailModal()">
-    <div id="cinemaSheet" class="fixed top-0 right-0 bottom-0 z-50 w-full sm:w-[580px] md:w-[620px] max-w-[100vw] bg-[#090d16] border-l border-white/15 shadow-[0_0_60px_rgba(0,0,0,0.95)] overflow-y-auto p-4 sm:p-7 space-y-4 cinema-sheet translate-x-full">
-      <div class="flex items-center justify-between border-b border-white/10 pb-3 sticky top-0 bg-[#090d16]/95 backdrop-blur-md z-20 -mx-4 -mt-4 p-4 sm:-mx-7 sm:-mt-7 sm:p-6 mb-2">
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-brand-gold shadow-[0_0_8px_rgba(245,197,24,0.8)]"></span>
-          <span class="text-xs font-mono font-bold tracking-widest uppercase text-brand-gold">CINEMA BLUEPRINT &amp; ARCHIVE</span>
-        </div>
-        <button onclick="closeDetailModal()" aria-label="Close cinema sheet" title="Close (Esc)" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center transition-transform hover:scale-110">
-          <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
-      </div>
-      <div id="detailModalContent"></div>
+  <!-- MODAL 1: MOVIE / SHOW DETAILS (Spacious High-Def ScoreCard & Cinema Poster) -->
+  <div id="detailModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='detailModal')closeDetailModal()">
+    <div class="glass-card w-full max-w-4xl rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto border border-white/20 shadow-2xl animate-fadeIn relative">
+      <button onclick="closeDetailModal()" aria-label="Close detail modal" title="Close" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center border border-white/15 transition-transform hover:scale-105">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div id="detailModalContent" class="p-5 sm:p-7 space-y-4"></div>
     </div>
   </div>
 
@@ -1906,7 +1900,7 @@
     </div>
   </div>
 
-  <!-- DYNAMIC ISLAND COMMAND DOCK (Unified Navigation & Embedded Audio Capsule) -->
+  <!-- DYNAMIC ISLAND COMMAND DOCK (Unified Navigation & Embedded Audio Streamer) -->
   <aside id="dynamicIslandDock" class="dynamic-island fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[96vw] bg-[#090d18]/90 backdrop-blur-2xl border border-white/15 rounded-full shadow-[0_12px_45px_rgba(0,0,0,0.75)] p-1.5 sm:p-2 flex items-center transition-all duration-300">
     <!-- RESTING BROWSING STATE (5 Core Spaces + Quick Vibe Search Shortcut) -->
     <div id="dockResting" class="flex items-center gap-1 sm:gap-1.5">
@@ -1919,8 +1913,8 @@
       <button type="button" onclick="switchTab('music')" id="dock-nav-music" data-mnav="music" class="dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 text-gray-300 hover:text-white hover:bg-white/10">
         <i class="fa-solid fa-music text-xs"></i> <span>Music</span>
       </button>
-      <button type="button" onclick="switchTab('decide')" id="dock-nav-decide" data-mnav="decide" class="dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 text-gray-300 hover:text-white hover:bg-white/10">
-        <i class="fa-solid fa-gamepad text-xs text-brand-gold"></i> <span>Play ✦</span>
+      <button type="button" onclick="switchTab('decide')" id="dock-nav-decide" data-mnav="decide" class="dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10">
+        <span>Play</span>
       </button>
       <button type="button" onclick="switchTab('space')" id="dock-nav-space" data-mnav="space" class="dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 text-gray-300 hover:text-white hover:bg-white/10">
         <i class="fa-solid fa-bookmark text-xs"></i> <span>Library</span>
@@ -2102,15 +2096,15 @@
   </div>
 
 
-  <script src="js/data.js?v=4.1"></script>
-  <script src="js/constellation.js?v=4.1"></script>
-  <script src="js/hub-duel.js?v=4.1"></script>
-  <script src="js/ui.js?v=4.1"></script>
-  <script src="js/features.js?v=4.1"></script>
-  <script src="js/marathon.js?v=4.1"></script>
-  <script src="js/universes.js?v=4.1"></script>
-  <script src="js/mood_dial.js?v=4.1"></script>
-  <script src="js/main.js?v=4.1"></script>
-  <script src="js/pwa.js?v=4.1"></script>
+  <script src="js/data.js?v=4.2"></script>
+  <script src="js/constellation.js?v=4.2"></script>
+  <script src="js/hub-duel.js?v=4.2"></script>
+  <script src="js/ui.js?v=4.2"></script>
+  <script src="js/features.js?v=4.2"></script>
+  <script src="js/marathon.js?v=4.2"></script>
+  <script src="js/universes.js?v=4.2"></script>
+  <script src="js/mood_dial.js?v=4.2"></script>
+  <script src="js/main.js?v=4.2"></script>
+  <script src="js/pwa.js?v=4.2"></script>
 </body>
 </html>
