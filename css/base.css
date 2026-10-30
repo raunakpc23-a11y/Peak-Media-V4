@@ -299,22 +299,22 @@
     }
     .card-hover {
       position: relative;
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, opacity 0.25s ease;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, opacity 0.25s ease, filter 0.25s ease;
       will-change: transform, box-shadow;
     }
     .card-hover:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 20px 42px -10px rgba(0, 0, 0, 0.95), 0 0 22px -4px rgb(var(--gold) / 0.35);
-      border-color: rgba(255, 255, 255, 0.32);
-      z-index: 10;
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.95), 0 0 25px -4px rgb(var(--gold) / 0.4);
+      border-color: rgba(245, 197, 24, 0.6);
+      z-index: 25;
     }
-    /* Dim surrounding stars in the constellation when focusing */
+    /* Dim surrounding stars in the constellation when focusing (Single Light Source Rule) */
     .constellation-zone:hover .card-hover:not(:hover) {
-      opacity: 0.72;
-      filter: brightness(0.88);
+      opacity: 0.62;
+      filter: brightness(0.8) saturate(0.82);
     }
     .poster-fade {
-      background: linear-gradient(to top, rgba(3, 5, 10, 0.98) 0%, rgba(3, 5, 10, 0.72) 48%, transparent 100%);
+      background: linear-gradient(to top, rgba(6, 9, 17, 0.98) 0%, rgba(6, 9, 17, 0.72) 48%, transparent 100%);
     }
 
     /* Constellation Zone Etched Astronomical Headings */
@@ -762,11 +762,107 @@
     .hscroll > *:last-child {
       margin-right: 2rem;
     }
-    .card-hover {
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease;
+    /* ==========================================================================
+       OBSERVATORY THEME EXTENSIONS
+       ========================================================================== */
+
+    /* The Listening Dish (Music) */
+    .radio-dish-halo {
+      position: relative;
+      overflow: hidden;
     }
-    .card-hover:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.8), 0 0 18px rgba(245, 197, 24, 0.15);
-      border-color: rgba(245, 197, 24, 0.35);
+    .radio-dish-halo::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      border-radius: 50%;
+      border: 1px dashed rgba(192, 132, 252, 0.25);
+      pointer-events: none;
+    }
+
+    /* Radio Frequency Tuner Scale */
+    .radio-tuner-track {
+      position: relative;
+      background: linear-gradient(90deg, rgba(20, 10, 35, 0.9), rgba(10, 8, 25, 0.95));
+      border: 1px solid rgba(192, 132, 252, 0.3);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+    }
+    .tuner-station-mark {
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-family: monospace;
+      font-weight: 700;
+      color: #c084fc;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(192, 132, 252, 0.2);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .tuner-station-mark:hover, .tuner-station-mark.active {
+      background: rgba(192, 132, 252, 0.2);
+      border-color: #c084fc;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(192, 132, 252, 0.4);
+    }
+
+    /* The Instrument Room (Play) */
+    .instrument-mount {
+      background: radial-gradient(circle at 50% 0%, rgba(226, 168, 75, 0.08) 0%, rgba(13, 17, 28, 0.95) 75%);
+      border: 1px solid rgba(226, 168, 75, 0.28);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 16px 40px -10px rgba(0,0,0,0.85), inset 0 0 0 1px rgba(255,255,255,0.04);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .instrument-mount:hover {
+      border-color: rgba(245, 197, 24, 0.55);
+      transform: translateY(-4px);
+      box-shadow: 0 24px 50px -10px rgba(0,0,0,0.95), 0 0 25px rgba(245, 197, 24, 0.15);
+    }
+
+    /* The Chart Table (Library) */
+    .chart-table-surface {
+      background: radial-gradient(ellipse at 50% 20%, rgba(35, 25, 15, 0.6) 0%, #080b12 85%);
+      border: 1px solid rgba(226, 168, 75, 0.3);
+      border-radius: 24px;
+    }
+
+    /* The Keeper's Log (Profile) */
+    .keeper-log-leather {
+      background: linear-gradient(135deg, rgba(28, 18, 12, 0.8) 0%, rgba(12, 10, 8, 0.95) 100%);
+      border: 1px solid rgba(212, 163, 89, 0.35);
+      border-radius: 28px;
+      box-shadow: 0 20px 50px -10px rgba(0,0,0,0.9);
+    }
+
+    /* Telemetry Fluid Tubes (Stats) */
+    .telemetry-tube {
+      background: #05070d;
+      border: 1px solid rgba(226, 168, 75, 0.3);
+      border-radius: 16px;
+      padding: 12px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .telemetry-tube::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #f5c518, #e2a84b);
+      box-shadow: 0 0 8px #f5c518;
     }

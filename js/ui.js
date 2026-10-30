@@ -190,10 +190,10 @@
   }
 
   // ---------- particles ----------
-  const cv = $('fxCanvas'), cx = cv.getContext('2d'); let W = 0, H = 0, parts = [], mode = 'none', raf = 0, tt = 0;
+  const cv = $('fxCanvas'), cx = cv.getContext('2d'); let W = 0, H = 0, parts = [], mode = 'stars', raf = 0, tt = 0;
   const rs = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; }; addEventListener('resize', rs); rs();
   function seed() {
-    const n = reduce ? 0 : (W < 640 ? 35 : 80); parts = [];
+    const n = reduce ? 0 : (W < 640 ? 45 : 100); parts = [];
     for (let i = 0; i < n; i++) {
       const p = { x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.8 + .6, s: Math.random() + .3, ph: Math.random() * 6.28 };
       parts.push(p);
@@ -238,6 +238,8 @@
   }
   const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
   document.addEventListener('visibilitychange', kick);
+  seed();
+  kick();
 
   function apply(id) {
     current = id; const t = THEMES[id];

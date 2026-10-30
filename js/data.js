@@ -15914,14 +15914,16 @@ Odd Taxi|2021|87
       const attrTitle = item.title.replace(/"/g, "&quot;");
       const fallbackSvg = generateStylizedPosterDataURI(item);
       const cachedPoster = posterCache[item.type + ':' + item.title] || fallbackSvg;
-      const platStyle = platformColors[item.platformName] || "bg-white/10 text-gray-300 border-white/20";
-      const widthClass = isCompactScroll ? "w-[114px] sm:w-44 shrink-0 snap-start" : "w-full";
+      const widthClass = isCompactScroll ? "w-[124px] sm:w-48 shrink-0 snap-start" : "w-full";
+      const isMovie = item.type === 'movie';
+      const starPipClass = isMovie ? 'bg-amber-400 shadow-[0_0_8px_#f5c518]' : 'bg-cyan-400 shadow-[0_0_8px_#38bdf8]';
+      const borderClass = isMovie ? 'border-amber-500/25 hover:border-amber-400/80 hover:shadow-[0_18px_45px_-10px_rgba(0,0,0,0.95),0_0_24px_rgba(245,197,24,0.3)]' : 'border-cyan-500/25 hover:border-cyan-400/80 hover:shadow-[0_18px_45px_-10px_rgba(0,0,0,0.95),0_0_24px_rgba(56,189,248,0.3)]';
 
-      // Decluttered Card: Resting state shows ONLY Poster, Title, Year, and Rating.
-      // Quick actions & platform metadata reveal smoothly on hover/focus.
+      // Celestial Starlight Card: Resting state shows Poster, Title, Year, and Magnitude Rating.
+      // Quick actions & starlight platform metadata reveal smoothly on hover.
       return `
-      <div onclick="openDetailModal('${escTitle}')" class="group relative rounded-2xl overflow-hidden bg-brand-card border border-white/10 card-hover cursor-pointer flex flex-col ${widthClass}">
-        <div class="relative poster-aspect w-full overflow-hidden bg-[#0c0f16]">
+      <div onclick="openDetailModal('${escTitle}')" class="group relative rounded-2xl overflow-hidden bg-[#0a0d16] border ${borderClass} card-hover cursor-pointer flex flex-col ${widthClass}" data-type="${item.type}">
+        <div class="relative poster-aspect w-full overflow-hidden bg-[#060911]">
           <img
             src="${cachedPoster}"
             data-title="${attrTitle}"
@@ -15930,16 +15932,22 @@ Odd Taxi|2021|87
             class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
-          <div class="absolute inset-0 poster-fade"></div>
+          <div class="absolute inset-0 poster-fade pointer-events-none"></div>
 
-          <!-- Hover-Only Action Controls & Platform Badge -->
+          <!-- Starlight Type Pip & Magnitude -->
+          <div class="absolute top-2 left-2 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/70 border border-white/10 backdrop-blur-md">
+            <span class="w-1.5 h-1.5 rounded-full ${starPipClass}"></span>
+            <span class="text-[9px] font-mono font-bold tracking-wider uppercase text-gray-300">${isMovie ? 'Film' : 'Series'}</span>
+          </div>
+
+          <!-- Hover-Only Action Controls -->
           <div class="absolute top-2 right-2 flex flex-col gap-1.5 z-10 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
             <button
               type="button"
               data-wish-btn="${attrTitle}"
               onclick="toggleWishlist('${escTitle}', event)"
               title="Toggle Watchlist"
-              class="w-9 h-9 rounded-full flex items-center justify-center transition-all ${isW ? 'bg-rose-500 text-white shadow-lg' : 'bg-black/75 text-gray-200 hover:bg-black hover:text-white'}">
+              class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all ${isW ? 'bg-rose-500 text-white shadow-lg' : 'bg-black/75 text-gray-200 hover:bg-black hover:text-white border border-white/10'}">
               <i class="fa-solid fa-heart text-xs"></i>
             </button>
             <button
@@ -15947,7 +15955,7 @@ Odd Taxi|2021|87
               data-watched-btn="${attrTitle}"
               onclick="toggleWatched('${escTitle}', event)"
               title="Mark as Watched"
-              class="w-9 h-9 rounded-full flex items-center justify-center transition-all ${isWatched ? 'bg-emerald-500 text-black shadow-lg' : 'bg-black/75 text-gray-200 hover:bg-black hover:text-white'}">
+              class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all ${isWatched ? 'bg-emerald-500 text-black shadow-lg' : 'bg-black/75 text-gray-200 hover:bg-black hover:text-white border border-white/10'}">
               <i class="fa-solid fa-check text-xs"></i>
             </button>
             <button
@@ -15955,23 +15963,24 @@ Odd Taxi|2021|87
               data-fav-btn="${attrTitle}"
               onclick="toggleFav('${escTitle}', event)"
               title="Toggle Favourite"
-              class="w-9 h-9 rounded-full flex items-center justify-center transition-all ${isFav ? 'bg-brand-gold text-black shadow-lg' : 'bg-black/75 text-gray-200 hover:bg-black hover:text-white'}">
+              class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all ${isFav ? 'bg-brand-gold text-black shadow-lg' : 'bg-black/75 text-gray-200 hover:bg-black hover:text-white border border-white/10'}">
               <i class="fa-solid fa-star text-xs"></i>
             </button>
           </div>
 
-          <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <span class="text-[9px] font-bold px-2 py-0.5 rounded-md border backdrop-blur-md ${platStyle}">${item.platformName}</span>
-            <span class="text-[9px] font-bold px-2 py-0.5 rounded-md bg-black/80 text-gray-300">${item.genre}</span>
+          <!-- Bottom Floating Badges on Hover -->
+          <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+            <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-black/80 text-brand-gold border border-brand-gold/30">${item.platformName}</span>
+            <span class="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded bg-black/80 text-gray-300 border border-white/10">${item.genre}</span>
           </div>
         </div>
 
-        <!-- Clean Resting Metadata: Title + Year & Rating Only -->
-        <div class="p-3 flex-1 flex flex-col justify-between gap-1 border-t border-white/5">
+        <!-- Resting Starlight Metadata: Title + Year + Rating Magnitude -->
+        <div class="p-2.5 sm:p-3 flex-1 flex flex-col justify-between gap-1 border-t border-white/5 bg-gradient-to-b from-[#0a0d16] to-[#06080e]">
           <h3 class="font-bold text-xs sm:text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-1" title="${attrTitle}">${item.cleanName || item.title}</h3>
-          <div class="flex items-center justify-between text-xs text-gray-400">
+          <div class="flex items-center justify-between text-xs text-gray-400 font-mono">
             <span>${item.year}</span>
-            <span class="text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
+            <span class="text-brand-gold font-bold flex items-center gap-1 font-mono text-[11px]"><i class="fa-solid fa-star text-[9px]"></i> ${item.rating} MAG</span>
           </div>
         </div>
       </div>`;
