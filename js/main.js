@@ -971,25 +971,6 @@
       }
     }
 
-    window.dockNavModeForced = false;
-    window.toggleDockNavMode = function() {
-      window.dockNavModeForced = !window.dockNavModeForced;
-      const dPlay = $('dockPlayback');
-      const dRest = $('dockResting');
-      if (window.dockNavModeForced) {
-        if (dPlay) { dPlay.classList.add('hidden'); dPlay.classList.remove('flex'); }
-        if (dRest) dRest.classList.remove('hidden');
-        showToast('Dock: Navigation Mode', 'fa-compass', 'text-brand-gold');
-      } else {
-        if (isPlayingMusic && dPlay) {
-          dPlay.classList.remove('hidden');
-          dPlay.classList.add('flex');
-          if (dRest) dRest.classList.add('hidden');
-          showToast('Dock: Playback Mode', 'fa-music', 'text-brand-gold');
-        }
-      }
-    };
-
     function updateMiniPlayerUI() {
       const s = musicQueue[musicQueueIdx];
       if (!s) return;
@@ -1007,20 +988,6 @@
       if ($('mpYtLink')) $('mpYtLink').href = `https://www.youtube.com/watch?v=${s.id}`;
       if ($('ytDockExternalLink')) $('ytDockExternalLink').href = `https://www.youtube.com/watch?v=${s.id}`;
       if ($('musicQueueCountLbl')) $('musicQueueCountLbl').textContent = musicQueue.length;
-
-      // Update Dynamic Island Playback State
-      const dPlay = $('dockPlayback');
-      const dRest = $('dockResting');
-      if (dPlay && dRest && !window.dockNavModeForced) {
-        dPlay.classList.remove('hidden');
-        dPlay.classList.add('flex');
-        dRest.classList.add('hidden');
-      }
-      if ($('dockThumb')) $('dockThumb').src = thumbUrl;
-      if ($('dockTitle')) $('dockTitle').textContent = s.t;
-      if ($('dockArtist')) $('dockArtist').textContent = `${s.a} · ${s.m}`;
-      if ($('dockPlayBtn')) $('dockPlayBtn').innerHTML = `<i class="fa-solid ${isPlayingMusic ? 'fa-pause' : 'fa-play'}"></i>`;
-      if ($('dockSoundwave')) $('dockSoundwave').style.opacity = isPlayingMusic ? '1' : '0.25';
 
       renderMusicQueueList();
     }
@@ -1315,13 +1282,6 @@
       if ($('musicMiniPlayer')) $('musicMiniPlayer').classList.add('hidden');
       if ($('musicVideoDock')) $('musicVideoDock').classList.add('hidden');
       if ($('musicQueueDrawer')) $('musicQueueDrawer').classList.add('hidden');
-      const dPlay = $('dockPlayback');
-      const dRest = $('dockResting');
-      if (dPlay && dRest) {
-        dPlay.classList.add('hidden');
-        dPlay.classList.remove('flex');
-        dRest.classList.remove('hidden');
-      }
     };
 
     // Easy Queue Management: Move Up/Down, Remove, Shuffle
