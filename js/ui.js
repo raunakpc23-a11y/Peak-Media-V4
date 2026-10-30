@@ -116,6 +116,19 @@
     if (watchingShelf) watchingShelf.classList.toggle('hidden', view !== 'all' && view !== 'watched');
     if (customSection) customSection.classList.toggle('hidden', view !== 'all' && view !== 'custom');
   };
+
+  window.toggleHubOverflowMenu = function() {
+    const m = document.getElementById('hubOverflowMenu');
+    if (m) m.classList.toggle('hidden');
+  };
+  document.addEventListener('click', function(e) {
+    const m = document.getElementById('hubOverflowMenu');
+    const btn = document.getElementById('hubOverflowMenuBtn');
+    if (m && !m.classList.contains('hidden') && btn && !btn.contains(e.target) && !m.contains(e.target)) {
+      m.classList.add('hidden');
+    }
+  });
+
   switchTab('discover');
 
   // ---------- themes ----------

@@ -1964,8 +1964,14 @@
       if (!container) return;
       const userName = (typeof obProfile !== 'undefined' && obProfile.username) ? obProfile.username : 'Peak Cinephile';
       const minted = getLocal('cs_golden_tickets', []).slice(0, 3);
+      const PODIUM_TIERS = [
+        { rank: 1, medal: '🥇', label: '1st · Champion Pass' },
+        { rank: 2, medal: '🥈', label: '2nd · Vice Pass' },
+        { rank: 3, medal: '🥉', label: '3rd · Masterpiece Pass' }
+      ];
 
       const slotsHtml = [0, 1, 2].map(idx => {
+        const tier = PODIUM_TIERS[idx];
         const title = minted[idx];
         const it = title ? globalDatabase[title] : null;
 
@@ -1979,8 +1985,8 @@
             <div class="golden-ticket-vip p-5 sm:p-6 text-amber-950 flex flex-col justify-between cursor-pointer group shadow-2xl relative select-none" onclick="openGoldenTicketExpandModal('${escT}')">
               <div class="flex items-center justify-between border-b-2 border-dashed border-amber-950/25 pb-2.5">
                 <div class="flex items-center gap-1.5 font-black text-[11px] tracking-widest uppercase font-mono">
-                  <i class="fa-solid fa-ticket-simple text-amber-900"></i>
-                  <span>TOP 3 GOLDEN TICKET · #${idx + 1}</span>
+                  <span class="text-sm">${tier.medal}</span>
+                  <span>${tier.label}</span>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-950/15 border border-amber-950/25 font-mono">${it.type}</span>
               </div>
@@ -2017,20 +2023,20 @@
         return `
           <div class="rounded-2xl border-2 border-dashed border-amber-400/35 bg-gradient-to-b from-amber-400/5 to-black/40 p-6 flex flex-col items-center justify-between text-center min-h-[380px] shadow-lg">
             <div class="w-full flex items-center justify-between border-b border-dashed border-amber-400/20 pb-2.5 text-[10px] font-black uppercase tracking-wider text-amber-400/70 font-mono">
-              <span>HALL OF FAME</span>
+              <span class="flex items-center gap-1"><span class="text-xs">${tier.medal}</span> ${tier.label}</span>
               <span>SLOT #${idx + 1}</span>
             </div>
             <div class="my-auto space-y-3 py-4 flex flex-col items-center">
               <div class="w-14 h-14 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 text-2xl shadow-inner">
                 <i class="fa-solid fa-ticket-simple"></i>
               </div>
-              <h4 class="text-sm sm:text-base font-extrabold text-white">Empty Golden Ticket #${idx + 1}</h4>
+              <h4 class="text-sm sm:text-base font-extrabold text-white">Empty ${tier.label}</h4>
               <p class="text-xs text-amber-100/60 max-w-[220px] leading-relaxed">
-                Reserved for one of your all-time Top 3 favorites. Open any watched movie and tap <strong>Mint Golden Ticket</strong>.
+                Reserved for your #${idx + 1} all-time favourite. Open any watched movie and tap <strong>Mint Ticket</strong>.
               </p>
             </div>
             <button type="button" onclick="openGoldenTicketPicker(${idx})" class="w-full py-2.5 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/35 text-amber-300 text-xs font-bold transition-all flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-plus text-[10px]"></i> <span>Select from Watched</span>
+              <i class="fa-solid fa-plus text-[10px]"></i> <span>Select #${idx + 1} Film</span>
             </button>
           </div>
         `;
@@ -2619,7 +2625,7 @@
         }
         showToast('Admin Console unlocked!', 'fa-shield-halved', 'text-cyan-400');
       } else {
-        showToast('Invalid Admin Passkey (Default: peak2026)', 'fa-lock', 'text-rose-400');
+        showToast('Invalid Admin Passkey', 'fa-lock', 'text-rose-400');
       }
     };
     window.lockAdminVault = function() {

@@ -16093,13 +16093,12 @@ Odd Taxi|2021|87
                 <span class="px-2 py-0.5 rounded bg-white/10 text-gray-200 text-[10px] font-semibold">${item.platformName}</span>
               </div>
               <h1 class="text-2xl sm:text-5xl font-display font-extrabold text-white tracking-tight leading-tight">${item.cleanName || item.title}</h1>
-              <p class="hidden sm:block text-gray-300 font-medium text-sm italic opacity-90">"${spot.tagline}"</p>
-              <p class="text-gray-300 text-xs sm:text-sm leading-relaxed max-w-2xl line-clamp-2 sm:line-clamp-3">${spot.blurb}</p>
+              <p class="text-brand-gold/90 font-medium text-xs sm:text-sm italic tracking-wide">"${spot.tagline}"</p>
               <div class="pt-1 sm:pt-2 flex items-center gap-2 sm:gap-2.5">
-                <button type="button" onclick="openDetailModal('${escTitle}')" class="flex-1 sm:flex-initial justify-center px-4 sm:px-5 py-2.5 rounded-xl bg-brand-gold text-black hover:opacity-95 font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
-                  <i class="fa-solid fa-play text-xs"></i> <span>Watch &amp; Details</span>
+                <button type="button" onclick="openDetailModal('${escTitle}')" class="flex-1 sm:flex-initial justify-center px-4 sm:px-6 py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-gold/20 transition-all active:scale-95">
+                  <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
                 </button>
-                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="px-3.5 sm:px-4 py-2.5 rounded-xl ${isW ? 'bg-rose-500 text-white border-rose-500' : 'bg-white/10 hover:bg-white/15 text-white border-white/15'} font-bold text-xs sm:text-sm flex items-center gap-1.5 border transition-all">
+                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="px-3.5 sm:px-4 py-2.5 rounded-xl ${isW ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'bg-white/10 hover:bg-white/15 text-white border-white/15 backdrop-blur-md'} font-bold text-xs sm:text-sm flex items-center gap-1.5 border transition-all active:scale-95">
                   <i class="fa-solid ${isW ? 'fa-check' : 'fa-plus'} text-xs"></i> <span>${isW ? 'Saved' : 'Watchlist'}</span>
                 </button>
                 <button type="button" onclick="toggleWatched('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="hidden sm:flex px-3.5 py-2.5 rounded-xl ${isSeen ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-white/[0.04] hover:bg-white/[0.1] text-gray-300 border-white/10'} font-medium text-xs sm:text-sm items-center gap-1.5 border transition-all">
