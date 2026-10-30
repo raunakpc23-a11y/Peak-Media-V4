@@ -43,6 +43,9 @@
   };
   const ON = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative bg-brand-gold text-black shadow-md';
   const OFF = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative text-gray-300 hover:text-white hover:bg-white/5';
+  const DOCK_ON = 'dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-brand-gold text-black shadow-md';
+  const DOCK_OFF = 'dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 text-gray-300 hover:text-white hover:bg-white/10';
+
   window.switchTab = function (key) {
     if (key === 'roulette') { openSurpriseModal(); return; }
     if (key === 'space') key = 'hub';
@@ -55,7 +58,10 @@
       const pane = $('tab-' + k); if (!pane) return;
       if (k === key) { pane.classList.remove('hidden', 'fade-in'); void pane.offsetWidth; pane.classList.add('fade-in'); } else pane.classList.add('hidden');
     });
-    Object.keys(GROUPS).forEach(k => { const n = $('nav-' + k); if (n) n.className = k === g ? ON : OFF; });
+    Object.keys(GROUPS).forEach(k => {
+      const n = $('nav-' + k); if (n) n.className = k === g ? ON : OFF;
+      const dn = $('dock-nav-' + k); if (dn) dn.className = k === g ? DOCK_ON : DOCK_OFF;
+    });
     const sn = $('subNav'), subs = GROUPS[g].subs;
     sn.innerHTML = subs.map(([k, l, ic]) => `<button class="sub-pill ${k === key ? 'on' : ''}" onclick="switchTab('${k}')"><i class="fa-solid ${ic}"></i>${l}</button>`).join('');
     sn.classList.toggle('hidden', !subs.length); sn.classList.toggle('flex', !!subs.length);
@@ -74,6 +80,25 @@
     if ((key === 'profile' || key === 'admin') && window.renderProfileTab) window.renderProfileTab();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  window.triggerOmniSearch = function() {
+    switchTab('browse');
+    setTimeout(() => {
+      const inp = document.getElementById('searchMovies') || document.getElementById('searchShows') || document.getElementById('bsInput');
+      if (inp) {
+        inp.focus();
+        inp.select();
+        showToast('Vibe Search active', 'fa-magnifying-glass', 'text-brand-gold');
+      }
+    }, 60);
+  };
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName)) {
+      e.preventDefault();
+      triggerOmniSearch();
+    }
+  });
 
   window.filterLibraryShelfView = function(view) {
     const btns = ['all', 'watched', 'wish', 'fav', 'custom'];

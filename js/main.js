@@ -971,22 +971,57 @@
       }
     }
 
+    window.dockNavModeForced = false;
+    window.toggleDockNavMode = function() {
+      window.dockNavModeForced = !window.dockNavModeForced;
+      const dPlay = $('dockPlayback');
+      const dRest = $('dockResting');
+      if (window.dockNavModeForced) {
+        if (dPlay) { dPlay.classList.add('hidden'); dPlay.classList.remove('flex'); }
+        if (dRest) dRest.classList.remove('hidden');
+        showToast('Dock: Navigation Mode', 'fa-compass', 'text-brand-gold');
+      } else {
+        if (isPlayingMusic && dPlay) {
+          dPlay.classList.remove('hidden');
+          dPlay.classList.add('flex');
+          if (dRest) dRest.classList.add('hidden');
+          showToast('Dock: Playback Mode', 'fa-music', 'text-brand-gold');
+        }
+      }
+    };
+
     function updateMiniPlayerUI() {
       const s = musicQueue[musicQueueIdx];
       if (!s) return;
       initMediaSessionHandlers();
       updateMediaSession(s);
-      $('mpThumb').src = `https://i.ytimg.com/vi/${s.id}/mqdefault.jpg`;
-      $('mpTitle').textContent = s.t;
-      $('mpArtist').textContent = `${s.a} · ${s.l === 'hi' ? 'Hindi' : 'English'} · ${s.m}`;
-      $('mpPlayBtn').innerHTML = `<i class="fa-solid ${isPlayingMusic ? 'fa-pause' : 'fa-play'}"></i>`;
+      const thumbUrl = `https://i.ytimg.com/vi/${s.id}/mqdefault.jpg`;
+      if ($('mpThumb')) $('mpThumb').src = thumbUrl;
+      if ($('mpTitle')) $('mpTitle').textContent = s.t;
+      if ($('mpArtist')) $('mpArtist').textContent = `${s.a} · ${s.l === 'hi' ? 'Hindi' : 'English'} · ${s.m}`;
+      if ($('mpPlayBtn')) $('mpPlayBtn').innerHTML = `<i class="fa-solid ${isPlayingMusic ? 'fa-pause' : 'fa-play'}"></i>`;
       const isFav = songFavs.includes(s.id);
-      $('mpFavBtn').className = `w-9 h-9 rounded-xl flex items-center justify-center text-xs ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10'}`;
-      $('mpShuffleBtn').className = `w-9 h-9 rounded-xl flex items-center justify-center text-xs ${musicShuffle ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-400'}`;
-      $('mpRepeatBtn').className = `w-9 h-9 rounded-xl flex items-center justify-center text-xs ${musicRepeat !== 'off' ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-400'}`;
-      $('mpYtLink').href = `https://www.youtube.com/watch?v=${s.id}`;
-      $('ytDockExternalLink').href = `https://www.youtube.com/watch?v=${s.id}`;
-      $('musicQueueCountLbl').textContent = musicQueue.length;
+      if ($('mpFavBtn')) $('mpFavBtn').className = `w-9 h-9 rounded-xl flex items-center justify-center text-xs ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10'}`;
+      if ($('mpShuffleBtn')) $('mpShuffleBtn').className = `w-9 h-9 rounded-xl flex items-center justify-center text-xs ${musicShuffle ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-400'}`;
+      if ($('mpRepeatBtn')) $('mpRepeatBtn').className = `w-9 h-9 rounded-xl flex items-center justify-center text-xs ${musicRepeat !== 'off' ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-400'}`;
+      if ($('mpYtLink')) $('mpYtLink').href = `https://www.youtube.com/watch?v=${s.id}`;
+      if ($('ytDockExternalLink')) $('ytDockExternalLink').href = `https://www.youtube.com/watch?v=${s.id}`;
+      if ($('musicQueueCountLbl')) $('musicQueueCountLbl').textContent = musicQueue.length;
+
+      // Update Dynamic Island Playback State
+      const dPlay = $('dockPlayback');
+      const dRest = $('dockResting');
+      if (dPlay && dRest && !window.dockNavModeForced) {
+        dPlay.classList.remove('hidden');
+        dPlay.classList.add('flex');
+        dRest.classList.add('hidden');
+      }
+      if ($('dockThumb')) $('dockThumb').src = thumbUrl;
+      if ($('dockTitle')) $('dockTitle').textContent = s.t;
+      if ($('dockArtist')) $('dockArtist').textContent = `${s.a} · ${s.m}`;
+      if ($('dockPlayBtn')) $('dockPlayBtn').innerHTML = `<i class="fa-solid ${isPlayingMusic ? 'fa-pause' : 'fa-play'}"></i>`;
+      if ($('dockSoundwave')) $('dockSoundwave').style.opacity = isPlayingMusic ? '1' : '0.25';
+
       renderMusicQueueList();
     }
 
@@ -1277,9 +1312,16 @@
       if ('mediaSession' in navigator) {
         try { navigator.mediaSession.playbackState = 'none'; } catch (e) {}
       }
-      $('musicMiniPlayer').classList.add('hidden');
-      $('musicVideoDock').classList.add('hidden');
-      $('musicQueueDrawer').classList.add('hidden');
+      if ($('musicMiniPlayer')) $('musicMiniPlayer').classList.add('hidden');
+      if ($('musicVideoDock')) $('musicVideoDock').classList.add('hidden');
+      if ($('musicQueueDrawer')) $('musicQueueDrawer').classList.add('hidden');
+      const dPlay = $('dockPlayback');
+      const dRest = $('dockResting');
+      if (dPlay && dRest) {
+        dPlay.classList.add('hidden');
+        dPlay.classList.remove('flex');
+        dRest.classList.remove('hidden');
+      }
     };
 
     // Easy Queue Management: Move Up/Down, Remove, Shuffle

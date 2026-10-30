@@ -16952,63 +16952,148 @@ Odd Taxi|2021|87
 
       const cinejoyStreamUrl = (window.getCinejoyUrl && window.getCinejoyUrl(item.title, item.type)) ? window.getCinejoyUrl(item.title, item.type) : null;
 
+      const allPredictions = getLocal('cs_predictions', {});
+      const prediction = allPredictions[item.title];
+      const allReflections = getLocal('cs_reflections', {});
+      const personalReflection = allReflections[item.title] || '';
+      const actualScore = userRating ? parseFloat(userRating).toFixed(1) : (parseFloat(item.rating) / 2).toFixed(1);
+      const predictedScore = prediction ? parseFloat(prediction.rating) : 0;
+      const scoreDelta = prediction ? (parseFloat(actualScore) - predictedScore).toFixed(1) : null;
+
+      // Tactile Wax Seal & Spoiler Capsule Markup
+      let spoilerCapsuleHtml = '';
+      if (!isWatched) {
+        spoilerCapsuleHtml = `
+          <div class="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-amber-500/25 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="wax-seal w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-amber-950 font-black shadow"><i class="fa-solid fa-stamp"></i></span>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-300">Curator's Pre-Watch Capsule</span>
+              </div>
+              <span class="text-[10px] font-mono text-gray-400 font-semibold">${prediction ? 'SEALED & HASHED' : 'UNSEALED'}</span>
+            </div>
+            ${prediction ? `
+              <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-gray-300 font-medium">Locked Expectation:</span>
+                  <span class="text-brand-gold font-bold">★ ${prediction.rating} Expected</span>
+                </div>
+                <p class="text-xs text-white italic font-serif">"${prediction.guess}"</p>
+                <div class="text-[10px] text-gray-500 font-mono mt-1">Sealed on ${prediction.sealedAt} · Will crack upon watch</div>
+              </div>
+            ` : `
+              <div class="space-y-2 pt-1">
+                <div class="flex items-center justify-between text-xs text-gray-300">
+                  <span class="text-[11px] font-semibold">Expected Star Rating:</span>
+                  <select id="preWatchExpectedRate" class="bg-black/60 border border-white/15 rounded-lg px-2 py-0.5 text-xs text-brand-gold font-bold focus:outline-none">
+                    <option value="5.0">★ 5.0 (Masterpiece)</option>
+                    <option value="4.5" selected>★ 4.5 (Must Watch)</option>
+                    <option value="4.0">★ 4.0 (Great)</option>
+                    <option value="3.5">★ 3.5 (Decent)</option>
+                    <option value="3.0">★ 3.0 (Average)</option>
+                  </select>
+                </div>
+                <input id="preWatchGuessInput" type="text" placeholder="Your ending guess, vibe prediction, or hype level..." class="w-full px-3 py-1.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+                <button type="button" onclick="sealPreWatchPrediction('${escTitle}')" class="w-full py-2 rounded-xl wax-seal text-amber-950 font-extrabold text-xs flex items-center justify-center gap-1.5 shadow hover:opacity-95 active:scale-95 transition-all">
+                  <i class="fa-solid fa-stamp"></i> <span>Stamp &amp; Seal Prediction</span>
+                </button>
+              </div>
+            `}
+          </div>`;
+      } else {
+        spoilerCapsuleHtml = `
+          <div class="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="wax-seal-cracked w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-brand-gold font-black"><i class="fa-solid fa-bolt"></i></span>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-white">Post-Watch Dossier &amp; Review</span>
+              </div>
+              ${prediction ? `<span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">SEAL CRACKED</span>` : ''}
+            </div>
+            ${prediction ? `
+              <div class="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-center items-center">
+                <div>
+                  <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Predicted</div>
+                  <div class="text-sm font-bold text-gray-300">★ ${prediction.rating}</div>
+                </div>
+                <div class="border-x border-white/10">
+                  <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Actual</div>
+                  <div class="text-sm font-bold text-brand-gold">★ ${actualScore}</div>
+                </div>
+                <div>
+                  <div class="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Delta</div>
+                  <div class="text-xs font-bold ${parseFloat(scoreDelta) >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${parseFloat(scoreDelta) >= 0 ? '+' : ''}${scoreDelta} ${parseFloat(scoreDelta) > 0 ? '(Exceeded)' : parseFloat(scoreDelta) === 0 ? '(Spot On)' : ''}</div>
+                </div>
+              </div>
+              <p class="text-xs text-gray-300 italic font-serif px-1">"${prediction.guess}"</p>
+            ` : ''}
+            <div class="space-y-1.5 pt-1">
+              <div class="flex items-center justify-between text-xs text-gray-400 font-semibold">
+                <span>Personal Reflection &amp; Notes:</span>
+                <button type="button" onclick="savePersonalReflection('${escTitle}')" class="text-[11px] text-brand-gold hover:underline font-bold">Save Note</button>
+              </div>
+              <textarea id="personalReflectionInput" rows="2" placeholder="Record your personal memories, standout scenes, or verdict..." class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold leading-relaxed font-sans">${personalReflection}</textarea>
+            </div>
+          </div>`;
+      }
+
       content.innerHTML = `
-        <div class="flex flex-col sm:flex-row gap-6 sm:gap-8 p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row gap-5 sm:gap-6">
           <!-- Poster Column (Locked 2:3 Aspect, Elegant Border & Soft Shadow) -->
-          <div class="w-48 sm:w-56 md:w-60 shrink-0 mx-auto sm:mx-0 rounded-2xl overflow-hidden border border-white/20 shadow-2xl aspect-[2/3] bg-[#0c101c] relative group/poster">
+          <div class="w-44 sm:w-52 md:w-56 shrink-0 mx-auto sm:mx-0 rounded-2xl overflow-hidden border border-white/20 shadow-2xl aspect-[2/3] bg-[#0c101c] relative group/poster">
             <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover/poster:scale-105" alt="${item.title}">
             <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 pointer-events-none"></div>
           </div>
 
           <!-- Details Column: Clear & Organized Visual Hierarchy -->
-          <div class="flex-1 w-full space-y-4">
+          <div class="flex-1 w-full space-y-3.5">
             <!-- Header: Badges & Title -->
             <div>
-              <div class="flex flex-wrap items-center gap-2 mb-2">
-                <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-extrabold text-xs">★ ${item.rating}</span>
-                <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-200 text-xs font-semibold">#${item.rank} Ranked</span>
-                <span class="px-2.5 py-0.5 rounded-md bg-white/10 text-gray-300 text-xs">${item.genre} · ${item.year}</span>
-                ${indiaPlatform ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[11px] font-semibold flex items-center gap-1.5"><i class="${platIcon}"></i> ${indiaPlatform}</span>` : ''}
+              <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+                <span class="px-2 py-0.5 rounded-md bg-brand-gold text-black font-extrabold text-[11px]">★ ${item.rating}</span>
+                <span class="px-2 py-0.5 rounded-md bg-white/10 text-gray-200 text-[11px] font-semibold">#${item.rank} Ranked</span>
+                <span class="px-2 py-0.5 rounded-md bg-white/10 text-gray-300 text-[11px]">${item.genre} · ${item.year}</span>
+                ${indiaPlatform ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[10px] font-semibold flex items-center gap-1"><i class="${platIcon}"></i> ${indiaPlatform}</span>` : ''}
               </div>
-              <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-white leading-tight tracking-tight">${item.cleanName || item.title}</h2>
+              <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white leading-tight tracking-tight">${item.cleanName || item.title}</h2>
             </div>
 
             <!-- Editorial Scorecard Ribbon (Clean matte 3-pillar layout) -->
-            <div class="p-3.5 sm:p-4 rounded-2xl bg-white/[0.04] border border-white/10 space-y-2.5">
+            <div class="p-3 sm:p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-2">
               <div class="grid grid-cols-3 gap-2 divide-x divide-white/10 text-center items-center">
                 <!-- IMDb Pillar -->
                 <a href="https://www.imdb.com/find/?q=${encodeURIComponent(item.cleanName || item.title)}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center px-1 group/imdb hover:opacity-85 transition-opacity" title="View on IMDb">
                   <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">IMDb</span>
                   <div class="flex items-baseline gap-1 mt-0.5">
-                    <span class="text-white font-extrabold text-lg sm:text-xl leading-none">${item.rating}</span>
-                    <span class="text-gray-500 text-[10px] font-semibold">/10</span>
+                    <span class="text-white font-extrabold text-base sm:text-lg leading-none">${item.rating}</span>
+                    <span class="text-gray-500 text-[9px] font-semibold">/10</span>
                   </div>
-                  <span class="text-[10px] text-brand-gold font-bold mt-1">#${item.rank} Ranked</span>
+                  <span class="text-[10px] text-brand-gold font-bold mt-0.5">#${item.rank} Ranked</span>
                 </a>
 
                 <!-- Rotten Tomatoes Critics Meter Pillar -->
                 <div class="flex flex-col items-center justify-center px-1 pl-2">
                   <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Critics</span>
                   <div class="flex items-baseline gap-1 mt-0.5">
-                    <span class="text-rose-400 font-extrabold text-lg sm:text-xl leading-none">${rtCritics}%</span>
+                    <span class="text-rose-400 font-extrabold text-base sm:text-lg leading-none">${rtCritics}%</span>
                   </div>
-                  <span class="text-[10px] text-gray-400 mt-1">Tomatometer</span>
+                  <span class="text-[10px] text-gray-400 mt-0.5">Tomatometer</span>
                 </div>
 
                 <!-- Audience Popcorn Meter Pillar -->
                 <div class="flex flex-col items-center justify-center px-1 pl-2">
                   <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Audience</span>
                   <div class="flex items-baseline gap-1 mt-0.5">
-                    <span class="text-amber-400 font-extrabold text-lg sm:text-xl leading-none">${rtAudience}%</span>
+                    <span class="text-amber-400 font-extrabold text-base sm:text-lg leading-none">${rtAudience}%</span>
                   </div>
-                  <span class="text-[10px] text-gray-400 mt-1">Popcornmeter</span>
+                  <span class="text-[10px] text-gray-400 mt-0.5">Popcornmeter</span>
                 </div>
               </div>
 
               <!-- Verdict -->
-              <div class="pt-2 border-t border-white/10 flex items-center justify-between">
+              <div class="pt-1.5 border-t border-white/10 flex items-center justify-between text-xs">
                 <span class="text-[11px] text-gray-400 font-medium">Consensus:</span>
-                <span class="px-2.5 py-0.5 rounded-full border text-[11px] font-bold ${riftBadge.color}">
+                <span class="px-2 py-0.5 rounded-full border text-[10px] font-bold ${riftBadge.color}">
                   ${riftBadge.text}
                 </span>
               </div>
@@ -17020,9 +17105,12 @@ Odd Taxi|2021|87
             </div>
 
             <!-- Plot Synopsis -->
-            <p id="modalSynopsisText" class="text-xs sm:text-sm text-gray-300 leading-relaxed">${cachedSynopsis}</p>
+            <p id="modalSynopsisText" class="text-xs text-gray-300 leading-relaxed">${cachedSynopsis}</p>
 
             ${seasonsHtml}
+
+            <!-- Tactile Spoiler Capsule & Prediction Dossier -->
+            ${spoilerCapsuleHtml}
 
             <!-- Star Rating Tracker -->
             <div class="flex items-center gap-2 pt-1 border-t border-white/10">
@@ -17042,8 +17130,8 @@ Odd Taxi|2021|87
               <!-- Streaming & Viewing Actions -->
               <div class="flex flex-wrap items-center gap-2">
                 ${cinejoyStreamUrl ? `
-                <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all">
-                  <i class="fa-solid fa-circle-play text-sm"></i> <span>Watch on Cinejoy</span>
+                <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition-all">
+                  <i class="fa-solid fa-circle-play text-xs"></i> <span>Watch on Cinejoy</span>
                 </a>` : ''}
 
                 ${indiaPlatform ? `
@@ -17086,6 +17174,10 @@ Odd Taxi|2021|87
 
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+      setTimeout(() => {
+        const sheet = document.getElementById('cinemaSheet');
+        if (sheet) sheet.classList.remove('translate-x-full');
+      }, 15);
 
       // Fetch poster & synopsis asynchronously with priority if not cached
       if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
@@ -17105,10 +17197,42 @@ Odd Taxi|2021|87
     }
 
     function closeDetailModal() {
-      const modal = document.getElementById('detailModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+      const sheet = document.getElementById('cinemaSheet');
+      if (sheet) sheet.classList.add('translate-x-full');
+      setTimeout(() => {
+        const modal = document.getElementById('detailModal');
+        if (modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      }, 280);
     }
+
+    window.sealPreWatchPrediction = function(title) {
+      const rateEl = document.getElementById('preWatchExpectedRate');
+      const guessEl = document.getElementById('preWatchGuessInput');
+      const rating = rateEl ? rateEl.value : '4.5';
+      const guess = (guessEl && guessEl.value.trim()) ? guessEl.value.trim() : 'Highly anticipated viewing';
+      const allPredictions = getLocal('cs_predictions', {});
+      allPredictions[title] = {
+        rating,
+        guess,
+        sealedAt: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+      saveLocal('cs_predictions', allPredictions);
+      showToast(`Stamped and sealed prediction for "${title}"!`, 'fa-stamp', 'text-brand-gold');
+      openDetailModal(title);
+    };
+
+    window.savePersonalReflection = function(title) {
+      const inp = document.getElementById('personalReflectionInput');
+      if (!inp) return;
+      const allReflections = getLocal('cs_reflections', {});
+      allReflections[title] = inp.value.trim();
+      saveLocal('cs_reflections', allReflections);
+      showToast(`Saved reflection for "${title}"`, 'fa-pen-nib', 'text-brand-gold');
+      openDetailModal(title);
+    };
 
     window.openDetailModal = openDetailModal;
     window.closeDetailModal = closeDetailModal;

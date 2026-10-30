@@ -99,21 +99,21 @@
         </div>
       </div>
 
-      <!-- Desktop 5 Single-Word Navigation Tabs: Home · Search · Music · Play · Library -->
-      <nav class="hidden md:flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/10 shrink-0" aria-label="Primary Navigation">
-        <button type="button" onclick="switchTab('discover')" id="nav-discover" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 relative bg-brand-gold text-black shadow-md">
-          <i class="fa-solid fa-house text-xs"></i> <span>Home</span>
+      <!-- Desktop Navigation: Streamlined for Spatial Dynamic Island -->
+      <nav class="hidden lg:flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/10 shrink-0" aria-label="Primary Navigation">
+        <button type="button" onclick="switchTab('discover')" id="nav-discover" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative bg-brand-gold text-black shadow-md">
+          <i class="fa-solid fa-house text-xs"></i> <span>Vault</span>
         </button>
-        <button type="button" onclick="switchTab('browse')" id="nav-browse" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 relative text-gray-300 hover:text-white hover:bg-white/5">
+        <button type="button" onclick="switchTab('browse')" id="nav-browse" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
           <i class="fa-solid fa-magnifying-glass text-xs"></i> <span>Search</span>
         </button>
-        <button type="button" onclick="switchTab('music')" id="nav-music" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 relative text-gray-300 hover:text-white hover:bg-white/5">
+        <button type="button" onclick="switchTab('music')" id="nav-music" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
           <i class="fa-solid fa-music text-xs"></i> <span>Music</span>
         </button>
-        <button type="button" onclick="switchTab('decide')" id="nav-decide" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 relative text-gray-300 hover:text-white hover:bg-white/5">
+        <button type="button" onclick="switchTab('decide')" id="nav-decide" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
           <i class="fa-solid fa-gamepad text-xs"></i> <span>Play</span>
         </button>
-        <button type="button" onclick="switchTab('space')" id="nav-space" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 relative text-gray-300 hover:text-white hover:bg-white/5">
+        <button type="button" onclick="switchTab('space')" id="nav-space" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
           <i class="fa-solid fa-bookmark text-xs"></i> <span>Library</span>
           <span id="navWishlistBadge" class="hidden px-1.5 py-0.5 text-[10px] font-extrabold rounded-full bg-rose-500 text-white">0</span>
         </button>
@@ -1690,12 +1690,18 @@
 
   </main>
 
-  <!-- MODAL 1: MOVIE / SHOW DETAILS (Spacious High-Def ScoreCard & Cinema Poster) -->
-  <div id="detailModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='detailModal')closeDetailModal()">
-    <div class="glass-card w-full max-w-4xl rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto border border-white/20 shadow-2xl animate-fadeIn relative">
-      <button onclick="closeDetailModal()" aria-label="Close detail modal" title="Close" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center border border-white/15 transition-transform hover:scale-105">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+  <!-- ARCHIVAL CINEMA SHEET & TACTILE SPOILER DRAWER (Right Slide-Over) -->
+  <div id="detailModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm transition-opacity duration-300" onclick="if(event.target.id==='detailModal')closeDetailModal()">
+    <div id="cinemaSheet" class="fixed top-0 right-0 bottom-0 z-50 w-full sm:w-[580px] md:w-[620px] max-w-[100vw] bg-[#090d16] border-l border-white/15 shadow-[0_0_60px_rgba(0,0,0,0.95)] overflow-y-auto p-4 sm:p-7 space-y-4 cinema-sheet translate-x-full">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3 sticky top-0 bg-[#090d16]/95 backdrop-blur-md z-20 -mx-4 -mt-4 p-4 sm:-mx-7 sm:-mt-7 sm:p-6 mb-2">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-brand-gold shadow-[0_0_8px_rgba(245,197,24,0.8)]"></span>
+          <span class="text-xs font-mono font-bold tracking-widest uppercase text-brand-gold">CINEMA BLUEPRINT &amp; ARCHIVE</span>
+        </div>
+        <button onclick="closeDetailModal()" aria-label="Close cinema sheet" title="Close (Esc)" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center transition-transform hover:scale-110">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
       <div id="detailModalContent"></div>
     </div>
   </div>
@@ -1900,24 +1906,63 @@
     </div>
   </div>
 
-  <!-- MOBILE BOTTOM NAVIGATION BAR (5 Single-Word Tabs: Home · Browse · Music · Play · Library) -->
-  <nav id="mobileBottomNav" class="md:hidden fixed bottom-0 inset-x-0 z-40 glass-nav border-t border-white/10 px-2 py-1.5 flex items-center justify-around" style="padding-bottom: max(0.375rem, env(safe-area-inset-bottom));">
-    <button type="button" onclick="switchTab('discover')" data-mnav="discover" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-brand-gold font-bold text-[11px]">
-      <i class="fa-solid fa-house text-sm"></i><span>Home</span>
-    </button>
-    <button type="button" onclick="switchTab('browse')" data-mnav="browse" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-gray-400 font-semibold text-[11px]">
-      <i class="fa-solid fa-magnifying-glass text-sm"></i><span>Search</span>
-    </button>
-    <button type="button" onclick="switchTab('music')" data-mnav="music" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-gray-400 font-semibold text-[11px]">
-      <i class="fa-solid fa-music text-sm"></i><span>Music</span>
-    </button>
-    <button type="button" onclick="switchTab('decide')" data-mnav="decide" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-gray-400 font-semibold text-[11px]">
-      <i class="fa-solid fa-gamepad text-sm"></i><span>Play</span>
-    </button>
-    <button type="button" onclick="switchTab('space')" data-mnav="space" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-gray-400 font-semibold text-[11px]">
-      <i class="fa-solid fa-bookmark text-sm"></i><span>Library</span>
-    </button>
-  </nav>
+  <!-- DYNAMIC ISLAND COMMAND DOCK (Unified Navigation & Embedded Audio Capsule) -->
+  <aside id="dynamicIslandDock" class="dynamic-island fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[96vw] bg-[#090d18]/90 backdrop-blur-2xl border border-white/15 rounded-full shadow-[0_12px_45px_rgba(0,0,0,0.75)] p-1.5 sm:p-2 flex items-center transition-all duration-300">
+    <!-- RESTING BROWSING STATE (5 Core Spaces + Quick Vibe Search Shortcut) -->
+    <div id="dockResting" class="flex items-center gap-1 sm:gap-1.5">
+      <button type="button" onclick="switchTab('discover')" id="dock-nav-discover" data-mnav="discover" class="dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-brand-gold text-black shadow-md">
+        <i class="fa-solid fa-house text-xs"></i> <span>Vault</span>
+      </button>
+      <button type="button" onclick="switchTab('browse')" id="dock-nav-browse" data-mnav="browse" class="dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 text-gray-300 hover:text-white hover:bg-white/10">
+        <i class="fa-solid fa-magnifying-glass text-xs"></i> <span>Search</span>
+      </button>
+      <button type="button" onclick="switchTab('music')" id="dock-nav-music" data-mnav="music" class="dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 text-gray-300 hover:text-white hover:bg-white/10">
+        <i class="fa-solid fa-music text-xs"></i> <span>Music</span>
+      </button>
+      <button type="button" onclick="switchTab('decide')" id="dock-nav-decide" data-mnav="decide" class="dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 text-gray-300 hover:text-white hover:bg-white/10">
+        <i class="fa-solid fa-gamepad text-xs text-brand-gold"></i> <span>Play ✦</span>
+      </button>
+      <button type="button" onclick="switchTab('space')" id="dock-nav-space" data-mnav="space" class="dock-pill px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 text-gray-300 hover:text-white hover:bg-white/10">
+        <i class="fa-solid fa-bookmark text-xs"></i> <span>Library</span>
+      </button>
+      <button type="button" onclick="triggerOmniSearch()" title="Vibe Search (/)" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/5 hover:bg-brand-gold hover:text-black border border-white/10 text-gray-400 hover:border-brand-gold flex items-center justify-center text-xs font-bold transition-all ml-0.5" aria-label="Quick Search">
+        <span class="font-mono text-[11px]">/</span>
+      </button>
+    </div>
+
+    <!-- ACTIVE PLAYBACK EXPANDED STATE (Fluidly morphs into audio streamer) -->
+    <div id="dockPlayback" class="hidden items-center gap-2 sm:gap-3 px-1 sm:px-2 min-w-0 max-w-[94vw]">
+      <div class="flex items-center gap-2 min-w-0 cursor-pointer" onclick="switchTab('music')">
+        <img id="dockThumb" src="icons/peak-media.svg" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-white/20 shrink-0" alt="Now Playing">
+        <div class="min-w-0 max-w-[105px] sm:max-w-[160px]">
+          <div id="dockTitle" class="text-xs font-bold text-white truncate">Select song</div>
+          <div id="dockArtist" class="text-[10px] text-gray-400 truncate">Music Vault</div>
+        </div>
+      </div>
+      <!-- Mini Live Soundwave Bars -->
+      <div id="dockSoundwave" class="flex items-center gap-0.5 px-1 py-0.5">
+        <span class="soundwave-bar"></span>
+        <span class="soundwave-bar"></span>
+        <span class="soundwave-bar"></span>
+        <span class="soundwave-bar"></span>
+      </div>
+      <!-- Audio Controls -->
+      <div class="flex items-center gap-1">
+        <button type="button" onclick="musicPrev()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-[10px]" title="Previous Track"><i class="fa-solid fa-backward-step"></i></button>
+        <button type="button" onclick="musicTogglePlay()" id="dockPlayBtn" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-brand-gold text-black flex items-center justify-center text-xs font-bold shadow-md" title="Play / Pause"><i class="fa-solid fa-play"></i></button>
+        <button type="button" onclick="musicNext()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-[10px]" title="Next Track"><i class="fa-solid fa-forward-step"></i></button>
+      </div>
+      <!-- Switchers & Dismiss -->
+      <div class="flex items-center gap-1 pl-1 border-l border-white/10">
+        <button type="button" onclick="toggleMusicVideoDock()" title="PiP Video Frame" class="w-7 h-7 rounded-full bg-white/5 hover:bg-white/15 text-gray-300 flex items-center justify-center text-[10px]"><i class="fa-solid fa-tv"></i></button>
+        <button type="button" onclick="toggleDockNavMode()" id="dockToggleModeBtn" title="Switch to Navigation" class="w-7 h-7 rounded-full bg-white/5 hover:bg-white/15 text-brand-gold flex items-center justify-center text-[10px]"><i class="fa-solid fa-compass"></i></button>
+        <button type="button" onclick="closeMusicMiniPlayer()" title="Stop Playing" class="w-7 h-7 rounded-full bg-red-600/30 hover:bg-red-600 text-red-400 hover:text-white flex items-center justify-center text-[10px] transition-colors"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- LEGACY MOBILE BOTTOM NAV (Hidden, replaced by Dynamic Island) -->
+  <nav id="mobileBottomNav" class="hidden"></nav>
 
   <!-- MODAL: ENGLISH VS HINDI SIDE-BY-SIDE COMPARE -->
   <div id="langCompareModal" class="fixed inset-0 z-[70] hidden items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='langCompareModal')closeLangCompareModal()">
@@ -2057,15 +2102,15 @@
   </div>
 
 
-  <script src="js/data.js?v=4.0"></script>
-  <script src="js/constellation.js?v=4.0"></script>
-  <script src="js/hub-duel.js?v=4.0"></script>
-  <script src="js/ui.js?v=4.0"></script>
-  <script src="js/features.js?v=4.0"></script>
-  <script src="js/marathon.js?v=4.0"></script>
-  <script src="js/universes.js?v=4.0"></script>
-  <script src="js/mood_dial.js?v=4.0"></script>
-  <script src="js/main.js?v=4.0"></script>
-  <script src="js/pwa.js?v=4.0"></script>
+  <script src="js/data.js?v=4.1"></script>
+  <script src="js/constellation.js?v=4.1"></script>
+  <script src="js/hub-duel.js?v=4.1"></script>
+  <script src="js/ui.js?v=4.1"></script>
+  <script src="js/features.js?v=4.1"></script>
+  <script src="js/marathon.js?v=4.1"></script>
+  <script src="js/universes.js?v=4.1"></script>
+  <script src="js/mood_dial.js?v=4.1"></script>
+  <script src="js/main.js?v=4.1"></script>
+  <script src="js/pwa.js?v=4.1"></script>
 </body>
 </html>
