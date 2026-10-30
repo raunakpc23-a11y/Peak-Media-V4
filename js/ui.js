@@ -66,6 +66,10 @@
       const active = btn.dataset.mnav === g;
       btn.className = 'mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] transition-colors ' + (active ? 'text-brand-gold font-bold bg-brand-gold/10' : 'text-gray-400 font-semibold');
     });
+    document.querySelectorAll('.station-plate').forEach(plate => {
+      const active = plate.dataset.station === g || (plate.dataset.station === 'discover' && g === 'discover');
+      plate.classList.toggle('active', active);
+    });
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
     if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
     if (key === 'music' && window.initMusicVault) window.initMusicVault();
@@ -77,6 +81,19 @@
     if ((key === 'profile' || key === 'admin') && window.renderProfileTab) window.renderProfileTab();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Auto-slim bottom station plates dock on scroll
+  let dockScrollTmr;
+  window.addEventListener('scroll', () => {
+    const dock = $('stationPlatesDock');
+    if (dock) {
+      dock.classList.add('dock-slim');
+      clearTimeout(dockScrollTmr);
+      dockScrollTmr = setTimeout(() => {
+        dock.classList.remove('dock-slim');
+      }, 250);
+    }
+  }, { passive: true });
 
   window.triggerOmniSearch = function() {
     switchTab('browse');
@@ -134,6 +151,7 @@
   // ---------- themes ----------
   const THEMES = {
     space: { n: 'Deep Cosmos', c: '#38bdf8', fx: 'stars' },
+    dawn: { n: 'Dawn Cartography', c: '#b45309', fx: 'none' },
     clear: { n: 'Summit Gold', c: '#F5C518', fx: 'none' },
     noir: { n: 'Noir Rain', c: '#94a3b8', fx: 'rain' },
     neon: { n: 'Cyber Cyan', c: '#06b6d4', fx: 'neon' },

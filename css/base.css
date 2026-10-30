@@ -1,16 +1,25 @@
-    :root { --gold: 245 197 24; --gold-hex: #F5C518; --bg: #07090e; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(245,197,24,.06), transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(15,23,42,.6), transparent 50%); }
-    [data-theme="clear"]  { --gold: 245 197 24; --gold-hex: #F5C518; --bg: #080A0F; --bgimg: none; }
-    [data-theme="noir"]   { --gold: 148 163 184; --gold-hex: #94a3b8; --bg: #07090d; --bgimg: radial-gradient(ellipse at 50% -10%, rgba(71,85,105,.35), transparent 60%); }
-    [data-theme="neon"]   { --gold: 6 182 212;   --gold-hex: #06b6d4; --bg: #050d14; --bgimg: radial-gradient(circle at 15% 10%, rgba(6,182,212,.18), transparent 45%), radial-gradient(circle at 85% 30%, rgba(56,189,248,.15), transparent 45%); }
-    [data-theme="aurora"] { --gold: 52 211 153;  --gold-hex: #34d399; --bg: #05100f; --bgimg: linear-gradient(180deg, rgba(52,211,153,.14), rgba(129,140,248,.10) 40%, transparent 70%); }
-    [data-theme="golden"]   { --gold: 255 159 28;  --gold-hex: #ff9f1c; --bg: #120c05; --bgimg: radial-gradient(ellipse at 50% 110%, rgba(255,159,28,.28), transparent 60%); }
-    [data-theme="blood"]    { --gold: 239 68 68;   --gold-hex: #ef4444; --bg: #110506; --bgimg: radial-gradient(circle at 50% -20%, rgba(239,68,68,.30), transparent 55%); }
-    [data-theme="space"]    { --gold: 56 189 248;  --gold-hex: #38bdf8; --bg: #050811; --bgimg: radial-gradient(ellipse at 70% 0%, rgba(56,189,248,.25), transparent 55%), radial-gradient(ellipse at 10% 80%, rgba(14,165,233,.14), transparent 50%); }
-    [data-theme="velvet"]   { --gold: 168 85 247;  --gold-hex: #a855f7; --bg: #0b0614; --bgimg: radial-gradient(ellipse at 75% 10%, rgba(168,85,247,.26), transparent 55%), radial-gradient(ellipse at 20% 85%, rgba(217,70,239,.14), transparent 50%); }
-    [data-theme="sakura"]   { --gold: 244 114 182; --gold-hex: #f472b6; --bg: #120710; --bgimg: radial-gradient(ellipse at 65% 0%, rgba(244,114,182,.24), transparent 55%), radial-gradient(ellipse at 15% 80%, rgba(251,113,133,.12), transparent 50%); }
-    [data-theme="frost"]    { --gold: 125 211 252; --gold-hex: #7dd3fc; --bg: #040b14; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(125,211,252,.26), transparent 60%), radial-gradient(ellipse at 85% 90%, rgba(56,189,248,.15), transparent 50%); }
-    [data-theme="solar"]    { --gold: 251 146 60;  --gold-hex: #fb923c; --bg: #110904; --bgimg: radial-gradient(ellipse at 50% -10%, rgba(251,146,60,.28), transparent 58%), radial-gradient(ellipse at 20% 90%, rgba(234,88,12,.15), transparent 50%); }
-    [data-theme="obsidian"] { --gold: 148 163 184; --gold-hex: #94a3b8; --bg: #030407; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(100,116,139,.16), transparent 55%); }
+    :root { --gold: 245 197 24; --gold-hex: #F5C518; --bg: #03050a; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(245,197,24,.06), transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(15,23,42,.6), transparent 50%); }
+    [data-theme="clear"]  { --gold: 245 197 24; --gold-hex: #F5C518; --bg: #03050a; --bgimg: none; }
+    [data-theme="dawn"]   { --gold: 180 83 9;   --gold-hex: #b45309; --bg: #f4eedb; --bgimg: radial-gradient(circle at 50% 0%, rgba(217,119,6,.08), transparent 70%); }
+    [data-theme="noir"]   { --gold: 148 163 184; --gold-hex: #94a3b8; --bg: #050608; --bgimg: radial-gradient(ellipse at 50% -10%, rgba(71,85,105,.35), transparent 60%); }
+    [data-theme="neon"]   { --gold: 6 182 212;   --gold-hex: #06b6d4; --bg: #02070c; --bgimg: radial-gradient(circle at 15% 10%, rgba(6,182,212,.18), transparent 45%), radial-gradient(circle at 85% 30%, rgba(56,189,248,.15), transparent 45%); }
+    [data-theme="aurora"] { --gold: 52 211 153;  --gold-hex: #34d399; --bg: #020a08; --bgimg: linear-gradient(180deg, rgba(52,211,153,.14), rgba(129,140,248,.10) 40%, transparent 70%); }
+    [data-theme="golden"]   { --gold: 255 159 28;  --gold-hex: #ff9f1c; --bg: #0a0602; --bgimg: radial-gradient(ellipse at 50% 110%, rgba(255,159,28,.28), transparent 60%); }
+    [data-theme="blood"]    { --gold: 239 68 68;   --gold-hex: #ef4444; --bg: #0c0203; --bgimg: radial-gradient(circle at 50% -20%, rgba(239,68,68,.30), transparent 55%); }
+    [data-theme="space"]    { --gold: 56 189 248;  --gold-hex: #38bdf8; --bg: #020409; --bgimg: radial-gradient(ellipse at 70% 0%, rgba(56,189,248,.25), transparent 55%), radial-gradient(ellipse at 10% 80%, rgba(14,165,233,.14), transparent 50%); }
+    [data-theme="velvet"]   { --gold: 168 85 247;  --gold-hex: #a855f7; --bg: #07030c; --bgimg: radial-gradient(ellipse at 75% 10%, rgba(168,85,247,.26), transparent 55%), radial-gradient(ellipse at 20% 85%, rgba(217,70,239,.14), transparent 50%); }
+    [data-theme="sakura"]   { --gold: 244 114 182; --gold-hex: #f472b6; --bg: #0b0309; --bgimg: radial-gradient(ellipse at 65% 0%, rgba(244,114,182,.24), transparent 55%), radial-gradient(ellipse at 15% 80%, rgba(251,113,133,.12), transparent 50%); }
+    [data-theme="frost"]    { --gold: 125 211 252; --gold-hex: #7dd3fc; --bg: #02060b; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(125,211,252,.26), transparent 60%), radial-gradient(ellipse at 85% 90%, rgba(56,189,248,.15), transparent 50%); }
+    [data-theme="solar"]    { --gold: 251 146 60;  --gold-hex: #fb923c; --bg: #0a0401; --bgimg: radial-gradient(ellipse at 50% -10%, rgba(251,146,60,.28), transparent 58%), radial-gradient(ellipse at 20% 90%, rgba(234,88,12,.15), transparent 50%); }
+    [data-theme="obsidian"] { --gold: 148 163 184; --gold-hex: #94a3b8; --bg: #020305; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(100,116,139,.16), transparent 55%); }
+
+    /* Dawn Paper Chart Light Mode */
+    [data-theme="dawn"] body { color: #1e293b !important; }
+    [data-theme="dawn"] .glass-nav { background: rgba(244, 238, 219, 0.94); border-color: rgba(0,0,0,0.08); }
+    [data-theme="dawn"] .glass-card { background: rgba(255, 252, 245, 0.88); border-color: rgba(0,0,0,0.08); color: #1e293b; }
+    [data-theme="dawn"] .text-white { color: #0f172a !important; }
+    [data-theme="dawn"] .text-gray-300, [data-theme="dawn"] .text-gray-400 { color: #475569 !important; }
+    [data-theme="dawn"] .station-plates-dock { background: rgba(235, 227, 206, 0.92); border-color: rgba(0,0,0,0.12); }
     body { background-image: var(--bgimg); background-attachment: fixed; transition: background-color .8s; }
     #fxCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
     main, footer { position: relative; z-index: 1; }
@@ -60,13 +69,250 @@
       aspect-ratio: 2 / 3;
     }
     .card-hover {
-      transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.24s ease;
-      will-change: transform;
+      position: relative;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, opacity 0.25s ease;
+      will-change: transform, box-shadow;
     }
     .card-hover:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 32px -4px rgba(0, 0, 0, 0.75);
-      border-color: rgba(255, 255, 255, 0.22);
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 20px 42px -10px rgba(0, 0, 0, 0.95), 0 0 22px -4px rgb(var(--gold) / 0.35);
+      border-color: rgba(255, 255, 255, 0.32);
+      z-index: 10;
+    }
+    /* Dim surrounding stars in the constellation when focusing */
+    .constellation-zone:hover .card-hover:not(:hover) {
+      opacity: 0.72;
+      filter: brightness(0.88);
+    }
+    .poster-fade {
+      background: linear-gradient(to top, rgba(3, 5, 10, 0.98) 0%, rgba(3, 5, 10, 0.72) 48%, transparent 100%);
+    }
+
+    /* Constellation Zone Etched Astronomical Headings */
+    .constellation-header {
+      position: relative;
+      margin-bottom: -1.75rem;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+    .constellation-watermark {
+      font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      color: transparent;
+      -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.08);
+      line-height: 1;
+      transition: -webkit-text-stroke 0.4s ease;
+    }
+    .constellation-zone:hover .constellation-watermark {
+      -webkit-text-stroke: 1.2px rgb(var(--gold) / 0.28);
+    }
+
+    /* Tonight's Pick Eyepiece Reticle & Velocity Card-Flick */
+    @keyframes cardFlickOut {
+      0% { transform: scale(1) translate(0, 0) rotate(0deg); opacity: 1; }
+      100% { transform: scale(0.88) translate(125%, -24px) rotate(18deg); opacity: 0; }
+    }
+    @keyframes cardDropIn {
+      0% { transform: scale(0.92) translate(-40px, -30px) rotate(-6deg); opacity: 0; }
+      65% { transform: scale(1.02) translate(4px, 4px) rotate(1deg); opacity: 1; }
+      100% { transform: scale(1) translate(0, 0) rotate(0deg); opacity: 1; }
+    }
+    .flick-out {
+      animation: cardFlickOut 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+      pointer-events: none;
+    }
+    .drop-in {
+      animation: cardDropIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    /* The 5 Engraved Brass Station Plates (Bottom Navigation) */
+    .station-plates-dock {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 45;
+      background: rgba(8, 11, 18, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(226, 168, 75, 0.25);
+      border-radius: 9999px;
+      padding: 5px 8px;
+      box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      max-width: calc(100vw - 1.5rem);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+    .station-plates-dock.dock-slim {
+      transform: translateX(-50%) translateY(32%);
+      opacity: 0.45;
+    }
+    .station-plates-dock:hover {
+      opacity: 1 !important;
+      transform: translateX(-50%) translateY(0) !important;
+    }
+    .station-plate {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #94a3b8;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    .station-plate:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .station-plate.active {
+      color: #000;
+      background: linear-gradient(135deg, #fce085, #d49a37);
+      box-shadow: 0 4px 18px rgba(245, 197, 24, 0.45);
+      font-weight: 800;
+    }
+    .station-plate.active::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 5px;
+      border-radius: 9999px;
+      background: #f5c518;
+      filter: blur(4px);
+    }
+
+    /* Orbiting Moon Mini-Player (Floating Audio Satellite) */
+    .orbiting-moon {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 5.5rem;
+      z-index: 40;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #090d18;
+      border: 2px solid rgba(192, 132, 252, 0.4);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.8), 0 0 16px rgba(192, 132, 252, 0.35);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+    }
+    .orbiting-moon:hover {
+      transform: scale(1.1);
+      border-color: #c084fc;
+    }
+    .orbiting-moon img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Library Collector's Spine View */
+    .spine-view-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: flex-end;
+      padding: 1rem 0;
+    }
+    .spine-card {
+      width: 32px;
+      height: 170px;
+      border-radius: 4px;
+      background: #0e1322;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, width 0.2s ease;
+      box-shadow: 2px 4px 10px rgba(0,0,0,0.6);
+    }
+    .spine-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      width: 44px;
+      z-index: 20;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.9), 0 0 16px rgba(245, 197, 24, 0.4);
+      border-color: var(--gold-hex);
+    }
+    .spine-title {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 11px;
+      font-weight: 800;
+      color: #e2e8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 135px;
+      margin: 8px auto 0 auto;
+      text-align: right;
+      letter-spacing: 0.02em;
+    }
+    .spine-card:hover .spine-title {
+      color: var(--gold-hex);
+    }
+    .spine-rating {
+      position: absolute;
+      bottom: 4px;
+      left: 0;
+      right: 0;
+      font-size: 9px;
+      font-weight: 900;
+      text-align: center;
+      color: #fbbf24;
+    }
+
+    /* Starlight Status Effects on Hub Cards */
+    .hub-card-wish img { filter: saturate(0.55) brightness(0.85); transition: filter 0.3s; }
+    .hub-card-wish:hover img { filter: saturate(1) brightness(1); }
+    .hub-card-fav { border-color: rgba(245, 197, 24, 0.55) !important; box-shadow: 0 4px 18px rgba(245, 197, 24, 0.25) !important; }
+    .hub-card-watched img { filter: saturate(1.15) contrast(1.05); }
+
+    /* CineSwipe Comet Cards */
+    .comet-stamp {
+      position: absolute;
+      top: 36px;
+      font-size: 26px;
+      font-weight: 900;
+      padding: 6px 14px;
+      border: 3px solid;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 25;
+    }
+    .comet-stamp.kept {
+      right: 28px;
+      color: #34d399;
+      border-color: #34d399;
+      transform: rotate(14deg);
+      background: rgba(52, 211, 153, 0.18);
+    }
+    .comet-stamp.pass {
+      left: 28px;
+      color: #f87171;
+      border-color: #f87171;
+      transform: rotate(-14deg);
+      background: rgba(248, 113, 113, 0.18);
     }
     @keyframes pulseGlow {
       0%, 100% { opacity: 0.35; transform: scale(1); }
