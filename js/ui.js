@@ -66,15 +66,9 @@
       const active = btn.dataset.mnav === g;
       btn.className = 'mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] transition-colors ' + (active ? 'text-brand-gold font-bold bg-brand-gold/10' : 'text-gray-400 font-semibold');
     });
-<<<<<<< HEAD
     document.querySelectorAll('.station-plate').forEach(plate => {
       const active = plate.dataset.station === g || (plate.dataset.station === 'discover' && g === 'discover');
       plate.classList.toggle('active', active);
-=======
-    document.querySelectorAll('.dock-btn').forEach(btn => {
-      const active = btn.dataset.tab === g;
-      btn.classList.toggle('active', active);
->>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
     });
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
     if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
@@ -88,17 +82,10 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-<<<<<<< HEAD
   // Auto-slim bottom station plates dock on scroll
   let dockScrollTmr;
   window.addEventListener('scroll', () => {
     const dock = $('stationPlatesDock');
-=======
-  // Auto-slim floating dock while scrolling
-  let dockScrollTmr;
-  window.addEventListener('scroll', () => {
-    const dock = $('floatingCinemaDock');
->>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
     if (dock) {
       dock.classList.add('dock-slim');
       clearTimeout(dockScrollTmr);

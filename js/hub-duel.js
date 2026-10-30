@@ -87,11 +87,7 @@
         } else {
           el.className = 'hub-shelf flex gap-3 overflow-x-auto pb-4 pt-1 snap-x';
         }
-<<<<<<< HEAD
         el.innerHTML = list.length ? list.map(t => shelfCard(t, s)).join('') : '<div class="text-xs text-gray-500 py-8 w-full text-center">Empty celestial zone · Plot stars to view them here</div>';
-=======
-        el.innerHTML = list.length ? list.map(t => shelfCard(t, s)).join('') : '<div class="text-xs text-gray-500 py-8 w-full text-center">Empty shelf · Add titles to see them lined up</div>';
->>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
         $('shelfCnt-' + s).textContent = list.length;
         attachThumbObservers(el);
       });

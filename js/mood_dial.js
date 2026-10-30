@@ -162,17 +162,10 @@
       cardEl.style.boxShadow = `0 10px 30px -10px ${sector.bg}`;
     }
 
-<<<<<<< HEAD
     // Floods the ambient room backdrop with calibrated starlight wash
     const pane = $('tab-mood');
     if (pane) {
       pane.style.background = `radial-gradient(ellipse at 50% -10%, ${sector.color}28 0%, transparent 65%)`;
-=======
-    // Floods the ambient page background with a soft mood color wash
-    const pane = $('tab-mood');
-    if (pane) {
-      pane.style.background = `radial-gradient(ellipse at 50% -10%, ${sector.color}2b 0%, transparent 65%)`;
->>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
     }
 
     // Highlight sector pills
