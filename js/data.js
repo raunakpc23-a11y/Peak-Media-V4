@@ -16057,74 +16057,89 @@ Odd Taxi|2021|87
       const fallbackSvg = generateStylizedPosterDataURI(item);
       const posterUrl = posterCache[item.type + ':' + item.title] || fallbackSvg;
 
-      let profName = '';
-      try {
-        const p = JSON.parse(localStorage.getItem('cs_profile_v1') || '{}');
-        if (p && p.username) profName = p.username;
-      } catch (e) {}
+      // Update telescope telemetry readout
+      const coords = [
+        "RA: 18h 36m · DEC: +38° 47' · FOV: 45°",
+        "RA: 14h 29m · DEC: -62° 40' · FOV: 50°",
+        "RA: 05h 35m · DEC: -05° 23' · FOV: 60°",
+        "RA: 06h 45m · DEC: -16° 42' · FOV: 35°",
+        "RA: 19h 50m · DEC: +08° 52' · FOV: 55°",
+        "RA: 22h 57m · DEC: -29° 37' · FOV: 40°",
+        "RA: 12h 26m · DEC: +12° 53' · FOV: 50°"
+      ];
+      const coordEl = document.getElementById('telescopeCoords');
+      if (coordEl) coordEl.textContent = coords[currentSpotlightIdx % coords.length];
+
+      // Update telescope barrel background glow
+      const barrel = document.getElementById('telescopeBarrel');
+      if (barrel) {
+        barrel.style.background = `radial-gradient(circle at 50% 50%, ${theme.c1}26 0%, #060913 72%, #000 100%)`;
+      }
 
       const banner = document.getElementById('heroBanner');
       if (!banner) return;
-      banner.style.background = `radial-gradient(ellipse at 80% 20%, ${theme.c1}77 0%, #03050a 78%)`;
+      banner.style.background = 'transparent';
 
       banner.innerHTML = `
-        <!-- Telescope Eyepiece Ambient Light & Color Bleed -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-2/3 h-full object-cover opacity-35 sm:opacity-20 blur-3xl scale-125 transition-all duration-700 pointer-events-none" />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#03050a] via-[#03050a]/80 to-transparent"></div>
-          <div class="absolute inset-0 bg-gradient-to-r from-[#03050a] via-[#03050a]/90 to-transparent"></div>
+        <!-- Optical Lens Nebular Glow -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-3xl">
+          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-2/3 h-full object-cover opacity-25 blur-3xl scale-125 transition-all duration-700 pointer-events-none" />
         </div>
 
         <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col justify-between h-full ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
-          <!-- Eyepiece Kicker -->
-          <div class="flex items-center justify-between gap-3 text-xs border-b border-white/[0.08] pb-3 mb-4 sm:mb-6">
+          <!-- Eyepiece Telemetry Header -->
+          <div class="flex items-center justify-between gap-3 text-xs border-b border-brand-gold/20 pb-3 mb-4 sm:mb-6 w-full">
             <div class="flex items-center gap-2">
-              <span class="inline-block w-2.5 h-2.5 rounded-full animate-pulse" style="background:${theme.accent}"></span>
-              <span class="font-bold text-white tracking-wide uppercase text-[11px] sm:text-xs">Eyepiece Focal Star · Tonight's Pick</span>
+              <span class="inline-block w-2.5 h-2.5 rounded-full animate-pulse shadow-[0_0_8px_#f5c518]" style="background:${theme.accent}"></span>
+              <span class="font-bold text-white tracking-widest uppercase text-[10px] sm:text-xs">Eyepiece Focal Star · Celestial Observation</span>
               <span class="text-white/25">·</span>
-              <span class="text-gray-400 text-[11px] sm:text-xs">${currentSpotlightIdx + 1} of ${spotlightTitles.length}</span>
+              <span class="text-brand-gold font-mono text-[10px] sm:text-xs">${currentSpotlightIdx + 1} of ${spotlightTitles.length}</span>
             </div>
             <div class="flex items-center gap-3 text-xs">
               <button type="button" onclick="openOnboardingWizard(true)" class="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-[11px]" title="Retake Star Alignment">
                 <i class="fa-solid fa-sliders text-[10px] text-brand-gold"></i>
-                <span class="hidden sm:inline">Align Taste</span>
+                <span class="hidden sm:inline font-mono">Calibrate Scope</span>
               </button>
             </div>
           </div>
 
           <!-- Main Eyepiece Stage -->
-          <div class="flex flex-col sm:flex-row items-start sm:items-end gap-5 sm:gap-8 w-full">
+          <div class="flex flex-col sm:flex-row items-center sm:items-end gap-5 sm:gap-8 w-full">
+            <!-- Astronomical Poster Bezel with Starlight Aura -->
             <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')">
-              <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster hidden sm:block w-36 md:w-48 rounded-2xl border border-white/20 shadow-2xl object-cover poster-aspect transition-transform duration-300 group-hover:scale-105 group-hover:shadow-brand-gold/25" />
-              <div class="hidden sm:flex absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover:opacity-100 items-center justify-center transition-opacity">
-                <span class="w-12 h-12 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-sm ml-0.5"></i></span>
+              <div class="relative rounded-2xl overflow-hidden border-2 border-brand-gold/40 shadow-[0_15px_40px_rgba(0,0,0,0.9),0_0_25px_rgba(245,197,24,0.2)] transition-all duration-300 group-hover:border-brand-gold group-hover:scale-105 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(245,197,24,0.45)]">
+                <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster w-32 sm:w-40 md:w-48 object-cover poster-aspect" />
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  <span class="w-12 h-12 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-sm ml-0.5"></i></span>
+                </div>
               </div>
             </div>
 
-            <div class="space-y-3 sm:space-y-3.5 max-w-2xl w-full">
-              <div class="flex flex-wrap items-center gap-2 text-xs">
-                <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-black uppercase text-[10px] tracking-wider">Focal Star</span>
-                <span class="font-extrabold uppercase tracking-wider text-xs" style="color:${theme.accent}">${item.genre}</span>
+            <!-- Starlight Telemetry & Observation Notes -->
+            <div class="space-y-3 sm:space-y-3.5 max-w-2xl w-full text-center sm:text-left">
+              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs">
+                <span class="px-2.5 py-0.5 rounded-full bg-brand-gold text-black font-black uppercase text-[9px] tracking-widest shadow-sm">Focal Star</span>
+                <span class="font-extrabold uppercase tracking-wider text-[11px] font-mono" style="color:${theme.accent}">${item.genre}</span>
                 <span class="text-white/30">•</span>
-                <span class="text-gray-300 font-semibold">${item.year}</span>
+                <span class="text-gray-300 font-mono text-[11px]">${item.year}</span>
                 <span class="text-white/30">•</span>
-                <span class="text-brand-gold font-extrabold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
+                <span class="text-brand-gold font-black flex items-center gap-1 font-mono text-xs"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating} MAG</span>
                 <span class="text-white/30">•</span>
-                <span class="px-2 py-0.5 rounded bg-white/10 text-gray-200 text-[10px] font-semibold">${item.platformName}</span>
+                <span class="px-2 py-0.5 rounded-md bg-white/10 text-gray-200 text-[10px] font-mono font-semibold">${item.platformName}</span>
               </div>
 
-              <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">${item.cleanName || item.title}</h1>
+              <h1 class="text-2xl sm:text-4xl md:text-5xl font-display font-black text-white tracking-tight leading-tight">${item.cleanName || item.title}</h1>
               <p class="text-brand-gold/90 font-medium text-xs sm:text-sm italic tracking-wide">"${spot.tagline}"</p>
 
-              <!-- Decisive Dual Action Buttons: Watch & Another (Card-Flick) -->
-              <div class="pt-2 flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <!-- Decisive Dual Action Buttons: Observe & Slew Next -->
+              <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2.5 sm:gap-3">
                 <button type="button" onclick="openDetailModal('${escTitle}')" class="px-6 py-2.5 sm:py-3 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-gold/30 transition-all active:scale-95">
-                  <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
+                  <i class="fa-solid fa-play text-xs"></i> <span>Observe Star</span>
                 </button>
-                <button type="button" onclick="flickTonightPick()" class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-white/20 backdrop-blur-md transition-all active:scale-95 group" title="Flick star and aim next candidate">
-                  <i class="fa-solid fa-shuffle text-xs text-brand-gold group-hover:rotate-180 transition-transform duration-300"></i> <span>Another Star</span>
+                <button type="button" onclick="flickTonightPick()" class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-white/20 backdrop-blur-md transition-all active:scale-95 group" title="Slew telescope to next focal star candidate">
+                  <i class="fa-solid fa-arrows-rotate text-xs text-brand-gold group-hover:rotate-180 transition-transform duration-300"></i> <span>Slew to Next</span>
                 </button>
-                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-10 h-10 sm:h-11 sm:w-11 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center border border-white/10 transition-all" title="Mark on Sky Chart">
+                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-10 h-10 sm:h-11 sm:w-11 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center border border-white/10 transition-all shadow-sm" title="Mark on Sky Chart">
                   <i class="fa-solid ${isW ? 'fa-check' : 'fa-bookmark'} text-xs"></i>
                 </button>
               </div>
@@ -16134,6 +16149,95 @@ Odd Taxi|2021|87
       `;
       attachThumbObservers(banner);
     }
+
+    window.setTelescopeMood = function(moodKey) {
+      document.querySelectorAll('#eyepieceMoodRing .mood-ring-notch').forEach(n => {
+        n.classList.toggle('active', n.dataset.mood === moodKey);
+      });
+      
+      const barrel = document.getElementById('telescopeBarrel');
+      const moodAuras = {
+        all: 'radial-gradient(circle at 50% 50%, #060913 0%, #020307 80%, #000 100%)',
+        mind: 'radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.22) 0%, #050b18 68%, #000 100%)',
+        adrenaline: 'radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.25) 0%, #1a060a 68%, #000 100%)',
+        melancholic: 'radial-gradient(circle at 50% 50%, rgba(129, 140, 248, 0.22) 0%, #080d20 68%, #000 100%)',
+        eerie: 'radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.22) 0%, #0b0618 68%, #000 100%)',
+        cozy: 'radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.22) 0%, #1a1205 68%, #000 100%)',
+        laughs: 'radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.22) 0%, #061810 68%, #000 100%)',
+        epic: 'radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.25) 0%, #180b04 68%, #000 100%)'
+      };
+      if (barrel && moodAuras[moodKey]) {
+        barrel.style.background = moodAuras[moodKey];
+      }
+
+      const genreMap = {
+        mind: ['Sci-Fi', 'Mystery'],
+        adrenaline: ['Action', 'Thriller', 'Crime'],
+        melancholic: ['Drama', 'Romance'],
+        eerie: ['Horror', 'Mystery'],
+        cozy: ['Animation', 'Comedy'],
+        laughs: ['Comedy'],
+        epic: ['Fantasy', 'Action', 'War']
+      };
+
+      if (moodKey !== 'all') {
+        const targetGenres = genreMap[moodKey] || [];
+        const sIdx = spotlightTitles.findIndex(s => {
+          const it = globalDatabase[s.title];
+          return it && targetGenres.includes(it.genre);
+        });
+        if (sIdx !== -1) {
+          renderHeroSpotlight(sIdx, true, true);
+        } else {
+          flickTonightPick();
+        }
+        if (window.showToast) showToast(`Telescope Mood Ring: ${moodKey.toUpperCase()}`, 'fa-compass', 'text-brand-gold');
+      } else {
+        renderHeroSpotlight(0, true, true);
+        if (window.showToast) showToast('Telescope Aperture: All Frequencies', 'fa-compass', 'text-brand-gold');
+      }
+    };
+
+    window.applyTelescopeFilter = function(filterKey) {
+      document.querySelectorAll('#opticalFilterRack .optical-glass-slide').forEach(s => {
+        s.classList.toggle('active', s.dataset.filter === filterKey);
+      });
+
+      const filterNames = {
+        all: 'Open Aperture',
+        scifi: 'Spectra: Sci-Fi',
+        action: 'Infrared: Action',
+        drama: 'Prism: Drama',
+        classic: 'Vintage: 70s–90s',
+        hindi: 'Monsoon: Hindi',
+        english: 'Western: English'
+      };
+
+      if (window.showToast) showToast(`Optical Filter: ${filterNames[filterKey] || filterKey}`, 'fa-filter', 'text-brand-gold');
+
+      if (filterKey === 'hindi') {
+        if (window.setGlobalLanguage) window.setGlobalLanguage('hi');
+        const sEl = document.getElementById('discoverIndianRow');
+        if (sEl) sEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (filterKey === 'english') {
+        if (window.setGlobalLanguage) window.setGlobalLanguage('en');
+      } else if (filterKey === 'scifi') {
+        const row = document.getElementById('discoverMindRow');
+        if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (filterKey === 'action') {
+        const row = document.getElementById('discoverBlockbustersRow');
+        if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (filterKey === 'classic') {
+        if (window.switchTab) switchTab('movies');
+        const dec = document.getElementById('filterMoviesDecade');
+        if (dec) {
+          dec.value = '1990s';
+          dec.dispatchEvent(new Event('change'));
+        }
+      } else if (filterKey === 'all') {
+        if (window.setGlobalLanguage) window.setGlobalLanguage('all');
+      }
+    };
 
     // Mood Curations (all 13 genres represented)
     const moods = {

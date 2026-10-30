@@ -238,9 +238,77 @@
         <span id="statWatchedCount">0</span>
       </div>
 
-      <!-- Living Cinema Marquee & JioCinema-Style Mobile Billboard Hero -->
-      <div id="heroBanner" class="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 bg-[#0b0e17] min-h-[250px] sm:min-h-[420px] flex flex-col justify-end sm:justify-between p-4 sm:p-9 shadow-2xl transition-all duration-700">
-        <!-- Injected via JavaScript -->
+      <!-- THE OBSERVATORY TELESCOPE APPARATUS (EYEPIECE RETICLE & OPTICAL CONTROLS) -->
+      <div class="telescope-apparatus" id="telescopeApparatus">
+        <div class="telescope-barrel" id="telescopeBarrel">
+          <!-- Astronomical Telemetry Bar -->
+          <div class="telescope-telemetry-bar">
+            <div class="flex items-center gap-2 sm:gap-3">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-gold shadow-[0_0_8px_#f5c518] animate-pulse"></span>
+              <span id="telescopeCoords" class="font-bold tracking-wider">RA: 18h 36m · DEC: +38° 47' · FOV: 45°</span>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-3 font-mono text-[10px] text-brand-gold/80">
+              <span id="telescopeCoordDisplay" class="hidden sm:inline">APERTURE: 800mm F/4.2</span>
+              <span class="px-2 py-0.5 rounded bg-brand-gold/15 text-brand-gold border border-brand-gold/30 font-bold uppercase tracking-wider">Focal Star Acquired</span>
+            </div>
+          </div>
+
+          <!-- Circular Optical Lens Viewport with Reticle Crosshairs, Concentric Circles & Meteor Ray -->
+          <div class="telescope-eyepiece-lens" id="telescopeLens">
+            <div class="telescope-crosshairs"></div>
+            <div class="telescope-reticle-circle reticle-c1"></div>
+            <div class="telescope-reticle-circle reticle-c2"></div>
+            <div class="telescope-reticle-circle reticle-c3"></div>
+            <div class="telescope-meteor-ray" onclick="openSurpriseModal()" title="Interstellar Meteor: Click for Shooting Star Roulette"></div>
+
+            <!-- Focal Star Stage (Hero Banner inside Eyepiece) -->
+            <div id="heroBanner" class="focal-star-stage w-full">
+              <!-- Injected via renderHeroSpotlight -->
+            </div>
+          </div>
+
+          <!-- Rotary Brass Mood Ring around Eyepiece Base -->
+          <div class="brass-mood-ring" id="eyepieceMoodRing" role="toolbar" aria-label="Telescope Mood Ring">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-brand-gold/80 pr-2 shrink-0 flex items-center gap-1 font-bold">
+              <i class="fa-solid fa-compass text-[10px]"></i> Mood Ring:
+            </span>
+            <button type="button" class="mood-ring-notch active" data-mood="all" onclick="setTelescopeMood('all')">✨ All Celestial</button>
+            <button type="button" class="mood-ring-notch" data-mood="mind" onclick="setTelescopeMood('mind')">🧠 Mind-Bending</button>
+            <button type="button" class="mood-ring-notch" data-mood="adrenaline" onclick="setTelescopeMood('adrenaline')">⚡ Adrenaline</button>
+            <button type="button" class="mood-ring-notch" data-mood="melancholic" onclick="setTelescopeMood('melancholic')">🌧️ Melancholic</button>
+            <button type="button" class="mood-ring-notch" data-mood="eerie" onclick="setTelescopeMood('eerie')">👁️ Eerie &amp; Dark</button>
+            <button type="button" class="mood-ring-notch" data-mood="cozy" onclick="setTelescopeMood('cozy')">☕ Cozy Hearth</button>
+            <button type="button" class="mood-ring-notch" data-mood="laughs" onclick="setTelescopeMood('laughs')">😂 Radiant Joy</button>
+            <button type="button" class="mood-ring-notch" data-mood="epic" onclick="setTelescopeMood('epic')">⚔️ Grand Odyssey</button>
+          </div>
+        </div>
+
+        <!-- Optical Filter Rack (Interchangeable Optical Glass Lenses below Barrel) -->
+        <div class="mt-3 flex items-center justify-between gap-3 flex-wrap">
+          <div class="optical-filter-rack flex-1" id="opticalFilterRack" role="toolbar" aria-label="Optical Glass Filter Rack">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-gray-400 pl-1 shrink-0 flex items-center gap-1.5 font-bold">
+              <i class="fa-solid fa-filter text-brand-gold text-[10px]"></i> Optical Filters:
+            </span>
+            <button type="button" class="optical-glass-slide active" data-filter="all" onclick="applyTelescopeFilter('all')">Open Aperture</button>
+            <button type="button" class="optical-glass-slide" data-filter="scifi" onclick="applyTelescopeFilter('scifi')">Spectra: Sci-Fi</button>
+            <button type="button" class="optical-glass-slide" data-filter="action" onclick="applyTelescopeFilter('action')">Infrared: Action</button>
+            <button type="button" class="optical-glass-slide" data-filter="drama" onclick="applyTelescopeFilter('drama')">Prism: Drama</button>
+            <button type="button" class="optical-glass-slide" data-filter="classic" onclick="applyTelescopeFilter('classic')">Vintage: 70s–90s</button>
+            <button type="button" class="optical-glass-slide" data-filter="hindi" onclick="applyTelescopeFilter('hindi')">Monsoon: Hindi</button>
+            <button type="button" class="optical-glass-slide" data-filter="english" onclick="applyTelescopeFilter('english')">Western: English</button>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" onclick="flickTonightPick()" class="px-3.5 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/30 text-brand-gold text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95 shadow-sm" title="Slew telescope to another celestial coordinate">
+              <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
+              <span>Slew Telescope</span>
+            </button>
+            <button type="button" onclick="openSurpriseModal()" class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-white text-xs font-semibold transition-all flex items-center gap-1.5 active:scale-95" title="Meteor Roulette">
+              <i class="fa-solid fa-meteor text-brand-gold text-[11px]"></i>
+              <span class="hidden sm:inline">Meteor Roulette</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Personalized Editorial Shelf -->
@@ -512,9 +580,9 @@
     <section id="tab-play" class="tab-pane hidden fade-in space-y-6">
       <div class="border-b border-white/10 pb-4">
         <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
-          <i class="fa-solid fa-gamepad text-brand-gold"></i> Play
+          <i class="fa-solid fa-scale-balanced text-brand-gold"></i> Instruments
         </h1>
-        <p class="text-xs sm:text-sm text-gray-400 mt-1">Interactive cinema discovery, face-offs, and taste analysis.</p>
+        <p class="text-xs sm:text-sm text-gray-400 mt-1">Observatory calibration dials, celestial face-offs, star synchronizers, and gravitational physics.</p>
       </div>
 
       <!-- Asymmetric Kinetic Tile Grid -->
@@ -1288,8 +1356,10 @@
       <!-- Hub Header: Title + Segmented Switcher + 3-Dot Overflow Menu -->
       <div class="border-b border-white/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <h1 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">Library</h1>
-          <span class="text-xs text-gray-400 font-mono hidden sm:inline-block">· Personal Collection</span>
+          <h1 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight flex items-center gap-2.5">
+            <i class="fa-solid fa-map text-brand-gold"></i> Chart Table
+          </h1>
+          <span class="text-xs text-gray-400 font-mono hidden sm:inline-block">· Starlight Vault &amp; Trajectories</span>
         </div>
         
         <div class="flex items-center gap-2">
@@ -1469,7 +1539,10 @@
       <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-white/10 p-3.5 sm:p-5 shadow-xl bg-gradient-to-r from-black/80 to-[#0e121c]/90">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex items-center gap-2 min-w-0">
-            <h1 class="text-xl sm:text-2xl font-display font-bold text-white tracking-tight">Music</h1>
+            <h1 class="text-xl sm:text-2xl font-display font-bold text-white tracking-tight flex items-center gap-2">
+              <i class="fa-solid fa-satellite-dish text-brand-gold"></i> The Dish
+            </h1>
+            <span class="text-xs text-gray-400 font-mono hidden sm:inline-block">· Stellar Radio Signals &amp; Scores</span>
           </div>
 
           <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
@@ -1585,9 +1658,9 @@
           <div class="flex items-center gap-4">
             <div id="profileBigAvatar" class="w-16 h-16 rounded-2xl bg-brand-gold/15 border-2 border-brand-gold flex items-center justify-center p-2 shadow-lg shrink-0"></div>
             <div class="min-w-0 flex-1">
-              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Member Profile</div>
-              <h2 id="profileDisplayName" class="text-2xl font-display font-extrabold text-white truncate">Cinephile</h2>
-              <div id="profileLangSummary" class="text-xs text-gray-400">Language: All · Favorite Genre: Sci-Fi</div>
+              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Chief Astronomer · Keeper's Log</div>
+              <h2 id="profileDisplayName" class="text-2xl font-display font-extrabold text-white truncate">Keeper</h2>
+              <div id="profileLangSummary" class="text-xs text-gray-400 font-mono">Telemetry: All Frequencies · Primary Galaxy: Sci-Fi</div>
             </div>
           </div>
 

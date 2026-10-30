@@ -989,6 +989,18 @@
       if ($('ytDockExternalLink')) $('ytDockExternalLink').href = `https://www.youtube.com/watch?v=${s.id}`;
       if ($('musicQueueCountLbl')) $('musicQueueCountLbl').textContent = musicQueue.length;
 
+      // Update Celestial Orbiting Moon Mini-Player
+      const moon = $('orbitingMoonPlayer');
+      const moonThumb = $('orbitingMoonThumb');
+      if (moon) {
+        if (isPlayingMusic) {
+          moon.classList.remove('hidden');
+          if (moonThumb) moonThumb.src = thumbUrl;
+        } else {
+          moon.classList.add('hidden');
+        }
+      }
+
       renderMusicQueueList();
     }
 
@@ -1280,6 +1292,7 @@
         try { navigator.mediaSession.playbackState = 'none'; } catch (e) {}
       }
       if ($('musicMiniPlayer')) $('musicMiniPlayer').classList.add('hidden');
+      if ($('orbitingMoonPlayer')) $('orbitingMoonPlayer').classList.add('hidden');
       if ($('musicVideoDock')) $('musicVideoDock').classList.add('hidden');
       if ($('musicQueueDrawer')) $('musicQueueDrawer').classList.add('hidden');
     };
