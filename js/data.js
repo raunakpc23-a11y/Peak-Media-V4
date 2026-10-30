@@ -16065,6 +16065,7 @@ Odd Taxi|2021|87
 
       const banner = document.getElementById('heroBanner');
       if (!banner) return;
+<<<<<<< HEAD
       banner.style.background = `radial-gradient(ellipse at 80% 20%, ${theme.c1}77 0%, #03050a 78%)`;
 
       banner.innerHTML = `
@@ -16081,21 +16082,52 @@ Odd Taxi|2021|87
             <div class="flex items-center gap-2">
               <span class="inline-block w-2.5 h-2.5 rounded-full animate-pulse" style="background:${theme.accent}"></span>
               <span class="font-bold text-white tracking-wide uppercase text-[11px] sm:text-xs">Eyepiece Focal Star · Tonight's Pick</span>
+=======
+      banner.style.background = `radial-gradient(ellipse at 80% 20%, ${theme.c1}88 0%, #07090e 75%)`;
+
+      banner.innerHTML = `
+        <!-- Ambient Color Bleed & Projector Light Glow -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-2/3 h-full object-cover opacity-35 sm:opacity-20 blur-3xl scale-125 transition-all duration-700 pointer-events-none" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#07090e] via-[#07090e]/80 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-[#07090e] via-[#07090e]/90 to-transparent"></div>
+        </div>
+
+        <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col justify-between h-full ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
+          <!-- Top Natural Kicker -->
+          <div class="flex items-center justify-between gap-3 text-xs border-b border-white/[0.08] pb-3 mb-4 sm:mb-6">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-2.5 h-2.5 rounded-full animate-pulse" style="background:${theme.accent}"></span>
+              <span class="font-bold text-white tracking-wide uppercase text-[11px] sm:text-xs">Tonight's Pick</span>
+>>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
               <span class="text-white/25">·</span>
               <span class="text-gray-400 text-[11px] sm:text-xs">${currentSpotlightIdx + 1} of ${spotlightTitles.length}</span>
             </div>
             <div class="flex items-center gap-3 text-xs">
+<<<<<<< HEAD
               <button type="button" onclick="openOnboardingWizard(true)" class="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-[11px]" title="Retake Star Alignment">
                 <i class="fa-solid fa-sliders text-[10px] text-brand-gold"></i>
                 <span class="hidden sm:inline">Align Taste</span>
+=======
+              <button type="button" onclick="openOnboardingWizard(true)" class="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-[11px]">
+                <i class="fa-solid fa-sliders text-[10px] text-brand-gold"></i>
+                <span class="hidden sm:inline">Taste Setup</span>
+>>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
               </button>
             </div>
           </div>
 
+<<<<<<< HEAD
           <!-- Main Eyepiece Stage -->
           <div class="flex flex-col sm:flex-row items-start sm:items-end gap-5 sm:gap-8 w-full">
             <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')">
               <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster hidden sm:block w-36 md:w-48 rounded-2xl border border-white/20 shadow-2xl object-cover poster-aspect transition-transform duration-300 group-hover:scale-105 group-hover:shadow-brand-gold/25" />
+=======
+          <!-- Main Hero Display -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-end gap-5 sm:gap-8 w-full">
+            <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')">
+              <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster hidden sm:block w-36 md:w-48 rounded-2xl border border-white/20 shadow-2xl object-cover poster-aspect transition-transform duration-300 group-hover:scale-105 group-hover:shadow-brand-gold/20" />
+>>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
               <div class="hidden sm:flex absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover:opacity-100 items-center justify-center transition-opacity">
                 <span class="w-12 h-12 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-sm ml-0.5"></i></span>
               </div>
@@ -16103,7 +16135,11 @@ Odd Taxi|2021|87
 
             <div class="space-y-3 sm:space-y-3.5 max-w-2xl w-full">
               <div class="flex flex-wrap items-center gap-2 text-xs">
+<<<<<<< HEAD
                 <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-black uppercase text-[10px] tracking-wider">Focal Star</span>
+=======
+                <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-black uppercase text-[10px] tracking-wider">Feature</span>
+>>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
                 <span class="font-extrabold uppercase tracking-wider text-xs" style="color:${theme.accent}">${item.genre}</span>
                 <span class="text-white/30">•</span>
                 <span class="text-gray-300 font-semibold">${item.year}</span>
@@ -16121,10 +16157,17 @@ Odd Taxi|2021|87
                 <button type="button" onclick="openDetailModal('${escTitle}')" class="px-6 py-2.5 sm:py-3 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-gold/30 transition-all active:scale-95">
                   <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
                 </button>
+<<<<<<< HEAD
                 <button type="button" onclick="flickTonightPick()" class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-white/20 backdrop-blur-md transition-all active:scale-95 group" title="Flick star and aim next candidate">
                   <i class="fa-solid fa-shuffle text-xs text-brand-gold group-hover:rotate-180 transition-transform duration-300"></i> <span>Another Star</span>
                 </button>
                 <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-10 h-10 sm:h-11 sm:w-11 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center border border-white/10 transition-all" title="Mark on Sky Chart">
+=======
+                <button type="button" onclick="flickTonightPick()" class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-white/20 backdrop-blur-md transition-all active:scale-95 group" title="Flick card and see next recommendation">
+                  <i class="fa-solid fa-shuffle text-xs text-brand-gold group-hover:rotate-180 transition-transform duration-300"></i> <span>Another</span>
+                </button>
+                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-10 h-10 sm:h-11 sm:w-11 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center border border-white/10 transition-all" title="Watchlist">
+>>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
                   <i class="fa-solid ${isW ? 'fa-check' : 'fa-bookmark'} text-xs"></i>
                 </button>
               </div>

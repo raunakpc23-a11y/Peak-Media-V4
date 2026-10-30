@@ -7,7 +7,11 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
+<<<<<<< HEAD
 const CACHE_NAME = 'peak-media-v5.0-observatory';
+=======
+const CACHE_NAME = 'peak-media-v4.6';
+>>>>>>> 2d84ee7d40a65ef55cf3b382337464acb0895b52
 
 // All local files to pre-cache the moment the SW installs
 const PRE_CACHE = [
