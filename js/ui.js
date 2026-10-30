@@ -121,16 +121,6 @@
     const m = document.getElementById('hubOverflowMenu');
     if (m) m.classList.toggle('hidden');
   };
-
-  window.toggleLibrarySpineView = function() {
-    if (window.playProjectorHaptic) window.playProjectorHaptic('click');
-    document.body.classList.toggle('spine-view-mode');
-    const isSpine = document.body.classList.contains('spine-view-mode');
-    const lbl = document.getElementById('spineViewToggleLbl');
-    if (lbl) lbl.textContent = isSpine ? 'Covers' : 'Spines';
-    showToast(isSpine ? 'Shelf: Physical Spine View' : 'Shelf: Poster Cover View', 'fa-lines-leaning', 'text-brand-gold');
-  };
-
   document.addEventListener('click', function(e) {
     const m = document.getElementById('hubOverflowMenu');
     const btn = document.getElementById('hubOverflowMenuBtn');
@@ -138,119 +128,6 @@
       m.classList.add('hidden');
     }
   });
-
-  // ==========================================
-  // THE PROJECTOR ROOM: OPTICS & HAPTICS ENGINE
-  // ==========================================
-  let audioCtx = null;
-  function getAudioContext() {
-    if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx && audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-    return audioCtx;
-  }
-
-  window.playProjectorHaptic = function(type = 'click') {
-    try {
-      const ctx = getAudioContext();
-      if (!ctx) return;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      if (type === 'click') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(320, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.04);
-        gain.gain.setValueAtTime(0.08, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.04);
-      } else if (type === 'flick') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(180, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(460, ctx.currentTime + 0.09);
-        gain.gain.setValueAtTime(0.06, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.09);
-      }
-    } catch (e) {}
-  };
-
-  // 60fps Pointer-tracking Spotlight Engine
-  let spotRaf = null;
-  window.addEventListener('pointermove', function(e) {
-    if (spotRaf) return;
-    spotRaf = requestAnimationFrame(function() {
-      document.documentElement.style.setProperty('--spot-x', `${e.clientX}px`);
-      document.documentElement.style.setProperty('--spot-y', `${e.clientY}px`);
-      spotRaf = null;
-    });
-  }, { passive: true });
-
-  // Brass Pull-Cord Lamp Interaction
-  window.triggerPullCordLamp = function(e) {
-    if (e) e.stopPropagation();
-    const btn = document.getElementById('vibeBtn');
-    if (btn) {
-      btn.classList.add('pulled');
-      setTimeout(() => btn.classList.remove('pulled'), 220);
-    }
-    window.playProjectorHaptic('click');
-    const panel = document.getElementById('vibePanel');
-    if (panel) {
-      panel.classList.toggle('hidden');
-    }
-  };
-
-  // Lights Out Flashlight Mode Toggle
-  window.toggleProjectorLightsOut = function() {
-    window.playProjectorHaptic('click');
-    document.body.classList.toggle('lights-out-mode');
-    const isOut = document.body.classList.contains('lights-out-mode');
-    showToast(isOut ? 'Lights Out: Flashlight Mode Active' : 'Projector Ambient Restored', isOut ? 'fa-moon' : 'fa-sun', isOut ? 'text-amber-400' : 'text-brand-gold');
-  };
-
-  // Kinetic Floating Island Dock Light Puddle & Scroll Collapse
-  window.syncDockLightPuddle = function(tabKey) {
-    const dock = document.getElementById('projectorDock');
-    if (!dock) return;
-    const btn = dock.querySelector(`[data-dock="${tabKey}"]`);
-    const puddle = document.getElementById('dockLightPuddle');
-    if (btn && puddle) {
-      puddle.style.left = `${btn.offsetLeft}px`;
-      puddle.style.width = `${btn.offsetWidth}px`;
-    }
-    dock.querySelectorAll('.dock-btn').forEach(b => {
-      const match = b.getAttribute('data-dock') === tabKey;
-      b.className = match
-        ? 'dock-btn relative px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-brand-gold transition-colors'
-        : 'dock-btn relative px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-white transition-colors';
-    });
-  };
-
-  let lastScrollY = window.scrollY;
-  let scrollTimeout = null;
-  window.addEventListener('scroll', function() {
-    const dock = document.getElementById('projectorDock');
-    if (!dock) return;
-    const curY = window.scrollY;
-    if (curY > lastScrollY + 20 && curY > 120) {
-      dock.classList.add('scrolled-down');
-    } else if (curY < lastScrollY - 10 || curY <= 120) {
-      dock.classList.remove('scrolled-down');
-    }
-    lastScrollY = curY;
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      dock.classList.remove('scrolled-down');
-    }, 450);
-  }, { passive: true });
 
   switchTab('discover');
 
@@ -524,7 +401,6 @@
     _sw.apply(this, arguments);
     const k = ({ browse: 'movies' })[key] || key;
     $('browseSearch').classList.toggle('hidden', !BROWSE.includes(k));
-    if (window.syncDockLightPuddle) window.syncDockLightPuddle(key);
   };
   drawChips();
 })();

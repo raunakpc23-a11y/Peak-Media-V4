@@ -16080,12 +16080,10 @@ Odd Taxi|2021|87
         <!-- Main Hero Body + Interactive Poster / Dot Switcher -->
         <div class="relative z-10 w-full flex flex-col lg:flex-row items-start lg:items-end justify-between gap-4 sm:gap-8 ${animate ? 'fade-in' : ''}">
           <div class="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6 max-w-3xl w-full">
-            <div id="tonightPosterCard" class="relative group/poster shrink-0">
-              <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster hidden sm:block w-36 md:w-44 rounded-2xl border border-white/20 shadow-2xl object-cover poster-aspect cursor-pointer hover:scale-[1.03] transition-all duration-300" style="box-shadow: 0 20px 50px -10px ${theme.c1}88, 0 0 25px ${theme.c2}44;" onclick="openDetailModal('${escTitle}')" />
-            </div>
+            <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster hidden sm:block w-36 md:w-44 rounded-xl border border-white/15 shadow-2xl object-cover poster-aspect shrink-0 cursor-pointer hover:scale-[1.02] transition-transform" onclick="openDetailModal('${escTitle}')" />
             <div class="space-y-2 sm:space-y-3 w-full">
               <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
-                <span class="px-2.5 py-0.5 rounded-full bg-brand-gold text-black font-extrabold uppercase text-[10px] tracking-wider shadow-sm">Tonight's Pick</span>
+                <span class="px-2 py-0.5 rounded bg-brand-gold text-black font-extrabold uppercase text-[10px]">Spotlight</span>
                 <span class="font-bold uppercase tracking-wide" style="color:${theme.accent}">${item.genre}</span>
                 <span class="text-white/30">•</span>
                 <span class="text-gray-200 font-semibold">${item.year}</span>
@@ -16096,15 +16094,15 @@ Odd Taxi|2021|87
               </div>
               <h1 class="text-2xl sm:text-5xl font-display font-extrabold text-white tracking-tight leading-tight">${item.cleanName || item.title}</h1>
               <p class="text-brand-gold/90 font-medium text-xs sm:text-sm italic tracking-wide">"${spot.tagline}"</p>
-              <div class="pt-1 sm:pt-2 flex flex-wrap items-center gap-2 sm:gap-3">
-                <button type="button" onclick="openDetailModal('${escTitle}')" class="flex-1 sm:flex-initial justify-center px-5 sm:px-6 py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-gold/20 transition-all active:scale-95">
+              <div class="pt-1 sm:pt-2 flex items-center gap-2 sm:gap-2.5">
+                <button type="button" onclick="openDetailModal('${escTitle}')" class="flex-1 sm:flex-initial justify-center px-4 sm:px-6 py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-gold/20 transition-all active:scale-95">
                   <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
                 </button>
-                <button type="button" onclick="flickNextTonightPick(event)" class="px-4 sm:px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-white/15 backdrop-blur-md transition-all active:scale-95 group/flick" title="Flick card for next title">
-                  <i class="fa-solid fa-arrows-rotate text-xs text-brand-gold group-hover/flick:rotate-180 transition-transform duration-500"></i> <span>Another</span>
-                </button>
-                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="px-3.5 py-2.5 rounded-xl ${isW ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border-white/10'} font-semibold text-xs flex items-center gap-1.5 border transition-all active:scale-95" title="Save to Watchlist">
+                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="px-3.5 sm:px-4 py-2.5 rounded-xl ${isW ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'bg-white/10 hover:bg-white/15 text-white border-white/15 backdrop-blur-md'} font-bold text-xs sm:text-sm flex items-center gap-1.5 border transition-all active:scale-95">
                   <i class="fa-solid ${isW ? 'fa-check' : 'fa-plus'} text-xs"></i> <span>${isW ? 'Saved' : 'Watchlist'}</span>
+                </button>
+                <button type="button" onclick="toggleWatched('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="hidden sm:flex px-3.5 py-2.5 rounded-xl ${isSeen ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-white/[0.04] hover:bg-white/[0.1] text-gray-300 border-white/10'} font-medium text-xs sm:text-sm items-center gap-1.5 border transition-all">
+                  <i class="fa-solid fa-check text-xs"></i> <span>${isSeen ? 'Watched' : 'Seen'}</span>
                 </button>
               </div>
             </div>
@@ -17658,45 +17656,11 @@ Odd Taxi|2021|87
       if (el) el.addEventListener(id === 'searchShows' ? 'input' : 'change', () => filterAndRenderShows(true));
     });
 
-    window.flickNextTonightPick = function(e) {
-      if (e) e.stopPropagation();
-      if (window.playProjectorHaptic) window.playProjectorHaptic('flick');
-      const card = document.getElementById('tonightPosterCard');
-      if (card) {
-        card.classList.add('card-flick-away');
-        setTimeout(() => {
-          renderHeroSpotlight(currentSpotlightIdx + 1, false);
-          const next = document.getElementById('tonightPosterCard');
-          if (next) next.classList.add('card-drop-in');
-        }, 260);
-      } else {
-        renderHeroSpotlight(currentSpotlightIdx + 1, false);
-      }
-    };
-
-    function animateCinemaOdometer() {
-      const el = document.getElementById('cinemaOdometer');
-      if (!el) return;
-      const target = 3482;
-      let cur = 1200;
-      const step = 92;
-      const timer = setInterval(() => {
-        cur += step;
-        if (cur >= target) {
-          cur = target;
-          clearInterval(timer);
-        }
-        el.textContent = cur.toLocaleString();
-      }, 22);
-    }
-
     // Auto-advance hero banner every 8 seconds if not hovered
     let heroHovered = false;
     const heroEl = document.getElementById('heroBanner');
-    if (heroEl) {
-      heroEl.onmouseenter = () => { heroHovered = true; };
-      heroEl.onmouseleave = () => { heroHovered = false; };
-    }
+    heroEl.onmouseenter = () => { heroHovered = true; };
+    heroEl.onmouseleave = () => { heroHovered = false; };
     setInterval(() => {
       if (!heroHovered && !document.hidden && !document.getElementById('tab-discover').classList.contains('hidden')) {
         renderHeroSpotlight(currentSpotlightIdx + 1);
@@ -17714,5 +17678,4 @@ Odd Taxi|2021|87
       renderTags('myTags');
       renderTags('friendTags');
       updateAllCountersAndViews();
-      animateCinemaOdometer();
     });

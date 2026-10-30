@@ -40,22 +40,12 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="css/base.css?v=4.5">
-  <link rel="stylesheet" href="css/widgets.css?v=4.5">
-  <link rel="stylesheet" href="css/onboarding.css?v=4.5">
-  <link rel="stylesheet" href="css/responsive.css?v=4.5">
+  <link rel="stylesheet" href="css/base.css?v=4.4">
+  <link rel="stylesheet" href="css/widgets.css?v=4.4">
+  <link rel="stylesheet" href="css/onboarding.css?v=4.4">
+  <link rel="stylesheet" href="css/responsive.css?v=4.4">
 </head>
-<body data-theme="space" class="min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased relative">
-
-  <!-- THE PROJECTOR ROOM: REAL-TIME SPOTLIGHT BEAM OVERLAY -->
-  <div id="projectorSpotlightOverlay" aria-hidden="true"></div>
-
-  <!-- THE PEEKING VINYL DISC (HOMEPAGE TO MUSIC LOUNGE BRIDGE) -->
-  <div id="homePeekingVinyl" class="home-peeking-vinyl flex items-center justify-center group" onclick="switchTab('music')" title="Open Vinyl Lounge" aria-label="Open Vinyl Lounge">
-    <div class="w-6 h-6 rounded-full bg-brand-gold/90 border-2 border-black flex items-center justify-center text-[10px] text-black shadow-inner group-hover:rotate-45 transition-transform">
-      <i class="fa-solid fa-record-vinyl"></i>
-    </div>
-  </div>
+<body data-theme="space" class="min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased">
 
   <header class="glass-nav sticky top-0 z-40 border-b border-white/10 transition-all">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between gap-1.5 sm:gap-4">
@@ -136,17 +126,9 @@
           <i class="fa-solid fa-magnifying-glass text-xs"></i>
         </button>
 
-        <!-- The Projector Room: Brass Pull-Cord Lamp -->
-        <button type="button" id="vibeBtn" onclick="triggerPullCordLamp(event)" title="Pull Cord: Projector Lamp & Atmosphere" class="pull-cord-btn relative w-9 h-11 flex flex-col items-center justify-start group cursor-pointer active:scale-95 transition-all" aria-label="Projector Lamp Settings">
-          <!-- Brass Mount Fixture -->
-          <span class="w-4 h-1.5 rounded-full bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-700 shadow-sm shrink-0"></span>
-          <!-- Bead Chain & Pull Acorn -->
-          <span class="pull-chain-beads flex flex-col items-center gap-[2.5px] mt-0.5">
-            <span class="w-1 h-1 rounded-full bg-yellow-400/90 shadow-[0_0_4px_#f5c518]"></span>
-            <span class="w-1 h-1 rounded-full bg-amber-500/80"></span>
-            <span class="w-1 h-1 rounded-full bg-yellow-400/90 shadow-[0_0_4px_#f5c518]"></span>
-            <span class="w-2.5 h-3 rounded-b-md rounded-t-sm bg-gradient-to-b from-yellow-300 via-amber-500 to-amber-700 shadow-md group-hover:scale-110 transition-transform"></span>
-          </span>
+        <!-- Unified Settings Drawer Trigger (Gear Icon) -->
+        <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Settings &amp; Atmosphere" class="w-9 h-9 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95" aria-label="Settings">
+          <i class="fa-solid fa-gear text-sm"></i>
         </button>
 
         <!-- Profile Button -->
@@ -240,20 +222,7 @@
 
     <!-- TAB 0: HOME (DISCOVER) -->
     <section id="tab-discover" class="tab-pane fade-in space-y-6 sm:space-y-8">
-      <!-- Vintage Cinema Mechanical Odometer Header -->
-      <div class="flex items-center justify-between gap-3 pb-1">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 text-xs font-mono text-gray-400 shadow-inner">
-          <i class="fa-solid fa-film text-brand-gold"></i>
-          <span class="tracking-widest uppercase text-[10px] text-gray-400 font-bold">Projector Archive:</span>
-          <span id="cinemaOdometer" class="font-extrabold text-white text-xs tracking-wider">3,482</span>
-          <span class="text-[10px] text-gray-500 font-semibold">Titles Vaulted</span>
-        </div>
-        <button type="button" onclick="toggleProjectorLightsOut()" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-300 hover:text-white transition-all flex items-center gap-1.5" title="Toggle Flashlight Mode">
-          <i class="fa-solid fa-moon text-amber-400 text-xs"></i> <span>Lights Out</span>
-        </button>
-      </div>
-
-      <!-- Hidden KPI counters kept for internal state sync -->
+      <!-- Hidden KPI counters kept for internal state sync; Cinematic Weather Report & duplicate language bar removed -->
       <div class="hidden" aria-hidden="true">
         <span id="statTotalTitles">3,400+</span>
         <span id="statWatchlistCount">0</span>
@@ -271,7 +240,7 @@
           <div class="space-y-1">
             <div id="personalWelcomeBanner" class="text-xs text-gray-400"></div>
             <h2 id="personalRowTitle" class="text-xl sm:text-2xl font-display font-bold text-white tracking-tight">
-              <span>Tonight's Pick</span>
+              <span>Picked For You</span>
             </h2>
             <p id="personalRowSub" class="text-xs text-gray-400"></p>
           </div>
@@ -1309,12 +1278,6 @@
             <button type="button" onclick="window.filterLibraryShelfView('custom')" id="shelfViewBtn-custom" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Custom Lists</button>
           </div>
 
-          <!-- Spine View Toggle Button -->
-          <button type="button" id="spineViewToggleBtn" onclick="toggleLibrarySpineView()" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all shrink-0" title="Toggle Shelf Spine vs. Cover View">
-            <i class="fa-solid fa-lines-leaning text-brand-gold text-[11px]"></i>
-            <span id="spineViewToggleLbl" class="hidden sm:inline">Spines</span>
-          </button>
-
           <!-- 3-Dot Overflow Menu -->
           <div class="relative shrink-0">
             <button type="button" id="hubOverflowMenuBtn" onclick="toggleHubOverflowMenu()" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all" title="More Options" aria-label="More Options">
@@ -2034,29 +1997,24 @@
     </div>
   </div>
 
-  <!-- THE PROJECTOR ROOM: KINETIC FLOATING ISLAND DOCK -->
-  <nav id="projectorDock" class="kinetic-dock px-3 py-1.5 flex items-center gap-1 sm:gap-2 max-w-[94vw] sm:max-w-md" aria-label="Projector Navigation Dock">
-    <button type="button" onclick="switchTab('discover')" data-dock="discover" class="dock-btn relative px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-brand-gold transition-colors">
-      <i class="fa-solid fa-house text-xs"></i><span class="text-[11px]">Vault</span>
+  <!-- MOBILE BOTTOM NAVIGATION (Exclusively shown on small screens: md:hidden) -->
+  <nav id="mobileBottomNav" class="md:hidden fixed bottom-0 inset-x-0 z-40 glass-nav border-t border-white/10 px-2 py-1.5 flex items-center justify-around" style="padding-bottom: max(0.375rem, env(safe-area-inset-bottom));">
+    <button type="button" onclick="switchTab('discover')" data-mnav="discover" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-brand-gold font-bold text-[11px]">
+      <i class="fa-solid fa-house text-sm"></i><span>Vault</span>
     </button>
-    <button type="button" onclick="switchTab('browse')" data-dock="browse" class="dock-btn relative px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-white transition-colors">
-      <i class="fa-solid fa-magnifying-glass text-xs"></i><span class="text-[11px]">Search</span>
+    <button type="button" onclick="switchTab('browse')" data-mnav="browse" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-gray-400 font-semibold text-[11px]">
+      <i class="fa-solid fa-magnifying-glass text-sm"></i><span>Search</span>
     </button>
-    <button type="button" onclick="switchTab('music')" data-dock="music" class="dock-btn relative px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-white transition-colors">
-      <i class="fa-solid fa-music text-xs"></i><span class="text-[11px]">Music</span>
+    <button type="button" onclick="switchTab('music')" data-mnav="music" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-gray-400 font-semibold text-[11px]">
+      <i class="fa-solid fa-music text-sm"></i><span>Music</span>
     </button>
-    <button type="button" onclick="switchTab('decide')" data-dock="decide" class="dock-btn relative px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-white transition-colors">
-      <span class="text-[11px]">Play</span>
+    <button type="button" onclick="switchTab('decide')" data-mnav="decide" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-gray-400 font-semibold text-[11px]">
+      <span>Play</span>
     </button>
-    <button type="button" onclick="switchTab('space')" data-dock="space" class="dock-btn relative px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-white transition-colors">
-      <i class="fa-solid fa-bookmark text-xs"></i><span class="text-[11px]">Library</span>
+    <button type="button" onclick="switchTab('space')" data-mnav="space" class="mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-gray-400 font-semibold text-[11px]">
+      <i class="fa-solid fa-bookmark text-sm"></i><span>Library</span>
     </button>
-    <!-- Sliding Pool of Light Under Active Icon -->
-    <span id="dockLightPuddle" class="dock-light-puddle"></span>
   </nav>
-
-  <!-- Legacy alias for state compatibility -->
-  <nav id="mobileBottomNav" class="hidden" aria-hidden="true"></nav>
 
   <!-- MODAL: ENGLISH VS HINDI SIDE-BY-SIDE COMPARE -->
   <div id="langCompareModal" class="fixed inset-0 z-[70] hidden items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='langCompareModal')closeLangCompareModal()">
@@ -2196,15 +2154,15 @@
   </div>
 
 
-  <script src="js/data.js?v=4.5"></script>
-  <script src="js/constellation.js?v=4.5"></script>
-  <script src="js/hub-duel.js?v=4.5"></script>
-  <script src="js/ui.js?v=4.5"></script>
-  <script src="js/features.js?v=4.5"></script>
-  <script src="js/marathon.js?v=4.5"></script>
-  <script src="js/universes.js?v=4.5"></script>
-  <script src="js/mood_dial.js?v=4.5"></script>
-  <script src="js/main.js?v=4.5"></script>
-  <script src="js/pwa.js?v=4.5"></script>
+  <script src="js/data.js?v=4.4"></script>
+  <script src="js/constellation.js?v=4.4"></script>
+  <script src="js/hub-duel.js?v=4.4"></script>
+  <script src="js/ui.js?v=4.4"></script>
+  <script src="js/features.js?v=4.4"></script>
+  <script src="js/marathon.js?v=4.4"></script>
+  <script src="js/universes.js?v=4.4"></script>
+  <script src="js/mood_dial.js?v=4.4"></script>
+  <script src="js/main.js?v=4.4"></script>
+  <script src="js/pwa.js?v=4.4"></script>
 </body>
 </html>

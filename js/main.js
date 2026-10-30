@@ -1420,7 +1420,6 @@
       musicSleepTimerInterval = null;
       musicSleepEndTime = 0;
       musicSleepEndTrack = false;
-      document.body.style.filter = '';
       const lbl = $('mpSleepLbl');
       if (lbl) lbl.textContent = 'Sleep';
       const btn = $('mpSleepBtn');
@@ -1436,23 +1435,13 @@
         clearInterval(musicSleepTimerInterval);
         musicSleepTimerInterval = null;
         musicSleepEndTime = 0;
-        document.body.style.filter = '';
         if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
         isPlayingMusic = false;
         updateMiniPlayerUI();
         cancelMusicSleepTimer();
-        showToast('Projector cooled down. Pausing music. Goodnight! 🌙', 'fa-moon', 'text-indigo-400');
+        showToast('Sleep timer ended. Pausing music. Goodnight! 🌙', 'fa-moon', 'text-indigo-400');
         return;
       }
-
-      // Gentle Projector Bulb Lux Dimming in final 5 minutes
-      if (remainingMs < 300000) {
-        const lux = 0.45 + 0.55 * (remainingMs / 300000);
-        document.body.style.filter = `brightness(${lux.toFixed(2)})`;
-      } else {
-        document.body.style.filter = '';
-      }
-
       const remMins = Math.floor(remainingMs / 60000);
       const remSecs = Math.floor((remainingMs % 60000) / 1000);
       const formatted = remMins + ':' + (remSecs < 10 ? '0' : '') + remSecs;
