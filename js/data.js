@@ -16033,7 +16033,19 @@ Odd Taxi|2021|87
       return "Late night screening";
     }
 
-    function renderHeroSpotlight(idx = 0, animate = true) {
+    window.flickTonightPick = function() {
+      const inner = document.getElementById('heroInnerWrap');
+      if (inner) {
+        inner.classList.add('flick-out');
+        setTimeout(() => {
+          renderHeroSpotlight(currentSpotlightIdx + 1, true, true);
+        }, 200);
+      } else {
+        renderHeroSpotlight(currentSpotlightIdx + 1, true, true);
+      }
+    };
+
+    function renderHeroSpotlight(idx = 0, animate = true, isDropIn = false) {
       currentSpotlightIdx = ((idx % spotlightTitles.length) + spotlightTitles.length) % spotlightTitles.length;
       const spot = spotlightTitles[currentSpotlightIdx];
       const item = globalDatabase[spot.title] || movies[0];
@@ -16053,75 +16065,70 @@ Odd Taxi|2021|87
 
       const banner = document.getElementById('heroBanner');
       if (!banner) return;
-      banner.style.background = `linear-gradient(115deg, #07090e 0%, ${theme.c1}cc 55%, ${theme.c2}66 100%)`;
+      banner.style.background = `radial-gradient(ellipse at 80% 20%, ${theme.c1}88 0%, #07090e 75%)`;
 
       banner.innerHTML = `
-        <!-- JioCinema-style Full-Bleed Poster Backdrop on Mobile + Ambient Backdrop on Desktop -->
+        <!-- Ambient Color Bleed & Projector Light Glow -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
-          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute inset-0 sm:left-auto sm:right-0 sm:w-3/4 w-full h-full object-cover opacity-45 sm:opacity-25 sm:blur-2xl sm:scale-110 transition-all duration-700" />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#06080d] via-[#06080d]/80 to-black/20 sm:bg-gradient-to-r sm:from-[#07090e] sm:via-[#07090e]/85 sm:to-transparent"></div>
+          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-2/3 h-full object-cover opacity-35 sm:opacity-20 blur-3xl scale-125 transition-all duration-700 pointer-events-none" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#07090e] via-[#07090e]/80 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-[#07090e] via-[#07090e]/90 to-transparent"></div>
         </div>
 
-        <!-- Top natural editorial bar (Desktop Only to keep Mobile Hero clean like JioCinema) -->
-        <div class="hidden sm:flex relative z-10 items-center justify-between gap-4 text-xs text-gray-400 border-b border-white/[0.07] pb-3.5 mb-6">
-          <div class="flex items-center gap-2">
-            <span class="inline-block w-2 h-2 rounded-full" style="background:${theme.accent}"></span>
-            <span class="font-medium text-gray-200">${getGreetingForTime()}${profName ? `, <strong class="text-white">${profName.replace(/</g, '&lt;')}</strong>` : ''}</span>
-            <span class="text-white/20">·</span>
-            <span class="text-gray-400">Spotlight ${currentSpotlightIdx + 1} of ${spotlightTitles.length}</span>
-          </div>
-          <div class="flex items-center gap-3 text-[11px] text-gray-400">
-            <button type="button" onclick="openLangCompareModal()" class="text-brand-gold hover:underline font-semibold"><i class="fa-solid fa-scale-unbalanced mr-1"></i>Compare</button>
-            <span>·</span>
-            <span>Press <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-gray-300 font-mono text-[10px]">/</kbd> to search</span>
-          </div>
-        </div>
-
-        <!-- Main Hero Body + Interactive Poster / Dot Switcher -->
-        <div class="relative z-10 w-full flex flex-col lg:flex-row items-start lg:items-end justify-between gap-4 sm:gap-8 ${animate ? 'fade-in' : ''}">
-          <div class="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6 max-w-3xl w-full">
-            <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster hidden sm:block w-36 md:w-44 rounded-xl border border-white/15 shadow-2xl object-cover poster-aspect shrink-0 cursor-pointer hover:scale-[1.02] transition-transform" onclick="openDetailModal('${escTitle}')" />
-            <div class="space-y-2 sm:space-y-3 w-full">
-              <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
-                <span class="px-2 py-0.5 rounded bg-brand-gold text-black font-extrabold uppercase text-[10px]">Spotlight</span>
-                <span class="font-bold uppercase tracking-wide" style="color:${theme.accent}">${item.genre}</span>
-                <span class="text-white/30">•</span>
-                <span class="text-gray-200 font-semibold">${item.year}</span>
-                <span class="text-white/30">•</span>
-                <span class="text-brand-gold font-extrabold">★ ${item.rating}</span>
-                <span class="text-white/30">•</span>
-                <span class="px-2 py-0.5 rounded bg-white/10 text-gray-200 text-[10px] font-semibold">${item.platformName}</span>
-              </div>
-              <h1 class="text-2xl sm:text-5xl font-display font-extrabold text-white tracking-tight leading-tight">${item.cleanName || item.title}</h1>
-              <p class="text-brand-gold/90 font-medium text-xs sm:text-sm italic tracking-wide">"${spot.tagline}"</p>
-              <div class="pt-1 sm:pt-2 flex items-center gap-2 sm:gap-2.5">
-                <button type="button" onclick="openDetailModal('${escTitle}')" class="flex-1 sm:flex-initial justify-center px-4 sm:px-6 py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-gold/20 transition-all active:scale-95">
-                  <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
-                </button>
-                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="px-3.5 sm:px-4 py-2.5 rounded-xl ${isW ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'bg-white/10 hover:bg-white/15 text-white border-white/15 backdrop-blur-md'} font-bold text-xs sm:text-sm flex items-center gap-1.5 border transition-all active:scale-95">
-                  <i class="fa-solid ${isW ? 'fa-check' : 'fa-plus'} text-xs"></i> <span>${isW ? 'Saved' : 'Watchlist'}</span>
-                </button>
-                <button type="button" onclick="toggleWatched('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="hidden sm:flex px-3.5 py-2.5 rounded-xl ${isSeen ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-white/[0.04] hover:bg-white/[0.1] text-gray-300 border-white/10'} font-medium text-xs sm:text-sm items-center gap-1.5 border transition-all">
-                  <i class="fa-solid fa-check text-xs"></i> <span>${isSeen ? 'Watched' : 'Seen'}</span>
-                </button>
-              </div>
+        <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col justify-between h-full ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
+          <!-- Top Natural Kicker -->
+          <div class="flex items-center justify-between gap-3 text-xs border-b border-white/[0.08] pb-3 mb-4 sm:mb-6">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-2.5 h-2.5 rounded-full animate-pulse" style="background:${theme.accent}"></span>
+              <span class="font-bold text-white tracking-wide uppercase text-[11px] sm:text-xs">Tonight's Pick</span>
+              <span class="text-white/25">·</span>
+              <span class="text-gray-400 text-[11px] sm:text-xs">${currentSpotlightIdx + 1} of ${spotlightTitles.length}</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <button type="button" onclick="openOnboardingWizard(true)" class="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-[11px]">
+                <i class="fa-solid fa-sliders text-[10px] text-brand-gold"></i>
+                <span class="hidden sm:inline">Taste Setup</span>
+              </button>
             </div>
           </div>
 
-          <!-- JioCinema-Style Pill Dots on Mobile + Poster Strip Switcher on Desktop -->
-          <div class="w-full lg:w-auto flex items-center justify-center lg:justify-end gap-1.5 sm:gap-2 pt-1 sm:pt-0">
-            ${spotlightTitles.map((s, i) => {
-              const sItem = globalDatabase[s.title] || movies[0];
-              const sFb = generateStylizedPosterDataURI(sItem);
-              const sPoster = posterCache[sItem.type + ':' + sItem.title] || sFb;
-              const active = i === currentSpotlightIdx;
-              return `
-                <button type="button" onclick="renderHeroSpotlight(${i})" class="sm:hidden h-1.5 rounded-full transition-all ${active ? 'w-6 bg-brand-gold' : 'w-2 bg-white/30'}" aria-label="Slide ${i + 1}"></button>
-                <button type="button" onclick="renderHeroSpotlight(${i})" class="hidden sm:block group relative rounded-xl overflow-hidden border transition-all shrink-0 ${active ? 'w-14 sm:w-16 border-brand-gold ring-2 ring-brand-gold/40 -translate-y-1' : 'w-11 sm:w-12 border-white/15 opacity-55 hover:opacity-95'}" title="${s.title.replace(/"/g, '&quot;')}">
-                  <img src="${sPoster}" data-title="${sItem.title.replace(/"/g, '&quot;')}" onerror="this.onerror=null;this.src='${sFb}';" class="lazy-poster w-full poster-aspect object-cover" alt="" />
+          <!-- Main Hero Display -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-end gap-5 sm:gap-8 w-full">
+            <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')">
+              <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster hidden sm:block w-36 md:w-48 rounded-2xl border border-white/20 shadow-2xl object-cover poster-aspect transition-transform duration-300 group-hover:scale-105 group-hover:shadow-brand-gold/20" />
+              <div class="hidden sm:flex absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover:opacity-100 items-center justify-center transition-opacity">
+                <span class="w-12 h-12 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-sm ml-0.5"></i></span>
+              </div>
+            </div>
+
+            <div class="space-y-3 sm:space-y-3.5 max-w-2xl w-full">
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <span class="px-2.5 py-0.5 rounded-md bg-brand-gold text-black font-black uppercase text-[10px] tracking-wider">Feature</span>
+                <span class="font-extrabold uppercase tracking-wider text-xs" style="color:${theme.accent}">${item.genre}</span>
+                <span class="text-white/30">•</span>
+                <span class="text-gray-300 font-semibold">${item.year}</span>
+                <span class="text-white/30">•</span>
+                <span class="text-brand-gold font-extrabold flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
+                <span class="text-white/30">•</span>
+                <span class="px-2 py-0.5 rounded bg-white/10 text-gray-200 text-[10px] font-semibold">${item.platformName}</span>
+              </div>
+
+              <h1 class="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">${item.cleanName || item.title}</h1>
+              <p class="text-brand-gold/90 font-medium text-xs sm:text-sm italic tracking-wide">"${spot.tagline}"</p>
+
+              <!-- Decisive Dual Action Buttons: Watch & Another (Card-Flick) -->
+              <div class="pt-2 flex flex-wrap items-center gap-2.5 sm:gap-3">
+                <button type="button" onclick="openDetailModal('${escTitle}')" class="px-6 py-2.5 sm:py-3 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-gold/30 transition-all active:scale-95">
+                  <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
                 </button>
-              `;
-            }).join('')}
+                <button type="button" onclick="flickTonightPick()" class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-white/20 backdrop-blur-md transition-all active:scale-95 group" title="Flick card and see next recommendation">
+                  <i class="fa-solid fa-shuffle text-xs text-brand-gold group-hover:rotate-180 transition-transform duration-300"></i> <span>Another</span>
+                </button>
+                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-10 h-10 sm:h-11 sm:w-11 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center border border-white/10 transition-all" title="Watchlist">
+                  <i class="fa-solid ${isW ? 'fa-check' : 'fa-bookmark'} text-xs"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       `;

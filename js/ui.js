@@ -66,6 +66,10 @@
       const active = btn.dataset.mnav === g;
       btn.className = 'mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] transition-colors ' + (active ? 'text-brand-gold font-bold bg-brand-gold/10' : 'text-gray-400 font-semibold');
     });
+    document.querySelectorAll('.dock-btn').forEach(btn => {
+      const active = btn.dataset.tab === g;
+      btn.classList.toggle('active', active);
+    });
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
     if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
     if (key === 'music' && window.initMusicVault) window.initMusicVault();
@@ -77,6 +81,19 @@
     if ((key === 'profile' || key === 'admin') && window.renderProfileTab) window.renderProfileTab();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Auto-slim floating dock while scrolling
+  let dockScrollTmr;
+  window.addEventListener('scroll', () => {
+    const dock = $('floatingCinemaDock');
+    if (dock) {
+      dock.classList.add('dock-slim');
+      clearTimeout(dockScrollTmr);
+      dockScrollTmr = setTimeout(() => {
+        dock.classList.remove('dock-slim');
+      }, 250);
+    }
+  }, { passive: true });
 
   window.triggerOmniSearch = function() {
     switchTab('browse');

@@ -162,6 +162,12 @@
       cardEl.style.boxShadow = `0 10px 30px -10px ${sector.bg}`;
     }
 
+    // Floods the ambient page background with a soft mood color wash
+    const pane = $('tab-mood');
+    if (pane) {
+      pane.style.background = `radial-gradient(ellipse at 50% -10%, ${sector.color}2b 0%, transparent 65%)`;
+    }
+
     // Highlight sector pills
     const pills = document.querySelectorAll('.mood-dial-pill');
     pills.forEach((p, i) => {
