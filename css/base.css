@@ -295,3 +295,228 @@
       box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.8), 0 0 18px rgba(245, 197, 24, 0.15);
       border-color: rgba(245, 197, 24, 0.35);
     }
+
+    /* ==========================================================================
+       THE PROJECTOR ROOM: OPTICS & LIGHT ENGINE
+       ========================================================================== */
+    :root {
+      --spot-x: 50vw;
+      --spot-y: 35vh;
+      --spot-size: 440px;
+      --spot-color: rgba(245, 197, 24, 0.08);
+      --beam-lux: 1;
+    }
+
+    /* Ambient Spotlight Beam Tracking Pointer */
+    #projectorSpotlightOverlay {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle var(--spot-size) at var(--spot-x) var(--spot-y), var(--spot-color) 0%, transparent 68%);
+      mix-blend-mode: screen;
+      transition: opacity 0.5s ease;
+    }
+
+    /* Directional Projector Down-Shadow */
+    .projector-shadow {
+      box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.88), 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    /* Brass Pull-Cord Lamp */
+    .pull-cord-btn {
+      transition: transform 0.18s ease;
+    }
+    .pull-cord-btn .pull-chain-beads {
+      transform-origin: top center;
+      transition: transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .pull-cord-btn.pulled .pull-chain-beads {
+      transform: translateY(14px);
+    }
+    .pull-cord-btn:active .pull-chain-beads {
+      transform: translateY(16px);
+    }
+
+    /* Lights Out Mode: Pitch darkness with flashlight circle reveal */
+    body.lights-out-mode {
+      background-color: #010204 !important;
+      background-image: none !important;
+    }
+    body.lights-out-mode header,
+    body.lights-out-mode footer {
+      opacity: 0.15;
+      transition: opacity 0.3s ease;
+    }
+    body.lights-out-mode header:hover,
+    body.lights-out-mode footer:hover {
+      opacity: 1;
+    }
+    body.lights-out-mode main {
+      mask-image: radial-gradient(circle 350px at var(--spot-x) var(--spot-y), black 25%, rgba(0,0,0,0.2) 70%, transparent 100%);
+      -webkit-mask-image: radial-gradient(circle 350px at var(--spot-x) var(--spot-y), black 25%, rgba(0,0,0,0.2) 70%, transparent 100%);
+      transition: mask-image 0.05s linear;
+    }
+
+    /* Card Flick Physics for "Tonight's Pick" */
+    @keyframes cardFlickAway {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+      40% { transform: translate(40%, -10px) rotate(8deg) scale(1.02); opacity: 0.8; }
+      100% { transform: translate(130%, 30px) rotate(24deg) scale(0.9); opacity: 0; }
+    }
+    @keyframes cardDropIn {
+      0% { transform: translateY(-35px) scale(0.92); opacity: 0; }
+      60% { transform: translateY(4px) scale(1.01); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .card-flick-away {
+      animation: cardFlickAway 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .card-drop-in {
+      animation: cardDropIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Kinetic Floating Island Dock */
+    .kinetic-dock {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 45;
+      background: rgba(9, 12, 20, 0.90);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255,255,255,0.2);
+      border-radius: 9999px;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, border-color 0.3s ease;
+    }
+    .kinetic-dock.scrolled-down {
+      transform: translateX(-50%) translateY(8px) scale(0.92);
+      opacity: 0.55;
+    }
+    .kinetic-dock.scrolled-down:hover {
+      transform: translateX(-50%) translateY(0) scale(1);
+      opacity: 1;
+    }
+    .dock-light-puddle {
+      position: absolute;
+      bottom: 3px;
+      height: 3px;
+      border-radius: 9999px;
+      background: var(--gold-hex);
+      box-shadow: 0 0 12px var(--gold-hex), 0 0 4px #fff;
+      transition: left 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275), width 0.32s ease;
+      pointer-events: none;
+    }
+
+    /* Peeking Vinyl on Home Edge */
+    .home-peeking-vinyl {
+      position: fixed;
+      right: -42px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 35;
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #222 22%, #0e0e0e 60%, #000 100%);
+      border: 2px solid rgba(245, 197, 24, 0.35);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 18px rgba(245, 197, 24, 0.22);
+      cursor: pointer;
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s ease;
+    }
+    .home-peeking-vinyl:hover {
+      right: -12px;
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.95), 0 0 25px rgba(245, 197, 24, 0.45);
+    }
+    .home-peeking-vinyl.spinning {
+      animation: vinylSpin 6s linear infinite;
+    }
+    @keyframes vinylSpin {
+      from { transform: translateY(-50%) rotate(0deg); }
+      to { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    /* ==========================================================================
+       THE COLLECTOR'S DEN: SHELF PHYSICS & SPINE VIEW
+       ========================================================================== */
+    /* Watchlist Unexposed Pale State */
+    [data-shelf="wish"] img,
+    #shelf-wish img {
+      filter: grayscale(0.7) contrast(0.85) brightness(0.8);
+      transition: filter 0.4s ease, transform 0.28s ease;
+    }
+    [data-shelf="wish"] .hub-card:hover img,
+    #shelf-wish .hub-card:hover img {
+      filter: grayscale(0.2) contrast(0.95) brightness(0.95);
+      transform: scale(1.04);
+    }
+
+    /* Watched Saturated Color Flood */
+    [data-shelf="watched"] img,
+    #shelf-watched img {
+      filter: saturate(1.1) brightness(1.0);
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.85);
+    }
+
+    /* Favourites Top Shelf Warm Downlight */
+    [data-shelf="fav"] {
+      position: relative;
+      background: radial-gradient(ellipse at 50% 0%, rgba(245, 197, 24, 0.12), rgba(0, 0, 0, 0.4) 75%) !important;
+      border: 1px solid rgba(245, 197, 24, 0.35) !important;
+      box-shadow: 0 10px 30px -10px rgba(245, 197, 24, 0.15);
+    }
+
+    /* Spine View Mode: Compact Physical Case Media Rack */
+    body.spine-view-mode .shelf-drop [id^="shelf-"] {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 4px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    body.spine-view-mode .hub-card {
+      width: 32px !important;
+      min-width: 32px !important;
+      height: 140px !important;
+      border-radius: 4px !important;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: #0d111a;
+      position: relative;
+      transition: transform 0.2s ease, width 0.2s ease;
+    }
+    body.spine-view-mode .hub-card:hover {
+      width: 44px !important;
+      transform: translateY(-8px) scale(1.05);
+      z-index: 20;
+      border-color: var(--gold-hex);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9), 0 0 12px rgba(245, 197, 24, 0.4);
+    }
+    body.spine-view-mode .hub-card img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover;
+      opacity: 0.3;
+    }
+    body.spine-view-mode .hub-card::after {
+      content: attr(title);
+      position: absolute;
+      inset: 0;
+      padding: 6px 2px;
+      font-size: 9px;
+      font-weight: 800;
+      font-family: 'Space Grotesk', monospace;
+      color: #fff;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      pointer-events: none;
+      text-shadow: 0 1px 3px #000;
+    }
