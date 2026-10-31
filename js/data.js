@@ -16085,6 +16085,16 @@ Odd Taxi|2021|87
         barrel.style.background = `radial-gradient(circle at 50% 50%, ${theme.c1}26 0%, #060913 72%, #000 100%)`;
       }
 
+      // Update Zenith Focal Star for the Observatory Sky
+      const zTitle = document.getElementById('zenithTitle');
+      if (zTitle) zTitle.textContent = item.title;
+      const zReason = document.getElementById('zenithReason');
+      if (zReason) zReason.textContent = spot.reason || `A landmark ${item.genre.toLowerCase()} masterwork that commands the night sky.`;
+      const zWatch = document.getElementById('zenithWatchBtn');
+      if (zWatch) zWatch.onclick = () => openDetailModal(item.title);
+      const zStar = document.getElementById('zenithStarNode');
+      if (zStar) zStar.onclick = () => openDetailModal(item.title);
+
       const banner = document.getElementById('heroBanner');
       if (!banner) return;
       banner.style.background = 'transparent';
@@ -16340,6 +16350,11 @@ Odd Taxi|2021|87
       }
 
       document.querySelectorAll('#discoverPantheonRow, #discoverBlockbustersRow, #discoverMindRow, #discoverTvRow, #discoverIndianRow, #moodRow, #wishlistContainer').forEach(addHorizontalArrows);
+
+      // Render the 5 Celestial Sky Constellations & Loupe nodes
+      if (window.renderSkyConstellations) {
+        window.renderSkyConstellations();
+      }
     }
 
     function addHorizontalArrows(scrollEl) {

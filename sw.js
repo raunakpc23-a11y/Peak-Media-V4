@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v5.3-observatory-extravaganza';
+const CACHE_NAME = 'peak-media-v5.4-observatory-pure-sky';
 
 // All local files to pre-cache the moment the SW installs
 const PRE_CACHE = [
@@ -23,6 +23,7 @@ const PRE_CACHE = [
   './js/constellation.js',
   './js/hub-duel.js',
   './js/ui.js',
+  './js/celestial.js',
   './js/features.js',
   './js/marathon.js',
   './js/universes.js',

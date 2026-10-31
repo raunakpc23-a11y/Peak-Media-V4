@@ -16,7 +16,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script>
     tailwind.config = {
@@ -26,6 +26,7 @@
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
             display: ['Space Grotesk', 'sans-serif'],
+            atlas: ['"Cormorant Garamond"', 'serif'],
           },
           colors: {
             brand: {
@@ -96,25 +97,33 @@
         </div>
       </div>
 
-      <!-- Center: 5 Engraved Brass Console Station Plates -->
-      <nav class="hidden md:flex items-center gap-1.5 p-1 rounded-2xl bg-black/60 border border-amber-500/25 shadow-inner shrink-0" aria-label="Observatory Navigation">
-        <button type="button" onclick="switchTab('discover')" id="nav-discover" class="console-station-plate active">
-          <i class="fa-solid fa-compass text-xs"></i> <span>The Sky</span>
+      <!-- Center: 5-Star Micro-Constellation Menu (The Pure Sky Menu) -->
+      <nav class="sky-menu-constellation" id="skyMenuConstellation" aria-label="Observatory Navigation">
+        <button type="button" class="sky-menu-star active" data-dest="discover" onclick="flyToStation('discover')" aria-label="The Sky" title="The Sky (Home &amp; Vault)">
+          <span class="sky-menu-label">The Sky</span>
         </button>
-        <button type="button" onclick="switchTab('music')" id="nav-music" class="console-station-plate">
-          <i class="fa-solid fa-satellite-dish text-xs"></i> <span>The Dish</span>
+        <button type="button" class="sky-menu-star" data-dest="music" onclick="flyToStation('music')" aria-label="The Listening Dish" title="The Listening Dish (Music)">
+          <span class="sky-menu-label">The Listening Dish</span>
         </button>
-        <button type="button" onclick="switchTab('decide')" id="nav-decide" class="console-station-plate">
-          <i class="fa-solid fa-scale-balanced text-xs"></i> <span>Instruments</span>
+        <button type="button" class="sky-menu-star" data-dest="decide" onclick="flyToStation('decide')" aria-label="The Instrument Room" title="The Instrument Room (Play)">
+          <span class="sky-menu-label">The Instrument Room</span>
         </button>
-        <button type="button" onclick="switchTab('space')" id="nav-space" class="console-station-plate">
-          <i class="fa-solid fa-map text-xs"></i> <span>Chart Table</span>
-          <span id="navWishlistBadge" class="hidden px-1.5 py-0.5 text-[9px] font-black rounded-full bg-rose-500 text-white">0</span>
+        <button type="button" class="sky-menu-star" data-dest="space" onclick="flyToStation('space')" aria-label="The Chart Table" title="The Chart Table (Library &amp; Taste)">
+          <span class="sky-menu-label">The Chart Table</span>
         </button>
-        <button type="button" onclick="switchTab('profile')" id="nav-profile" class="console-station-plate">
-          <i class="fa-solid fa-book-bookmark text-xs"></i> <span>Keeper's Log</span>
+        <button type="button" class="sky-menu-star" data-dest="profile" onclick="flyToStation('profile')" aria-label="The Keeper's Log" title="The Keeper's Log (Profile &amp; Settings)">
+          <span class="sky-menu-label">The Keeper's Log</span>
         </button>
       </nav>
+
+      <!-- Hidden navigation buttons for background state sync -->
+      <div class="hidden" aria-hidden="true">
+        <button id="nav-discover"></button>
+        <button id="nav-music"></button>
+        <button id="nav-decide"></button>
+        <button id="nav-space"><span id="navWishlistBadge"></span></button>
+        <button id="nav-profile"></button>
+      </div>
 
       <!-- Right: Mechanical Starlight Reel, Slew Telescope, Reading Lamp, Profile Badge -->
       <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
@@ -224,204 +233,194 @@
     <div id="subNav" class="hidden gap-1.5 sm:gap-2 mb-4 sm:mb-6"></div>
 
 
-    <!-- TAB 0: HOME (DISCOVER) -->
-    <section id="tab-discover" class="tab-pane fade-in space-y-6 sm:space-y-8">
-      <!-- Hidden KPI counters kept for internal state sync; Cinematic Weather Report & duplicate language bar removed -->
+    <!-- TAB 0: THE SKY (HOME AND THE VAULT) -->
+    <section id="tab-discover" class="tab-pane fade-in painted-sky-field">
+      <!-- Hidden KPI counters kept for internal state sync -->
       <div class="hidden" aria-hidden="true">
         <span id="statTotalTitles">3,400+</span>
         <span id="statWatchlistCount">0</span>
         <span id="statWatchedCount">0</span>
       </div>
 
-      <!-- THE OBSERVATORY TELESCOPE APPARATUS (EYEPIECE RETICLE & OPTICAL CONTROLS) -->
-      <div class="telescope-apparatus" id="telescopeApparatus">
-        <div class="telescope-barrel" id="telescopeBarrel">
-          <!-- Astronomical Telemetry Bar -->
-          <div class="telescope-telemetry-bar">
-            <div class="flex items-center gap-2 sm:gap-3">
-              <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-gold shadow-[0_0_8px_#f5c518] animate-pulse"></span>
-              <span id="telescopeCoords" class="font-bold tracking-wider">RA: 18h 36m · DEC: +38° 47' · FOV: 45°</span>
-            </div>
-            <div class="flex items-center gap-2 sm:gap-3 font-mono text-[10px] text-brand-gold/80">
-              <span id="telescopeCoordDisplay" class="hidden sm:inline">APERTURE: 800mm F/4.2</span>
-              <span class="px-2 py-0.5 rounded bg-brand-gold/15 text-brand-gold border border-brand-gold/30 font-bold uppercase tracking-wider">Focal Star Acquired</span>
-            </div>
-          </div>
-
-          <!-- Circular Optical Lens Viewport with Reticle Crosshairs, Concentric Circles & Meteor Ray -->
-          <div class="telescope-eyepiece-lens" id="telescopeLens">
-            <div class="telescope-crosshairs"></div>
-            <div class="telescope-reticle-circle reticle-c1"></div>
-            <div class="telescope-reticle-circle reticle-c2"></div>
-            <div class="telescope-reticle-circle reticle-c3"></div>
-            <div class="telescope-meteor-ray" onclick="openSurpriseModal()" title="Interstellar Meteor: Click for Shooting Star Roulette"></div>
-
-            <!-- Focal Star Stage (Hero Banner inside Eyepiece) -->
-            <div id="heroBanner" class="focal-star-stage w-full">
-              <!-- Injected via renderHeroSpotlight -->
-            </div>
-          </div>
-
-          <!-- Rotary Brass Mood Ring around Eyepiece Base -->
-          <div class="brass-mood-ring" id="eyepieceMoodRing" role="toolbar" aria-label="Telescope Mood Ring">
-            <span class="text-[10px] font-mono uppercase tracking-wider text-brand-gold/80 pr-2 shrink-0 flex items-center gap-1 font-bold">
-              <i class="fa-solid fa-compass text-[10px]"></i> Mood Ring:
-            </span>
-            <button type="button" class="mood-ring-notch active" data-mood="all" onclick="setTelescopeMood('all')">✨ All Celestial</button>
-            <button type="button" class="mood-ring-notch" data-mood="mind" onclick="setTelescopeMood('mind')">🧠 Mind-Bending</button>
-            <button type="button" class="mood-ring-notch" data-mood="adrenaline" onclick="setTelescopeMood('adrenaline')">⚡ Adrenaline</button>
-            <button type="button" class="mood-ring-notch" data-mood="melancholic" onclick="setTelescopeMood('melancholic')">🌧️ Melancholic</button>
-            <button type="button" class="mood-ring-notch" data-mood="eerie" onclick="setTelescopeMood('eerie')">👁️ Eerie &amp; Dark</button>
-            <button type="button" class="mood-ring-notch" data-mood="cozy" onclick="setTelescopeMood('cozy')">☕ Cozy Hearth</button>
-            <button type="button" class="mood-ring-notch" data-mood="laughs" onclick="setTelescopeMood('laughs')">😂 Radiant Joy</button>
-            <button type="button" class="mood-ring-notch" data-mood="epic" onclick="setTelescopeMood('epic')">⚔️ Grand Odyssey</button>
-          </div>
+      <!-- ZENITH FOCAL STAR: TONIGHT'S PICK -->
+      <div class="zenith-focal-star flex flex-col items-center text-center pt-8 pb-10 px-4 relative z-10" id="zenithSection">
+        <div class="zenith-star-core cursor-pointer mb-5" id="zenithStarNode" onclick="openZenithDetail()" title="Tonight's Focal Star">
+          <div class="zenith-star-lens"></div>
         </div>
-
-        <!-- Optical Filter Rack (Interchangeable Optical Glass Lenses below Barrel) -->
-        <div class="mt-3 flex items-center justify-between gap-3 flex-wrap">
-          <div class="optical-filter-rack flex-1" id="opticalFilterRack" role="toolbar" aria-label="Optical Glass Filter Rack">
-            <span class="text-[10px] font-mono uppercase tracking-wider text-gray-400 pl-1 shrink-0 flex items-center gap-1.5 font-bold">
-              <i class="fa-solid fa-filter text-brand-gold text-[10px]"></i> Optical Filters:
-            </span>
-            <button type="button" class="optical-glass-slide active" data-filter="all" onclick="applyTelescopeFilter('all')">Open Aperture</button>
-            <button type="button" class="optical-glass-slide" data-filter="scifi" onclick="applyTelescopeFilter('scifi')">Spectra: Sci-Fi</button>
-            <button type="button" class="optical-glass-slide" data-filter="action" onclick="applyTelescopeFilter('action')">Infrared: Action</button>
-            <button type="button" class="optical-glass-slide" data-filter="drama" onclick="applyTelescopeFilter('drama')">Prism: Drama</button>
-            <button type="button" class="optical-glass-slide" data-filter="classic" onclick="applyTelescopeFilter('classic')">Vintage: 70s–90s</button>
-            <button type="button" class="optical-glass-slide" data-filter="hindi" onclick="applyTelescopeFilter('hindi')">Monsoon: Hindi</button>
-            <button type="button" class="optical-glass-slide" data-filter="english" onclick="applyTelescopeFilter('english')">Western: English</button>
-          </div>
-
-          <div class="flex items-center gap-2 shrink-0">
-            <button type="button" onclick="flickTonightPick()" class="px-3.5 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/30 text-brand-gold text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95 shadow-sm" title="Slew telescope to another celestial coordinate">
-              <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
-              <span>Slew Telescope</span>
-            </button>
-            <button type="button" onclick="openSurpriseModal()" class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-white text-xs font-semibold transition-all flex items-center gap-1.5 active:scale-95" title="Meteor Roulette">
-              <i class="fa-solid fa-meteor text-brand-gold text-[11px]"></i>
-              <span class="hidden sm:inline">Meteor Roulette</span>
-            </button>
-          </div>
+        <div class="text-[11px] font-mono tracking-widest text-[#B88A4A] uppercase mb-1.5 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[#F2B35E] shadow-[0_0_8px_#F2B35E] animate-pulse"></span>
+          <span>Zenith · Tonight's Pick</span>
+          <span class="text-white/30">·</span>
+          <span id="telescopeCoords" class="font-mono text-white/60">RA: 18h 36m · DEC: +38° 47'</span>
         </div>
-      </div>
-
-      <!-- Personalized Editorial Shelf -->
-      <div id="personalProfileSection" class="hidden space-y-3.5">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-white/[0.08] pb-3">
-          <div class="space-y-1">
-            <div id="personalWelcomeBanner" class="text-xs text-gray-400"></div>
-            <h2 id="personalRowTitle" class="text-xl sm:text-2xl font-display font-bold text-white tracking-tight">
-              <span>Picked For You</span>
-            </h2>
-            <p id="personalRowSub" class="text-xs text-gray-400"></p>
-          </div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <div id="personalFilterPills" class="flex items-center gap-1.5"></div>
-            <button onclick="openOnboardingWizard(true)" class="text-xs text-gray-400 hover:text-white px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition-colors flex items-center gap-1.5">
-              <i class="fa-solid fa-sliders text-[10px] text-brand-gold"></i> <span>Retake Setup</span>
-            </button>
-          </div>
-        </div>
-        <div class="has-arrows">
-          <div id="personalCuratedRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
-        </div>
-      </div>
-
-
-      <!-- Constellation Zone 1: The Pantheon (Essential Cinema) -->
-      <div class="constellation-zone space-y-2 relative pt-2">
-        <div class="constellation-header">
-          <div class="constellation-watermark">The Pantheon</div>
-        </div>
-        <div class="flex items-center justify-between relative z-10">
-          <div class="flex items-center gap-2.5">
-            <h2 class="text-xl sm:text-2xl font-display font-black text-white tracking-tight">Essential Cinema</h2>
-            <span class="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-brand-gold font-mono font-bold">9.0+ PANTHEON</span>
-          </div>
-          <button onclick="switchTab('movies')" class="text-xs text-brand-gold hover:text-white transition-colors font-bold flex items-center gap-1 group">
-            <span>Slew Telescope</span> <i class="fa-solid fa-chevron-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+        <h1 id="zenithTitle" class="text-3xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight max-w-3xl leading-tight drop-shadow-md">
+          Inception
+        </h1>
+        <p id="zenithReason" class="text-sm sm:text-base text-gray-300 max-w-xl italic mt-2.5 font-sans leading-relaxed">
+          A precision heist engineered across the architecture of dreams.
+        </p>
+        <div class="flex items-center gap-3 mt-5">
+          <button type="button" id="zenithWatchBtn" onclick="openZenithDetail()" class="lens-watch-action inline-flex items-center justify-center gap-2 w-auto px-6 py-2.5">
+            <i class="fa-solid fa-play text-xs text-[#0E1233]"></i>
+            <span>Watch</span>
+          </button>
+          <button type="button" onclick="flickTonightPick()" class="px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-gray-300 hover:text-white transition-all flex items-center gap-1.5" title="Slew to another zenith star">
+            <i class="fa-solid fa-arrows-rotate text-[11px] text-[#B88A4A]"></i>
+            <span>Slew Scope</span>
           </button>
         </div>
-        <div class="has-arrows relative z-10">
-          <div id="discoverPantheonRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
+        
+        <!-- Hidden heroBanner kept to satisfy legacy renderHeroSpotlight callbacks -->
+        <div id="heroBanner" class="hidden"></div>
+      </div>
+
+      <!-- THE BRASS MOOD DIAL & OPTICAL GLASS FILTERS -->
+      <div class="max-w-4xl mx-auto px-4 my-8 relative z-20 space-y-4">
+        <!-- Brass Mood Dial Ring -->
+        <div class="brass-mood-ring" id="eyepieceMoodRing" role="toolbar" aria-label="Observatory Mood Dial">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-[#B88A4A] pr-2 shrink-0 flex items-center gap-1.5 font-bold">
+            <i class="fa-solid fa-compass text-xs"></i> Mood Dial:
+          </span>
+          <button type="button" class="mood-ring-notch active" data-mood="all" onclick="setTelescopeMood('all')">✨ All Celestial</button>
+          <button type="button" class="mood-ring-notch" data-mood="mind" onclick="setTelescopeMood('mind')">🧠 Mind-Bending</button>
+          <button type="button" class="mood-ring-notch" data-mood="adrenaline" onclick="setTelescopeMood('adrenaline')">⚡ Adrenaline</button>
+          <button type="button" class="mood-ring-notch" data-mood="melancholic" onclick="setTelescopeMood('melancholic')">🌧️ Melancholic</button>
+          <button type="button" class="mood-ring-notch" data-mood="eerie" onclick="setTelescopeMood('eerie')">👁️ Eerie &amp; Dark</button>
+          <button type="button" class="mood-ring-notch" data-mood="cozy" onclick="setTelescopeMood('cozy')">☕ Cozy Hearth</button>
+          <button type="button" class="mood-ring-notch" data-mood="laughs" onclick="setTelescopeMood('laughs')">😂 Radiant Joy</button>
+          <button type="button" class="mood-ring-notch" data-mood="epic" onclick="setTelescopeMood('epic')">⚔️ Grand Odyssey</button>
+        </div>
+
+        <!-- Coloured Optical Glass Filter Slides -->
+        <div class="optical-filter-rack" id="opticalFilterRack" role="toolbar" aria-label="Optical Glass Filter Slides">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-gray-400 pl-1 shrink-0 flex items-center gap-1.5 font-bold">
+            <i class="fa-solid fa-filter text-[#B88A4A] text-[10px]"></i> Optical Filters:
+          </span>
+          <button type="button" class="optical-glass-slide active" data-filter="all" onclick="applyTelescopeFilter('all')">Open Aperture</button>
+          <button type="button" class="optical-glass-slide" data-filter="scifi" onclick="applyTelescopeFilter('scifi')">Spectra: Sci-Fi</button>
+          <button type="button" class="optical-glass-slide" data-filter="action" onclick="applyTelescopeFilter('action')">Infrared: Action</button>
+          <button type="button" class="optical-glass-slide" data-filter="drama" onclick="applyTelescopeFilter('drama')">Prism: Drama</button>
+          <button type="button" class="optical-glass-slide" data-filter="classic" onclick="applyTelescopeFilter('classic')">Vintage: 70s–90s</button>
+          <button type="button" class="optical-glass-slide" data-filter="hindi" onclick="applyTelescopeFilter('hindi')">Monsoon: Hindi</button>
+          <button type="button" class="optical-glass-slide" data-filter="english" onclick="applyTelescopeFilter('english')">Western: English</button>
         </div>
       </div>
 
-      <!-- Constellation Zone 2: The Colosseum (Popular Hits) -->
-      <div class="constellation-zone space-y-2 relative pt-4">
-        <div class="constellation-header">
-          <div class="constellation-watermark">The Colosseum</div>
-        </div>
-        <div class="flex items-center justify-between relative z-10">
-          <div class="flex items-center gap-2.5">
-            <h2 class="text-xl sm:text-2xl font-display font-black text-white tracking-tight">Popular Hits</h2>
-            <span class="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-cyan-400 font-mono font-bold">BOX OFFICE</span>
+      <!-- CONSTELLATION 1: THE PROJECTOR (Essential Cinema · Pantheon) -->
+      <div class="constellation-stage" id="stageProjector" data-constellation="projector">
+        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
+          <div>
+            <h2 class="constellation-script-title">The Projector</h2>
+            <p class="constellation-subtitle-sans">Essential cinema · Pantheon</p>
           </div>
-          <button type="button" onclick="switchTab('universes')" class="text-xs text-brand-gold hover:text-white transition-colors font-semibold flex items-center gap-1 group shrink-0">
-            <span>Star Atlas</span> <i class="fa-solid fa-chevron-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+          <button type="button" onclick="switchTab('movies')" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
+            <span>All Stars</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="has-arrows relative z-10">
-          <div id="discoverBlockbustersRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
+        <div class="relative w-full h-[320px] sm:h-[380px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
+            <path class="constellation-vector-line" d="M 250,120 L 210,80 L 290,80 Z M 250,120 L 380,180 L 380,250 L 470,250 L 750,100 L 880,70 L 820,250 L 880,430 L 750,400 L 470,250 L 380,320 L 250,380 L 210,420 L 290,420 Z M 380,320 L 320,470" />
+            <circle cx="250" cy="120" r="45" class="constellation-vector-line" />
+            <circle cx="250" cy="380" r="45" class="constellation-vector-line" />
+          </svg>
+          <div class="constellation-star-field" id="fieldProjector"></div>
         </div>
       </div>
 
-      <!-- Constellation Zone 3: The Event Horizon (Sci-Fi & Mind Benders) -->
-      <div class="constellation-zone space-y-2 relative pt-4">
-        <div class="constellation-header">
-          <div class="constellation-watermark">Event Horizon</div>
-        </div>
-        <div class="flex items-center justify-between relative z-10">
-          <div class="flex items-center gap-2.5">
-            <h2 class="text-xl sm:text-2xl font-display font-black text-white tracking-tight">Sci-Fi &amp; Thrillers</h2>
-            <span class="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-purple-400 font-mono font-bold">MIND BENDERS</span>
+      <!-- CONSTELLATION 2: THE TORCH (Popular Hits · Box Office) -->
+      <div class="constellation-stage" id="stageTorch" data-constellation="torch">
+        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
+          <div>
+            <h2 class="constellation-script-title">The Torch</h2>
+            <p class="constellation-subtitle-sans">Box office and popular culture</p>
           </div>
-          <button onclick="switchTab('categories')" class="text-xs text-brand-gold hover:text-white transition-colors font-semibold flex items-center gap-1 group">
-            <span>Spectrum</span> <i class="fa-solid fa-chevron-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+          <button type="button" onclick="switchTab('universes')" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
+            <span>Star Atlas</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="has-arrows relative z-10">
-          <div id="discoverMindRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
+        <div class="relative w-full h-[320px] sm:h-[380px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
+            <path class="constellation-vector-line" d="M 500,470 L 500,400 L 480,340 L 520,280 L 500,240 M 410,240 L 500,240 L 590,240 L 630,190 L 370,190 Z M 370,190 L 360,110 L 430,80 L 500,40 L 570,80 L 640,110 L 630,190 M 500,170 L 500,40 M 500,40 L 500,10" />
+          </svg>
+          <div class="constellation-star-field" id="fieldTorch"></div>
         </div>
       </div>
 
-      <!-- Constellation Zone 4: The Citadel (Television & Series) -->
-      <div class="constellation-zone space-y-2 relative pt-4">
-        <div class="constellation-header">
-          <div class="constellation-watermark">The Citadel</div>
-        </div>
-        <div class="flex items-center justify-between relative z-10">
-          <div class="flex items-center gap-2.5">
-            <h2 class="text-xl sm:text-2xl font-display font-black text-white tracking-tight">Television &amp; Series</h2>
-            <span class="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-emerald-400 font-mono font-bold">PRESTIGE SERIES</span>
+      <!-- CONSTELLATION 3: THE COMET (Sci-Fi & Thrillers · Mind Benders) -->
+      <div class="constellation-stage" id="stageComet" data-constellation="comet">
+        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
+          <div>
+            <h2 class="constellation-script-title">The Comet</h2>
+            <p class="constellation-subtitle-sans">Mind benders and mystery</p>
           </div>
-          <button onclick="switchTab('shows')" class="text-xs text-brand-gold hover:text-white transition-colors font-semibold flex items-center gap-1 group">
-            <span>Orbiting Series</span> <i class="fa-solid fa-chevron-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+          <button type="button" onclick="switchTab('categories')" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
+            <span>Spectrum</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="has-arrows relative z-10">
-          <div id="discoverTvRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
+        <div class="relative w-full h-[320px] sm:h-[380px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
+            <path class="constellation-vector-line" d="M 130,220 L 110,260 L 130,300 M 110,260 L 180,260 L 240,250 M 240,250 L 340,190 L 500,140 L 680,100 L 880,70 M 240,250 L 420,240 L 620,230 L 840,220 M 240,250 L 320,320 L 480,380 L 680,420 L 870,450" />
+          </svg>
+          <div class="constellation-star-field" id="fieldComet"></div>
         </div>
       </div>
 
-      <!-- Constellation Zone 5: The Monsoon (Indian Cinema) -->
-      <div class="constellation-zone space-y-2 relative pt-4">
-        <div class="constellation-header">
-          <div class="constellation-watermark">The Monsoon</div>
-        </div>
-        <div class="flex items-center justify-between relative z-10">
-          <div class="flex items-center gap-2.5">
-            <h2 class="text-xl sm:text-2xl font-display font-black text-white tracking-tight">Indian Cinema</h2>
-            <span class="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] text-amber-400 font-mono font-bold">HINDI &amp; REGIONAL</span>
+      <!-- CONSTELLATION 4: THE ANTENNA (Television & Series) -->
+      <div class="constellation-stage" id="stageAntenna" data-constellation="antenna">
+        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
+          <div>
+            <h2 class="constellation-script-title">The Antenna</h2>
+            <p class="constellation-subtitle-sans">Stories told across seasons</p>
           </div>
-          <button type="button" onclick="setGlobalLanguage('hi'); switchTab('movies');" class="text-xs text-brand-gold hover:text-white transition-colors font-semibold flex items-center gap-1 group shrink-0">
-            <span>All Stars</span> <i class="fa-solid fa-chevron-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+          <button type="button" onclick="switchTab('shows')" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
+            <span>Orbiting Series</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="has-arrows relative z-10">
-          <div id="discoverIndianRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
+        <div class="relative w-full h-[320px] sm:h-[380px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
+            <path class="constellation-vector-line" d="M 450,470 L 380,410 L 520,410 Z M 450,470 L 450,350 M 200,230 Q 450,390 700,230 M 200,230 L 450,210 L 700,230 M 450,350 L 450,170 M 330,150 Q 450,130 570,150 M 240,100 Q 450,75 660,100 M 450,90 L 450,30" />
+          </svg>
+          <div class="constellation-star-field" id="fieldAntenna"></div>
         </div>
+      </div>
+
+      <!-- CONSTELLATION 5: THE LOTUS (Indian Cinema · Hindi & Regional) -->
+      <div class="constellation-stage" id="stageLotus" data-constellation="lotus">
+        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
+          <div>
+            <h2 class="constellation-script-title">The Lotus</h2>
+            <p class="constellation-subtitle-sans">Hindi and regional masterworks</p>
+          </div>
+          <button type="button" onclick="setGlobalLanguage('hi'); switchTab('movies');" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
+            <span>All Stars</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+        <div class="relative w-full h-[320px] sm:h-[380px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
+            <path class="constellation-vector-line" d="M 500,470 L 500,390 M 440,340 L 500,390 L 560,340 M 500,390 L 500,220 M 220,270 Q 320,220 500,340 Q 680,220 780,270 M 340,140 Q 420,100 500,220 Q 580,100 660,140 M 500,220 L 500,50 M 390,40 L 500,50 L 610,40" />
+          </svg>
+          <div class="constellation-star-field" id="fieldLotus"></div>
+        </div>
+      </div>
+
+      <!-- PAINTED MOUNTAIN RIDGE SILHOUETTE (HORIZON) -->
+      <div class="mountain-ridge-horizon" aria-hidden="true">
+        <svg viewBox="0 0 1440 140" class="w-full h-full object-cover" preserveAspectRatio="none" fill="none">
+          <path d="M0,140 L0,90 L160,65 L320,100 L520,50 L720,85 L920,40 L1120,75 L1320,55 L1440,80 L1440,140 Z" fill="#150d26" fill-opacity="0.95" />
+          <path d="M0,140 L0,110 L220,85 L440,120 L680,75 L900,110 L1160,90 L1440,105 L1440,140 Z" fill="#0b0615" />
+        </svg>
+      </div>
+
+      <!-- HIDDEN DATA HOLDERS TO PRESERVE JAVASCRIPT COMPATIBILITY -->
+      <div class="hidden" aria-hidden="true">
+        <div id="discoverPantheonRow"></div>
+        <div id="discoverBlockbustersRow"></div>
+        <div id="discoverMindRow"></div>
+        <div id="discoverTvRow"></div>
+        <div id="discoverIndianRow"></div>
+        <div id="personalProfileSection"></div>
+        <div id="personalCuratedRow"></div>
+        <div id="telescopeBarrel"></div>
       </div>
     </section>
 
@@ -2256,6 +2255,23 @@
   <canvas id="fxCanvas"></canvas>
   <div id="flashlightAperture" class="flashlight-aperture" aria-hidden="true"><div class="flashlight-crosshair"></div></div>
 
+  <!-- FLOATING OPTICAL GLASS LENS (CELESTIAL LOUPE) -->
+  <div id="celestialLens" class="celestial-lens" aria-hidden="true">
+    <div class="lens-bezel">
+      <div class="lens-poster-disc" id="lensPosterDisc"></div>
+      <div class="lens-title-serif" id="lensTitle">Title</div>
+      <div class="lens-hook-line" id="lensHook">Editorial note</div>
+      <div class="lens-meta-bar" id="lensMeta">
+        <span id="lensYear">2024</span>
+        <span class="text-white/20">·</span>
+        <span id="lensRating" class="text-[#F2B35E] font-bold">★ 9.1</span>
+        <span class="text-white/20">·</span>
+        <span id="lensType" class="uppercase text-[9px]">Film</span>
+      </div>
+      <button type="button" class="lens-watch-action" id="lensWatchBtn">Watch</button>
+    </div>
+  </div>
+
   <!-- MODAL: FIRST-TIME PERSONALIZATION & ONBOARDING WIZARD (Natural Editorial Cinema Pass) -->
   <div id="onboardingOverlay" class="fixed inset-0 z-[100] hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
     <!-- Dynamic Living Poster Wall Backdrop -->
@@ -2327,6 +2343,7 @@
   <script src="js/constellation.js?v=5.0"></script>
   <script src="js/hub-duel.js?v=5.0"></script>
   <script src="js/ui.js?v=5.0"></script>
+  <script src="js/celestial.js?v=5.0"></script>
   <script src="js/features.js?v=5.0"></script>
   <script src="js/marathon.js?v=5.0"></script>
   <script src="js/universes.js?v=5.0"></script>

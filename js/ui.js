@@ -74,6 +74,13 @@
       const active = plate.dataset.station === g || (plate.dataset.station === 'discover' && g === 'discover');
       plate.classList.toggle('active', active);
     });
+    document.querySelectorAll('.sky-menu-star').forEach(star => {
+      const active = star.dataset.dest === g || (star.dataset.dest === 'discover' && g === 'discover');
+      star.classList.toggle('active', active);
+    });
+    if (key === 'discover' && window.renderSkyConstellations) {
+      setTimeout(window.renderSkyConstellations, 50);
+    }
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
     if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
     if (key === 'music' && window.initMusicVault) window.initMusicVault();
@@ -85,6 +92,15 @@
     }
     if ((key === 'profile' || key === 'admin') && window.renderProfileTab) window.renderProfileTab();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Star-streak flight transition across the 5 Observatory stations
+  window.flyToStation = function (dest) {
+    if (window.triggerStarFlight && !document.body.classList.contains('reduce-fx')) {
+      window.triggerStarFlight(300, () => window.switchTab(dest));
+    } else {
+      window.switchTab(dest);
+    }
   };
 
   // Auto-slim bottom station plates dock on scroll
@@ -193,8 +209,16 @@
     return { top, text, theme: AUTO[top] || 'clear' };
   }
 
-  // ---------- particles ----------
+  // ---------- particles & star-streak flight ----------
   const cv = $('fxCanvas'), cx = cv.getContext('2d'); let W = 0, H = 0, parts = [], mode = 'stars', raf = 0, tt = 0;
+  let flightActive = false, flightStart = 0, flightDuration = 300, flightCb = null;
+  window.triggerStarFlight = function (dur = 300, cb) {
+    flightActive = true;
+    flightStart = performance.now();
+    flightDuration = dur;
+    flightCb = cb;
+    kick();
+  };
   const rs = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; }; addEventListener('resize', rs); rs();
   function seed() {
     const n = reduce ? 0 : (W < 640 ? 45 : 100); parts = [];
@@ -206,6 +230,38 @@
   function frame() {
     raf = 0; if (reduce || mode === 'none' || document.hidden) { cx.clearRect(0, 0, W, H); return; }
     tt += .016; cx.clearRect(0, 0, W, H);
+
+    // Star-Streak Flight Mode (300ms rush between Observatory stations)
+    if (flightActive) {
+      const elapsed = performance.now() - flightStart;
+      const progress = Math.min(1, elapsed / flightDuration);
+      const cxCenter = W * 0.5, cyCenter = H * 0.5;
+      const streakFactor = Math.sin(progress * Math.PI) * 0.38;
+      cx.lineWidth = 1.6;
+      parts.forEach(p => {
+        const dx = p.x - cxCenter, dy = p.y - cyCenter;
+        const endX = p.x + dx * streakFactor;
+        const endY = p.y + dy * streakFactor;
+        const grad = cx.createLinearGradient(p.x, p.y, endX, endY);
+        grad.addColorStop(0, 'rgba(255,255,255,0.15)');
+        grad.addColorStop(1, 'rgba(242,179,94,0.85)');
+        cx.strokeStyle = grad;
+        cx.beginPath();
+        cx.moveTo(p.x, p.y);
+        cx.lineTo(endX, endY);
+        cx.stroke();
+      });
+      if (progress >= 1) {
+        flightActive = false;
+        if (flightCb) {
+          const cb = flightCb;
+          flightCb = null;
+          cb();
+        }
+      }
+      raf = requestAnimationFrame(frame);
+      return;
+    }
     if (mode === 'aurora') {
       for (let b = 0; b < 3; b++) {
         const g = cx.createLinearGradient(0, 0, 0, H * .6); const c = ['52,211,153', '129,140,248', '45,212,191'][b];
