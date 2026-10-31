@@ -371,6 +371,7 @@
   const AUTO = { 'Sci-Fi': 'space', Drama: 'noir', Crime: 'noir', Thriller: 'neon', Horror: 'blood', Fantasy: 'aurora', Comedy: 'clear', Romance: 'golden', Action: 'neon', Animation: 'aurora', Western: 'golden', War: 'noir', Documentary: 'clear' };
   const SHIFT = { 'Sci-Fi': 'Romance', Drama: 'Comedy', Crime: 'Comedy', Thriller: 'Animation', Horror: 'Comedy', Fantasy: 'Action', Comedy: 'Drama', Romance: 'Sci-Fi', Action: 'Fantasy', Animation: 'Drama', Western: 'Sci-Fi', War: 'Comedy', Documentary: 'Fantasy' };
   let pin = ls.get('cs_theme_v2', 'space');            // 'auto' or a theme id
+  let themeMode = ls.get('cs_theme_mode', 'system');   // 'system' (default) | 'light' | 'dark'
   let reduce = ls.get('cs_reduce', false); // Calm Mode Off by default, visual effects active
   let current = 'space', forecast = null;
 
@@ -484,7 +485,7 @@
   kick();
 
   function apply(id) {
-    current = id; const t = THEMES[id];
+    current = id; const t = THEMES[id] || THEMES.space;
     document.body.setAttribute('data-theme', id); document.body.classList.toggle('reduce-fx', !!reduce);
     mode = t.fx; if (mode === 'aurora') parts = []; else seed(); if (mode === 'aurora' && reduce) parts = [];
     kick(); if (reduce) cx.clearRect(0, 0, W, H);
@@ -494,12 +495,101 @@
     document.querySelectorAll('.swatch').forEach(e => e.classList.toggle('on', e.dataset.id === id));
     $('reduceTgl').classList.toggle('on', !!reduce);
     const pb = $('wxPin'); if (pb) pb.textContent = pin === 'auto' ? 'Pin this theme' : 'Back to auto';
+    updateThemeModeUI();
   }
+
+  function updateThemeModeUI() {
+    const isDark = current !== 'dawn';
+    const isSys = themeMode === 'system';
+
+    // Header theme button icon & title
+    const hdrIcon = $('headerThemeIcon');
+    if (hdrIcon) {
+      if (isSys) {
+        hdrIcon.className = 'fa-solid fa-circle-half-stroke text-xs ' + (isDark ? 'text-amber-400' : 'text-amber-600');
+      } else if (themeMode === 'light') {
+        hdrIcon.className = 'fa-solid fa-sun text-xs text-amber-500';
+      } else {
+        hdrIcon.className = 'fa-solid fa-moon text-xs text-sky-400';
+      }
+    }
+    const hdrBtn = $('headerThemeBtn');
+    if (hdrBtn) {
+      hdrBtn.title = `Theme: ${isSys ? 'System Default' : (themeMode === 'light' ? 'Light Mode' : 'Dark Mode')} (${isDark ? 'Dark' : 'Light'}) · Click to toggle`;
+    }
+
+    // Stream Filter Bar Theme Pill
+    const filterBtn = $('themeModeFilterBtn');
+    const filterIcon = $('themeModeFilterIcon');
+    const filterLabel = $('themeModeFilterLabel');
+    if (filterBtn && filterIcon && filterLabel) {
+      if (isSys) {
+        filterIcon.className = 'fa-solid fa-circle-half-stroke ' + (isDark ? 'text-amber-400' : 'text-amber-600');
+        filterLabel.textContent = `Theme: System (${isDark ? 'Dark' : 'Light'})`;
+        filterBtn.className = 'theme-pill-system';
+      } else if (themeMode === 'light') {
+        filterIcon.className = 'fa-solid fa-sun text-amber-500';
+        filterLabel.textContent = 'Theme: Light';
+        filterBtn.className = 'theme-pill-light';
+      } else {
+        filterIcon.className = 'fa-solid fa-moon text-sky-400';
+        filterLabel.textContent = 'Theme: Dark';
+        filterBtn.className = 'theme-pill-dark';
+      }
+    }
+  }
+
   function refresh() {
     forecast = makeForecast();
-    apply(pin === 'auto' ? forecast.theme : pin);
+    let themeToApply = 'space';
+
+    if (themeMode === 'light') {
+      themeToApply = 'dawn';
+    } else if (themeMode === 'dark') {
+      themeToApply = (pin === 'auto' ? forecast.theme : (pin === 'dawn' ? 'space' : pin));
+    } else {
+      // System Default Mode (checks OS prefers-color-scheme)
+      const prefersDark = !window.matchMedia || window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        themeToApply = (pin === 'auto' ? forecast.theme : (pin === 'dawn' ? 'space' : pin));
+      } else {
+        themeToApply = 'dawn';
+      }
+    }
+
+    apply(themeToApply);
     const t = $('wxText'); if (t) t.textContent = forecast.text;
-    const k = $('wxKicker'); if (k) k.textContent = 'Cinematic Weather Report · ' + THEMES[current].n;
+    const k = $('wxKicker'); if (k) k.textContent = 'Cinematic Weather Report · ' + (THEMES[current] ? THEMES[current].n : 'Atmosphere');
+  }
+
+  window.toggleSystemThemeMode = function() {
+    // Cycle: system -> light -> dark -> system
+    if (themeMode === 'system') {
+      themeMode = 'light';
+    } else if (themeMode === 'light') {
+      themeMode = 'dark';
+    } else {
+      themeMode = 'system';
+    }
+    ls.set('cs_theme_mode', themeMode);
+    refresh();
+  };
+
+  window.setThemeMode = function(mode) {
+    if (['system', 'light', 'dark'].includes(mode)) {
+      themeMode = mode;
+      ls.set('cs_theme_mode', themeMode);
+      refresh();
+    }
+  };
+
+  // Watch for OS Dark/Light changes in real time
+  if (window.matchMedia) {
+    try {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (themeMode === 'system') refresh();
+      });
+    } catch (_) {}
   }
 
   // ---------- Vibe menu ----------
@@ -508,8 +598,25 @@
     const t = THEMES[id];
     return t ? `<button class="swatch" data-id="${id}" title="${t.n}" style="background:${t.c}"></button>` : '';
   }).join('');
-  $('swatchRow').onclick = e => { const b = e.target.closest('.swatch'); if (!b) return; pin = b.dataset.id; ls.set('cs_theme_v2', pin); refresh(); };
-  $('autoBtn').onclick = () => { pin = 'auto'; ls.set('cs_theme_v2', pin); refresh(); };
+  $('swatchRow').onclick = e => {
+    const b = e.target.closest('.swatch'); if (!b) return;
+    pin = b.dataset.id;
+    ls.set('cs_theme_v2', pin);
+    if (pin === 'dawn') {
+      themeMode = 'light';
+    } else {
+      themeMode = 'dark';
+    }
+    ls.set('cs_theme_mode', themeMode);
+    refresh();
+  };
+  $('autoBtn').onclick = () => {
+    pin = 'auto';
+    themeMode = 'system';
+    ls.set('cs_theme_v2', pin);
+    ls.set('cs_theme_mode', themeMode);
+    refresh();
+  };
   window.toggleReduce = () => { reduce = !reduce; ls.set('cs_reduce', reduce); refresh(); };
   window.toggleVibe = e => { e && e.stopPropagation(); $('vibePanel').classList.toggle('hidden'); };
   document.addEventListener('click', e => { if (!e.target.closest('#vibePanel') && !e.target.closest('#vibeBtn') && !e.target.closest('[onclick*="openThemeEffectsModal"]') && !e.target.closest('[onclick*="toggleVibe"]')) $('vibePanel').classList.add('hidden'); });

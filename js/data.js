@@ -16112,8 +16112,8 @@ Odd Taxi|2021|87
         const sPoster = posterCache[sItem.type + ':' + sItem.title] || sFallback;
         const isActive = i === currentSpotlightIdx;
         return `
-          <button type="button" onclick="renderHeroSpotlight(${i}, true)" title="${escTitle}" class="relative shrink-0 rounded-lg overflow-hidden transition-all duration-200 group ${isActive ? 'ring-2 ring-brand-gold scale-105 shadow-md shadow-brand-gold/30' : 'opacity-60 hover:opacity-100 hover:scale-102 ring-1 ring-white/10'}">
-            <img src="${sPoster}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${sFallback}';" class="w-7 h-11 sm:w-9 sm:h-13 object-cover lazy-poster" alt="${attrTitle}" />
+          <button type="button" onclick="renderHeroSpotlight(${i}, true)" title="${escTitle}" class="relative shrink-0 rounded-xl overflow-hidden transition-all duration-200 group ${isActive ? 'ring-2 ring-brand-gold scale-105 shadow-md shadow-brand-gold/30' : 'opacity-65 hover:opacity-100 hover:scale-105 ring-1 ring-white/10'}">
+            <img src="${sPoster}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${sFallback}';" class="w-9 h-14 sm:w-11 sm:h-16 md:w-12 md:h-18 object-cover lazy-poster" alt="${attrTitle}" />
           </button>
         `;
       }).join('');
@@ -16121,57 +16121,59 @@ Odd Taxi|2021|87
       banner.innerHTML = `
         <!-- Optical Lens Nebular Glow -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl sm:rounded-3xl">
-          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-1/2 h-full object-cover opacity-20 blur-2xl pointer-events-none" />
+          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-1/2 h-full object-cover opacity-25 blur-3xl pointer-events-none" />
         </div>
 
-        <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
+        <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-7 ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
           
-          <!-- Left: Compact 2:3 Poster Card & Film Info -->
-          <div class="flex items-center gap-3.5 sm:gap-5 w-full md:w-auto min-w-0">
-            <!-- Compact Poster with authentic 2:3 ratio -->
+          <!-- Left: Grand 2:3 Poster Card & Film Info -->
+          <div class="flex items-center gap-4 sm:gap-6 w-full md:w-auto min-w-0">
+            <!-- Authentic 2:3 Poster with cinematic depth -->
             <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')" title="View Details">
-              <div class="relative w-20 sm:w-24 md:w-28 rounded-xl overflow-hidden border border-white/20 shadow-lg group-hover:border-brand-gold group-hover:scale-105 transition-all">
+              <div class="relative w-28 sm:w-36 md:w-44 rounded-2xl overflow-hidden border border-white/20 shadow-2xl group-hover:border-brand-gold group-hover:scale-102 transition-all">
                 <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster w-full aspect-[2/3] object-cover" />
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                  <span class="w-8 h-8 rounded-full bg-brand-gold text-black flex items-center justify-center shadow"><i class="fa-solid fa-play text-xs ml-0.5"></i></span>
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity backdrop-blur-[2px]">
+                  <span class="w-10 h-10 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-sm ml-0.5"></i></span>
                 </div>
               </div>
             </div>
 
-            <!-- Title & Compact Metadata (Strictly star rating, genre, year, 1-line summary) -->
-            <div class="space-y-1.5 min-w-0 flex-1">
-              <div class="flex items-center gap-2 text-xs font-mono">
-                <span class="text-brand-gold font-black flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
-                <span class="text-white/30">•</span>
-                <span class="text-gray-300 font-semibold uppercase text-[11px] tracking-wide" style="color:${theme.accent}">${item.genre}</span>
-                <span class="text-white/30">•</span>
-                <span class="text-gray-400 text-[11px]">${item.year}</span>
+            <!-- Title & Metadata (Star rating, genre, year, 2-line synopsis) -->
+            <div class="space-y-2 min-w-0 flex-1">
+              <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+                <span class="text-brand-gold font-black px-2 py-0.5 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center gap-1.5"><i class="fa-solid fa-star text-[11px]"></i> ${item.rating}</span>
+                <span class="text-white/30 hidden sm:inline">•</span>
+                <span class="text-gray-200 font-bold uppercase text-[11px] tracking-wider px-2 py-0.5 rounded-md bg-white/5 border border-white/10" style="color:${theme.accent}">${item.genre}</span>
+                <span class="text-white/30 hidden sm:inline">•</span>
+                <span class="text-gray-300 font-semibold text-xs">${item.year}</span>
               </div>
 
-              <h1 onclick="openDetailModal('${escTitle}')" class="text-base sm:text-xl md:text-2xl font-display font-extrabold text-white tracking-tight leading-tight truncate cursor-pointer hover:text-brand-gold transition-colors">
+              <h1 onclick="openDetailModal('${escTitle}')" class="text-lg sm:text-2xl md:text-3xl font-display font-extrabold text-white tracking-tight leading-tight line-clamp-1 cursor-pointer hover:text-brand-gold transition-colors">
                 ${item.cleanName || item.title}
               </h1>
 
-              <p class="text-xs text-gray-300 line-clamp-1 max-w-lg leading-relaxed">
+              <p class="text-xs sm:text-sm text-gray-300 line-clamp-2 max-w-xl leading-relaxed">
                 ${item.synopsis || spot.blurb || ''}
               </p>
 
               <!-- Actions: Watch Now + Watchlist -->
-              <div class="pt-1 flex items-center gap-2.5">
-                <button type="button" onclick="openDetailModal('${escTitle}')" class="px-4 py-1.5 sm:px-5 sm:py-2 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs flex items-center gap-2 shadow-md transition-all active:scale-95">
-                  <i class="fa-solid fa-play text-[11px]"></i> <span>Watch Now</span>
+              <div class="pt-1.5 flex items-center gap-3">
+                <button type="button" onclick="openDetailModal('${escTitle}')" class="px-5 py-2 sm:px-6 sm:py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
+                  <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
                 </button>
-                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/10 hover:bg-white/20 text-gray-300'} flex items-center justify-center border border-white/10 transition-all text-xs" title="Save to Watchlist">
+                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${isW ? 'bg-rose-500 text-white shadow-rose-500/30' : 'bg-white/10 hover:bg-white/20 text-gray-300'} flex items-center justify-center border border-white/10 shadow transition-all text-xs sm:text-sm" title="Save to Watchlist">
                   <i class="fa-solid ${isW ? 'fa-check' : 'fa-bookmark'}"></i>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Right: Small Array of Spotlight Suggestions -->
-          <div class="flex flex-col items-start md:items-end gap-1.5 w-full md:w-auto shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-white/10">
-            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400">Spotlight Queue</span>
-            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5">
+          <!-- Right: Spotlight Suggestions Queue -->
+          <div class="flex flex-col items-start md:items-end gap-2 w-full md:w-auto shrink-0 pt-2.5 md:pt-0 border-t md:border-t-0 border-white/10">
+            <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-list-check text-brand-gold text-[10px]"></i> Spotlight Queue
+            </span>
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
               ${suggestionsHTML}
             </div>
           </div>

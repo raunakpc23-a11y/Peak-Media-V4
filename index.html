@@ -124,8 +124,13 @@
         <span id="hdrReelCount"></span>
       </div>
 
-      <!-- Right: Settings, Profile Badge -->
-      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+      <!-- Right: Theme Mode, Settings, Profile Badge -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <!-- Light / Dark / System Theme Toggle Button in Header -->
+        <button type="button" id="headerThemeBtn" onclick="toggleSystemThemeMode()" title="Toggle Theme (System / Light / Dark)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Toggle Theme Mode">
+          <i id="headerThemeIcon" class="fa-solid fa-circle-half-stroke text-xs text-amber-400"></i>
+        </button>
+
         <!-- Settings & Atmosphere Controls -->
         <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Settings &amp; Atmosphere" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Settings">
           <i class="fa-solid fa-sliders text-xs"></i>
@@ -216,170 +221,180 @@
         <div id="moodRow"></div>
       </div>
 
-      <!-- 1. FEATURED CINEMATIC SPOTLIGHT HERO (Compact Living Spotlight) -->
-      <div id="heroBanner" class="relative rounded-2xl sm:rounded-3xl overflow-hidden p-3.5 sm:p-5 border border-white/10 shadow-xl bg-gradient-to-br from-[#101424] via-[#090c16] to-[#05070e] transition-all"></div>
+      <!-- 1. FEATURED CINEMATIC SPOTLIGHT HERO (Living Projector Spotlight) -->
+      <div id="heroBanner" class="relative rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-6 md:p-7 border border-white/10 shadow-2xl bg-gradient-to-br from-[#101424] via-[#090c16] to-[#05070e] transition-all"></div>
 
-      <!-- 2. THE DECIDERS (Compact One-Line Interactive Cinema Discovery Bar) -->
-      <div id="homePlayLab" class="p-2 sm:p-2.5 rounded-2xl bg-black/60 border border-amber-500/25 backdrop-blur-md shadow-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-4">
-        <!-- Left: Section Title in one line -->
-        <div class="flex items-center gap-2 shrink-0 px-1.5 py-0.5">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span class="text-xs sm:text-sm font-display font-bold uppercase tracking-wider text-white">The Deciders</span>
-        </div>
-
-        <!-- Right / Center: The 6 Deciders in a clean, compact single row -->
-        <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5">
-          <!-- Duel (Compact pill) -->
-          <button type="button" onclick="openCinemaGame('duel')" class="decider-pill group" title="Movie Duel · Head-to-head tournament showdown">
-            <span class="w-6 h-6 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-400 text-xs shrink-0 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-trophy"></i>
-            </span>
-            <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors whitespace-nowrap">Duel</span>
-          </button>
-
-          <!-- CineSwipe (Compact pill) -->
-          <button type="button" onclick="openCinemaGame('match')" class="decider-pill group" title="CineSwipe · Instant swipe matchmaker">
-            <span class="w-6 h-6 rounded-lg bg-rose-400/15 border border-rose-400/30 flex items-center justify-center text-rose-400 text-xs shrink-0 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-fire-flame-curved"></i>
-            </span>
-            <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors whitespace-nowrap">CineSwipe</span>
-          </button>
-
-          <!-- Marathon Architect (Compact pill) -->
-          <button type="button" onclick="openCinemaGame('marathon')" class="decider-pill group" title="Marathon Architect · Binge runtime & intermission planner">
-            <span class="w-6 h-6 rounded-lg bg-purple-400/15 border border-purple-400/30 flex items-center justify-center text-purple-400 text-xs shrink-0 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-film"></i>
-            </span>
-            <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors whitespace-nowrap">Marathon</span>
-          </button>
-
-          <span class="h-4 w-px bg-white/10 shrink-0"></span>
-
-          <!-- Time Machine (Icon button with tooltip) -->
-          <button type="button" onclick="openCinemaGame('timemachine')" class="decider-icon-btn group" title="Time Machine · Leap across cinema decades (1950–Present)" aria-label="Time Machine">
-            <i class="fa-solid fa-clock-rotate-left text-xs text-sky-400 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[11px] font-semibold text-gray-300 hidden md:inline">Decades</span>
-          </button>
-
-          <!-- Surprise Roulette (Icon button with tooltip) -->
-          <button type="button" onclick="openCinemaGame('roulette')" class="decider-icon-btn group" title="Surprise Roulette · Spin 3,400+ films for an instant pick" aria-label="Surprise Roulette">
-            <i class="fa-solid fa-dice text-xs text-yellow-400 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[11px] font-semibold text-gray-300 hidden md:inline">Roulette</span>
-          </button>
-
-          <!-- Opposite Day (Icon button with tooltip) -->
-          <button type="button" onclick="openCinemaGame('opposite')" id="homeOppositeDeciderBtn" class="decider-icon-btn group" title="Opposite Day · Flip genre habits to discover counter-gems" aria-label="Opposite Day">
-            <i class="fa-solid fa-shuffle text-xs text-emerald-400 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[11px] font-semibold text-gray-300 hidden md:inline">Opposite</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- 3. COMPACT VINYL CONSOLE (Tactile Audio Dock) -->
-      <div id="homeVinylShowcase" class="p-2 sm:p-2.5 rounded-2xl bg-gradient-to-r from-[#140b24]/90 via-[#0a0d18]/95 to-[#05070e] border border-purple-500/25 backdrop-blur-md shadow-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 group">
+      <!-- 2 & 3. INTERACTIVE DECIDERS & VINYL LOUNGE (Responsive Dual-Module Deck) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 sm:gap-4">
         
-        <!-- Left: Compact Rotating Vinyl Disc + Track Details -->
-        <div class="flex items-center gap-3 min-w-0 flex-1">
-          <div class="relative shrink-0 cursor-pointer" onclick="openMusicFromVinyl()" title="Click to open Music Lounge">
-            <div id="homeVinylDisc" class="vinyl-record-disc w-11 h-11 sm:w-13 sm:h-13 rounded-full relative flex items-center justify-center shadow-lg transition-transform group-hover:scale-105">
-              <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
-              <div class="vinyl-center-label relative w-5 h-5 sm:w-6 sm:h-6 rounded-full overflow-hidden border border-[#120d20]">
-                <img id="homeVinylThumb" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg" alt="Album Art" class="w-full h-full object-cover" />
+        <!-- THE DECIDERS (Tactile Cinema Discovery Console) -->
+        <div id="homePlayLab" class="p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-black/60 border border-amber-500/25 backdrop-blur-md shadow-lg flex flex-col justify-between gap-3">
+          <!-- Top Row: Title, live indicator & quick subtitle -->
+          <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#f59e0b]"></span>
+              <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white">The Deciders</span>
+            </div>
+            <span class="text-[11px] text-gray-400 font-mono hidden sm:inline">Cinema Decision Lab</span>
+          </div>
+
+          <!-- Bottom: The 6 Decision Modes in 2 balanced rows -->
+          <div class="flex flex-col gap-2.5">
+            <!-- Row 1: The 3 Core Interactive Experiences -->
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="openCinemaGame('duel')" class="decider-pill group justify-center text-center py-2" title="Movie Duel · Head-to-head tournament showdown">
+                <span class="w-6 h-6 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-400 text-xs shrink-0 group-hover:scale-110 transition-transform">
+                  <i class="fa-solid fa-trophy"></i>
+                </span>
+                <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors">Duel</span>
+              </button>
+
+              <button type="button" onclick="openCinemaGame('match')" class="decider-pill group justify-center text-center py-2" title="CineSwipe · Instant swipe matchmaker">
+                <span class="w-6 h-6 rounded-lg bg-rose-400/15 border border-rose-400/30 flex items-center justify-center text-rose-400 text-xs shrink-0 group-hover:scale-110 transition-transform">
+                  <i class="fa-solid fa-fire-flame-curved"></i>
+                </span>
+                <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors">CineSwipe</span>
+              </button>
+
+              <button type="button" onclick="openCinemaGame('marathon')" class="decider-pill group justify-center text-center py-2" title="Marathon Architect · Binge runtime & intermission planner">
+                <span class="w-6 h-6 rounded-lg bg-purple-400/15 border border-purple-400/30 flex items-center justify-center text-purple-400 text-xs shrink-0 group-hover:scale-110 transition-transform">
+                  <i class="fa-solid fa-film"></i>
+                </span>
+                <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors">Marathon</span>
+              </button>
+            </div>
+
+            <!-- Row 2: The 3 Quick Decision Tools with icons & labels -->
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="openCinemaGame('timemachine')" class="decider-icon-btn group justify-center text-center py-1.5" title="Time Machine · Leap across cinema decades (1950–Present)" aria-label="Time Machine">
+                <i class="fa-solid fa-clock-rotate-left text-xs text-sky-400 group-hover:scale-110 transition-transform"></i>
+                <span class="text-[11px] font-semibold text-gray-300">Decades</span>
+              </button>
+
+              <button type="button" onclick="openCinemaGame('roulette')" class="decider-icon-btn group justify-center text-center py-1.5" title="Surprise Roulette · Spin 3,400+ films for an instant pick" aria-label="Surprise Roulette">
+                <i class="fa-solid fa-dice text-xs text-yellow-400 group-hover:scale-110 transition-transform"></i>
+                <span class="text-[11px] font-semibold text-gray-300">Roulette</span>
+              </button>
+
+              <button type="button" onclick="openCinemaGame('opposite')" id="homeOppositeDeciderBtn" class="decider-icon-btn group justify-center text-center py-1.5" title="Opposite Day · Flip genre habits to discover counter-gems" aria-label="Opposite Day">
+                <i class="fa-solid fa-shuffle text-xs text-emerald-400 group-hover:scale-110 transition-transform"></i>
+                <span class="text-[11px] font-semibold text-gray-300">Opposite</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- VINYL LOUNGE CONSOLE (Tactile Audio Turntable Dock) -->
+        <div id="homeVinylShowcase" class="p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#140b24]/90 via-[#0a0d18]/95 to-[#05070e] border border-purple-500/25 backdrop-blur-md shadow-lg flex flex-col justify-between gap-3 group">
+          <!-- Top Row: Vinyl Disc, Title & Live Audio Equalizer -->
+          <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-2.5">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="relative shrink-0 cursor-pointer" onclick="openMusicFromVinyl()" title="Click to open Music Lounge">
+                <div id="homeVinylDisc" class="vinyl-record-disc w-14 h-14 sm:w-16 sm:h-16 rounded-full relative flex items-center justify-center shadow-xl transition-transform group-hover:scale-105">
+                  <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
+                  <div class="vinyl-center-label relative w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden border border-[#120d20]">
+                    <img id="homeVinylThumb" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg" alt="Album Art" class="w-full h-full object-cover" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] font-extrabold uppercase tracking-widest text-purple-300 font-mono flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping"></span> Vinyl Vault
+                  </span>
+                  <span id="homeVinylStatusBadge" class="text-[9px] text-gray-400 font-mono hidden sm:inline">Ready to Spin</span>
+                </div>
+                <h3 id="homeVinylTitle" class="text-xs sm:text-sm font-bold text-white tracking-tight truncate cursor-pointer hover:text-purple-300 transition-colors" onclick="openMusicFromVinyl()">
+                  Starboy (Official Theme)
+                </h3>
+                <p id="homeVinylArtist" class="text-[10px] sm:text-[11px] text-purple-200/70 truncate">
+                  The Weeknd · Pop &amp; Hits
+                </p>
               </div>
             </div>
-          </div>
 
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-2">
-              <span class="text-[9px] font-extrabold uppercase tracking-widest text-purple-300 font-mono flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping"></span> Vinyl Vault
-              </span>
-              <span id="homeVinylStatusBadge" class="text-[9px] text-gray-400 font-mono hidden sm:inline">Ready to Spin</span>
+            <!-- Mini Equalizer Visualizer -->
+            <div class="flex items-center gap-0.5 h-5 px-1 shrink-0">
+              <span class="eq-bar eq-1"></span>
+              <span class="eq-bar eq-2"></span>
+              <span class="eq-bar eq-3"></span>
+              <span class="eq-bar eq-4"></span>
+              <span class="eq-bar eq-5"></span>
+              <span class="eq-bar eq-6"></span>
             </div>
-            <h3 id="homeVinylTitle" class="text-xs sm:text-sm font-bold text-white tracking-tight truncate cursor-pointer hover:text-purple-300 transition-colors" onclick="openMusicFromVinyl()">
-              Starboy (Official Theme)
-            </h3>
-            <p id="homeVinylArtist" class="text-[10px] sm:text-[11px] text-purple-200/70 truncate">
-              The Weeknd · Pop &amp; Hits
-            </p>
+          </div>
+
+          <!-- Bottom Row: Audio Controls -->
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <!-- Play/Pause Button -->
+              <button type="button" id="homeVinylPlayBtn" onclick="toggleHomeVinylPlayback(event)" class="px-4 py-1.5 sm:px-5 sm:py-2 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
+                <i id="homeVinylPlayIcon" class="fa-solid fa-play text-[10px]"></i>
+                <span id="homeVinylPlayText">Play</span>
+              </button>
+
+              <!-- Next Button -->
+              <button type="button" onclick="window.musicNext(); if(window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1 transition-all active:scale-95" title="Next Song">
+                <i class="fa-solid fa-forward-step text-[11px] text-purple-300"></i>
+                <span class="hidden sm:inline">Next</span>
+              </button>
+            </div>
+
+            <!-- Open Music Lounge Button -->
+            <button type="button" onclick="openMusicFromVinyl()" class="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-400/40 text-purple-200 hover:text-white font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95">
+              <i class="fa-solid fa-up-right-and-down-left-from-center text-[10px]"></i>
+              <span>Music Lounge</span>
+            </button>
           </div>
         </div>
 
-        <!-- Right: Equalizer Visualizer & Direct Controls -->
-        <div class="flex items-center justify-between sm:justify-end gap-2 shrink-0">
-          <!-- Mini Equalizer Visualizer -->
-          <div class="flex items-center gap-0.5 h-4 px-1 hidden md:flex">
-            <span class="eq-bar eq-1"></span>
-            <span class="eq-bar eq-2"></span>
-            <span class="eq-bar eq-3"></span>
-            <span class="eq-bar eq-4"></span>
-            <span class="eq-bar eq-5"></span>
-            <span class="eq-bar eq-6"></span>
-          </div>
-
-          <!-- Play/Pause Button -->
-          <button type="button" id="homeVinylPlayBtn" onclick="toggleHomeVinylPlayback(event)" class="px-3 py-1.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
-            <i id="homeVinylPlayIcon" class="fa-solid fa-play text-[10px]"></i>
-            <span id="homeVinylPlayText">Play</span>
-          </button>
-
-          <!-- Next Button -->
-          <button type="button" onclick="window.musicNext(); if(window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1 transition-all active:scale-95" title="Next Song">
-            <i class="fa-solid fa-forward-step text-[11px] text-purple-300"></i>
-            <span class="hidden sm:inline">Next</span>
-          </button>
-
-          <!-- Open Music Lounge Button -->
-          <button type="button" onclick="openMusicFromVinyl()" class="px-3 py-1.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-400/40 text-purple-200 hover:text-white font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95">
-            <i class="fa-solid fa-up-right-and-down-left-from-center text-[10px]"></i>
-            <span>Music</span>
-          </button>
-        </div>
       </div>
 
-      <!-- 4. LIBRARY (Concise Compact Member Shelf & Passport Bar) -->
-      <div id="homeProfileVaultCard" class="p-2 sm:p-2.5 rounded-2xl bg-black/60 border border-emerald-500/25 backdrop-blur-md shadow-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3">
+      <!-- 4. LIBRARY (Personal Member Shelf & Passport Bar) -->
+      <div id="homeProfileVaultCard" class="p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-black/60 border border-emerald-500/25 backdrop-blur-md shadow-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
         <!-- Left: Avatar Badge & Title -->
-        <div class="flex items-center gap-2.5 shrink-0 px-1">
-          <div class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-sm shadow shrink-0">
+        <div class="flex items-center gap-3 shrink-0 px-1">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-sm shadow shrink-0">
             <span id="homePassportAvatar">🎬</span>
           </div>
           <div>
-            <h3 class="text-xs sm:text-sm font-display font-bold uppercase tracking-wider text-white">Library</h3>
+            <h3 class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white">Personal Library</h3>
+            <p class="text-[10px] text-gray-400 font-mono hidden sm:block">Watchlist · Watched · Favorites</p>
           </div>
         </div>
 
         <!-- Center: Live Counter Pills -->
-        <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5">
-          <button type="button" onclick="openShelvesFromHome()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-mono text-gray-300 flex items-center gap-1.5 transition-colors" title="View Watchlist">
-            <span id="homeProfileWatchlistCount" class="font-extrabold text-amber-400">0</span>
-            <span class="text-gray-400 text-[11px]">Watchlist</span>
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+          <button type="button" onclick="openShelvesFromHome()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-mono text-gray-300 flex items-center gap-2 transition-colors border border-white/5" title="View Watchlist">
+            <span id="homeProfileWatchlistCount" class="font-extrabold text-amber-400 text-sm">0</span>
+            <span class="text-gray-400 text-[11px] font-semibold">Watchlist</span>
           </button>
-          <button type="button" onclick="openShelvesFromHome()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-mono text-gray-300 flex items-center gap-1.5 transition-colors" title="View Watched Films">
-            <span id="homeProfileWatchedCount" class="font-extrabold text-emerald-400">0</span>
-            <span class="text-gray-400 text-[11px]">Watched</span>
+          <button type="button" onclick="openShelvesFromHome()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-mono text-gray-300 flex items-center gap-2 transition-colors border border-white/5" title="View Watched Films">
+            <span id="homeProfileWatchedCount" class="font-extrabold text-emerald-400 text-sm">0</span>
+            <span class="text-gray-400 text-[11px] font-semibold">Watched</span>
           </button>
-          <button type="button" onclick="openShelvesFromHome()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-mono text-gray-300 flex items-center gap-1.5 transition-colors" title="View Favorites">
-            <span id="homeProfileFavCount" class="font-extrabold text-brand-gold">0</span>
-            <span class="text-gray-400 text-[11px]">Favorites</span>
+          <button type="button" onclick="openShelvesFromHome()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-mono text-gray-300 flex items-center gap-2 transition-colors border border-white/5" title="View Favorites">
+            <span id="homeProfileFavCount" class="font-extrabold text-brand-gold text-sm">0</span>
+            <span class="text-gray-400 text-[11px] font-semibold">Favorites</span>
           </button>
         </div>
 
         <!-- Right: Action Buttons -->
         <div class="flex items-center gap-2 shrink-0">
-          <button type="button" onclick="openShelvesFromHome()" class="px-3 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/30 text-cyan-200 text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95">
+          <button type="button" onclick="openShelvesFromHome()" class="px-3.5 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/30 text-cyan-200 text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow">
             <i class="fa-solid fa-bookmark text-[11px]"></i>
-            <span>Shelves</span>
+            <span>My Shelves</span>
           </button>
-          <button type="button" onclick="openProfileFromHome()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-extrabold flex items-center gap-1.5 shadow transition-all active:scale-95">
+          <button type="button" onclick="openProfileFromHome()" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-extrabold flex items-center gap-1.5 shadow transition-all active:scale-95">
             <i class="fa-solid fa-user text-[11px]"></i>
-            <span>Profile</span>
+            <span>Screening Pass</span>
           </button>
         </div>
       </div>
 
-      <!-- 5. STREAM QUICK FORMAT FILTER -->
-      <div id="streamFilterBar" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 border-b border-white/10">
+      <!-- 5. STREAM QUICK FORMAT FILTER & THEME TOGGLE -->
+      <div id="streamFilterBar" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2.5 border-b border-white/10">
         <span class="text-xs font-bold text-gray-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5 mr-1">
           <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i> Filter Stream:
         </span>
@@ -388,6 +403,14 @@
         <button type="button" class="stream-filter-chip" data-filter="series" onclick="filterOpeningShelves('series')">Series</button>
         <button type="button" class="stream-filter-chip" data-filter="indian" onclick="filterOpeningShelves('indian')">Indian Cinema</button>
         <button type="button" class="stream-filter-chip" data-filter="pantheon" onclick="filterOpeningShelves('pantheon')">9.0+ Masterworks</button>
+
+        <!-- Right: Theme Mode Filter Button (System Default / Light / Dark) -->
+        <div class="ml-auto shrink-0 flex items-center gap-2 pl-2">
+          <button type="button" id="themeModeFilterBtn" onclick="toggleSystemThemeMode()" class="theme-pill-system" title="Toggle Theme (System / Light / Dark)">
+            <i id="themeModeFilterIcon" class="fa-solid fa-circle-half-stroke text-amber-400"></i>
+            <span id="themeModeFilterLabel">Theme: System</span>
+          </button>
+        </div>
       </div>
 
       <!-- 6. THE 5 FLUID CURATED SHELVES -->
