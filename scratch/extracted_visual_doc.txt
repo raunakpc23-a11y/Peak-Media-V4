@@ -1,0 +1,122 @@
+
+
+
+Peak Media: The Observatory Sky (Visual Direction)
+
+This is the original version of the sky concept. It describes how Peak Media looks and moves, in words. It contains no mockups.
+
+
+The idea
+
+The whole screen is a painted night sky, and everything on the site is part of it. There are no boxes holding a sky and no strips of scorecards. You scroll to move the camera inside a place, and you click to fly between places. All core features stay and work as they do today. Only the look and the way you reach things change.
+
+
+It must not be bland
+
+The current site is a stack of flat rows and identical buttons. A tidy version of that would still be bland, so the rule for every screen is the same: something must be alive, layered and specific to stargazing.
+
+
+The sky is never a flat colour. It has depth: a far layer of faint stars, a middle layer of brighter ones, a painted ridge line in front, and a soft glow low on the horizon.
+
+
+Nothing is a plain rectangle. Round lenses, arched windows, brass rings and drawn lines replace boxes.
+
+
+Every title is a point of light you can discover, not a row you scroll past.
+
+
+Large, beautiful type is part of the artwork, not a label.
+
+
+If a screen could belong to any other website, it is not finished.
+
+
+What it looks like
+
+The sky. Shades from deep midnight blue at the top to a dusky plum near the horizon. A few thin streaks of cloud catch the glow. Stars twinkle at different speeds, so the whole thing breathes slightly.
+
+The constellations. Each group of titles is a large illustrated figure drawn across the sky in fine lines: a projector, a torch, a comet, an antenna and a lotus. They are big enough to be the artwork themselves. Stars sit along the lines, and each star is a film or series.
+
+The stars. Colour tells you what kind of thing it is: warm amber for films, pale ice-blue for series, soft violet for songs. Size shows how loved it is, and brightness shows how well it suits your mood right now.
+
+The lens. Posters are hidden until you ask. When your pointer or finger nears a star, a round glass lens opens over it with the poster, the title, one line about it and the Watch button. Move away and it closes.
+
+The type. Constellation names are set in a refined italic serif, like a hand-lettered star atlas, and they are large. Everything else uses a clean, friendly sans. Names are in sentence case with no spaced capitals.
+
+The colours. Midnight Indigo #0E1233 at the top, Dusk Plum #2B1A4F near the horizon, Afterglow Amber #F2B35E for films, Starlight Ice #BFE3FF for series, Song Violet #B9A2FF for songs, and Brass #B88A4A for instruments. The light theme is dawn: a chalk-white chart with ink-blue stars.
+
+
+The five places
+
+A tiny constellation of five stars sits in the top corner and is the entire menu. Hover a star and the place&apos;s name is written in the air beside it. Click it and the camera flies there.
+
+
+The Sky: Home and the Vault. Scroll up from the horizon through the five constellations. Tonight&apos;s Pick is the brightest star, with a short line on why it was chosen. A brass ring around your pointer is the Mood Dial, and coloured glass slid across the sky is how filters work.
+
+
+The Listening Dish: Music. A large painted dish on a hill. Songs arrive as violet pulses around it, and playlists are stations on a tuning scale. The current song is a small moon in the corner.
+
+
+The Instrument Room: Play. A dark room with six illustrated brass instruments on the wall, one per game. Tap one and the room zooms in on it.
+
+
+The Chart Table: Library, Taste DNA and Universes. You look straight down at a huge star chart. Saved titles are pinned stars, lists are constellations you draw with a line, and Taste DNA is your own constellation growing star by star.
+
+
+The Keeper&apos;s Log: Profile and settings. A leather logbook on a desk with your avatar and four glass tubes that fill with your counts. The settings sit on a lamp beside it.
+
+
+How it moves, explained
+
+Animation is the core of the site, but there is not much of it, and each piece has a clear job. Everything is quick and crisp, with a soft, springy stop, so it feels responsive and not floaty.
+
+
+The opening. On arrival the dome slit parts and the sky fades in behind a stilled telescope. This happens once and sets the mood.
+
+
+Scroll as camera. Scrolling is the camera tilting up through the night. The far stars, the near stars and the ridge move at different speeds, which gives real depth. Scroll back and the camera tilts down again.
+
+
+Lines that draw themselves. When you reach a constellation, its lines trace in from one star to the next, so the figure appears as you arrive.
+
+
+The flight. Moving between places is a short rush of star streaks, like crossing space, and then the new place settles in.
+
+
+The lens. It follows your pointer or finger with a very slight lag, opens quickly, and closes just as quickly. It is the part that feels most alive.
+
+
+Dawn. When the sleep timer runs, the sky slowly lightens toward morning. When it arrives, the music stops.
+
+Everything else stays still. There are no hover effects on every item and no sections sliding in. If someone has reduced motion turned on, the sky becomes static and flights become simple fades.
+
+
+Features carried over
+
+Mood Dial, Search, Compare, Roulette, Time Machine, Opposite Day, Duel, CineSwipe, Matchmaker, Ricochet Lab, Marathon Architect, Compatibility, Library, Taste DNA, Universes, the sleep timer, Calm Mode, Lights Out, Theme and Guest all stay and work as they do today.
+
+
+The skills and tools behind this
+
+These are the three skills the design leans on. I could look them up but not install them here, so they need adding manually.
+
+
+Emil Kowalski&apos;s design engineering skill: about polish and animation decisions. It helps judge whether something should move at all, how quickly, and with what easing, and how to make components feel responsive.
+
+
+Impeccable, by Paul Bakaus: a design vocabulary for steering an AI, with commands such as polish, audit, critique, distill, animate, bolder and quieter, and a set of banned bland habits. It builds on Anthropic&apos;s frontend-design skill.
+
+
+Taste Skill, by Leonxlnx: an anti-bland skill with three dials for variance, motion and density, plus variants for different looks.
+
+
+Playwright: takes screenshots of the live build so the design can be checked against what actually renders. It is best used in Claude Code.
+
+
+Figma: available as a connector, useful for drawing the screens before building them.
+
+
+Review against common traps
+
+The first pass leaned on gold on dark, which is a common default. It now uses three meaningful star colours over a shaded sky. Numbered markers, spaced capital labels, and identical rounded cards were all removed, because none of them says anything here. The one memorable element is the lens, and everything around it stays quiet.
+
