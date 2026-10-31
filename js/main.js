@@ -1066,7 +1066,58 @@
       }
 
       renderMusicQueueList();
+
+      // Sync the Broad Interactive Vinyl Player on Home Page
+      if (window.updateHomeVinylPlayer) {
+        window.updateHomeVinylPlayer();
+      }
     }
+
+    window.getCurrentMusicState = function() {
+      return {
+        track: (musicQueue && musicQueueIdx >= 0) ? musicQueue[musicQueueIdx] : null,
+        isPlaying: isPlayingMusic,
+        queueLength: musicQueue ? musicQueue.length : 0
+      };
+    };
+
+    window.updateHomeVinylPlayer = function() {
+      const thumb = $('homeVinylThumb');
+      const title = $('homeVinylTitle');
+      const artist = $('homeVinylArtist');
+      const disc = $('homeVinylDisc');
+      const toneArm = $('homeVinylToneArm');
+      const playIcon = $('homeVinylPlayIcon');
+      const playText = $('homeVinylPlayText');
+      const statusBadge = $('homeVinylStatusBadge');
+
+      const s = (musicQueue && musicQueueIdx >= 0 && musicQueue[musicQueueIdx]) ? musicQueue[musicQueueIdx] : (musicCatalog && musicCatalog[0]);
+      if (s) {
+        if (thumb) thumb.src = `https://i.ytimg.com/vi/${s.id}/mqdefault.jpg`;
+        if (title) title.textContent = s.t;
+        if (artist) artist.textContent = `${s.a} · ${s.l === 'hi' ? 'Hindi' : 'English'} · ${s.m || 'Curated Sound'}`;
+      }
+
+      if (disc) {
+        disc.classList.toggle('spinning', isPlayingMusic);
+        disc.classList.toggle('paused', !isPlayingMusic);
+      }
+      if (toneArm) {
+        toneArm.classList.toggle('playing', isPlayingMusic);
+      }
+      if (playIcon) {
+        playIcon.className = `fa-solid ${isPlayingMusic ? 'fa-pause' : 'fa-play'} text-xs`;
+      }
+      if (playText) {
+        playText.textContent = isPlayingMusic ? 'Pause' : 'Play Track';
+      }
+      if (statusBadge) {
+        statusBadge.textContent = isPlayingMusic ? 'Now Playing' : 'Ready to Spin';
+        statusBadge.className = isPlayingMusic 
+          ? 'px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 text-[10px] font-mono font-bold animate-pulse'
+          : 'px-2 py-0.5 rounded-md bg-white/5 text-gray-400 text-[10px] font-mono';
+      }
+    };
 
     window.playSongById = function(vid) {
       ensureMusicLoaded();

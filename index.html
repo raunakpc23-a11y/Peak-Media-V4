@@ -51,8 +51,8 @@
   <header class="observatory-master-console sticky top-0 z-40 transition-all">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between gap-1.5 sm:gap-4">
       
-      <!-- Left: Engraved Brass Astrolabe Plate -->
-      <div class="brass-astrolabe-plate group shrink-0" onclick="switchTab('discover')" title="Peak Observatory · Hilltop Dome">
+      <!-- Left: Peak Media Brand Plate -->
+      <div class="brass-astrolabe-plate group shrink-0 cursor-pointer" onclick="switchTab('discover')" title="Peak Media · Home">
         <div class="h-8 sm:h-10 px-2 py-0.5 rounded-lg bg-black/90 border border-brand-gold/40 flex items-center justify-center shadow-inner">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-6 sm:h-8 w-auto" fill="none">
             <defs>
@@ -92,27 +92,30 @@
           </svg>
         </div>
         <div class="flex flex-col select-none">
-          <span class="text-xs sm:text-sm font-black tracking-wider uppercase text-brand-gold">PEAK · OBSERVATORY</span>
-          <span class="text-[9px] font-mono tracking-widest text-amber-200/70 hidden sm:inline uppercase">EST. 2026 · HILLTOP APERTURE</span>
+          <span class="text-xs sm:text-sm font-black tracking-wider uppercase text-brand-gold">PEAK MEDIA</span>
+          <span class="text-[9px] font-sans font-medium tracking-wider text-gray-400 hidden sm:inline uppercase">Cinema &amp; Sound Vault</span>
         </div>
       </div>
 
-      <!-- Center: 5-Star Micro-Constellation Menu (The Pure Sky Menu) -->
-      <nav class="sky-menu-constellation" id="skyMenuConstellation" aria-label="Observatory Navigation">
-        <button type="button" class="sky-menu-star active" data-dest="discover" onclick="flyToStation('discover')" aria-label="The Sky" title="The Sky (Home &amp; Vault)">
-          <span class="sky-menu-label">The Sky</span>
+      <!-- Center: Clean Navigation Pills -->
+      <nav class="flex items-center gap-1 sm:gap-1.5 p-1 rounded-2xl bg-black/60 border border-white/10 backdrop-blur-md" id="headerNavPills" aria-label="Main Navigation">
+        <button type="button" class="nav-header-pill active" data-dest="discover" onclick="switchTab('discover')">
+          <i class="fa-solid fa-house text-xs"></i> <span class="hidden sm:inline">Home</span>
         </button>
-        <button type="button" class="sky-menu-star" data-dest="music" onclick="flyToStation('music')" aria-label="The Listening Dish" title="The Listening Dish (Music)">
-          <span class="sky-menu-label">The Listening Dish</span>
+        <button type="button" class="nav-header-pill" data-dest="movies" onclick="switchTab('movies')">
+          <i class="fa-solid fa-clapperboard text-xs"></i> <span class="hidden sm:inline">Movies</span>
         </button>
-        <button type="button" class="sky-menu-star" data-dest="decide" onclick="flyToStation('decide')" aria-label="The Instrument Room" title="The Instrument Room (Play)">
-          <span class="sky-menu-label">The Instrument Room</span>
+        <button type="button" class="nav-header-pill" data-dest="shows" onclick="switchTab('shows')">
+          <i class="fa-solid fa-tv text-xs"></i> <span class="hidden sm:inline">Shows</span>
         </button>
-        <button type="button" class="sky-menu-star" data-dest="space" onclick="flyToStation('space')" aria-label="The Chart Table" title="The Chart Table (Library &amp; Taste)">
-          <span class="sky-menu-label">The Chart Table</span>
+        <button type="button" class="nav-header-pill" data-dest="music" onclick="openMusicFromVinyl()">
+          <i class="fa-solid fa-record-vinyl text-xs text-purple-400"></i> <span class="hidden sm:inline">Music</span>
         </button>
-        <button type="button" class="sky-menu-star" data-dest="profile" onclick="flyToStation('profile')" aria-label="The Keeper's Log" title="The Keeper's Log (Profile &amp; Settings)">
-          <span class="sky-menu-label">The Keeper's Log</span>
+        <button type="button" class="nav-header-pill" data-dest="play" onclick="switchTab('play')">
+          <i class="fa-solid fa-gamepad text-xs text-amber-400"></i> <span class="hidden sm:inline">Games</span>
+        </button>
+        <button type="button" class="nav-header-pill" data-dest="hub" onclick="switchTab('hub')">
+          <i class="fa-solid fa-bookmark text-xs text-cyan-400"></i> <span class="hidden sm:inline">Shelves</span>
         </button>
       </nav>
 
@@ -123,31 +126,25 @@
         <button id="nav-decide"></button>
         <button id="nav-space"><span id="navWishlistBadge"></span></button>
         <button id="nav-profile"></button>
+        <span id="hdrReelCount"></span>
       </div>
 
-      <!-- Right: Mechanical Starlight Reel, Slew Telescope, Reading Lamp, Profile Badge -->
+      <!-- Right: Search, Reading Lamp (Settings), Profile Badge -->
       <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-        <!-- Mechanical Starlight Reel Counter -->
-        <div class="starlight-mechanical-reel select-none" title="Live catalog star count">
-          <i class="fa-solid fa-star text-[10px] text-brand-gold animate-pulse"></i>
-          <span id="hdrReelCount" class="text-xs">3,400+</span>
-          <span class="text-amber-200/60 font-semibold text-[9px] tracking-wider uppercase hidden lg:inline">STARS IN VAULT</span>
-        </div>
-
-        <!-- Slew Telescope Search Trigger -->
-        <button type="button" onclick="switchTab('browse')" title="Slew Telescope (/)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-amber-500/25 transition-all active:scale-95 shadow-inner" aria-label="Search">
+        <!-- Search Trigger -->
+        <button type="button" onclick="switchTab('browse')" title="Search (/)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Search">
           <i class="fa-solid fa-magnifying-glass text-xs"></i>
         </button>
 
-        <!-- Brass Desk Reading Lamp (Atmosphere & Theme Controls) -->
-        <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Pull Brass Cord · Dome Settings" class="brass-pulllamp-btn active:scale-95" aria-label="Settings">
+        <!-- Reading Lamp (Atmosphere & Theme Controls) -->
+        <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Atmosphere &amp; Theme Settings" class="brass-pulllamp-btn active:scale-95" aria-label="Settings">
           <i class="fa-solid fa-lightbulb text-sm"></i>
         </button>
 
-        <!-- Chief Astronomer Profile Badge -->
-        <button type="button" id="userProfileBtn" onclick="switchTab('profile')" title="Keeper's Profile" class="h-9 sm:h-10 pl-1.5 pr-2.5 sm:pr-3 rounded-xl bg-black/60 hover:bg-black/80 border border-amber-500/25 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95 shadow-inner">
-          <span id="headerAvatarBadge" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center text-xs">🔭</span>
-          <span id="headerUsernameLabel" class="hidden sm:inline text-amber-100/90 font-mono text-[11px] uppercase tracking-wider">Keeper</span>
+        <!-- User Profile Badge -->
+        <button type="button" id="userProfileBtn" onclick="switchTab('profile')" title="Profile &amp; Preferences" class="h-9 sm:h-10 pl-1.5 pr-2.5 sm:pr-3 rounded-xl bg-black/60 hover:bg-black/80 border border-white/10 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95 shadow-inner">
+          <span id="headerAvatarBadge" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center text-xs">🎬</span>
+          <span id="headerUsernameLabel" class="hidden sm:inline text-gray-300 text-[11px] font-semibold">Profile</span>
         </button>
       </div>
     </div>
@@ -233,215 +230,294 @@
     <div id="subNav" class="hidden gap-1.5 sm:gap-2 mb-4 sm:mb-6"></div>
 
 
-    <!-- TAB 0: THE SKY (HOME AND THE VAULT) -->
-    <section id="tab-discover" class="tab-pane fade-in painted-sky-field">
-      <!-- Hidden KPI counters kept for internal state sync -->
+    <!-- TAB 0: HOME & DISCOVER VAULT -->
+    <section id="tab-discover" class="tab-pane fade-in painted-sky-field space-y-8 pb-16">
+      <!-- Hidden counters kept for background state sync -->
       <div class="hidden" aria-hidden="true">
         <span id="statTotalTitles">3,400+</span>
         <span id="statWatchlistCount">0</span>
         <span id="statWatchedCount">0</span>
-      </div>
-
-      <!-- ZENITH FOCAL STAR: TONIGHT'S PICK -->
-      <div class="zenith-focal-star flex flex-col items-center text-center pt-8 pb-10 px-4 relative z-10" id="zenithSection">
-        <div class="zenith-star-core cursor-pointer mb-5" id="zenithStarNode" onclick="openZenithDetail()" title="Tonight's Focal Star">
-          <div class="zenith-star-lens"></div>
-        </div>
-        <div class="text-[11px] font-mono tracking-widest text-[#B88A4A] uppercase mb-1.5 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-[#F2B35E] shadow-[0_0_8px_#F2B35E] animate-pulse"></span>
-          <span>Zenith · Tonight's Pick</span>
-          <span class="text-white/30">·</span>
-          <span id="telescopeCoords" class="font-mono text-white/60">RA: 18h 36m · DEC: +38° 47'</span>
-        </div>
-        <h1 id="zenithTitle" class="text-3xl sm:text-5xl md:text-6xl font-serif text-white tracking-tight max-w-3xl leading-tight drop-shadow-md">
-          Inception
-        </h1>
-        <p id="zenithReason" class="text-sm sm:text-base text-gray-300 max-w-xl italic mt-2.5 font-sans leading-relaxed">
-          A precision heist engineered across the architecture of dreams.
-        </p>
-        <div class="flex items-center gap-3 mt-5">
-          <button type="button" id="zenithWatchBtn" onclick="openZenithDetail()" class="lens-watch-action inline-flex items-center justify-center gap-2 w-auto px-6 py-2.5">
-            <i class="fa-solid fa-play text-xs text-[#0E1233]"></i>
-            <span>Watch</span>
-          </button>
-          <button type="button" onclick="flickTonightPick()" class="px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-gray-300 hover:text-white transition-all flex items-center gap-1.5" title="Slew to another zenith star">
-            <i class="fa-solid fa-arrows-rotate text-[11px] text-[#B88A4A]"></i>
-            <span>Slew Scope</span>
-          </button>
-        </div>
-        
-        <!-- Hidden heroBanner kept to satisfy legacy renderHeroSpotlight callbacks -->
-        <div id="heroBanner" class="hidden"></div>
-      </div>
-
-      <!-- THE BRASS MOOD DIAL & OPTICAL GLASS FILTERS -->
-      <div class="max-w-4xl mx-auto px-4 my-8 relative z-20 space-y-4">
-        <!-- Brass Mood Dial Ring -->
-        <div class="brass-mood-ring" id="eyepieceMoodRing" role="toolbar" aria-label="Observatory Mood Dial">
-          <span class="text-[11px] font-mono uppercase tracking-wider text-[#B88A4A] pr-2 shrink-0 flex items-center gap-1.5 font-bold">
-            <i class="fa-solid fa-compass text-xs"></i> Mood Dial:
-          </span>
-          <button type="button" class="mood-ring-notch active" data-mood="all" onclick="setTelescopeMood('all')">✨ All Celestial</button>
-          <button type="button" class="mood-ring-notch" data-mood="mind" onclick="setTelescopeMood('mind')">🧠 Mind-Bending</button>
-          <button type="button" class="mood-ring-notch" data-mood="adrenaline" onclick="setTelescopeMood('adrenaline')">⚡ Adrenaline</button>
-          <button type="button" class="mood-ring-notch" data-mood="melancholic" onclick="setTelescopeMood('melancholic')">🌧️ Melancholic</button>
-          <button type="button" class="mood-ring-notch" data-mood="eerie" onclick="setTelescopeMood('eerie')">👁️ Eerie &amp; Dark</button>
-          <button type="button" class="mood-ring-notch" data-mood="cozy" onclick="setTelescopeMood('cozy')">☕ Cozy Hearth</button>
-          <button type="button" class="mood-ring-notch" data-mood="laughs" onclick="setTelescopeMood('laughs')">😂 Radiant Joy</button>
-          <button type="button" class="mood-ring-notch" data-mood="epic" onclick="setTelescopeMood('epic')">⚔️ Grand Odyssey</button>
-        </div>
-
-        <!-- Coloured Optical Glass Filter Slides -->
-        <div class="optical-filter-rack" id="opticalFilterRack" role="toolbar" aria-label="Optical Glass Filter Slides">
-          <span class="text-[11px] font-mono uppercase tracking-wider text-gray-400 pl-1 shrink-0 flex items-center gap-1.5 font-bold">
-            <i class="fa-solid fa-filter text-[#B88A4A] text-[10px]"></i> Optical Filters:
-          </span>
-          <button type="button" class="optical-glass-slide active" data-filter="all" onclick="applyTelescopeFilter('all')">Open Aperture</button>
-          <button type="button" class="optical-glass-slide" data-filter="scifi" onclick="applyTelescopeFilter('scifi')">Spectra: Sci-Fi</button>
-          <button type="button" class="optical-glass-slide" data-filter="action" onclick="applyTelescopeFilter('action')">Infrared: Action</button>
-          <button type="button" class="optical-glass-slide" data-filter="drama" onclick="applyTelescopeFilter('drama')">Prism: Drama</button>
-          <button type="button" class="optical-glass-slide" data-filter="classic" onclick="applyTelescopeFilter('classic')">Vintage: 70s–90s</button>
-          <button type="button" class="optical-glass-slide" data-filter="hindi" onclick="applyTelescopeFilter('hindi')">Monsoon: Hindi</button>
-          <button type="button" class="optical-glass-slide" data-filter="english" onclick="applyTelescopeFilter('english')">Western: English</button>
-        </div>
-      </div>
-
-      <!-- CONSTELLATION 1: THE PROJECTOR (Essential Cinema · Pantheon) -->
-      <div class="constellation-stage" id="stageProjector" data-constellation="projector">
-        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
-          <div>
-            <h2 class="constellation-script-title">The Projector</h2>
-            <p class="constellation-subtitle-sans">Essential cinema · Pantheon 9.0+</p>
-          </div>
-          <button type="button" onclick="switchTab('movies')" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
-            <span>All Stars</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
-          </button>
-        </div>
-        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-            <!-- Projector twin reels, drive paths, lens and spreading light cone -->
-            <circle cx="220" cy="96" r="65" class="constellation-vector-line" />
-            <path class="constellation-vector-line" d="M 220,96 L 140,72 M 220,96 L 220,36 M 220,96 L 300,72" />
-            <circle cx="220" cy="432" r="65" class="constellation-vector-line" />
-            <path class="constellation-vector-line" d="M 220,432 L 140,456 M 220,432 L 220,504 M 220,432 L 300,456" />
-            <path class="constellation-vector-line" d="M 220,96 L 380,228 L 480,264 L 220,432 M 380,228 L 320,560" />
-            <path class="constellation-vector-line" d="M 480,264 L 820,120 L 880,264 L 820,408 Z M 480,264 L 880,264" />
-          </svg>
-          <div class="constellation-star-field" id="fieldProjector"></div>
-        </div>
-      </div>
-
-      <!-- CONSTELLATION 2: THE TORCH (Popular Hits · Box Office) -->
-      <div class="constellation-stage" id="stageTorch" data-constellation="torch">
-        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
-          <div>
-            <h2 class="constellation-script-title">The Torch</h2>
-            <p class="constellation-subtitle-sans">Box office and popular culture</p>
-          </div>
-          <button type="button" onclick="switchTab('universes')" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
-            <span>Star Atlas</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
-          </button>
-        </div>
-        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-            <!-- Torch handle, sconce rim and rising curved flame arcs -->
-            <path class="constellation-vector-line" d="M 500,528 L 500,444 L 500,360 L 500,276 M 340,276 L 500,276 L 660,276" />
-            <path class="constellation-vector-line" d="M 340,276 Q 300,220 260,168 Q 330,140 400,120 Q 450,80 500,48 Q 550,80 600,120 Q 670,140 740,168 Q 700,220 660,276" />
-            <path class="constellation-vector-line" d="M 500,276 L 500,48 M 400,120 L 500,276 L 600,120" />
-          </svg>
-          <div class="constellation-star-field" id="fieldTorch"></div>
-        </div>
-      </div>
-
-      <!-- CONSTELLATION 3: THE COMET (Sci-Fi & Thrillers · Mind Benders) -->
-      <div class="constellation-stage" id="stageComet" data-constellation="comet">
-        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
-          <div>
-            <h2 class="constellation-script-title">The Comet</h2>
-            <p class="constellation-subtitle-sans">Mind benders and mystery</p>
-          </div>
-          <button type="button" onclick="switchTab('categories')" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
-            <span>Spectrum</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
-          </button>
-        </div>
-        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-            <!-- Comet bow shock, dense nucleus and sweeping dual parabolic ion tails -->
-            <path class="constellation-vector-line" d="M 100,276 L 200,276 L 300,264" />
-            <circle cx="200" cy="276" r="30" class="constellation-vector-line" />
-            <path class="constellation-vector-line" d="M 300,264 Q 380,200 480,156 Q 580,120 680,96 Q 780,75 880,60" />
-            <path class="constellation-vector-line" d="M 300,264 L 520,276 L 760,276 L 920,288" />
-            <path class="constellation-vector-line" d="M 300,264 Q 380,330 460,396 Q 560,435 660,468 Q 760,495 860,516" />
-          </svg>
-          <div class="constellation-star-field" id="fieldComet"></div>
-        </div>
-      </div>
-
-      <!-- CONSTELLATION 4: THE ANTENNA (Television & Series) -->
-      <div class="constellation-stage" id="stageAntenna" data-constellation="antenna">
-        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
-          <div>
-            <h2 class="constellation-script-title">The Antenna</h2>
-            <p class="constellation-subtitle-sans">Stories told across seasons</p>
-          </div>
-          <button type="button" onclick="switchTab('shows')" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
-            <span>Orbiting Series</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
-          </button>
-        </div>
-        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-            <!-- Pedestal struts, dish parabolic curve, central receiver mast and radiation arcs -->
-            <path class="constellation-vector-line" d="M 500,528 L 400,456 L 600,456 Z M 500,528 L 500,384" />
-            <path class="constellation-vector-line" d="M 200,300 Q 500,440 800,300" />
-            <path class="constellation-vector-line" d="M 200,300 L 500,168 L 800,300 M 500,384 L 500,252 L 500,168" />
-            <path class="constellation-vector-line" d="M 320,132 Q 500,100 680,132 M 500,168 L 500,48" />
-          </svg>
-          <div class="constellation-star-field" id="fieldAntenna"></div>
-        </div>
-      </div>
-
-      <!-- CONSTELLATION 5: THE LOTUS (Indian Cinema · Hindi & Regional) -->
-      <div class="constellation-stage" id="stageLotus" data-constellation="lotus">
-        <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
-          <div>
-            <h2 class="constellation-script-title">The Lotus</h2>
-            <p class="constellation-subtitle-sans">Hindi and regional masterworks</p>
-          </div>
-          <button type="button" onclick="setGlobalLanguage('hi'); switchTab('movies');" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
-            <span>All Stars</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
-          </button>
-        </div>
-        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-            <!-- Calyx stem, overlapping petal curves and crown jewel -->
-            <path class="constellation-vector-line" d="M 500,528 L 500,444 M 380,396 L 500,444 L 620,396 M 500,444 L 500,264" />
-            <path class="constellation-vector-line" d="M 160,264 Q 240,210 320,180 Q 410,210 500,264 Q 590,210 680,180 Q 760,210 840,264" />
-            <path class="constellation-vector-line" d="M 160,264 Q 330,340 500,444 Q 670,340 840,264" />
-            <path class="constellation-vector-line" d="M 320,180 Q 410,130 500,84 Q 590,130 680,180 M 500,264 L 500,84 L 500,24" />
-          </svg>
-          <div class="constellation-star-field" id="fieldLotus"></div>
-        </div>
-      </div>
-
-      <!-- PAINTED MOUNTAIN RIDGE SILHOUETTE (HORIZON) -->
-      <div class="mountain-ridge-horizon" aria-hidden="true">
-        <svg viewBox="0 0 1440 140" class="w-full h-full object-cover" preserveAspectRatio="none" fill="none">
-          <path d="M0,140 L0,90 L160,65 L320,100 L520,50 L720,85 L920,40 L1120,75 L1320,55 L1440,80 L1440,140 Z" fill="#150d26" fill-opacity="0.95" />
-          <path d="M0,140 L0,110 L220,85 L440,120 L680,75 L900,110 L1160,90 L1440,105 L1440,140 Z" fill="#0b0615" />
-        </svg>
-      </div>
-
-      <!-- HIDDEN DATA HOLDERS TO PRESERVE JAVASCRIPT COMPATIBILITY -->
-      <div class="hidden" aria-hidden="true">
-        <div id="discoverPantheonRow"></div>
-        <div id="discoverBlockbustersRow"></div>
-        <div id="discoverMindRow"></div>
-        <div id="discoverTvRow"></div>
-        <div id="discoverIndianRow"></div>
+        <div id="telescopeBarrel"></div>
+        <div id="zenithSection"></div>
+        <div id="zenithTitle"></div>
+        <div id="zenithReason"></div>
+        <div id="zenithWatchBtn"></div>
+        <div id="zenithStarNode"></div>
+        <div id="eyepieceMoodRing"></div>
+        <div id="opticalFilterRack"></div>
+        <div id="telescopeCoords"></div>
         <div id="personalProfileSection"></div>
         <div id="personalCuratedRow"></div>
-        <div id="telescopeBarrel"></div>
+        <div id="moodRow"></div>
       </div>
+
+      <!-- 1. FEATURED CINEMATIC SPOTLIGHT HERO -->
+      <div id="heroBanner" class="relative rounded-3xl overflow-hidden min-h-[380px] sm:min-h-[460px] p-6 sm:p-10 border border-white/10 shadow-2xl bg-gradient-to-br from-[#121729]/95 via-[#0b0e18] to-[#060810] flex flex-col justify-between transition-all"></div>
+
+      <!-- 2. CINEMA GAMES & DECISION TOOLS BAR -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-white">Cinema Games &amp; Decision Tools</h2>
+          </div>
+          <button type="button" onclick="switchTab('play')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
+            <span>All Games</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+
+        <div id="homeGamesBar" class="cinema-games-bar">
+          <!-- Movie Duel -->
+          <div onclick="switchTab('duel')" class="game-action-tile group" title="Launch Movie Duel">
+            <div class="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-trophy text-xs"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white group-hover:text-brand-gold transition-colors">Movie Duel</div>
+              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Head-to-head showdown</div>
+            </div>
+          </div>
+
+          <!-- Surprise Roulette -->
+          <div onclick="openSurpriseModal()" class="game-action-tile group" title="Launch Surprise Roulette">
+            <div class="w-8 h-8 rounded-xl bg-yellow-500/15 border border-yellow-400/30 flex items-center justify-center text-brand-gold group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-dice text-xs"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white group-hover:text-brand-gold transition-colors">Roulette</div>
+              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Instant random pick</div>
+            </div>
+          </div>
+
+          <!-- Time Machine -->
+          <div onclick="tmOpen()" class="game-action-tile group" title="Launch Time Machine">
+            <div class="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">Time Machine</div>
+              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Hop cinema decades</div>
+            </div>
+          </div>
+
+          <!-- CineSwipe -->
+          <div onclick="switchTab('match')" class="game-action-tile group" title="Launch CineSwipe Matchmaker">
+            <div class="w-8 h-8 rounded-xl bg-rose-500/15 border border-rose-400/30 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-fire-flame-curved text-xs"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white group-hover:text-rose-300 transition-colors">CineSwipe</div>
+              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Swipe matchmaker</div>
+            </div>
+          </div>
+
+          <!-- Marathon Architect -->
+          <div onclick="openMarathonModal()" class="game-action-tile group" title="Launch Marathon Architect">
+            <div class="w-8 h-8 rounded-xl bg-purple-500/15 border border-purple-400/30 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-film text-xs"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white group-hover:text-purple-300 transition-colors">Marathon</div>
+              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Binge plan architect</div>
+            </div>
+          </div>
+
+          <!-- Opposite Day -->
+          <div onclick="oppToggle()" class="game-action-tile group" title="Toggle Opposite Day Taste Inverter">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-shuffle text-xs"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">Opposite Day</div>
+              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Invert your taste</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. BROAD INTERACTIVE VINYL TURNTABLE MODULE (Click to expand into Music) -->
+      <div id="homeVinylShowcase" class="home-vinyl-panel relative rounded-3xl overflow-hidden p-5 sm:p-7 border border-purple-500/30 bg-gradient-to-br from-[#130b22]/90 via-[#0a0d18]/95 to-[#05070e] shadow-2xl backdrop-blur-xl group">
+        <!-- Ambient lighting glow -->
+        <div class="absolute -right-16 -top-16 w-80 h-80 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 -bottom-16 w-80 h-80 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
+          
+          <!-- Left: Turntable Disc (Clicking this expands to Music Lounge) -->
+          <div class="vinyl-turntable-deck relative shrink-0 cursor-pointer" onclick="openMusicFromVinyl()" title="Click to expand Vinyl into Music Lounge">
+            <div id="homeVinylDisc" class="vinyl-record-disc w-36 h-36 sm:w-48 sm:h-48 md:w-56 md:h-56 rounded-full relative flex items-center justify-center shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_35px_rgba(168,85,247,0.25)] transition-transform duration-500 group-hover:scale-105">
+              <!-- Concentric Vinyl Grooves Texture -->
+              <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
+              <!-- Glare reflection sheen -->
+              <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
+              
+              <!-- Center Album Label (Spins smoothly) -->
+              <div class="vinyl-center-label relative w-14 h-14 sm:w-18 sm:h-18 md:w-22 md:h-22 rounded-full overflow-hidden border-4 border-[#120d20] shadow-inner flex items-center justify-center">
+                <img id="homeVinylThumb" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg" alt="Album Art" class="w-full h-full object-cover" />
+                <div class="absolute w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#05060a] border-2 border-brand-gold shadow-md"></div>
+              </div>
+            </div>
+
+            <!-- Tone Arm -->
+            <div id="homeVinylToneArm" class="vinyl-tone-arm pointer-events-none">
+              <div class="tone-arm-pivot"></div>
+              <div class="tone-arm-rod"></div>
+              <div class="tone-arm-head"></div>
+            </div>
+
+            <!-- Hover click hint -->
+            <div class="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[2px]">
+              <span class="px-3 py-1.5 rounded-full bg-brand-gold text-black font-extrabold text-xs shadow-lg flex items-center gap-1.5">
+                <i class="fa-solid fa-expand text-[11px]"></i> Open Music
+              </span>
+            </div>
+          </div>
+
+          <!-- Right: Track Info, Equalizer Waves, and Playback Controls -->
+          <div class="flex-1 min-w-0 flex flex-col justify-between space-y-4 text-center md:text-left w-full">
+            <div>
+              <div class="flex flex-wrap items-center justify-center md:justify-start gap-2.5 text-xs">
+                <span class="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/30 font-bold uppercase tracking-widest text-[10px] flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping"></span>
+                  Soundtrack &amp; Vinyl Vault
+                </span>
+                <span id="homeVinylStatusBadge" class="px-2 py-0.5 rounded-md bg-white/5 text-gray-400 text-[10px] font-mono">Ready to Spin</span>
+              </div>
+
+              <h3 id="homeVinylTitle" class="text-xl sm:text-2xl md:text-3xl font-display font-extrabold text-white tracking-tight mt-2 truncate">
+                Starboy (Official Theme)
+              </h3>
+              <p id="homeVinylArtist" class="text-sm text-purple-200/80 font-medium mt-1 truncate">
+                The Weeknd · Pop &amp; Energy · 4,400+ Songs Available
+              </p>
+            </div>
+
+            <!-- Equalizer Visualizer Bars -->
+            <div class="flex items-center justify-center md:justify-start gap-1 h-6 py-1">
+              <span class="eq-bar eq-1"></span>
+              <span class="eq-bar eq-2"></span>
+              <span class="eq-bar eq-3"></span>
+              <span class="eq-bar eq-4"></span>
+              <span class="eq-bar eq-5"></span>
+              <span class="eq-bar eq-6"></span>
+              <span class="eq-bar eq-7"></span>
+              <span class="eq-bar eq-8"></span>
+              <span class="eq-bar eq-9"></span>
+              <span class="eq-bar eq-10"></span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1">
+              <button type="button" id="homeVinylPlayBtn" onclick="toggleHomeVinylPlayback(event)" class="px-5 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
+                <i id="homeVinylPlayIcon" class="fa-solid fa-play text-xs"></i>
+                <span id="homeVinylPlayText">Play Track</span>
+              </button>
+              <button type="button" onclick="window.musicNext(); if(window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95" title="Next Song">
+                <i class="fa-solid fa-forward-step text-xs text-purple-300"></i>
+                <span>Next</span>
+              </button>
+              <button type="button" onclick="openMusicFromVinyl()" class="px-5 py-2.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
+                <i class="fa-solid fa-up-right-and-down-left-from-center text-xs"></i>
+                <span>Open Music Lounge</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 4. THE 5 FLUID CURATED SHELVES -->
+      
+      <!-- Shelf 1: Essential Masterworks (Pantheon 9.0+) -->
+      <div class="curated-shelf-wrapper space-y-3">
+        <div class="flex items-baseline justify-between px-1">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
+              <i class="fa-solid fa-crown text-brand-gold text-base"></i> Essential Masterworks
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Highest rated films and series in cinema history (9.0+)</p>
+          </div>
+          <button type="button" onclick="switchTab('movies')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
+            <span>Explore All</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+        <div class="relative group/row">
+          <div id="discoverPantheonRow" class="shelf-scroll-row"></div>
+        </div>
+      </div>
+
+      <!-- Shelf 2: Popular Hits & Box Office -->
+      <div class="curated-shelf-wrapper space-y-3">
+        <div class="flex items-baseline justify-between px-1">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
+              <i class="fa-solid fa-fire text-amber-400 text-base"></i> Popular Hits &amp; Box Office
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Spectacle, blockbusters, and pop culture favorites</p>
+          </div>
+          <button type="button" onclick="switchTab('universes')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
+            <span>Universes</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+        <div class="relative group/row">
+          <div id="discoverBlockbustersRow" class="shelf-scroll-row"></div>
+        </div>
+      </div>
+
+      <!-- Shelf 3: Mind Benders & Thrillers -->
+      <div class="curated-shelf-wrapper space-y-3">
+        <div class="flex items-baseline justify-between px-1">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
+              <i class="fa-solid fa-brain text-cyan-400 text-base"></i> Mind Benders &amp; Thrillers
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Reality-warping mysteries, sci-fi concepts, and psychological puzzles</p>
+          </div>
+          <button type="button" onclick="switchTab('categories')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
+            <span>Genres</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+        <div class="relative group/row">
+          <div id="discoverMindRow" class="shelf-scroll-row"></div>
+        </div>
+      </div>
+
+      <!-- Shelf 4: Prestige Series -->
+      <div class="curated-shelf-wrapper space-y-3">
+        <div class="flex items-baseline justify-between px-1">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
+              <i class="fa-solid fa-tv text-sky-400 text-base"></i> Prestige Series
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Immersive multi-season drama and television epics</p>
+          </div>
+          <button type="button" onclick="switchTab('shows')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
+            <span>All Shows</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+        <div class="relative group/row">
+          <div id="discoverTvRow" class="shelf-scroll-row"></div>
+        </div>
+      </div>
+
+      <!-- Shelf 5: Indian Cinema Classics -->
+      <div class="curated-shelf-wrapper space-y-3">
+        <div class="flex items-baseline justify-between px-1">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
+              <i class="fa-solid fa-star text-rose-400 text-base"></i> Indian Cinema Classics
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Acclaimed Hindi and regional masterpieces</p>
+          </div>
+          <button type="button" onclick="setGlobalLanguage('hi'); switchTab('movies');" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
+            <span>Hindi Cinema</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+        <div class="relative group/row">
+          <div id="discoverIndianRow" class="shelf-scroll-row"></div>
+        </div>
+      </div>
+
     </section>
 
     <!-- TAB 1: MOVIES -->
@@ -1578,52 +1654,45 @@
     <!-- TAB: MUSIC (THE LISTENING DISH) -->
     <section id="tab-music" class="tab-pane hidden fade-in space-y-4 sm:space-y-6">
       
-      <!-- PARABOLIC RADIO DISH APERTURE & STELLAR AUDIO CONSOLE -->
+      <!-- MUSIC LOUNGE & SOUNDTRACK VAULT HERO -->
       <div class="relative rounded-3xl overflow-hidden p-4 sm:p-6 shadow-2xl border border-purple-500/35 bg-gradient-to-br from-[#120a1f] via-[#090b14] to-[#04060b] radio-dish-halo">
         <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           
-          <!-- Dish Vector & Callout -->
+          <!-- Lounge Title & Callout -->
           <div class="flex items-center gap-3.5 min-w-0">
-            <!-- Pulsing Parabolic Dish Aperture SVG -->
             <div class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-purple-950/60 border border-purple-400/50 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(192,132,252,0.35)]">
-              <div class="absolute inset-0 rounded-2xl border border-purple-400/30 radio-wave-pulse pointer-events-none"></div>
-              <svg viewBox="0 0 48 48" class="w-7 h-7 text-purple-300" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 38 C7 20, 20 7, 38 7" />
-                <path d="M14 38 C14 25, 25 14, 38 14" stroke-opacity="0.6" stroke-dasharray="2 2" />
-                <path d="M21 38 C21 30, 30 21, 38 21" stroke-opacity="0.4" />
-                <line x1="38" y1="7" x2="26" y2="19" stroke="#f5c518" stroke-width="3" />
-                <circle cx="38" cy="7" r="3" fill="#f5c518" />
-                <line x1="12" y1="42" x2="24" y2="34" />
-                <line x1="24" y1="34" x2="36" y2="42" />
-              </svg>
+              <i class="fa-solid fa-record-vinyl text-2xl text-purple-300"></i>
             </div>
             
             <div class="min-w-0">
               <div class="text-[10px] font-black uppercase tracking-widest text-purple-300 font-mono flex items-center gap-2">
-                <span>STATION 02</span>
+                <span>SOUNDTRACK &amp; VINYL VAULT</span>
                 <span>·</span>
                 <span class="inline-block w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_#c084fc] animate-ping"></span>
-                <span>DEEP-SPACE RADIO DISH</span>
+                <span>4,400+ TRACKS</span>
               </div>
               <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2 mt-0.5">
-                The Listening Dish
+                Music Lounge
               </h1>
-              <span class="text-xs text-purple-200/70 font-mono hidden sm:inline-block">· Stellar Radio Signals, Soundtracks &amp; Violet Audio Waves</span>
+              <span class="text-xs text-purple-200/70 font-sans hidden sm:inline-block">Curated soundtracks, Hindi melodies, and global hits</span>
             </div>
           </div>
 
-          <!-- Dish Quick Controls: Spin Dish (Shuffle), Resume, Blank Reel, Cut -->
+          <!-- Quick Controls: Back to Home, Shuffle, Resume, New Mix, Stop -->
           <div class="flex flex-wrap items-center gap-2 shrink-0">
-            <button type="button" onclick="musicPlayRandom()" title="Spin Dish (Random Discovery)" class="px-3.5 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95">
-              <i class="fa-solid fa-rotate text-purple-300"></i> <span>Spin Dish</span>
+            <button type="button" onclick="closeMusicToVinyl()" title="Return to Home" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 shadow">
+              <i class="fa-solid fa-arrow-left text-xs"></i> <span>Back to Home</span>
             </button>
-            <button type="button" id="musicResumeBtn" onclick="musicResumeLast()" title="Lock Frequency to Last Signal" class="px-3.5 py-2 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
+            <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="px-3.5 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95">
+              <i class="fa-solid fa-shuffle text-purple-300"></i> <span>Shuffle</span>
+            </button>
+            <button type="button" id="musicResumeBtn" onclick="musicResumeLast()" title="Resume Last Track" class="px-3.5 py-2 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
               <i class="fa-solid fa-play"></i> <span>Resume</span>
             </button>
-            <button type="button" onclick="openCreateSongPlaylistModal()" title="Hang Songs on Blank Reel" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-compact-disc text-brand-gold"></i> <span>New Mix</span>
+            <button type="button" onclick="openCreateSongPlaylistModal()" title="Create Custom Playlist" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
+              <i class="fa-solid fa-plus text-brand-gold"></i> <span>New Mix</span>
             </button>
-            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Close Audio Satellite" aria-label="Stop Music Player" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
+            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Stop Audio" aria-label="Stop Music Player" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
               <i class="fa-solid fa-xmark text-sm"></i>
             </button>
           </div>
@@ -2178,23 +2247,26 @@
     </div>
   </div>
 
-  <!-- THE 5 ENGRAVED BRASS STATION PLATES (Observatory Navigation: Mobile & Desktop) -->
-  <div id="stationPlatesDock" class="station-plates-dock" aria-label="Observatory Stations">
-    <button type="button" onclick="switchTab('discover')" data-station="discover" id="station-discover" class="station-plate active" title="The Sky &amp; Telescope Vault">
-      <i class="fa-solid fa-compass text-sm"></i> <span class="text-[10px] sm:text-xs">The Sky</span>
+  <!-- QUICK BOTTOM STATIONS DOCK (Mobile & Desktop) -->
+  <div id="stationPlatesDock" class="station-plates-dock" aria-label="Navigation Stations">
+    <button type="button" onclick="switchTab('discover')" data-station="discover" id="station-discover" class="station-plate active" title="Home">
+      <i class="fa-solid fa-house text-sm"></i> <span class="text-[10px] sm:text-xs">Home</span>
     </button>
-    <button type="button" onclick="switchTab('music')" data-station="music" id="station-music" class="station-plate" title="The Listening Dish">
-      <i class="fa-solid fa-satellite-dish text-sm text-purple-400"></i> <span class="text-[10px] sm:text-xs">The Dish</span>
+    <button type="button" onclick="switchTab('movies')" data-station="movies" id="station-movies" class="station-plate" title="Movies">
+      <i class="fa-solid fa-clapperboard text-sm text-amber-400"></i> <span class="text-[10px] sm:text-xs">Movies</span>
     </button>
-    <button type="button" onclick="switchTab('decide')" data-station="decide" id="station-decide" class="station-plate" title="The Instrument Room">
-      <i class="fa-solid fa-scale-balanced text-sm text-amber-400"></i> <span class="text-[10px] sm:text-xs">Instruments</span>
+    <button type="button" onclick="switchTab('shows')" data-station="shows" id="station-shows" class="station-plate" title="Shows">
+      <i class="fa-solid fa-tv text-sm text-sky-400"></i> <span class="text-[10px] sm:text-xs">Shows</span>
     </button>
-    <button type="button" onclick="switchTab('space')" data-station="space" id="station-space" class="station-plate" title="The Chart Table">
-      <i class="fa-solid fa-map text-sm text-cyan-400"></i> <span class="text-[10px] sm:text-xs">Chart Table</span>
+    <button type="button" onclick="openMusicFromVinyl()" data-station="music" id="station-music" class="station-plate" title="Music Lounge">
+      <i class="fa-solid fa-record-vinyl text-sm text-purple-400"></i> <span class="text-[10px] sm:text-xs">Music</span>
+    </button>
+    <button type="button" onclick="switchTab('play')" data-station="play" id="station-play" class="station-plate" title="Cinema Games">
+      <i class="fa-solid fa-gamepad text-sm text-rose-400"></i> <span class="text-[10px] sm:text-xs">Games</span>
+    </button>
+    <button type="button" onclick="switchTab('hub')" data-station="space" id="station-space" class="station-plate" title="Shelves &amp; Library">
+      <i class="fa-solid fa-bookmark text-sm text-cyan-400"></i> <span class="text-[10px] sm:text-xs">Shelves</span>
       <span id="dockWishBadge" class="hidden px-1.5 py-0.2 text-[9px] font-black rounded-full bg-rose-500 text-white">0</span>
-    </button>
-    <button type="button" onclick="switchTab('profile')" data-station="profile" id="station-profile" class="station-plate" title="The Keeper's Log">
-      <i class="fa-solid fa-book-bookmark text-sm text-emerald-400"></i> <span class="text-[10px] sm:text-xs">Keeper's Log</span>
     </button>
   </div>
 

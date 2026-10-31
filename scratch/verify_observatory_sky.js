@@ -33,19 +33,20 @@ jsFiles.forEach(file => {
 const html = fs.readFileSync('index.html', 'utf8');
 const expectedElements = [
   'id="tab-discover"',
-  'id="stageProjector"',
-  'id="stageTorch"',
-  'id="stageComet"',
-  'id="stageAntenna"',
-  'id="stageLotus"',
-  'id="celestialLens"',
-  'id="skyMenuConstellation"',
-  'id="zenithStarNode"',
-  'id="zenithTitle"',
-  'id="zenithReason"',
-  'id="zenithWatchBtn"',
-  'id="eyepieceMoodRing"',
-  'id="opticalFilterRack"'
+  'id="heroBanner"',
+  'id="homeGamesBar"',
+  'id="homeVinylShowcase"',
+  'id="homeVinylDisc"',
+  'id="homeVinylThumb"',
+  'id="homeVinylTitle"',
+  'id="homeVinylPlayBtn"',
+  'id="discoverPantheonRow"',
+  'id="discoverBlockbustersRow"',
+  'id="discoverMindRow"',
+  'id="discoverTvRow"',
+  'id="discoverIndianRow"',
+  'id="headerNavPills"',
+  'id="stationPlatesDock"'
 ];
 
 expectedElements.forEach(item => {
@@ -54,6 +55,23 @@ expectedElements.forEach(item => {
   } else {
     console.error(`[FAIL] HTML missing ${item}`);
     errors++;
+  }
+});
+
+// Check that pseudo-sci-fi text has been eliminated from the UI
+const forbiddenPhrases = [
+  'HILLTOP APERTURE',
+  'STARS IN VAULT',
+  'Aperture: 800mm',
+  'Focal Star Acquired'
+];
+
+forbiddenPhrases.forEach(phrase => {
+  if (html.includes(phrase)) {
+    console.error(`[FAIL] Found forbidden sci-fi phrase in HTML: "${phrase}"`);
+    errors++;
+  } else {
+    console.log(`[PASS] Cleaned forbidden phrase: "${phrase}"`);
   }
 });
 

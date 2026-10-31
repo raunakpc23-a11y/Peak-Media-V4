@@ -1128,507 +1128,255 @@
       --brass-metal: #B88A4A;
     }
 
-    /* Full-screen Painted Night Sky Canvas */
+    /* Full-screen Deep Night Sky Canvas */
     .painted-sky-field {
       position: relative;
-      background: linear-gradient(180deg, #0E1233 0%, #15113A 30%, #1D1442 60%, #2B1A4F 100%);
+      background: linear-gradient(180deg, #0b0f1d 0%, #0d1224 35%, #120e26 70%, #080a12 100%);
       min-height: 100vh;
       width: 100%;
       overflow-x: hidden;
     }
 
-    /* Hand-lettered star atlas constellation typography */
-    .constellation-script-title {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-style: italic;
-      font-size: clamp(2rem, 3.5vw, 3.2rem);
-      font-weight: 600;
-      color: #F2B35E;
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-      text-shadow: 0 0 25px rgba(242, 179, 94, 0.4);
-    }
-    .constellation-subtitle-sans {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 500;
-      color: rgba(191, 227, 255, 0.75);
-      letter-spacing: 0.02em;
-    }
-
-    /* Constellation Vector Figure Canvas & Node Stage */
-    .constellation-stage {
-      position: relative;
-      width: 100%;
-      min-height: 580px;
-      margin: 2.5rem 0 5rem 0;
-      border-radius: 32px;
-      background: radial-gradient(ellipse at 50% 50%, rgba(35, 26, 68, 0.45) 0%, rgba(14, 18, 51, 0.15) 75%);
-    }
-    @media (max-width: 640px) {
-      .constellation-stage {
-        min-height: 480px;
-        margin: 1.5rem 0 3.5rem 0;
-      }
-    }
-
-    .constellation-vector-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-    .constellation-vector-line {
-      stroke: rgba(242, 179, 94, 0.18);
-      stroke-width: 1.5;
-      stroke-dasharray: 1400;
-      stroke-dashoffset: 1400;
-      fill: none;
-      transition: stroke-dashoffset 1.6s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.4s ease, stroke-width 0.3s ease;
-    }
-    .constellation-stage.drawn .constellation-vector-line {
-      stroke-dashoffset: 0;
-      stroke: rgba(242, 179, 94, 0.42);
-    }
-    .constellation-stage:hover .constellation-vector-line {
-      stroke: rgba(242, 179, 94, 0.82);
-      stroke-width: 1.8;
-    }
-
-    /* Celestial Node Capsule: Optical Lens Disc + Title Plate */
-    .celestial-node-capsule {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      z-index: 25;
-      display: flex;
-      flex-direction: column;
+    /* Header Navigation Pills */
+    .nav-header-pill {
+      display: inline-flex;
       align-items: center;
-      cursor: pointer;
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.2s ease, filter 0.25s ease;
-      touch-action: manipulation;
-      user-select: none;
-    }
-    .celestial-node-capsule:hover,
-    .celestial-node-capsule.active {
-      transform: translate(-50%, -50%) scale(1.18);
-      z-index: 50;
-    }
-
-    /* The Optical Lens Disc (Holding the Thumbnail) */
-    .celestial-lens-aperture {
-      position: relative;
-      width: 68px;
-      height: 68px;
-      border-radius: 50%;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9), 0 0 16px rgba(242, 179, 94, 0.3);
-      border: 2px solid #F2B35E;
-      background: #060913;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
-      flex-shrink: 0;
-    }
-    @media (max-width: 640px) {
-      .celestial-lens-aperture {
-        width: 52px;
-        height: 52px;
-      }
-    }
-
-    /* Magnitudes */
-    .mag-large .celestial-lens-aperture {
-      width: 78px;
-      height: 78px;
-    }
-    @media (max-width: 640px) {
-      .mag-large .celestial-lens-aperture {
-        width: 60px;
-        height: 60px;
-      }
-    }
-    .mag-small .celestial-lens-aperture {
-      width: 56px;
-      height: 56px;
-    }
-    @media (max-width: 640px) {
-      .mag-small .celestial-lens-aperture {
-        width: 44px;
-        height: 44px;
-      }
-    }
-
-    /* Poster Image inside Aperture */
-    .celestial-lens-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.35s ease, filter 0.3s ease;
-    }
-    .celestial-node-capsule:hover .celestial-lens-img {
-      transform: scale(1.1);
-    }
-
-    /* Optical Glass Glare Reflection */
-    .celestial-lens-glare {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 40%, transparent 60%);
-      pointer-events: none;
-      mix-blend-mode: overlay;
-    }
-
-    /* Astronomical Bezel Rating Badge */
-    .celestial-lens-rating {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      padding: 1px 4px;
-      border-radius: 6px;
-      background: rgba(14, 18, 51, 0.92);
-      border: 1px solid rgba(242, 179, 94, 0.6);
-      font-family: ui-monospace, monospace;
-      font-size: 8.5px;
+      gap: 0.45rem;
+      padding: 0.42rem 0.85rem;
+      border-radius: 0.85rem;
+      font-size: 0.8125rem;
       font-weight: 700;
-      color: #F2B35E;
-      line-height: 1;
-      pointer-events: none;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
-    }
-
-    /* Halo Glow */
-    .celestial-lens-halo {
-      position: absolute;
-      inset: -8px;
-      border-radius: 50%;
-      pointer-events: none;
-      opacity: 0.35;
-      filter: blur(6px);
-      transition: opacity 0.3s ease, filter 0.3s ease;
-    }
-    .celestial-node-capsule:hover .celestial-lens-halo {
-      opacity: 0.85;
-      filter: blur(12px);
-    }
-
-    /* Color Tokens */
-    .star-amber .celestial-lens-aperture {
-      border-color: #F2B35E;
-    }
-    .star-amber .celestial-lens-halo {
-      background: radial-gradient(circle, #F2B35E 0%, transparent 70%);
-    }
-    .star-ice .celestial-lens-aperture {
-      border-color: #BFE3FF;
-    }
-    .star-ice .celestial-lens-halo {
-      background: radial-gradient(circle, #BFE3FF 0%, transparent 70%);
-    }
-    .star-ice .celestial-lens-rating {
-      border-color: rgba(191, 227, 255, 0.6);
-      color: #BFE3FF;
-    }
-    .star-violet .celestial-lens-aperture {
-      border-color: #B9A2FF;
-    }
-    .star-violet .celestial-lens-halo {
-      background: radial-gradient(circle, #B9A2FF 0%, transparent 70%);
-    }
-    .star-violet .celestial-lens-rating {
-      border-color: rgba(185, 162, 255, 0.6);
-      color: #B9A2FF;
-    }
-
-    /* Integrated Astrolabe Title Plate */
-    .celestial-node-info {
-      margin-top: 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      max-width: 125px;
-      pointer-events: none;
-    }
-    @media (max-width: 640px) {
-      .celestial-node-info {
-        max-width: 90px;
-        margin-top: 4px;
-      }
-    }
-    .celestial-node-title {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-style: italic;
-      font-size: 13px;
-      font-weight: 600;
-      line-height: 1.15;
-      color: #FFFFFF;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95), 0 0 12px rgba(242, 179, 94, 0.4);
-      white-space: normal;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      transition: color 0.2s ease;
-    }
-    @media (max-width: 640px) {
-      .celestial-node-title {
-        font-size: 11px;
-        -webkit-line-clamp: 1;
-      }
-    }
-    .celestial-node-capsule:hover .celestial-node-title {
-      color: #F2B35E;
-    }
-    .celestial-node-meta {
-      font-family: 'Inter', sans-serif;
-      font-size: 9.5px;
-      font-weight: 500;
-      color: rgba(191, 227, 255, 0.7);
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      margin-top: 2px;
-    }
-    @media (max-width: 640px) {
-      .celestial-node-meta {
-        font-size: 8.5px;
-      }
-    }
-    .celestial-node-meta .meta-dot {
-      opacity: 0.4;
-    }
-
-    /* Quick Play Starlight Ray on Hover */
-    .celestial-quick-play {
-      position: absolute;
-      top: 34px;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.6);
-      opacity: 0;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(242, 179, 94, 0.95);
-      color: #0E1233;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 0 20px #F2B35E;
-      transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-      pointer-events: none;
-      border: none;
-      cursor: pointer;
-    }
-    @media (max-width: 640px) {
-      .celestial-quick-play {
-        top: 26px;
-        width: 26px;
-        height: 26px;
-        font-size: 9px;
-      }
-    }
-    .celestial-node-capsule:hover .celestial-quick-play {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-      pointer-events: auto;
-    }
-
-    /* Legacy compatibility for node */
-    .celestial-star-node {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 25;
-      touch-action: manipulation;
-    }
-
-    /* Tonight's Zenith Focal Star */
-    .zenith-focal-star {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 1rem 2rem 1rem;
-      text-align: center;
-    }
-    .zenith-star-core {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #FFFFFF;
-      box-shadow: 0 0 20px #FFFFFF, 0 0 45px #F2B35E, 0 0 80px rgba(242, 179, 94, 0.6);
-      position: relative;
-      cursor: pointer;
-      animation: zenithBreathe 3.5s ease-in-out infinite;
-    }
-    @keyframes zenithBreathe {
-      0%, 100% { transform: scale(1); filter: brightness(1); }
-      50% { transform: scale(1.15); filter: brightness(1.3); }
-    }
-
-    /* The Floating Optical Glass Lens (Loupe) */
-    .celestial-lens {
-      position: fixed;
-      pointer-events: none;
-      z-index: 100;
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.85);
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .celestial-lens.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translate(-50%, -50%) scale(1);
-    }
-    .lens-bezel {
-      width: min(340px, 92vw);
-      background: radial-gradient(circle at 45% 30%, rgba(28, 20, 52, 0.98) 0%, rgba(10, 8, 22, 0.99) 100%);
-      border: 1.5px solid #B88A4A;
-      border-radius: 28px;
-      padding: 16px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.95), inset 0 2px 6px rgba(255, 255, 255, 0.2), 0 0 35px rgba(242, 179, 94, 0.25);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      position: relative;
-    }
-    .lens-poster-disc {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid #F2B35E;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.8), inset 0 0 12px rgba(0,0,0,0.5);
-      position: relative;
-      margin: 0 auto;
-      background: #000;
-      shrink-0: 0;
-    }
-    .lens-poster-disc img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .lens-title-serif {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-style: italic;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #FFFFFF;
-      text-align: center;
-      line-height: 1.15;
-    }
-    .lens-hook-line {
-      font-family: 'Inter', sans-serif;
-      font-size: 11.5px;
-      color: rgba(191, 227, 255, 0.85);
-      text-align: center;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .lens-meta-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 11px;
-      font-mono: monospace;
-      font-weight: 700;
-      color: #F2B35E;
-    }
-    .lens-watch-action {
-      width: 100%;
-      padding: 8px 14px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #F2B35E 0%, #B88A4A 100%);
-      color: #0E1233;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 800;
-      text-align: center;
-      cursor: pointer;
-      border: none;
-      box-shadow: 0 4px 16px rgba(242, 179, 94, 0.4);
-      transition: all 0.2s ease;
-    }
-    .lens-watch-action:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(242, 179, 94, 0.55);
-    }
-
-    /* 5-Star Micro-Constellation Menu (Top Corner) */
-    .sky-menu-constellation {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 7px 18px;
-      border-radius: 9999px;
-      background: rgba(14, 18, 51, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(184, 138, 74, 0.45);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
-      user-select: none;
-      z-index: 75;
-    }
-    @media (max-width: 767px) {
-      .sky-menu-constellation {
-        position: fixed;
-        top: 0.75rem;
-        right: 0.75rem;
-        gap: 10px;
-        padding: 5px 12px;
-      }
-    }
-    .sky-menu-star {
-      position: relative;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #F2B35E;
-      box-shadow: 0 0 8px #F2B35E;
-      cursor: pointer;
-      transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-    .sky-menu-star:hover, .sky-menu-star.active {
-      transform: scale(1.5);
-      background: #FFFFFF;
-      box-shadow: 0 0 12px #FFFFFF, 0 0 20px #F2B35E;
-    }
-    .sky-menu-label {
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-style: italic;
-      font-size: 13px;
-      color: #FFFFFF;
+      color: #94a3b8;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      text-shadow: 0 0 10px rgba(242, 179, 94, 0.5);
+      cursor: pointer;
     }
-    .sky-menu-star:hover .sky-menu-label {
-      opacity: 1;
+    .nav-header-pill:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .nav-header-pill.active {
+      color: #000000;
+      background: #f5c518;
+      box-shadow: 0 4px 14px rgba(245, 197, 24, 0.35);
     }
 
-    /* Mountain Ridge Silhouette (Horizon) */
-    .mountain-ridge-horizon {
+    /* Broad Interactive Vinyl Showcase Module */
+    .home-vinyl-panel {
       position: relative;
-      width: 100%;
-      height: 140px;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, filter 0.4s ease;
+      will-change: transform, opacity;
+    }
+    .home-vinyl-panel.vinyl-expanding {
+      transform: scale(1.6);
+      opacity: 0;
+      filter: blur(10px);
       pointer-events: none;
-      margin-top: 1rem;
-      background: linear-gradient(180deg, transparent 0%, rgba(43, 26, 79, 0.6) 50%, #150d26 100%);
+    }
+
+    /* The Vinyl Record Disc */
+    .vinyl-turntable-deck {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+    }
+    .vinyl-record-disc {
+      background: radial-gradient(circle, #222226 0%, #141416 35%, #0c0c0e 70%, #050507 100%);
+      border: 4px solid #1c1d24;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(168, 85, 247, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
+    .vinyl-record-disc.spinning {
+      animation: vinylDiscSpin 12s linear infinite;
+    }
+    .vinyl-record-disc.paused {
+      animation-play-state: paused !important;
+    }
+    @keyframes vinylDiscSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Concentric Vinyl Grooves Texture */
+    .vinyl-groove-rings {
+      background: repeating-radial-gradient(
+        circle at center,
+        transparent 0px,
+        transparent 2px,
+        rgba(255, 255, 255, 0.038) 3px,
+        transparent 4px
+      );
+      opacity: 0.85;
+    }
+
+    /* Conic Glare Reflection Sheen */
+    .vinyl-sheen-facet {
+      background: conic-gradient(
+        from 45deg,
+        rgba(255, 255, 255, 0.14) 0deg,
+        transparent 55deg,
+        rgba(255, 255, 255, 0.08) 120deg,
+        transparent 180deg,
+        rgba(255, 255, 255, 0.14) 235deg,
+        transparent 300deg,
+        rgba(255, 255, 255, 0.08) 360deg
+      );
+      mix-blend-mode: screen;
+    }
+
+    /* Center Album Label */
+    .vinyl-center-label {
+      background: #111;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Realistic Tone Arm */
+    .vinyl-tone-arm {
+      position: absolute;
+      top: -10px;
+      right: -5px;
+      width: 90px;
+      height: 120px;
+      pointer-events: none;
+      transform-origin: 80% 15%;
+      transform: rotate(0deg);
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 20;
+    }
+    .vinyl-tone-arm.playing {
+      transform: rotate(25deg);
+    }
+    .tone-arm-pivot {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e2e8f0 0%, #64748b 70%, #1e293b 100%);
+      border: 2px solid #cbd5e1;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+    }
+    .tone-arm-rod {
+      position: absolute;
+      top: 22px;
+      right: 21px;
+      width: 4px;
+      height: 82px;
+      background: linear-gradient(to bottom, #cbd5e1 0%, #94a3b8 60%, #475569 100%);
+      transform: rotate(18deg);
+      transform-origin: top center;
+      border-radius: 2px;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+    }
+    .tone-arm-head {
+      position: absolute;
+      bottom: 12px;
+      left: 20px;
+      width: 14px;
+      height: 20px;
+      background: #f59e0b;
+      border-radius: 3px;
+      transform: rotate(-10deg);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+      border: 1px solid #fbbf24;
+    }
+
+    /* Audio Equalizer Bars */
+    .eq-bar {
+      display: inline-block;
+      width: 3.5px;
+      border-radius: 2px;
+      background: linear-gradient(to top, #a855f7 0%, #c084fc 60%, #f5c518 100%);
+      height: 4px;
+      transition: height 0.2s ease;
+    }
+    .vinyl-record-disc.spinning ~ .flex-1 .eq-bar,
+    .home-vinyl-panel:has(.vinyl-record-disc.spinning) .eq-bar {
+      animation: eqBounce 1.2s ease-in-out infinite alternate;
+    }
+    @keyframes eqBounce {
+      0% { height: 4px; }
+      50% { height: 18px; }
+      100% { height: 8px; }
+    }
+    .eq-1 { animation-delay: 0.1s !important; }
+    .eq-2 { animation-delay: 0.35s !important; }
+    .eq-3 { animation-delay: 0.15s !important; }
+    .eq-4 { animation-delay: 0.5s !important; }
+    .eq-5 { animation-delay: 0.25s !important; }
+    .eq-6 { animation-delay: 0.4s !important; }
+    .eq-7 { animation-delay: 0.2s !important; }
+    .eq-8 { animation-delay: 0.6s !important; }
+    .eq-9 { animation-delay: 0.3s !important; }
+    .eq-10 { animation-delay: 0.45s !important; }
+
+    /* Cinema Games Action Strip */
+    .cinema-games-bar {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin: 1.75rem 0;
+    }
+    @media (min-width: 640px) {
+      .cinema-games-bar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+    }
+    @media (min-width: 1024px) {
+      .cinema-games-bar {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 0.875rem;
+      }
+    }
+
+    .game-action-tile {
+      position: relative;
+      border-radius: 1.25rem;
+      padding: 1rem 0.875rem;
+      background: rgba(13, 17, 28, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.65rem;
+      cursor: pointer;
+      transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+    }
+    .game-action-tile:hover {
+      transform: translateY(-4px);
+      background: rgba(20, 26, 44, 0.95);
+      border-color: rgba(245, 197, 24, 0.45);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(245, 197, 24, 0.15);
+    }
+    .game-action-tile:active {
+      transform: scale(0.97);
+    }
+
+    /* Fluid Curated Shelves */
+    .curated-shelf-wrapper {
+      margin: 2.25rem 0;
+    }
+    .shelf-scroll-row {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      padding: 0.75rem 0.25rem 1.25rem 0.25rem;
+      -webkit-overflow-scrolling: touch;
+    }
+    .shelf-scroll-row::-webkit-scrollbar {
+      display: none;
+    }
+    .shelf-scroll-row {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }

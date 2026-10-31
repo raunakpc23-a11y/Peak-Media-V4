@@ -70,16 +70,23 @@
       const active = btn.dataset.mnav === g;
       btn.className = 'mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] transition-colors ' + (active ? 'text-brand-gold font-bold bg-brand-gold/10' : 'text-gray-400 font-semibold');
     });
+    document.querySelectorAll('.nav-header-pill').forEach(pill => {
+      const dest = pill.dataset.dest;
+      const active = dest === key || dest === g || (dest === 'movies' && key === 'movies') || (dest === 'shows' && key === 'shows');
+      pill.classList.toggle('active', active);
+    });
     document.querySelectorAll('.station-plate').forEach(plate => {
-      const active = plate.dataset.station === g || (plate.dataset.station === 'discover' && g === 'discover');
+      const dest = plate.dataset.station;
+      const active = dest === key || dest === g || (dest === 'movies' && key === 'movies') || (dest === 'shows' && key === 'shows');
       plate.classList.toggle('active', active);
     });
     document.querySelectorAll('.sky-menu-star').forEach(star => {
       const active = star.dataset.dest === g || (star.dataset.dest === 'discover' && g === 'discover');
       star.classList.toggle('active', active);
     });
-    if (key === 'discover' && window.renderSkyConstellations) {
-      setTimeout(window.renderSkyConstellations, 50);
+    if (key === 'discover') {
+      if (window.renderDiscoverTab) setTimeout(window.renderDiscoverTab, 40);
+      if (window.updateHomeVinylPlayer) setTimeout(window.updateHomeVinylPlayer, 60);
     }
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
     if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
@@ -94,9 +101,37 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Star-streak flight transition across the 5 Observatory stations
+  // Expand Vinyl Disc on Home Page into Music Lounge
+  window.openMusicFromVinyl = function() {
+    const showcase = document.getElementById('homeVinylShowcase');
+    if (showcase && !document.body.classList.contains('reduce-fx')) {
+      showcase.classList.add('vinyl-expanding');
+      setTimeout(() => {
+        window.switchTab('music');
+        showcase.classList.remove('vinyl-expanding');
+      }, 350);
+    } else {
+      window.switchTab('music');
+    }
+  };
+
+  // Return from Music Lounge back to Home Page with Vinyl in view
+  window.closeMusicToVinyl = function() {
+    window.switchTab('discover');
+    setTimeout(() => {
+      const showcase = document.getElementById('homeVinylShowcase');
+      if (showcase) {
+        showcase.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
+    }, 120);
+  };
+
+  // Star-streak flight transition across stations
   window.flyToStation = function (dest) {
-    if (window.triggerStarFlight && !document.body.classList.contains('reduce-fx')) {
+    if (dest === 'music') {
+      window.openMusicFromVinyl();
+    } else if (window.triggerStarFlight && !document.body.classList.contains('reduce-fx')) {
       window.triggerStarFlight(300, () => window.switchTab(dest));
     } else {
       window.switchTab(dest);

@@ -15975,12 +15975,12 @@ Odd Taxi|2021|87
           </div>
         </div>
 
-        <!-- Resting Starlight Metadata: Title + Year + Rating Magnitude -->
+        <!-- Resting Starlight Metadata: Title + Year + Rating -->
         <div class="p-2.5 sm:p-3 flex-1 flex flex-col justify-between gap-1 border-t border-white/5 bg-gradient-to-b from-[#0a0d16] to-[#06080e]">
           <h3 class="font-bold text-xs sm:text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-1" title="${attrTitle}">${item.cleanName || item.title}</h3>
           <div class="flex items-center justify-between text-xs text-gray-400 font-mono">
             <span>${item.year}</span>
-            <span class="text-brand-gold font-bold flex items-center gap-1 font-mono text-[11px]"><i class="fa-solid fa-star text-[9px]"></i> ${item.rating} MAG</span>
+            <span class="text-brand-gold font-bold flex items-center gap-1 font-mono text-[11px]"><i class="fa-solid fa-star text-[9px]"></i> ${item.rating}</span>
           </div>
         </div>
       </div>`;
@@ -16106,27 +16106,27 @@ Odd Taxi|2021|87
         </div>
 
         <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col justify-between h-full ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
-          <!-- Eyepiece Telemetry Header -->
-          <div class="flex items-center justify-between gap-3 text-xs border-b border-brand-gold/20 pb-3 mb-4 sm:mb-6 w-full">
+          <!-- Spotlight Header -->
+          <div class="flex items-center justify-between gap-3 text-xs border-b border-white/10 pb-3 mb-4 sm:mb-6 w-full">
             <div class="flex items-center gap-2">
               <span class="inline-block w-2.5 h-2.5 rounded-full animate-pulse shadow-[0_0_8px_#f5c518]" style="background:${theme.accent}"></span>
-              <span class="font-bold text-white tracking-widest uppercase text-[10px] sm:text-xs">Eyepiece Focal Star · Celestial Observation</span>
+              <span class="font-bold text-white tracking-widest uppercase text-[10px] sm:text-xs">Featured Spotlight · Tonight's Selection</span>
               <span class="text-white/25">·</span>
               <span class="text-brand-gold font-mono text-[10px] sm:text-xs">${currentSpotlightIdx + 1} of ${spotlightTitles.length}</span>
             </div>
             <div class="flex items-center gap-3 text-xs">
-              <button type="button" onclick="openOnboardingWizard(true)" class="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-[11px]" title="Retake Star Alignment">
+              <button type="button" onclick="openOnboardingWizard(true)" class="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-[11px]" title="Tune Taste Preferences">
                 <i class="fa-solid fa-sliders text-[10px] text-brand-gold"></i>
-                <span class="hidden sm:inline font-mono">Calibrate Scope</span>
+                <span class="hidden sm:inline">Taste Setup</span>
               </button>
             </div>
           </div>
 
-          <!-- Main Eyepiece Stage -->
+          <!-- Main Spotlight Stage -->
           <div class="flex flex-col sm:flex-row items-center sm:items-end gap-5 sm:gap-8 w-full">
-            <!-- Astronomical Poster Bezel with Starlight Aura -->
+            <!-- Featured Poster Card -->
             <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')">
-              <div class="relative rounded-2xl overflow-hidden border-2 border-brand-gold/40 shadow-[0_15px_40px_rgba(0,0,0,0.9),0_0_25px_rgba(245,197,24,0.2)] transition-all duration-300 group-hover:border-brand-gold group-hover:scale-105 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(245,197,24,0.45)]">
+              <div class="relative rounded-2xl overflow-hidden border border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.9),0_0_25px_rgba(245,197,24,0.2)] transition-all duration-300 group-hover:border-brand-gold group-hover:scale-105 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(245,197,24,0.45)]">
                 <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster w-32 sm:w-40 md:w-48 object-cover poster-aspect" />
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                   <span class="w-12 h-12 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-sm ml-0.5"></i></span>
@@ -16134,31 +16134,32 @@ Odd Taxi|2021|87
               </div>
             </div>
 
-            <!-- Starlight Telemetry & Observation Notes -->
+            <!-- Spotlight Details & Actions -->
             <div class="space-y-3 sm:space-y-3.5 max-w-2xl w-full text-center sm:text-left">
               <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs">
-                <span class="px-2.5 py-0.5 rounded-full bg-brand-gold text-black font-black uppercase text-[9px] tracking-widest shadow-sm">Focal Star</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-brand-gold text-black font-black uppercase text-[9px] tracking-widest shadow-sm">Featured</span>
                 <span class="font-extrabold uppercase tracking-wider text-[11px] font-mono" style="color:${theme.accent}">${item.genre}</span>
                 <span class="text-white/30">•</span>
                 <span class="text-gray-300 font-mono text-[11px]">${item.year}</span>
                 <span class="text-white/30">•</span>
-                <span class="text-brand-gold font-black flex items-center gap-1 font-mono text-xs"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating} MAG</span>
+                <span class="text-brand-gold font-black flex items-center gap-1 font-mono text-xs"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
                 <span class="text-white/30">•</span>
                 <span class="px-2 py-0.5 rounded-md bg-white/10 text-gray-200 text-[10px] font-mono font-semibold">${item.platformName}</span>
               </div>
 
               <h1 class="text-2xl sm:text-4xl md:text-5xl font-display font-black text-white tracking-tight leading-tight">${item.cleanName || item.title}</h1>
               <p class="text-brand-gold/90 font-medium text-xs sm:text-sm italic tracking-wide">"${spot.tagline}"</p>
+              <p class="text-gray-300 text-xs sm:text-sm font-sans leading-relaxed line-clamp-2 max-w-xl">${item.synopsis || spot.blurb || ''}</p>
 
-              <!-- Decisive Dual Action Buttons: Observe & Slew Next -->
+              <!-- Action Buttons -->
               <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2.5 sm:gap-3">
                 <button type="button" onclick="openDetailModal('${escTitle}')" class="px-6 py-2.5 sm:py-3 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-gold/30 transition-all active:scale-95">
-                  <i class="fa-solid fa-play text-xs"></i> <span>Observe Star</span>
+                  <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
                 </button>
-                <button type="button" onclick="flickTonightPick()" class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-white/20 backdrop-blur-md transition-all active:scale-95 group" title="Slew telescope to next focal star candidate">
-                  <i class="fa-solid fa-arrows-rotate text-xs text-brand-gold group-hover:rotate-180 transition-transform duration-300"></i> <span>Slew to Next</span>
+                <button type="button" onclick="flickTonightPick()" class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-white/20 backdrop-blur-md transition-all active:scale-95 group" title="Next Highlight">
+                  <i class="fa-solid fa-arrows-rotate text-xs text-brand-gold group-hover:rotate-180 transition-transform duration-300"></i> <span>Next Highlight</span>
                 </button>
-                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-10 h-10 sm:h-11 sm:w-11 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center border border-white/10 transition-all shadow-sm" title="Mark on Sky Chart">
+                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-10 h-10 sm:h-11 sm:w-11 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center border border-white/10 transition-all shadow-sm" title="Save to Watchlist">
                   <i class="fa-solid ${isW ? 'fa-check' : 'fa-bookmark'} text-xs"></i>
                 </button>
               </div>
@@ -16351,9 +16352,9 @@ Odd Taxi|2021|87
 
       document.querySelectorAll('#discoverPantheonRow, #discoverBlockbustersRow, #discoverMindRow, #discoverTvRow, #discoverIndianRow, #moodRow, #wishlistContainer').forEach(addHorizontalArrows);
 
-      // Render the 5 Celestial Sky Constellations & Loupe nodes
-      if (window.renderSkyConstellations) {
-        window.renderSkyConstellations();
+      // Sync the Broad Interactive Vinyl Turntable on Home
+      if (window.updateHomeVinylPlayer) {
+        window.updateHomeVinylPlayer();
       }
     }
 
