@@ -669,16 +669,19 @@
           }).join('');
       }
 
-      // Render Playlists as Simple Word Tabs
+      // Render Backlit Analog Radio Tuning Scale Marks
       const plRow = $('musicPlaylistsRow');
       if (plRow) {
         const activePl = ($('musicFilterPlaylist') && $('musicFilterPlaylist').value) || 'all';
-        plRow.innerHTML = `<button type="button" onclick="resetMusicFilters()" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${activePl === 'all' ? 'bg-brand-gold text-black border-brand-gold' : 'bg-white/[0.04] text-gray-300 border-white/10 hover:text-white'}">All</button>` +
-          musicPlaylists.map(p => {
-            const isSel = String(activePl) === String(p.id);
-            const shortTitle = p.title.split('|')[0].split('–')[0].split('-')[0].replace(/\(\d+.*?\)/g, '').trim().slice(0, 24);
-            return `<button type="button" onclick="filterMusicByPlaylist(${p.id})" title="${esc(p.title)}" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-medium transition-all border ${isSel ? 'bg-brand-gold text-black border-brand-gold font-bold' : 'bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white border-white/10'}">${esc(shortTitle)}</button>`;
-          }).join('');
+        const freqs = ['88.5', '91.2', '93.5', '96.4', '98.8', '101.1', '103.7', '105.4', '107.9'];
+        let marksHtml = `<button type="button" onclick="resetMusicFilters()" class="tuner-station-mark ${activePl === 'all' ? 'active' : ''}"><span>88.0 MHz</span> <span class="text-white/60">· ALL</span></button>`;
+        marksHtml += musicPlaylists.map((p, idx) => {
+          const isSel = String(activePl) === String(p.id);
+          const f = freqs[(idx + 1) % freqs.length] + ' MHz';
+          const shortTitle = p.title.split('|')[0].split('–')[0].split('-')[0].replace(/\(\d+.*?\)/g, '').trim().slice(0, 20);
+          return `<button type="button" onclick="filterMusicByPlaylist(${p.id}, this)" title="${esc(p.title)}" class="tuner-station-mark ${isSel ? 'active' : ''}"><span>${f}</span> <span class="text-white/80">· ${esc(shortTitle)}</span></button>`;
+        }).join('');
+        plRow.innerHTML = marksHtml;
       }
 
       renderMusicArtistChips();
@@ -716,9 +719,18 @@
       if (favBtn) favBtn.className = 'px-3 py-2 rounded-xl text-xs font-bold transition-all ' + (mode === 'favs' ? 'bg-brand-gold text-black shadow' : 'bg-white/5 text-gray-300 hover:text-white border border-white/10');
       filterAndRenderMusic(true);
     };
-    window.filterMusicByPlaylist = function(pid) {
+    window.filterMusicByPlaylist = function(pid, btnEl) {
       const sel = $('musicFilterPlaylist');
       if (sel) sel.value = String(pid);
+      if (btnEl && $('radioNeedle')) {
+        const track = $('radioTunerTrack');
+        if (track) {
+          const rect = btnEl.getBoundingClientRect();
+          const trackRect = track.getBoundingClientRect();
+          const needleX = Math.max(10, rect.left - trackRect.left + rect.width / 2);
+          $('radioNeedle').style.left = needleX + 'px';
+        }
+      }
       filterAndRenderMusic(true);
       if (window.initMusicVault) window.initMusicVault();
     };
@@ -728,11 +740,60 @@
       if ($('musicFilterPlaylist')) $('musicFilterPlaylist').value = 'all';
       if ($('musicFilterMood')) $('musicFilterMood').value = 'all';
       if ($('musicFilterEra')) $('musicFilterEra').value = 'all';
+      if ($('radioNeedle')) $('radioNeedle').style.left = '14px';
       musicSelectedArtist = 'All';
       musicViewMode = 'all';
       setMusicViewMode('all');
       renderMusicArtistChips();
       filterAndRenderMusic(true);
+      if (window.initMusicVault) window.initMusicVault();
+    };
+
+    // Knurled Rotary Knobs State and Cycler
+    const KNOB_LANGS = ['all', 'hi', 'en'];
+    const KNOB_MOODS = ['all', 'Romantic & Melody', 'Party & Energy', 'Pop & Hits', 'Chill & Indie', 'R&B & Hip-Hop', 'Nostalgia & Classics'];
+    const KNOB_ERAS = ['all', '2020s', '2010s', '2000s', '1990s', '1980s'];
+    let knobState = { langIdx: 0, moodIdx: 0, eraIdx: 0 };
+
+    window.cycleMusicKnob = function(type) {
+      if (type === 'lang') {
+        knobState.langIdx = (knobState.langIdx + 1) % KNOB_LANGS.length;
+        const val = KNOB_LANGS[knobState.langIdx];
+        const dial = $('knobDialLang');
+        if (dial) dial.style.transform = `rotate(${knobState.langIdx * 120}deg)`;
+        const lbl = $('knobLabelLang');
+        if (lbl) lbl.textContent = val.toUpperCase();
+        window.setSimpleMusicLang(val);
+      } else if (type === 'mood') {
+        knobState.moodIdx = (knobState.moodIdx + 1) % KNOB_MOODS.length;
+        const val = KNOB_MOODS[knobState.moodIdx];
+        const dial = $('knobDialMood');
+        if (dial) dial.style.transform = `rotate(${knobState.moodIdx * 51.4}deg)`;
+        const lbl = $('knobLabelMood');
+        if (lbl) lbl.textContent = val === 'all' ? 'ALL MOODS' : val.split('&')[0].trim().toUpperCase();
+        if ($('musicFilterMood')) $('musicFilterMood').value = val;
+        filterAndRenderMusic(true);
+      } else if (type === 'era') {
+        knobState.eraIdx = (knobState.eraIdx + 1) % KNOB_ERAS.length;
+        const val = KNOB_ERAS[knobState.eraIdx];
+        const dial = $('knobDialEra');
+        if (dial) dial.style.transform = `rotate(${knobState.eraIdx * 60}deg)`;
+        const lbl = $('knobLabelEra');
+        if (lbl) lbl.textContent = val === 'all' ? 'ALL ERAS' : val;
+        if ($('musicFilterEra')) $('musicFilterEra').value = val;
+        filterAndRenderMusic(true);
+      }
+    };
+
+    // Collector's Velvet Spine View Toggle
+    window.toggleLibrarySpineView = function() {
+      window.libraryViewMode = window.libraryViewMode === 'spine' ? 'chart' : 'spine';
+      const lbl = $('libraryViewModeLabel');
+      if (lbl) lbl.textContent = window.libraryViewMode === 'spine' ? 'Chart View' : 'Spine View';
+      if (typeof renderShelves === 'function') renderShelves();
+      else if (window.renderHubShelves) window.renderHubShelves();
+      else if (window.updateHubUI) window.updateHubUI();
+      showToast(window.libraryViewMode === 'spine' ? 'Collector Velvet Spine View Activated' : 'Star Chart Surface Activated', 'fa-bars-staggered', 'text-brand-gold');
     };
 
     function filterAndRenderMusic(resetPage = true) {
@@ -768,7 +829,7 @@
       const slice = musicFiltered.slice((musicPage - 1) * MUSIC_PAGE_SIZE, musicPage * MUSIC_PAGE_SIZE);
       const container = $('musicTracksContainer');
       if (!slice.length) {
-        container.innerHTML = `<div class="col-span-full py-12 text-center text-gray-400 text-sm">No songs matched your current filters. <button type="button" onclick="resetMusicFilters()" class="text-brand-gold underline ml-1">Reset filters</button></div>`;
+        container.innerHTML = `<div class="col-span-full py-12 text-center text-purple-200/60 text-sm font-mono">No celestial radio signals matched your frequency. <button type="button" onclick="resetMusicFilters()" class="text-brand-gold underline ml-1 font-bold">Reset scale</button></div>`;
         $('musicPagination').innerHTML = '';
         return;
       }
@@ -777,31 +838,34 @@
       container.innerHTML = slice.map((s, idx) => {
         const globalIdx = (musicPage - 1) * MUSIC_PAGE_SIZE + idx + 1;
         const isFav = songFavs.includes(s.id);
-        const isAdFree = songAdFree.includes(s.id);
         const isPlayingThis = curPlayingId === s.id;
         const plName = (musicPlaylists[(s.p && s.p[0]) || 0] || {}).title || ' Vault';
+        const cardStyle = isPlayingThis 
+          ? 'border-purple-400 bg-purple-950/45 shadow-[0_0_24px_rgba(192,132,252,0.4)] ring-1 ring-purple-400/50' 
+          : 'border-purple-500/20 bg-gradient-to-r from-purple-950/20 via-[#0a0d18]/90 to-black hover:border-purple-400/60 hover:shadow-[0_0_18px_rgba(192,132,252,0.25)]';
+
         return `
-          <div class="glass-card rounded-2xl p-2.5 border ${isPlayingThis ? 'border-brand-gold bg-brand-gold/10' : 'border-white/10 hover:border-white/25'} flex items-center gap-3 transition-all group">
-            <div onclick="playSongById('${s.id}')" class="relative w-16 h-12 rounded-xl overflow-hidden bg-black shrink-0 cursor-pointer">
-              <img src="https://i.ytimg.com/vi/${s.id}/mqdefault.jpg" loading="lazy" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+          <div class="rounded-2xl p-2.5 sm:p-3 border ${cardStyle} flex items-center gap-3 transition-all duration-300 group">
+            <div onclick="playSongById('${s.id}')" class="relative w-16 h-12 rounded-xl overflow-hidden bg-black shrink-0 cursor-pointer border border-purple-500/30">
+              <img src="https://i.ytimg.com/vi/${s.id}/mqdefault.jpg" loading="lazy" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <i class="fa-solid ${isPlayingThis && isPlayingMusic ? 'fa-volume-high text-brand-gold' : 'fa-play text-white'} text-xs"></i>
+                <i class="fa-solid ${isPlayingThis && isPlayingMusic ? 'fa-volume-high text-purple-300 animate-pulse' : 'fa-play text-white'} text-xs"></i>
               </div>
             </div>
             <div onclick="playSongById('${s.id}')" class="min-w-0 flex-1 cursor-pointer">
-              <div class="text-xs sm:text-sm font-bold text-white group-hover:text-brand-gold truncate">${globalIdx}. ${esc(s.t)}</div>
+              <div class="text-xs sm:text-sm font-bold text-white group-hover:text-purple-300 truncate">${globalIdx}. ${esc(s.t)}</div>
               <div class="flex flex-wrap items-center gap-1.5 text-[11px] text-gray-400 mt-0.5">
-                <span class="font-semibold text-gray-300">${esc(s.a)}</span>
+                <span class="font-semibold text-purple-200/90">${esc(s.a)}</span>
                 <span>·</span>
-                <span class="px-1.5 py-0.2 rounded bg-white/5 text-[10px]">${s.l === 'hi' ? 'Hindi' : 'English'}</span>
+                <span class="px-1.5 py-0.2 rounded bg-purple-500/10 border border-purple-500/25 text-[10px] text-purple-300 font-mono">${s.l === 'hi' ? 'Hindi' : 'English'}</span>
                 <span>·</span>
-                <span class="text-[10px] text-gray-500 truncate max-w-[140px]">${esc(plName)}</span>
+                <span class="text-[10px] text-gray-500 truncate max-w-[130px] font-mono">${esc(plName)}</span>
               </div>
             </div>
             <div class="flex items-center gap-1 shrink-0">
-              <button type="button" onclick="playNextSongById('${s.id}')" title="Play Next" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-gray-300 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-arrow-turn-down"></i></button>
-              <button type="button" onclick="queueSongById('${s.id}')" title="Add to Queue" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-brand-gold hover:text-black text-gray-300 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-plus"></i></button>
-              <button type="button" onclick="toggleSongFav('${s.id}')" title="Favorite Song" class="w-8 h-8 rounded-lg ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-heart"></i></button>
+              <button type="button" onclick="playNextSongById('${s.id}')" title="Play Next in Orbit" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-500/20 text-gray-300 hover:text-purple-200 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-arrow-turn-down"></i></button>
+              <button type="button" onclick="queueSongById('${s.id}')" title="Queue Satellite" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-500 hover:text-white text-gray-300 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-plus"></i></button>
+              <button type="button" onclick="toggleSongFav('${s.id}')" title="Favorite Starlight Track" class="w-8 h-8 rounded-lg ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-heart"></i></button>
             </div>
           </div>`;
       }).join('');
@@ -2372,14 +2436,22 @@
     };
 
     // ---------------------------------------------------------
-    // CINEMA HALL LIGHTS-OUT & SOUNDTRACK VERIFICATION
+    // CINEMA HALL LIGHTS-OUT (HANDHELD FLASHLIGHT BEAM)
     // ---------------------------------------------------------
     window.toggleCinemaLightsOut = function() {
       const active = document.body.classList.toggle('lights-out-mode');
       const tgl = $('lightsOutTgl');
       if (tgl) tgl.classList.toggle('on', active);
-      showToast(active ? 'Cinema Hall Lights-Out (OLED Pitch-Black)' : 'Lights-Out Deactivated', 'fa-moon', 'text-amber-400');
+      showToast(active ? 'Lights Out: Handheld Flashlight Beam Active' : 'Dome Lamp Restored', 'fa-moon', 'text-brand-gold');
     };
+
+    // Track Handheld Flashlight Aperture across the astronomical dome
+    document.addEventListener('pointermove', e => {
+      if (document.body.classList.contains('lights-out-mode')) {
+        document.documentElement.style.setProperty('--flashlight-x', `${e.clientX}px`);
+        document.documentElement.style.setProperty('--flashlight-y', `${e.clientY}px`);
+      }
+    }, { passive: true });
 
     window.playOSTForTitle = function(title) {
       ensureMusicLoaded();

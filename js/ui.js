@@ -58,7 +58,10 @@
       if (k === key) { pane.classList.remove('hidden', 'fade-in'); void pane.offsetWidth; pane.classList.add('fade-in'); } else pane.classList.add('hidden');
     });
     Object.keys(GROUPS).forEach(k => {
-      const n = $('nav-' + k); if (n) n.className = k === g ? ON : OFF;
+      const n = $('nav-' + k); 
+      if (n) {
+        n.classList.toggle('active', k === g);
+      }
     });
     const sn = $('subNav'), subs = GROUPS[g].subs;
     sn.innerHTML = subs.map(([k, l, ic]) => `<button class="sub-pill ${k === key ? 'on' : ''}" onclick="switchTab('${k}')"><i class="fa-solid ${ic}"></i>${l}</button>`).join('');
@@ -78,6 +81,7 @@
       if (window.renderShelves) window.renderShelves();
       if (window.refreshDNA) window.refreshDNA();
       if (window.renderCustomListsTab) window.renderCustomListsTab();
+      if (window.renderCinePassLedger) window.renderCinePassLedger();
     }
     if ((key === 'profile' || key === 'admin') && window.renderProfileTab) window.renderProfileTab();
     window.scrollTo({ top: 0, behavior: 'smooth' });

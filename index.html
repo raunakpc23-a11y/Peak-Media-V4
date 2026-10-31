@@ -47,13 +47,13 @@
 </head>
 <body data-theme="space" class="min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased">
 
-  <header class="glass-nav sticky top-0 z-40 border-b border-white/10 transition-all">
+  <header class="observatory-master-console sticky top-0 z-40 transition-all">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between gap-1.5 sm:gap-4">
       
-      <!-- Brand Logo: Expansive Multi-Faceted Summit in Front of Wordmark -->
-      <div class="flex items-center gap-2 cursor-pointer group shrink-0" onclick="switchTab('discover')" title="Home">
-        <div class="h-10 sm:h-12 px-2 sm:px-2.5 py-1 rounded-xl bg-[#050811] border border-white/15 group-hover:border-brand-gold/60 flex items-center justify-center shadow-lg transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-8 sm:h-10 w-auto" fill="none">
+      <!-- Left: Engraved Brass Astrolabe Plate -->
+      <div class="brass-astrolabe-plate group shrink-0" onclick="switchTab('discover')" title="Peak Observatory · Hilltop Dome">
+        <div class="h-8 sm:h-10 px-2 py-0.5 rounded-lg bg-black/90 border border-brand-gold/40 flex items-center justify-center shadow-inner">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-6 sm:h-8 w-auto" fill="none">
             <defs>
               <linearGradient id="hdrGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#F0F9FF"/>
@@ -87,63 +87,58 @@
             <g stroke-linecap="round" stroke-linejoin="round" fill="none">
               <path d="M78 356 L195 304 L288 248 L385 186 L435 126 L468 82 L482 56" stroke="url(#hdrGoldGrad)" stroke-width="10"/>
               <path d="M482 56 L516 118 L558 188 L610 256 L674 328 L736 362" stroke="url(#hdrGoldGrad)" stroke-width="10"/>
-              <path d="M468 82 L476 112 L450 172 L418 214" stroke="#BAE6FD" stroke-width="6.8"/>
-              <path d="M482 56 L485 142 L500 188 L522 232" stroke="#E0F2FE" stroke-width="6.8"/>
-              <path d="M482 56 L460 138 L428 210 L376 286 L312 348" stroke="url(#hdrDeepSky)" stroke-width="6"/>
-              <path d="M482 56 L504 134 L542 216 L588 296 L640 356" stroke="url(#hdrDeepSky)" stroke-width="6"/>
-              <path d="M108 346 L168 312 L208 318 L246 298 L310 262" stroke="#38BDF8" stroke-width="6.2"/>
-              <path d="M568 206 L608 242 L626 254 L648 294 L678 330" stroke="#38BDF8" stroke-width="6.2"/>
-              <path d="M150 366 L238 326 L332 294 L424 268 L518 286 L612 332 L706 368" stroke="#60A5FA" stroke-width="5" opacity="0.92"/>
             </g>
           </svg>
         </div>
-      </div>
-
-      <!-- Center: Starlight Reel Counter -->
-      <div class="hidden sm:flex items-center gap-2">
-        <div class="counter-reel text-brand-gold text-xs font-mono flex items-center gap-2 select-none" title="Live catalog star count">
-          <i class="fa-solid fa-star text-[10px] text-brand-gold animate-pulse"></i>
-          <span id="hdrReelCount">3,400+</span>
-          <span class="text-gray-400 font-semibold text-[10px] tracking-wider uppercase">STARS IN VAULT</span>
+        <div class="flex flex-col select-none">
+          <span class="text-xs sm:text-sm font-black tracking-wider uppercase text-brand-gold">PEAK · OBSERVATORY</span>
+          <span class="text-[9px] font-mono tracking-widest text-amber-200/70 hidden sm:inline uppercase">EST. 2026 · HILLTOP APERTURE</span>
         </div>
       </div>
 
-      <!-- Desktop Navigation: 5 Observatory Stations -->
-      <nav class="hidden md:flex items-center gap-1 bg-white/[0.04] p-1 rounded-2xl border border-white/10 shrink-0" aria-label="Observatory Navigation">
-        <button type="button" onclick="switchTab('discover')" id="nav-discover" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative bg-brand-gold text-black shadow-md">
+      <!-- Center: 5 Engraved Brass Console Station Plates -->
+      <nav class="hidden md:flex items-center gap-1.5 p-1 rounded-2xl bg-black/60 border border-amber-500/25 shadow-inner shrink-0" aria-label="Observatory Navigation">
+        <button type="button" onclick="switchTab('discover')" id="nav-discover" class="console-station-plate active">
           <i class="fa-solid fa-compass text-xs"></i> <span>The Sky</span>
         </button>
-        <button type="button" onclick="switchTab('music')" id="nav-music" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
+        <button type="button" onclick="switchTab('music')" id="nav-music" class="console-station-plate">
           <i class="fa-solid fa-satellite-dish text-xs"></i> <span>The Dish</span>
         </button>
-        <button type="button" onclick="switchTab('decide')" id="nav-decide" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
+        <button type="button" onclick="switchTab('decide')" id="nav-decide" class="console-station-plate">
           <i class="fa-solid fa-scale-balanced text-xs"></i> <span>Instruments</span>
         </button>
-        <button type="button" onclick="switchTab('space')" id="nav-space" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
+        <button type="button" onclick="switchTab('space')" id="nav-space" class="console-station-plate">
           <i class="fa-solid fa-map text-xs"></i> <span>Chart Table</span>
-          <span id="navWishlistBadge" class="hidden px-1.5 py-0.5 text-[10px] font-extrabold rounded-full bg-rose-500 text-white">0</span>
+          <span id="navWishlistBadge" class="hidden px-1.5 py-0.5 text-[9px] font-black rounded-full bg-rose-500 text-white">0</span>
         </button>
-        <button type="button" onclick="switchTab('profile')" id="nav-profile" class="nav-pill whitespace-nowrap shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 relative text-gray-300 hover:text-white hover:bg-white/5">
+        <button type="button" onclick="switchTab('profile')" id="nav-profile" class="console-station-plate">
           <i class="fa-solid fa-book-bookmark text-xs"></i> <span>Keeper's Log</span>
         </button>
       </nav>
 
-      <!-- Header Actions: Search, Reading Lamp (Settings), Profile Badge -->
-      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <!-- Quick Search Trigger -->
-        <button type="button" onclick="switchTab('browse')" title="Slew Telescope (/)" class="w-9 h-9 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95" aria-label="Search">
+      <!-- Right: Mechanical Starlight Reel, Slew Telescope, Reading Lamp, Profile Badge -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <!-- Mechanical Starlight Reel Counter -->
+        <div class="starlight-mechanical-reel select-none" title="Live catalog star count">
+          <i class="fa-solid fa-star text-[10px] text-brand-gold animate-pulse"></i>
+          <span id="hdrReelCount" class="text-xs">3,400+</span>
+          <span class="text-amber-200/60 font-semibold text-[9px] tracking-wider uppercase hidden lg:inline">STARS IN VAULT</span>
+        </div>
+
+        <!-- Slew Telescope Search Trigger -->
+        <button type="button" onclick="switchTab('browse')" title="Slew Telescope (/)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-amber-500/25 transition-all active:scale-95 shadow-inner" aria-label="Search">
           <i class="fa-solid fa-magnifying-glass text-xs"></i>
         </button>
 
-        <!-- Desk Lamp (Atmosphere & Theme Controls) -->
-        <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Desk Lamp &amp; Settings" class="w-9 h-9 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95" aria-label="Settings">
+        <!-- Brass Desk Reading Lamp (Atmosphere & Theme Controls) -->
+        <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Pull Brass Cord · Dome Settings" class="brass-pulllamp-btn active:scale-95" aria-label="Settings">
           <i class="fa-solid fa-lightbulb text-sm"></i>
         </button>
 
-        <!-- Keeper's Profile Button -->
-        <button type="button" id="userProfileBtn" onclick="switchTab('profile')" title="Keeper's Profile" class="h-9 pl-1.5 pr-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95">
-          <span id="headerAvatarBadge" class="w-6 h-6 rounded-lg bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center text-xs">🔭</span>
-          <span id="headerUsernameLabel" class="hidden sm:inline text-gray-200">Keeper</span>
+        <!-- Chief Astronomer Profile Badge -->
+        <button type="button" id="userProfileBtn" onclick="switchTab('profile')" title="Keeper's Profile" class="h-9 sm:h-10 pl-1.5 pr-2.5 sm:pr-3 rounded-xl bg-black/60 hover:bg-black/80 border border-amber-500/25 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95 shadow-inner">
+          <span id="headerAvatarBadge" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center text-xs">🔭</span>
+          <span id="headerUsernameLabel" class="hidden sm:inline text-amber-100/90 font-mono text-[11px] uppercase tracking-wider">Keeper</span>
         </button>
       </div>
     </div>
@@ -1364,7 +1359,7 @@
         
         <div class="flex items-center gap-2">
           <!-- Spine View Drawer Toggle (The Collector's Archive) -->
-          <button type="button" id="toggleLibraryViewModeBtn" onclick="toggleLibrarySpineView()" class="px-3 py-1 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all" title="Toggle Spine View vs Chart View">
+          <button type="button" id="toggleLibrarySpineViewBtn" onclick="toggleLibrarySpineView()" class="brass-backup-chest" title="Toggle Spine View vs Chart View">
             <i class="fa-solid fa-bars-staggered text-brand-gold text-[11px]"></i>
             <span id="libraryViewModeLabel" class="hidden sm:inline">Spine View</span>
           </button>
@@ -1378,17 +1373,18 @@
             <button type="button" onclick="window.filterLibraryShelfView('custom')" id="shelfViewBtn-custom" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Custom Lists</button>
           </div>
 
-          <!-- 3-Dot Overflow Menu -->
+          <!-- Brass Backup Chest (Export & Import) -->
           <div class="relative shrink-0">
-            <button type="button" id="hubOverflowMenuBtn" onclick="toggleHubOverflowMenu()" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all" title="More Options" aria-label="More Options">
-              <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+            <button type="button" id="hubOverflowMenuBtn" onclick="toggleHubOverflowMenu()" class="brass-backup-chest" title="Brass Backup Chest · Export &amp; Import" aria-label="Backup Chest">
+              <i class="fa-solid fa-box-archive text-brand-gold text-sm"></i>
+              <span class="hidden sm:inline">Backup Chest</span>
             </button>
-            <div id="hubOverflowMenu" class="hidden absolute right-0 top-11 z-30 w-48 rounded-2xl bg-[#0d111c] border border-white/15 shadow-2xl p-1.5 space-y-0.5 animate-fadeIn">
+            <div id="hubOverflowMenu" class="hidden absolute right-0 top-11 z-30 w-52 rounded-2xl bg-[#0d111c] border border-amber-500/35 shadow-2xl p-2 space-y-1 animate-fadeIn">
               <button type="button" onclick="exportUserData(); toggleHubOverflowMenu();" class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
-                <i class="fa-solid fa-download text-brand-gold w-4"></i> <span>Export Backup</span>
+                <i class="fa-solid fa-download text-brand-gold w-4"></i> <span>Seal Backup (Export)</span>
               </button>
               <label class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 cursor-pointer transition-colors">
-                <i class="fa-solid fa-upload text-cyan-400 w-4"></i> <span>Import Backup</span>
+                <i class="fa-solid fa-upload text-cyan-400 w-4"></i> <span>Open Backup (Import)</span>
                 <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event); toggleHubOverflowMenu();">
               </label>
               <button type="button" onclick="openThemeEffectsModal(event); toggleHubOverflowMenu();" class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
@@ -1396,6 +1392,32 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- THE TOP THREE STAGE: THREE BRIGHTEST STARS IN GOLD FRAMES -->
+      <div class="gold-podium-frame p-5 sm:p-7 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-500/30 pb-4">
+          <div>
+            <div class="text-[10px] font-black uppercase tracking-widest text-brand-gold font-mono flex items-center gap-2">
+              <i class="fa-solid fa-crown text-brand-gold"></i>
+              <span>CHART TABLE PODIUM · TOP THREE BRIGHTEST STARS</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white mt-0.5">
+              Top 3 Golden Ticket Hall of Fame
+            </h3>
+            <p class="text-xs text-amber-200/70 mt-1">The three brightest stars of your life. Tap any watched star's scorecard to mint it into your gold podium frame.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="exportCinePassLedger()" class="brass-backup-chest text-xs" title="Export Top 3 Passes Archive">
+              <i class="fa-solid fa-download text-brand-gold"></i> <span>Export Passes</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Stamped Tickets Grid -->
+        <div id="cinePassLedgerContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <!-- Rendered dynamically by renderCinePassLedger() -->
         </div>
       </div>
 
@@ -1534,29 +1556,56 @@
     </section>
 
 
-    <!-- TAB: MUSIC -->
-    <section id="tab-music" class="tab-pane hidden fade-in space-y-3.5 sm:space-y-4">
-      <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden glass-card border border-white/10 p-3.5 sm:p-5 shadow-xl bg-gradient-to-r from-black/80 to-[#0e121c]/90">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-2 min-w-0">
-            <h1 class="text-xl sm:text-2xl font-display font-bold text-white tracking-tight flex items-center gap-2">
-              <i class="fa-solid fa-satellite-dish text-brand-gold"></i> The Dish
-            </h1>
-            <span class="text-xs text-gray-400 font-mono hidden sm:inline-block">· Stellar Radio Signals &amp; Scores</span>
+    <!-- TAB: MUSIC (THE LISTENING DISH) -->
+    <section id="tab-music" class="tab-pane hidden fade-in space-y-4 sm:space-y-6">
+      
+      <!-- PARABOLIC RADIO DISH APERTURE & STELLAR AUDIO CONSOLE -->
+      <div class="relative rounded-3xl overflow-hidden p-4 sm:p-6 shadow-2xl border border-purple-500/35 bg-gradient-to-br from-[#120a1f] via-[#090b14] to-[#04060b] radio-dish-halo">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          <!-- Dish Vector & Callout -->
+          <div class="flex items-center gap-3.5 min-w-0">
+            <!-- Pulsing Parabolic Dish Aperture SVG -->
+            <div class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-purple-950/60 border border-purple-400/50 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(192,132,252,0.35)]">
+              <div class="absolute inset-0 rounded-2xl border border-purple-400/30 radio-wave-pulse pointer-events-none"></div>
+              <svg viewBox="0 0 48 48" class="w-7 h-7 text-purple-300" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 38 C7 20, 20 7, 38 7" />
+                <path d="M14 38 C14 25, 25 14, 38 14" stroke-opacity="0.6" stroke-dasharray="2 2" />
+                <path d="M21 38 C21 30, 30 21, 38 21" stroke-opacity="0.4" />
+                <line x1="38" y1="7" x2="26" y2="19" stroke="#f5c518" stroke-width="3" />
+                <circle cx="38" cy="7" r="3" fill="#f5c518" />
+                <line x1="12" y1="42" x2="24" y2="34" />
+                <line x1="24" y1="34" x2="36" y2="42" />
+              </svg>
+            </div>
+            
+            <div class="min-w-0">
+              <div class="text-[10px] font-black uppercase tracking-widest text-purple-300 font-mono flex items-center gap-2">
+                <span>STATION 02</span>
+                <span>·</span>
+                <span class="inline-block w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_#c084fc] animate-ping"></span>
+                <span>DEEP-SPACE RADIO DISH</span>
+              </div>
+              <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2 mt-0.5">
+                The Listening Dish
+              </h1>
+              <span class="text-xs text-purple-200/70 font-mono hidden sm:inline-block">· Stellar Radio Signals, Soundtracks &amp; Violet Audio Waves</span>
+            </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
-            <button type="button" onclick="musicPlayRandom()" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
-              <i class="fa-solid fa-shuffle"></i> <span>Shuffle</span>
+          <!-- Dish Quick Controls: Spin Dish (Shuffle), Resume, Blank Reel, Cut -->
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <button type="button" onclick="musicPlayRandom()" title="Spin Dish (Random Discovery)" class="px-3.5 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95">
+              <i class="fa-solid fa-rotate text-purple-300"></i> <span>Spin Dish</span>
             </button>
-            <button type="button" id="musicResumeBtn" onclick="musicResumeLast()" class="px-3 py-1.5 sm:py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-white flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-play text-brand-gold"></i> <span>Resume</span>
+            <button type="button" id="musicResumeBtn" onclick="musicResumeLast()" title="Lock Frequency to Last Signal" class="px-3.5 py-2 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
+              <i class="fa-solid fa-play"></i> <span>Resume</span>
             </button>
-            <button type="button" onclick="openCreateSongPlaylistModal()" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/35 text-xs font-bold text-brand-gold flex items-center gap-1 transition-all">
-              <i class="fa-solid fa-plus"></i> <span>New Mix</span>
+            <button type="button" onclick="openCreateSongPlaylistModal()" title="Hang Songs on Blank Reel" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
+              <i class="fa-solid fa-compact-disc text-brand-gold"></i> <span>New Mix</span>
             </button>
-            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Stop Music Player" aria-label="Stop Music Player" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600/25 hover:bg-red-600 border-2 border-red-500/70 text-red-400 hover:text-white flex items-center justify-center shadow-lg shadow-red-600/20 transition-all active:scale-95">
-              <i class="fa-solid fa-xmark text-lg sm:text-xl font-black"></i>
+            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Close Audio Satellite" aria-label="Stop Music Player" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
+              <i class="fa-solid fa-xmark text-sm"></i>
             </button>
           </div>
         </div>
@@ -1564,39 +1613,83 @@
         <span id="musicTotalPlaylistsCount" class="hidden"></span>
       </div>
 
-      <!-- 1. Search & Filter Bar FIRST -->
-      <div class="glass-card p-3 sm:p-4 rounded-2xl space-y-2.5 border border-brand-gold/25" style="background: linear-gradient(135deg, rgb(var(--gold) / 0.06), rgba(14, 18, 28, 0.92))">
-        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2">
+      <!-- ANALOG RADIO TUNING SCALE & ROTARY BASE -->
+      <div class="radio-tuner-glass space-y-4">
+        
+        <!-- Search & Frequency Sweep -->
+        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2.5">
           <div class="relative flex-1 min-w-0">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-gold text-xs sm:text-sm"></i>
-            <input type="text" id="musicSearchInput" placeholder="Search songs, artists, or soundtracks..." class="w-full pl-9 pr-3 py-2 bg-black/60 border border-white/15 rounded-xl text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold">
+            <i class="fa-solid fa-tower-broadcast absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400 text-xs sm:text-sm"></i>
+            <input type="text" id="musicSearchInput" placeholder="Tune radio: search titles, artists, movie OSTs..." class="w-full pl-9 pr-3 py-2.5 bg-black/70 border border-purple-500/30 rounded-xl text-xs sm:text-sm text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 font-mono">
           </div>
 
+          <!-- Quick Filters: All / Hindi / English / Favs / Advanced -->
           <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
-            <button type="button" onclick="setSimpleMusicLang('all')" id="mlang-all" class="shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-gold text-black transition-all">All</button>
-            <button type="button" onclick="setSimpleMusicLang('hi')" id="mlang-hi" class="shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">Hindi</button>
-            <button type="button" onclick="setSimpleMusicLang('en')" id="mlang-en" class="shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">English</button>
-            <button type="button" onclick="setMusicViewMode(musicViewMode === 'favs' ? 'all' : 'favs')" id="mview-favs" class="shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">
+            <button type="button" onclick="setSimpleMusicLang('all')" id="mlang-all" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-500 text-white shadow transition-all">All Waves</button>
+            <button type="button" onclick="setSimpleMusicLang('hi')" id="mlang-hi" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">Hindi</button>
+            <button type="button" onclick="setSimpleMusicLang('en')" id="mlang-en" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">English</button>
+            <button type="button" onclick="setMusicViewMode(musicViewMode === 'favs' ? 'all' : 'favs')" id="mview-favs" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">
               <i class="fa-solid fa-heart text-rose-400 mr-1"></i>Favs
             </button>
-            <button type="button" onclick="document.getElementById('musicAdvancedFilters').classList.toggle('hidden')" class="shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-brand-gold border border-brand-gold/30 transition-all flex items-center gap-1">
-              <i class="fa-solid fa-sliders"></i> <span>Filters</span>
+            <button type="button" onclick="document.getElementById('musicAdvancedFilters').classList.toggle('hidden')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-purple-300 border border-purple-500/30 transition-all flex items-center gap-1">
+              <i class="fa-solid fa-sliders"></i> <span>Knobs</span>
             </button>
           </div>
         </div>
 
-        <!-- Styled Dark Dropdowns (No Transparent or Grey Options) -->
-        <div id="musicAdvancedFilters" class="hidden pt-2.5 border-t border-white/10 space-y-2.5">
+        <!-- 3 Knurled Brass Rotary Knobs for Dish Base (Language, Spectrum Mood, Epoch Era) -->
+        <div class="grid grid-cols-3 gap-2 sm:gap-4 p-3 rounded-2xl bg-black/60 border border-purple-500/20 text-center select-none">
+          <!-- Knob 1: Language -->
+          <div class="knurled-rotary-knob">
+            <span class="text-[9px] font-mono font-black text-amber-200/70 tracking-widest uppercase">FREQUENCY</span>
+            <div class="rotary-knob-dial" id="knobDialLang" onclick="cycleMusicKnob('lang')" title="Rotate Language Knob">
+              <div class="rotary-knob-indicator"></div>
+            </div>
+            <span id="knobLabelLang" class="text-[11px] font-mono text-purple-200 font-bold">ALL</span>
+          </div>
+          <!-- Knob 2: Spectrum Mood -->
+          <div class="knurled-rotary-knob">
+            <span class="text-[9px] font-mono font-black text-amber-200/70 tracking-widest uppercase">SPECTRUM</span>
+            <div class="rotary-knob-dial" id="knobDialMood" onclick="cycleMusicKnob('mood')" title="Rotate Spectrum Mood Knob">
+              <div class="rotary-knob-indicator"></div>
+            </div>
+            <span id="knobLabelMood" class="text-[11px] font-mono text-purple-200 font-bold truncate max-w-[90px]">ALL MOODS</span>
+          </div>
+          <!-- Knob 3: Epoch Era -->
+          <div class="knurled-rotary-knob">
+            <span class="text-[9px] font-mono font-black text-amber-200/70 tracking-widest uppercase">EPOCH</span>
+            <div class="rotary-knob-dial" id="knobDialEra" onclick="cycleMusicKnob('era')" title="Rotate Epoch Era Knob">
+              <div class="rotary-knob-indicator"></div>
+            </div>
+            <span id="knobLabelEra" class="text-[11px] font-mono text-purple-200 font-bold">ALL ERAS</span>
+          </div>
+        </div>
+
+        <!-- Backlit Horizontal Analog Radio Tuning Scale -->
+        <div class="space-y-1.5 pt-1">
+          <div class="flex items-center justify-between text-[10px] font-mono text-purple-300/80 px-1 font-bold">
+            <span class="flex items-center gap-1.5"><i class="fa-solid fa-satellite-dish text-brand-gold text-[10px]"></i> TUNING SCALE (88.5 — 108.0 MHz)</span>
+            <button type="button" onclick="resetMusicFilters()" class="text-brand-gold hover:underline">Reset Scale</button>
+          </div>
+          
+          <div class="radio-tuner-track relative" id="radioTunerTrack">
+            <div id="radioNeedle" class="radio-needle" style="left: 14px;"></div>
+            <div id="musicPlaylistsRow" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth w-full"></div>
+          </div>
+        </div>
+
+        <!-- Hidden Select Elements for programmatic synchronization -->
+        <div id="musicAdvancedFilters" class="hidden pt-2.5 border-t border-purple-500/20 space-y-2.5">
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <select id="musicFilterLang" class="dark-select px-3 py-2 bg-[#0d111a] border border-brand-gold/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+            <select id="musicFilterLang" class="dark-select px-3 py-2 bg-[#0d111a] border border-purple-500/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-purple-400 cursor-pointer">
               <option value="all">Language: All</option>
               <option value="hi">Hindi &amp; Indian</option>
               <option value="en">English &amp; Global</option>
             </select>
-            <select id="musicFilterPlaylist" class="dark-select px-3 py-2 bg-[#0d111a] border border-brand-gold/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-gold cursor-pointer">
-              <option value="all">All Playlists</option>
+            <select id="musicFilterPlaylist" class="dark-select px-3 py-2 bg-[#0d111a] border border-purple-500/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-purple-400 cursor-pointer">
+              <option value="all">All Stations</option>
             </select>
-            <select id="musicFilterMood" class="dark-select px-3 py-2 bg-[#0d111a] border border-brand-gold/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+            <select id="musicFilterMood" class="dark-select px-3 py-2 bg-[#0d111a] border border-purple-500/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-purple-400 cursor-pointer">
               <option value="all">All Moods</option>
               <option value="Romantic & Melody">Romantic &amp; Melody</option>
               <option value="Party & Energy">Party &amp; Energy</option>
@@ -1605,7 +1698,7 @@
               <option value="R&B & Hip-Hop">R&amp;B &amp; Hip-Hop</option>
               <option value="Nostalgia & Classics">Nostalgia &amp; Classics</option>
             </select>
-            <select id="musicFilterEra" class="dark-select px-3 py-2 bg-[#0d111a] border border-brand-gold/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-brand-gold cursor-pointer">
+            <select id="musicFilterEra" class="dark-select px-3 py-2 bg-[#0d111a] border border-purple-500/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-purple-400 cursor-pointer">
               <option value="all">All Eras</option>
               <option value="2020s">2020s</option>
               <option value="2010s">2010s</option>
@@ -1617,13 +1710,6 @@
           <div id="musicArtistChips" class="flex flex-wrap gap-1.5 items-center"></div>
         </div>
         <button type="button" id="mview-all" class="hidden"></button>
-      </div>
-
-      <!-- 2. Playlists as Clean Word-Tab Pills (No Thumbnails on Phone or PC, Hidden Scrollbar) -->
-      <div class="flex items-center gap-2">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400 shrink-0"><i class="fa-solid fa-list-ul text-brand-gold mr-1"></i>Playlists:</span>
-        <div id="musicPlaylistsRow" class="flex-1 flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 scroll-smooth"></div>
-        <button type="button" onclick="resetMusicFilters()" class="text-[11px] text-brand-gold hover:underline font-semibold shrink-0">All</button>
       </div>
 
       <!-- Results Count & Queue Play Bar -->
@@ -1750,37 +1836,10 @@
         </div>
       </div>
 
-      <!-- BLOCK 2: OFFICIAL GOLDEN TICKET LEDGER (AUTHENTIC COMMEMORATIVE PASSES) -->
-      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-brand-gold/30 space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-          <div>
-            <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Personal Cinema Heritage</span>
-            <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2.5 mt-0.5">
-              <i class="fa-solid fa-ticket text-brand-gold"></i> Top 3 Golden Ticket Hall of Fame
-            </h3>
-            <p class="text-xs text-gray-400 mt-1">Curate your definitive Top 3 films or shows of all time. Tap any watched title's Scorecard to mint it into your personal showcase.</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="exportCinePassLedger()" class="px-3 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/35 text-xs font-bold text-brand-gold flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-download"></i> <span>Export Top 3 Passes</span>
-            </button>
-            <button type="button" onclick="switchTab('space')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-dna text-cyan-300"></i> <span>Taste DNA Radar</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Dynamic Stamped Tickets Grid -->
-        <div id="cinePassLedgerContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          <!-- Rendered dynamically by renderCinePassLedger() -->
-        </div>
-      </div>
-
-      <div class="pt-4 flex items-center justify-between border-t border-white/5 text-xs text-gray-500">
-        <span>Peak Media · Summit Cinema Vault</span>
-        <button type="button" onclick="switchTab('admin')" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5">
-          <i class="fa-solid fa-shield-halved text-[11px]"></i> <span>Owner Console</span>
-        </button>
+      <!-- KEEPER'S LOG SIGN-OFF -->
+      <div class="pt-4 flex items-center justify-between border-t border-amber-500/20 text-xs text-amber-200/50 font-mono select-none">
+        <span class="flex items-center gap-2"><i class="fa-solid fa-feather text-brand-gold"></i> PEAK OBSERVATORY · CHIEF ASTRONOMER'S LEDGER</span>
+        <span>EPOCH 2026 · ALL RIGHTS RESERVED</span>
       </div>
     </section>
 
@@ -2195,6 +2254,7 @@
 
 
   <canvas id="fxCanvas"></canvas>
+  <div id="flashlightAperture" class="flashlight-aperture" aria-hidden="true"><div class="flashlight-crosshair"></div></div>
 
   <!-- MODAL: FIRST-TIME PERSONALIZATION & ONBOARDING WIZARD (Natural Editorial Cinema Pass) -->
   <div id="onboardingOverlay" class="fixed inset-0 z-[100] hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
