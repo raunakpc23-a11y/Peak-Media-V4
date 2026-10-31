@@ -45,7 +45,7 @@
   const ON = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative bg-brand-gold text-black shadow-md';
   const OFF = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative text-gray-300 hover:text-white hover:bg-white/5';
 
-  window.switchTab = function (key) {
+  window.switchTab = function (key, pushState = true) {
     if (key === 'roulette') { openSurpriseModal(); return; }
     if (key === 'space') key = 'hub';
     if (key === 'browse') key = 'movies';
@@ -53,9 +53,39 @@
     if (key === 'lists') key = 'hub';
     if (!PANE_GROUP[key]) key = 'discover';
     const g = PANE_GROUP[key];
+
+    // Browser History Synchronization
+    if (pushState !== false && window.history && typeof window.history.pushState === 'function') {
+      const stateTab = key === 'discover' ? '' : '#' + key;
+      if (window.location.hash !== stateTab) {
+        try {
+          window.history.pushState({ tab: key }, '', stateTab || (window.location.pathname + window.location.search));
+        } catch (_) {}
+      }
+    }
+
+    // Toggle Header Back Home Button (Hidden on Home, Visible on sub-pages)
+    const headerBackBtn = $('headerBackHomeBtn');
+    if (headerBackBtn) {
+      if (key === 'discover') {
+        headerBackBtn.classList.add('hidden');
+        headerBackBtn.classList.remove('inline-flex');
+      } else {
+        headerBackBtn.classList.remove('hidden');
+        headerBackBtn.classList.add('inline-flex');
+      }
+    }
+
+    // Spring Window Transition Animation (.portal-glade-in)
     Object.keys(PANE_GROUP).forEach(k => {
       const pane = $('tab-' + k); if (!pane) return;
-      if (k === key) { pane.classList.remove('hidden', 'fade-in'); void pane.offsetWidth; pane.classList.add('fade-in'); } else pane.classList.add('hidden');
+      if (k === key) { 
+        pane.classList.remove('hidden', 'fade-in', 'portal-glade-in'); 
+        void pane.offsetWidth; 
+        pane.classList.add('portal-glade-in'); 
+      } else {
+        pane.classList.add('hidden');
+      }
     });
     Object.keys(GROUPS).forEach(k => {
       const n = $('nav-' + k); 
@@ -100,6 +130,23 @@
     if ((key === 'profile' || key === 'admin') && window.renderProfileTab) window.renderProfileTab();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Popstate Listener for Browser Back/Forward Navigation
+  window.addEventListener('popstate', (e) => {
+    const rawHash = (window.location.hash || '').replace('#', '');
+    const tab = (e.state && e.state.tab) || rawHash || 'discover';
+    window.switchTab(tab, false);
+  });
+
+  // Check URL Hash on Initial Page Boot
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.hash) {
+      const initTab = window.location.hash.replace('#', '');
+      if (initTab && initTab !== 'discover') {
+        setTimeout(() => window.switchTab(initTab, false), 80);
+      }
+    }
+  });
 
   // Expand Vinyl Disc on Home Page into Music Lounge
   window.openMusicFromVinyl = function() {

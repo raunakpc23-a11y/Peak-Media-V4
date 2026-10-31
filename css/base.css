@@ -1313,6 +1313,71 @@
     .eq-9 { animation-delay: 0.3s !important; }
     .eq-10 { animation-delay: 0.45s !important; }
 
+    /* The Deciders Ribbon & Pills */
+    .decider-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.65rem 0.35rem 0.4rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      user-select: none;
+    }
+    .decider-pill:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(245, 197, 24, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    .decider-pill:active {
+      transform: scale(0.96);
+    }
+
+    .decider-icon-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      user-select: none;
+    }
+    .decider-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+    .decider-icon-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Portal Window Transition Animation */
+    @keyframes portalGladeIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.985) translateY(12px);
+        filter: blur(4px);
+      }
+      60% {
+        filter: blur(0);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    .portal-glade-in {
+      animation: portalGladeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      will-change: transform, opacity, filter;
+    }
+
     /* Stream Quick Format Switcher */
     .stream-filter-chip {
       padding: 0.45rem 0.9rem;

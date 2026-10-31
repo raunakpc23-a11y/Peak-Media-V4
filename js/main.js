@@ -308,12 +308,27 @@
       } else if (obStep === 4) {
         const langPref = obProfile.language === 'Hindi' ? 'hi' : obProfile.language === 'English' ? 'en' : 'all';
         const gSet = new Set([obProfile.favoriteGenre, ...(obProfile.secondaryGenres || [])].filter(Boolean));
-        let pool = movies.slice().filter(m => langPref === 'all' || m.lang === langPref);
+        const allMovies = (typeof movies !== 'undefined' && movies.length) ? movies : (window.movies && window.movies.length ? window.movies : [
+          { title: "Inception", cleanName: "Inception", year: "2010", rating: 8.8, genre: "Sci-Fi", lang: "en" },
+          { title: "Interstellar", cleanName: "Interstellar", year: "2014", rating: 8.7, genre: "Sci-Fi", lang: "en" },
+          { title: "The Dark Knight", cleanName: "The Dark Knight", year: "2008", rating: 9.0, genre: "Action", lang: "en" },
+          { title: "Pulp Fiction", cleanName: "Pulp Fiction", year: "1994", rating: 8.9, genre: "Crime", lang: "en" },
+          { title: "3 Idiots", cleanName: "3 Idiots", year: "2009", rating: 8.4, genre: "Comedy", lang: "hi" },
+          { title: "Dangal", cleanName: "Dangal", year: "2016", rating: 8.3, genre: "Drama", lang: "hi" },
+          { title: "RRR", cleanName: "RRR", year: "2022", rating: 8.0, genre: "Action", lang: "hi" },
+          { title: "Spirited Away", cleanName: "Spirited Away", year: "2001", rating: 8.6, genre: "Animation", lang: "en" },
+          { title: "The Matrix", cleanName: "The Matrix", year: "1999", rating: 8.7, genre: "Sci-Fi", lang: "en" },
+          { title: "Fight Club", cleanName: "Fight Club", year: "1999", rating: 8.8, genre: "Drama", lang: "en" },
+          { title: "Parasite", cleanName: "Parasite", year: "2019", rating: 8.5, genre: "Drama", lang: "en" },
+          { title: "Gladiator", cleanName: "Gladiator", year: "2000", rating: 8.5, genre: "Action", lang: "en" }
+        ]);
+        let pool = allMovies.slice().filter(m => langPref === 'all' || m.lang === langPref);
+        if (!pool.length) pool = allMovies.slice();
         if (obMovieQuery.trim()) {
           const q = obMovieQuery.toLowerCase().trim();
-          pool = movies.filter(m => (m.cleanName || m.title).toLowerCase().includes(q) || m.genre.toLowerCase().includes(q));
+          pool = allMovies.filter(m => (m.cleanName || m.title).toLowerCase().includes(q) || (m.genre && m.genre.toLowerCase().includes(q)));
         } else {
-          pool.sort((a, b) => ((gSet.has(b.genre) ? 1.5 : 0) + b.rating) - ((gSet.has(a.genre) ? 1.5 : 0) + a.rating));
+          pool.sort((a, b) => ((gSet.has(b.genre) ? 1.5 : 0) + (parseFloat(b.rating) || 0)) - ((gSet.has(a.genre) ? 1.5 : 0) + (parseFloat(a.rating) || 0)));
         }
         const topMovies = pool.slice(0, 18);
         const picked = new Set(obProfile.favMoviesSeed || []);
@@ -367,12 +382,33 @@
       } else if (obStep === 5) {
         const langPref = obProfile.language === 'Hindi' ? 'hi' : obProfile.language === 'English' ? 'en' : 'all';
         const gSet = new Set([obProfile.favoriteGenre, ...(obProfile.secondaryGenres || [])].filter(Boolean));
-        let pool = tvShows.slice().filter(s => langPref === 'all' || s.lang === langPref);
+        const allShows = (typeof tvShows !== 'undefined' && tvShows.length) ? tvShows : (window.tvShows && window.tvShows.length ? window.tvShows : [
+          { title: "Breaking Bad", cleanName: "Breaking Bad", year: "2008", rating: 9.5, genre: "Crime", lang: "en" },
+          { title: "Game of Thrones", cleanName: "Game of Thrones", year: "2011", rating: 9.2, genre: "Fantasy", lang: "en" },
+          { title: "Stranger Things", cleanName: "Stranger Things", year: "2016", rating: 8.7, genre: "Sci-Fi", lang: "en" },
+          { title: "Chernobyl", cleanName: "Chernobyl", year: "2019", rating: 9.4, genre: "Drama", lang: "en" },
+          { title: "Sherlock", cleanName: "Sherlock", year: "2010", rating: 9.1, genre: "Mystery", lang: "en" },
+          { title: "The Boys", cleanName: "The Boys", year: "2019", rating: 8.7, genre: "Action", lang: "en" },
+          { title: "Dark", cleanName: "Dark", year: "2017", rating: 8.7, genre: "Sci-Fi", lang: "en" },
+          { title: "Succession", cleanName: "Succession", year: "2018", rating: 8.9, genre: "Drama", lang: "en" },
+          { title: "Better Call Saul", cleanName: "Better Call Saul", year: "2015", rating: 9.0, genre: "Crime", lang: "en" },
+          { title: "The Last of Us", cleanName: "The Last of Us", year: "2023", rating: 8.8, genre: "Drama", lang: "en" },
+          { title: "Mirzapur", cleanName: "Mirzapur", year: "2018", rating: 8.5, genre: "Crime", lang: "hi" },
+          { title: "Sacred Games", cleanName: "Sacred Games", year: "2018", rating: 8.6, genre: "Crime", lang: "hi" },
+          { title: "Panchayat", cleanName: "Panchayat", year: "2020", rating: 8.9, genre: "Comedy", lang: "hi" },
+          { title: "Scam 1992", cleanName: "Scam 1992", year: "2020", rating: 9.3, genre: "Biography", lang: "hi" },
+          { title: "The Family Man", cleanName: "The Family Man", year: "2019", rating: 8.7, genre: "Action", lang: "hi" },
+          { title: "Money Heist", cleanName: "Money Heist", year: "2017", rating: 8.2, genre: "Action", lang: "en" },
+          { title: "Peaky Blinders", cleanName: "Peaky Blinders", year: "2013", rating: 8.8, genre: "Crime", lang: "en" },
+          { title: "Friends", cleanName: "Friends", year: "1994", rating: 8.9, genre: "Comedy", lang: "en" }
+        ]);
+        let pool = allShows.slice().filter(s => langPref === 'all' || s.lang === langPref);
+        if (!pool.length) pool = allShows.slice();
         if (obShowQuery.trim()) {
           const q = obShowQuery.toLowerCase().trim();
-          pool = tvShows.filter(s => (s.cleanName || s.title).toLowerCase().includes(q) || s.genre.toLowerCase().includes(q));
+          pool = allShows.filter(s => (s.cleanName || s.title).toLowerCase().includes(q) || (s.genre && s.genre.toLowerCase().includes(q)));
         } else {
-          pool.sort((a, b) => ((gSet.has(b.genre) ? 1.5 : 0) + b.rating) - ((gSet.has(a.genre) ? 1.5 : 0) + a.rating));
+          pool.sort((a, b) => ((gSet.has(b.genre) ? 1.5 : 0) + (parseFloat(b.rating) || 0)) - ((gSet.has(a.genre) ? 1.5 : 0) + (parseFloat(a.rating) || 0)));
         }
         const topShows = pool.slice(0, 18);
         const picked = new Set(obProfile.favShowsSeed || []);

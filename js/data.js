@@ -16106,72 +16106,76 @@ Odd Taxi|2021|87
       if (!banner) return;
       banner.style.background = 'transparent';
 
+      const suggestionsHTML = spotlightTitles.map((s, i) => {
+        const sItem = globalDatabase[s.title] || {};
+        const sFallback = generateStylizedPosterDataURI(sItem);
+        const sPoster = posterCache[sItem.type + ':' + sItem.title] || sFallback;
+        const isActive = i === currentSpotlightIdx;
+        return `
+          <button type="button" onclick="renderHeroSpotlight(${i}, true)" title="${escTitle}" class="relative shrink-0 rounded-lg overflow-hidden transition-all duration-200 group ${isActive ? 'ring-2 ring-brand-gold scale-105 shadow-md shadow-brand-gold/30' : 'opacity-60 hover:opacity-100 hover:scale-102 ring-1 ring-white/10'}">
+            <img src="${sPoster}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${sFallback}';" class="w-7 h-11 sm:w-9 sm:h-13 object-cover lazy-poster" alt="${attrTitle}" />
+          </button>
+        `;
+      }).join('');
+
       banner.innerHTML = `
         <!-- Optical Lens Nebular Glow -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-3xl">
-          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-2/3 h-full object-cover opacity-25 blur-3xl scale-125 transition-all duration-700 pointer-events-none" />
+        <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl sm:rounded-3xl">
+          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-1/2 h-full object-cover opacity-20 blur-2xl pointer-events-none" />
         </div>
 
-        <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col justify-between h-full ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
-          <!-- Spotlight Header -->
-          <div class="flex items-center justify-between gap-3 text-xs border-b border-white/10 pb-3 mb-4 sm:mb-6 w-full">
-            <div class="flex items-center gap-2">
-              <span class="inline-block w-2.5 h-2.5 rounded-full animate-pulse shadow-[0_0_8px_#f5c518]" style="background:${theme.accent}"></span>
-              <span class="font-bold text-white tracking-widest uppercase text-[10px] sm:text-xs">Featured Spotlight · Tonight's Selection</span>
-              <span class="text-white/25">·</span>
-              <span class="text-brand-gold font-mono text-[10px] sm:text-xs">${currentSpotlightIdx + 1} of ${spotlightTitles.length}</span>
-            </div>
-            <div class="flex items-center gap-3 text-xs">
-              <button type="button" onclick="openOnboardingWizard(true)" class="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-[11px]" title="Tune Taste Preferences">
-                <i class="fa-solid fa-sliders text-[10px] text-brand-gold"></i>
-                <span class="hidden sm:inline">Taste Setup</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Main Spotlight Stage -->
-          <div class="flex flex-col sm:flex-row items-center sm:items-end gap-5 sm:gap-8 w-full">
-            <!-- Featured Poster Card -->
-            <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')">
-              <div class="relative rounded-2xl overflow-hidden border border-white/20 shadow-[0_15px_40px_rgba(0,0,0,0.9),0_0_25px_rgba(245,197,24,0.2)] transition-all duration-300 group-hover:border-brand-gold group-hover:scale-105 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(245,197,24,0.45)]">
-                <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster w-32 sm:w-40 md:w-48 object-cover poster-aspect" />
+        <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
+          
+          <!-- Left: Compact 2:3 Poster Card & Film Info -->
+          <div class="flex items-center gap-3.5 sm:gap-5 w-full md:w-auto min-w-0">
+            <!-- Compact Poster with authentic 2:3 ratio -->
+            <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')" title="View Details">
+              <div class="relative w-20 sm:w-24 md:w-28 rounded-xl overflow-hidden border border-white/20 shadow-lg group-hover:border-brand-gold group-hover:scale-105 transition-all">
+                <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster w-full aspect-[2/3] object-cover" />
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                  <span class="w-12 h-12 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-sm ml-0.5"></i></span>
+                  <span class="w-8 h-8 rounded-full bg-brand-gold text-black flex items-center justify-center shadow"><i class="fa-solid fa-play text-xs ml-0.5"></i></span>
                 </div>
               </div>
             </div>
 
-            <!-- Spotlight Details & Actions -->
-            <div class="space-y-3 sm:space-y-3.5 max-w-2xl w-full text-center sm:text-left">
-              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs">
-                <span class="px-2.5 py-0.5 rounded-full bg-brand-gold text-black font-black uppercase text-[9px] tracking-widest shadow-sm">Featured</span>
-                <span class="font-extrabold uppercase tracking-wider text-[11px] font-mono" style="color:${theme.accent}">${item.genre}</span>
+            <!-- Title & Compact Metadata (Strictly star rating, genre, year, 1-line summary) -->
+            <div class="space-y-1.5 min-w-0 flex-1">
+              <div class="flex items-center gap-2 text-xs font-mono">
+                <span class="text-brand-gold font-black flex items-center gap-1"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
                 <span class="text-white/30">•</span>
-                <span class="text-gray-300 font-mono text-[11px]">${item.year}</span>
+                <span class="text-gray-300 font-semibold uppercase text-[11px] tracking-wide" style="color:${theme.accent}">${item.genre}</span>
                 <span class="text-white/30">•</span>
-                <span class="text-brand-gold font-black flex items-center gap-1 font-mono text-xs"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
-                <span class="text-white/30">•</span>
-                <span class="px-2 py-0.5 rounded-md bg-white/10 text-gray-200 text-[10px] font-mono font-semibold">${item.platformName}</span>
+                <span class="text-gray-400 text-[11px]">${item.year}</span>
               </div>
 
-              <h1 class="text-2xl sm:text-4xl md:text-5xl font-display font-black text-white tracking-tight leading-tight">${item.cleanName || item.title}</h1>
-              <p class="text-brand-gold/90 font-medium text-xs sm:text-sm italic tracking-wide">"${spot.tagline}"</p>
-              <p class="text-gray-300 text-xs sm:text-sm font-sans leading-relaxed line-clamp-2 max-w-xl">${item.synopsis || spot.blurb || ''}</p>
+              <h1 onclick="openDetailModal('${escTitle}')" class="text-base sm:text-xl md:text-2xl font-display font-extrabold text-white tracking-tight leading-tight truncate cursor-pointer hover:text-brand-gold transition-colors">
+                ${item.cleanName || item.title}
+              </h1>
 
-              <!-- Action Buttons -->
-              <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2.5 sm:gap-3">
-                <button type="button" onclick="openDetailModal('${escTitle}')" class="px-6 py-2.5 sm:py-3 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-gold/30 transition-all active:scale-95">
-                  <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
+              <p class="text-xs text-gray-300 line-clamp-1 max-w-lg leading-relaxed">
+                ${item.synopsis || spot.blurb || ''}
+              </p>
+
+              <!-- Actions: Watch Now + Watchlist -->
+              <div class="pt-1 flex items-center gap-2.5">
+                <button type="button" onclick="openDetailModal('${escTitle}')" class="px-4 py-1.5 sm:px-5 sm:py-2 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs flex items-center gap-2 shadow-md transition-all active:scale-95">
+                  <i class="fa-solid fa-play text-[11px]"></i> <span>Watch Now</span>
                 </button>
-                <button type="button" onclick="flickTonightPick()" class="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 border border-white/20 backdrop-blur-md transition-all active:scale-95 group" title="Next Highlight">
-                  <i class="fa-solid fa-arrows-rotate text-xs text-brand-gold group-hover:rotate-180 transition-transform duration-300"></i> <span>Next Highlight</span>
-                </button>
-                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-10 h-10 sm:h-11 sm:w-11 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center border border-white/10 transition-all shadow-sm" title="Save to Watchlist">
-                  <i class="fa-solid ${isW ? 'fa-check' : 'fa-bookmark'} text-xs"></i>
+                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl ${isW ? 'bg-rose-500 text-white' : 'bg-white/10 hover:bg-white/20 text-gray-300'} flex items-center justify-center border border-white/10 transition-all text-xs" title="Save to Watchlist">
+                  <i class="fa-solid ${isW ? 'fa-check' : 'fa-bookmark'}"></i>
                 </button>
               </div>
             </div>
           </div>
+
+          <!-- Right: Small Array of Spotlight Suggestions -->
+          <div class="flex flex-col items-start md:items-end gap-1.5 w-full md:w-auto shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-white/10">
+            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400">Spotlight Queue</span>
+            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5">
+              ${suggestionsHTML}
+            </div>
+          </div>
+
         </div>
       `;
       attachThumbObservers(banner);
