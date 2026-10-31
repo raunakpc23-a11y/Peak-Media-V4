@@ -1,15 +1,14 @@
 /**
  * Peak Media: The Observatory Sky Engine
- * Pure celestial night sky presentation, illustrated constellations,
- * self-drawing starlight lines, and floating optical glass loupe.
+ * Pure celestial night sky presentation with illustrated constellations,
+ * integrated starlight thumbnail lenses and titles, and floating optical loupe.
  */
 (function () {
   'use strict';
 
-  // Sentence-case formatter: preserves proper nouns while avoiding all-caps tracking
+  // Sentence-case formatter: clean title/sentence case
   function toSentenceCase(str) {
     if (!str) return '';
-    // If string is ALL CAPS, convert to clean title/sentence case
     if (str === str.toUpperCase() && str.length > 3) {
       return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
@@ -18,26 +17,48 @@
 
   // Curated editorial hook lines for pure stargazing atmosphere
   const editorialHooks = {
-    'Inception': 'A precision heist engineered across the architecture of dreams.',
-    'Interstellar': 'A journey beyond the event horizon driven by time and love.',
-    'The Dark Knight': 'A psychological chess match on the brink of urban collapse.',
+    'The Shawshank Redemption': 'Hope and unyielding dignity behind stone walls.',
     'The Godfather': 'The quiet, chilling coronation of a reluctant American king.',
-    'Pulp Fiction': 'An electric dance of dial-tone hitmen and diner philosophy.',
+    'The Dark Knight': 'A psychological chess match on the brink of urban collapse.',
     '12 Angry Men': 'Twelve men in a sweltering room weighing human truth.',
     'Schindler\'s List': 'The enduring human flame amidst the darkest hour.',
+    'The Lord of the Rings: The Return of the King': 'The grand culmination of fellowship and light over shadow.',
+    'Pulp Fiction': 'An electric dance of dial-tone hitmen and diner philosophy.',
+    'Fight Club': 'A biting, surreal revolt against modern numbness.',
+    'Forrest Gump': 'A gentle odyssey woven through the currents of history.',
+    'Inception': 'A precision heist engineered across the architecture of dreams.',
+    'Interstellar': 'A journey beyond the event horizon driven by time and love.',
     'Spirited Away': 'A dreamlike bathhouse fable of identity and wonder.',
     'Parasite': 'A razor-sharp upstairs-downstairs descent into social gravity.',
     'Whiplash': 'Artistry pushed to the edge of madness on blood-stained drumsticks.',
+    'The Matrix': 'The seminal question of simulated reality and free will.',
+    'Blade Runner 2049': 'A haunting search for the soul in a neon wasteland.',
+    'Arrival': 'A linguistic breakthrough bridging cosmic time and grief.',
+    'Ex Machina': 'A dangerous Turing test within a pristine mountain sanctuary.',
+    'Memento': 'A puzzle of grief and memory solved in reverse.',
+    'Shutter Island': 'A rain-soaked asylum riddle where nothing is as it seems.',
+    'Se7en': 'A rain-drenched descent into sins and moral philosophy.',
     'Dune: Part Two': 'The mythic rise of a desert messiah across starlit sands.',
+    'Top Gun: Maverick': 'Pure aerial kinetic cinema flying on borrowed time.',
+    'Avengers: Infinity War': 'A staggering cosmic clash of consequence and sacrifice.',
     'Oppenheimer': 'The blinding spark of Prometheus trapped in a boardroom trial.',
-    '3 Idiots': 'A warm, rebellious anthem for following the spark within.',
-    'Dangal': 'A father and his daughters breaking destiny on the wrestling mat.',
-    'RRR': 'Two revolutionary forces igniting friendship, fire, and water.',
+    'Avatar: The Way of Water': 'An aquatic biological odyssey under the stars of Pandora.',
+    'John Wick: Chapter 4': 'A neon ballet of honor, exhaustion, and final sunrise.',
     'Breaking Bad': 'A quiet chemistry teacher’s calculated transformation into myth.',
     'Chernobyl': 'The staggering cost of lies laid bare beneath graphite smoke.',
     'Succession': 'A savage, Shakespearean tragedy of corporate kin and isolation.',
     'Severance': 'A pristine corporate labyrinth that cleaves your memory in two.',
-    'Game of Thrones': 'Dynasties bleeding for an iron seat while winter approaches.'
+    'Better Call Saul': 'A tragic portrait of a man continually wrestling with his conscience.',
+    'The Wire': 'A panoramic examination of an American city system by system.',
+    'Game of Thrones': 'Dynasties bleeding for an iron seat while winter approaches.',
+    '3 Idiots': 'A warm, rebellious anthem for following the spark within.',
+    'Dangal': 'A father and his daughters breaking destiny on the wrestling mat.',
+    'Swades': 'A poignant homecoming illuminating rural India under starlight.',
+    'Lagaan': 'An epic village stand against empire on a dust-blown cricket pitch.',
+    'Gangs of Wasseypur': 'Generations of blood, coal, and revenge in rural Bihar.',
+    'Drishyam': 'A father\'s ironclad protective illusion to save his family.',
+    'RRR': 'Two revolutionary forces igniting friendship, fire, and water.',
+    '12th Fail': 'An inspiring journey of perseverance from Chambal to civil service.'
   };
 
   function getEditorialHook(item) {
@@ -56,11 +77,10 @@
       stageId: 'stageProjector',
       type: 'movie',
       coords: [
-        { x: 21, y: 16 }, { x: 25, y: 24 }, { x: 29, y: 16 },
-        { x: 38, y: 36 }, { x: 38, y: 50 }, { x: 47, y: 50 },
-        { x: 75, y: 20 }, { x: 88, y: 14 }, { x: 82, y: 50 },
-        { x: 88, y: 86 }, { x: 75, y: 80 }, { x: 38, y: 64 },
-        { x: 25, y: 76 }, { x: 21, y: 84 }, { x: 29, y: 84 }, { x: 32, y: 94 }
+        { x: 22, y: 16 }, { x: 14, y: 12 }, { x: 22, y: 6 }, { x: 30, y: 12 },
+        { x: 22, y: 72 }, { x: 14, y: 76 }, { x: 22, y: 84 }, { x: 30, y: 76 },
+        { x: 38, y: 38 }, { x: 48, y: 44 },
+        { x: 82, y: 20 }, { x: 88, y: 44 }, { x: 82, y: 68 }
       ]
     },
     torch: {
@@ -68,10 +88,9 @@
       stageId: 'stageTorch',
       type: 'movie',
       coords: [
-        { x: 50, y: 94 }, { x: 50, y: 80 }, { x: 48, y: 68 }, { x: 52, y: 56 },
-        { x: 41, y: 48 }, { x: 50, y: 48 }, { x: 59, y: 48 }, { x: 63, y: 38 },
-        { x: 37, y: 38 }, { x: 50, y: 34 }, { x: 36, y: 22 }, { x: 43, y: 16 },
-        { x: 50, y: 8 },  { x: 57, y: 16 }, { x: 64, y: 22 }, { x: 50, y: 2 }
+        { x: 50, y: 88 }, { x: 50, y: 74 }, { x: 50, y: 60 },
+        { x: 34, y: 46 }, { x: 50, y: 46 }, { x: 66, y: 46 },
+        { x: 26, y: 28 }, { x: 40, y: 20 }, { x: 50, y: 8 },  { x: 60, y: 20 }, { x: 74, y: 28 }
       ]
     },
     comet: {
@@ -79,10 +98,10 @@
       stageId: 'stageComet',
       type: 'movie',
       coords: [
-        { x: 11, y: 52 }, { x: 13, y: 44 }, { x: 13, y: 60 }, { x: 18, y: 52 },
-        { x: 24, y: 50 }, { x: 34, y: 38 }, { x: 50, y: 28 }, { x: 68, y: 20 },
-        { x: 88, y: 14 }, { x: 42, y: 48 }, { x: 62, y: 46 }, { x: 84, y: 44 },
-        { x: 32, y: 64 }, { x: 48, y: 76 }, { x: 68, y: 84 }, { x: 87, y: 90 }
+        { x: 10, y: 46 }, { x: 20, y: 46 }, { x: 30, y: 44 },
+        { x: 48, y: 26 }, { x: 68, y: 16 }, { x: 88, y: 10 },
+        { x: 52, y: 46 }, { x: 76, y: 46 }, { x: 92, y: 48 },
+        { x: 46, y: 66 }, { x: 66, y: 78 }, { x: 86, y: 86 }
       ]
     },
     antenna: {
@@ -90,10 +109,10 @@
       stageId: 'stageAntenna',
       type: 'tv',
       coords: [
-        { x: 45, y: 94 }, { x: 38, y: 82 }, { x: 52, y: 82 }, { x: 45, y: 70 },
-        { x: 20, y: 46 }, { x: 70, y: 46 }, { x: 45, y: 42 }, { x: 45, y: 34 },
-        { x: 33, y: 30 }, { x: 57, y: 30 }, { x: 24, y: 20 }, { x: 45, y: 18 },
-        { x: 66, y: 20 }, { x: 45, y: 6 },  { x: 30, y: 62 }, { x: 60, y: 62 }
+        { x: 50, y: 88 }, { x: 40, y: 76 }, { x: 60, y: 76 },
+        { x: 50, y: 64 }, { x: 20, y: 50 }, { x: 80, y: 50 },
+        { x: 50, y: 42 }, { x: 50, y: 28 },
+        { x: 32, y: 22 }, { x: 68, y: 22 }, { x: 50, y: 8 }
       ]
     },
     lotus: {
@@ -101,10 +120,9 @@
       stageId: 'stageLotus',
       type: 'mixed',
       coords: [
-        { x: 50, y: 94 }, { x: 50, y: 78 }, { x: 44, y: 68 }, { x: 56, y: 68 },
-        { x: 50, y: 44 }, { x: 22, y: 54 }, { x: 32, y: 44 }, { x: 34, y: 28 },
-        { x: 42, y: 20 }, { x: 50, y: 10 }, { x: 58, y: 20 }, { x: 66, y: 28 },
-        { x: 68, y: 44 }, { x: 78, y: 54 }, { x: 39, y: 8 },  { x: 61, y: 8 }
+        { x: 50, y: 88 }, { x: 50, y: 74 }, { x: 38, y: 66 }, { x: 62, y: 66 },
+        { x: 50, y: 44 }, { x: 16, y: 44 }, { x: 32, y: 30 }, { x: 68, y: 30 },
+        { x: 84, y: 44 }, { x: 50, y: 14 }, { x: 50, y: 4 }
       ]
     }
   };
@@ -191,42 +209,105 @@
         const item = pool[idx];
         if (!item) return;
 
-        const star = document.createElement('div');
-        star.className = 'celestial-star-node';
-        star.style.left = coord.x + '%';
-        star.style.top = coord.y + '%';
+        // Create Celestial Starlight Node Capsule (Thumbnail Lens + Title Plate)
+        const capsule = document.createElement('div');
+        capsule.className = 'celestial-node-capsule celestial-star-node';
+        capsule.style.left = coord.x + '%';
+        capsule.style.top = coord.y + '%';
 
         // Color token
         const isTv = item.type === 'tv';
         const isSong = item.type === 'music';
         const colorClass = isTv ? 'star-ice' : (isSong ? 'star-violet' : 'star-amber');
-        star.classList.add(colorClass);
+        capsule.classList.add(colorClass);
 
         // Magnitude sizing
         const rating = parseFloat(item.rating) || 7.5;
-        if (rating >= 8.8) star.classList.add('mag-large');
-        else if (rating >= 8.0) star.classList.add('mag-medium');
-        else star.classList.add('mag-small');
+        if (rating >= 8.8) capsule.classList.add('mag-large');
+        else if (rating >= 8.0) capsule.classList.add('mag-medium');
+        else capsule.classList.add('mag-small');
 
-        // Store data attributes for proximity loupe lens
+        // Poster URL with stylized fallback
         const fallbackPoster = window.generateStylizedPosterDataURI ? window.generateStylizedPosterDataURI(item) : '';
         const posterUrl = (window.posterCache && window.posterCache[item.type + ':' + item.title]) || fallbackPoster;
 
-        star.dataset.title = item.title;
-        star.dataset.year = item.year || '2024';
-        star.dataset.rating = item.rating || '8.5';
-        star.dataset.type = isTv ? 'Series' : (isSong ? 'Song' : 'Film');
-        star.dataset.genre = item.genre || 'Cinema';
-        star.dataset.poster = posterUrl;
-        star.dataset.desc = getEditorialHook(item);
+        // 1. The Optical Lens Aperture Disc (Holding the Thumbnail)
+        const aperture = document.createElement('div');
+        aperture.className = 'celestial-lens-aperture';
 
-        // Direct tap/click opens detail
-        star.onclick = (e) => {
+        const img = document.createElement('img');
+        img.className = 'celestial-lens-img';
+        img.src = posterUrl;
+        img.alt = item.title;
+        img.loading = 'lazy';
+        img.onerror = function() {
+          this.onerror = null;
+          this.src = fallbackPoster || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="68" height="68"><rect width="100%" height="100%" fill="%230E1233"/><text x="50%" y="50%" fill="%23F2B35E" font-size="10" text-anchor="middle" dy=".3em">Star</text></svg>';
+        };
+        aperture.appendChild(img);
+
+        // Glass glare reflection
+        const glare = document.createElement('div');
+        glare.className = 'celestial-lens-glare';
+        aperture.appendChild(glare);
+
+        // Astronomical Bezel Rating Badge
+        const ratingBadge = document.createElement('span');
+        ratingBadge.className = 'celestial-lens-rating';
+        ratingBadge.textContent = '★ ' + (item.rating || '8.5');
+        aperture.appendChild(ratingBadge);
+
+        // Halo corona
+        const halo = document.createElement('div');
+        halo.className = 'celestial-lens-halo';
+        aperture.appendChild(halo);
+
+        capsule.appendChild(aperture);
+
+        // 2. Integrated Astrolabe Title Plate
+        const info = document.createElement('div');
+        info.className = 'celestial-node-info';
+
+        const titleText = document.createElement('div');
+        titleText.className = 'celestial-node-title';
+        titleText.textContent = toSentenceCase(item.title);
+        info.appendChild(titleText);
+
+        const metaText = document.createElement('div');
+        metaText.className = 'celestial-node-meta';
+        metaText.innerHTML = `<span>${item.year || '2024'}</span><span class="meta-dot">·</span><span>${item.genre || (isTv ? 'Series' : 'Film')}</span>`;
+        info.appendChild(metaText);
+
+        capsule.appendChild(info);
+
+        // 3. Quick Play Starlight Button
+        const playBtn = document.createElement('button');
+        playBtn.type = 'button';
+        playBtn.className = 'celestial-quick-play';
+        playBtn.title = `Watch ${item.title}`;
+        playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+        playBtn.onclick = (e) => {
+          e.stopPropagation();
+          if (window.openDetailModal) window.openDetailModal(item.title);
+        };
+        capsule.appendChild(playBtn);
+
+        // Data attributes for proximity loupe lens compatibility
+        capsule.dataset.title = item.title;
+        capsule.dataset.year = item.year || '2024';
+        capsule.dataset.rating = item.rating || '8.5';
+        capsule.dataset.type = isTv ? 'Series' : (isSong ? 'Song' : 'Film');
+        capsule.dataset.genre = item.genre || 'Cinema';
+        capsule.dataset.poster = posterUrl;
+        capsule.dataset.desc = getEditorialHook(item);
+
+        // Clicking anywhere on the capsule opens detail
+        capsule.onclick = (e) => {
           e.stopPropagation();
           if (window.openDetailModal) window.openDetailModal(item.title);
         };
 
-        container.appendChild(star);
+        container.appendChild(capsule);
       });
     });
 
@@ -284,12 +365,13 @@
     if (!lensEl) initLensElements();
     if (!lensEl) return;
 
-    const stars = document.querySelectorAll('.celestial-star-node');
+    const capsules = document.querySelectorAll('.celestial-node-capsule');
     let nearestStar = null;
     let minDistance = 9999;
 
-    stars.forEach(star => {
-      const rect = star.getBoundingClientRect();
+    capsules.forEach(star => {
+      const aperture = star.querySelector('.celestial-lens-aperture') || star;
+      const rect = aperture.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const dist = Math.hypot(clientX - centerX, clientY - centerY);
@@ -300,9 +382,10 @@
       }
     });
 
-    // Magnetically capture star within 48px proximity radius
-    if (nearestStar && minDistance <= 48) {
-      const rect = nearestStar.getBoundingClientRect();
+    // Magnetically capture star within 50px proximity radius
+    if (nearestStar && minDistance <= 50) {
+      const aperture = nearestStar.querySelector('.celestial-lens-aperture') || nearestStar;
+      const rect = aperture.getBoundingClientRect();
       targetX = rect.left + rect.width / 2;
       targetY = rect.top + rect.height / 2;
 
@@ -312,7 +395,7 @@
         // Populate lens aperture
         if (posterDiscEl) {
           const poster = nearestStar.dataset.poster || '';
-          posterDiscEl.innerHTML = `<img src="${poster}" alt="" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'96\\' height=\\'96\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%230E1233\\'/><text x=\\'50%\\' y=\\'50%\\' fill=\\'%23F2B35E\\' font-size=\\'12\\' text-anchor=\\'middle\\' dy=\\'.3em\\'>Starlight</text></svg>';" />`;
+          posterDiscEl.innerHTML = `<img src="${poster}" alt="" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2296%22 height=%2296%22><rect width=%22100%%22 height=%22100%%22 fill=%22%230E1233%22/><text x=%2250%%22 y=%2250%%22 fill=%22%23F2B35E%22 font-size=%2212%22 text-anchor=%22middle%22 dy=%22.3em%22>Starlight</text></svg>';" />`;
         }
 
         if (titleEl) titleEl.textContent = toSentenceCase(nearestStar.dataset.title || '');
@@ -331,7 +414,7 @@
         isLensVisible = true;
         lensEl.classList.add('active');
       }
-    } else if (minDistance > 58) {
+    } else if (minDistance > 65) {
       if (isLensVisible) {
         isLensVisible = false;
         activeStarNode = null;
@@ -380,24 +463,30 @@
     }
 
     // Touch support for mobile dragging
-    window.addEventListener('touchmove', (e) => {
-      if (e.touches && e.touches[0]) {
-        checkStarProximity(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    }, { passive: true });
+    if (typeof window !== 'undefined' && window.addEventListener) {
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches[0]) {
+          checkStarProximity(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+    }
   }
 
   // Expose global endpoints
-  window.renderSkyConstellations = renderSkyConstellations;
-  window.initObservatorySky = initObservatorySky;
+  if (typeof window !== 'undefined') {
+    window.renderSkyConstellations = renderSkyConstellations;
+    window.initObservatorySky = initObservatorySky;
+  }
 
   // Auto-init on DOM readiness
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initObservatorySky, 100);
+      });
+    } else {
       setTimeout(initObservatorySky, 100);
-    });
-  } else {
-    setTimeout(initObservatorySky, 100);
+    }
   }
 
 })();

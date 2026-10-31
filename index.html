@@ -311,17 +311,21 @@
         <div class="px-4 sm:px-8 pt-4 pb-2 flex items-baseline justify-between">
           <div>
             <h2 class="constellation-script-title">The Projector</h2>
-            <p class="constellation-subtitle-sans">Essential cinema · Pantheon</p>
+            <p class="constellation-subtitle-sans">Essential cinema · Pantheon 9.0+</p>
           </div>
           <button type="button" onclick="switchTab('movies')" class="text-xs text-[#F2B35E] hover:text-white transition-colors flex items-center gap-1">
             <span>All Stars</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="relative w-full h-[320px] sm:h-[380px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
-            <path class="constellation-vector-line" d="M 250,120 L 210,80 L 290,80 Z M 250,120 L 380,180 L 380,250 L 470,250 L 750,100 L 880,70 L 820,250 L 880,430 L 750,400 L 470,250 L 380,320 L 250,380 L 210,420 L 290,420 Z M 380,320 L 320,470" />
-            <circle cx="250" cy="120" r="45" class="constellation-vector-line" />
-            <circle cx="250" cy="380" r="45" class="constellation-vector-line" />
+        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+            <!-- Projector twin reels, drive paths, lens and spreading light cone -->
+            <circle cx="220" cy="96" r="65" class="constellation-vector-line" />
+            <path class="constellation-vector-line" d="M 220,96 L 140,72 M 220,96 L 220,36 M 220,96 L 300,72" />
+            <circle cx="220" cy="432" r="65" class="constellation-vector-line" />
+            <path class="constellation-vector-line" d="M 220,432 L 140,456 M 220,432 L 220,504 M 220,432 L 300,456" />
+            <path class="constellation-vector-line" d="M 220,96 L 380,228 L 480,264 L 220,432 M 380,228 L 320,560" />
+            <path class="constellation-vector-line" d="M 480,264 L 820,120 L 880,264 L 820,408 Z M 480,264 L 880,264" />
           </svg>
           <div class="constellation-star-field" id="fieldProjector"></div>
         </div>
@@ -338,9 +342,12 @@
             <span>Star Atlas</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="relative w-full h-[320px] sm:h-[380px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
-            <path class="constellation-vector-line" d="M 500,470 L 500,400 L 480,340 L 520,280 L 500,240 M 410,240 L 500,240 L 590,240 L 630,190 L 370,190 Z M 370,190 L 360,110 L 430,80 L 500,40 L 570,80 L 640,110 L 630,190 M 500,170 L 500,40 M 500,40 L 500,10" />
+        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+            <!-- Torch handle, sconce rim and rising curved flame arcs -->
+            <path class="constellation-vector-line" d="M 500,528 L 500,444 L 500,360 L 500,276 M 340,276 L 500,276 L 660,276" />
+            <path class="constellation-vector-line" d="M 340,276 Q 300,220 260,168 Q 330,140 400,120 Q 450,80 500,48 Q 550,80 600,120 Q 670,140 740,168 Q 700,220 660,276" />
+            <path class="constellation-vector-line" d="M 500,276 L 500,48 M 400,120 L 500,276 L 600,120" />
           </svg>
           <div class="constellation-star-field" id="fieldTorch"></div>
         </div>
@@ -357,9 +364,14 @@
             <span>Spectrum</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="relative w-full h-[320px] sm:h-[380px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
-            <path class="constellation-vector-line" d="M 130,220 L 110,260 L 130,300 M 110,260 L 180,260 L 240,250 M 240,250 L 340,190 L 500,140 L 680,100 L 880,70 M 240,250 L 420,240 L 620,230 L 840,220 M 240,250 L 320,320 L 480,380 L 680,420 L 870,450" />
+        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+            <!-- Comet bow shock, dense nucleus and sweeping dual parabolic ion tails -->
+            <path class="constellation-vector-line" d="M 100,276 L 200,276 L 300,264" />
+            <circle cx="200" cy="276" r="30" class="constellation-vector-line" />
+            <path class="constellation-vector-line" d="M 300,264 Q 380,200 480,156 Q 580,120 680,96 Q 780,75 880,60" />
+            <path class="constellation-vector-line" d="M 300,264 L 520,276 L 760,276 L 920,288" />
+            <path class="constellation-vector-line" d="M 300,264 Q 380,330 460,396 Q 560,435 660,468 Q 760,495 860,516" />
           </svg>
           <div class="constellation-star-field" id="fieldComet"></div>
         </div>
@@ -376,9 +388,13 @@
             <span>Orbiting Series</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="relative w-full h-[320px] sm:h-[380px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
-            <path class="constellation-vector-line" d="M 450,470 L 380,410 L 520,410 Z M 450,470 L 450,350 M 200,230 Q 450,390 700,230 M 200,230 L 450,210 L 700,230 M 450,350 L 450,170 M 330,150 Q 450,130 570,150 M 240,100 Q 450,75 660,100 M 450,90 L 450,30" />
+        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+            <!-- Pedestal struts, dish parabolic curve, central receiver mast and radiation arcs -->
+            <path class="constellation-vector-line" d="M 500,528 L 400,456 L 600,456 Z M 500,528 L 500,384" />
+            <path class="constellation-vector-line" d="M 200,300 Q 500,440 800,300" />
+            <path class="constellation-vector-line" d="M 200,300 L 500,168 L 800,300 M 500,384 L 500,252 L 500,168" />
+            <path class="constellation-vector-line" d="M 320,132 Q 500,100 680,132 M 500,168 L 500,48" />
           </svg>
           <div class="constellation-star-field" id="fieldAntenna"></div>
         </div>
@@ -395,9 +411,13 @@
             <span>All Stars</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="relative w-full h-[320px] sm:h-[380px]">
-          <svg class="constellation-vector-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
-            <path class="constellation-vector-line" d="M 500,470 L 500,390 M 440,340 L 500,390 L 560,340 M 500,390 L 500,220 M 220,270 Q 320,220 500,340 Q 680,220 780,270 M 340,140 Q 420,100 500,220 Q 580,100 660,140 M 500,220 L 500,50 M 390,40 L 500,50 L 610,40" />
+        <div class="relative w-full h-[560px] sm:h-[640px] md:h-[720px]">
+          <svg class="constellation-vector-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+            <!-- Calyx stem, overlapping petal curves and crown jewel -->
+            <path class="constellation-vector-line" d="M 500,528 L 500,444 M 380,396 L 500,444 L 620,396 M 500,444 L 500,264" />
+            <path class="constellation-vector-line" d="M 160,264 Q 240,210 320,180 Q 410,210 500,264 Q 590,210 680,180 Q 760,210 840,264" />
+            <path class="constellation-vector-line" d="M 160,264 Q 330,340 500,444 Q 670,340 840,264" />
+            <path class="constellation-vector-line" d="M 320,180 Q 410,130 500,84 Q 590,130 680,180 M 500,264 L 500,84 L 500,24" />
           </svg>
           <div class="constellation-star-field" id="fieldLotus"></div>
         </div>

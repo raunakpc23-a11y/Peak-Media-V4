@@ -1160,15 +1160,15 @@
     .constellation-stage {
       position: relative;
       width: 100%;
-      height: 380px;
-      margin: 1.5rem 0 3.5rem 0;
-      border-radius: 28px;
-      background: radial-gradient(ellipse at 50% 50%, rgba(35, 26, 68, 0.35) 0%, rgba(14, 18, 51, 0.1) 75%);
+      min-height: 580px;
+      margin: 2.5rem 0 5rem 0;
+      border-radius: 32px;
+      background: radial-gradient(ellipse at 50% 50%, rgba(35, 26, 68, 0.45) 0%, rgba(14, 18, 51, 0.15) 75%);
     }
     @media (max-width: 640px) {
       .constellation-stage {
-        height: 320px;
-        margin: 1rem 0 2.5rem 0;
+        min-height: 480px;
+        margin: 1.5rem 0 3.5rem 0;
       }
     }
 
@@ -1180,73 +1180,268 @@
       pointer-events: none;
     }
     .constellation-vector-line {
-      stroke: rgba(242, 179, 94, 0.15);
+      stroke: rgba(242, 179, 94, 0.18);
       stroke-width: 1.5;
-      stroke-dasharray: 1200;
-      stroke-dashoffset: 1200;
+      stroke-dasharray: 1400;
+      stroke-dashoffset: 1400;
       fill: none;
       transition: stroke-dashoffset 1.6s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.4s ease, stroke-width 0.3s ease;
     }
     .constellation-stage.drawn .constellation-vector-line {
       stroke-dashoffset: 0;
-      stroke: rgba(242, 179, 94, 0.45);
+      stroke: rgba(242, 179, 94, 0.42);
     }
     .constellation-stage:hover .constellation-vector-line {
-      stroke: rgba(242, 179, 94, 0.85);
+      stroke: rgba(242, 179, 94, 0.82);
       stroke-width: 1.8;
     }
 
-    /* Interactive Starlight Nodes */
+    /* Celestial Node Capsule: Optical Lens Disc + Title Plate */
+    .celestial-node-capsule {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 25;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.2s ease, filter 0.25s ease;
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .celestial-node-capsule:hover,
+    .celestial-node-capsule.active {
+      transform: translate(-50%, -50%) scale(1.18);
+      z-index: 50;
+    }
+
+    /* The Optical Lens Disc (Holding the Thumbnail) */
+    .celestial-lens-aperture {
+      position: relative;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9), 0 0 16px rgba(242, 179, 94, 0.3);
+      border: 2px solid #F2B35E;
+      background: #060913;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      flex-shrink: 0;
+    }
+    @media (max-width: 640px) {
+      .celestial-lens-aperture {
+        width: 52px;
+        height: 52px;
+      }
+    }
+
+    /* Magnitudes */
+    .mag-large .celestial-lens-aperture {
+      width: 78px;
+      height: 78px;
+    }
+    @media (max-width: 640px) {
+      .mag-large .celestial-lens-aperture {
+        width: 60px;
+        height: 60px;
+      }
+    }
+    .mag-small .celestial-lens-aperture {
+      width: 56px;
+      height: 56px;
+    }
+    @media (max-width: 640px) {
+      .mag-small .celestial-lens-aperture {
+        width: 44px;
+        height: 44px;
+      }
+    }
+
+    /* Poster Image inside Aperture */
+    .celestial-lens-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s ease, filter 0.3s ease;
+    }
+    .celestial-node-capsule:hover .celestial-lens-img {
+      transform: scale(1.1);
+    }
+
+    /* Optical Glass Glare Reflection */
+    .celestial-lens-glare {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 40%, transparent 60%);
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+
+    /* Astronomical Bezel Rating Badge */
+    .celestial-lens-rating {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      padding: 1px 4px;
+      border-radius: 6px;
+      background: rgba(14, 18, 51, 0.92);
+      border: 1px solid rgba(242, 179, 94, 0.6);
+      font-family: ui-monospace, monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #F2B35E;
+      line-height: 1;
+      pointer-events: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Halo Glow */
+    .celestial-lens-halo {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.35;
+      filter: blur(6px);
+      transition: opacity 0.3s ease, filter 0.3s ease;
+    }
+    .celestial-node-capsule:hover .celestial-lens-halo {
+      opacity: 0.85;
+      filter: blur(12px);
+    }
+
+    /* Color Tokens */
+    .star-amber .celestial-lens-aperture {
+      border-color: #F2B35E;
+    }
+    .star-amber .celestial-lens-halo {
+      background: radial-gradient(circle, #F2B35E 0%, transparent 70%);
+    }
+    .star-ice .celestial-lens-aperture {
+      border-color: #BFE3FF;
+    }
+    .star-ice .celestial-lens-halo {
+      background: radial-gradient(circle, #BFE3FF 0%, transparent 70%);
+    }
+    .star-ice .celestial-lens-rating {
+      border-color: rgba(191, 227, 255, 0.6);
+      color: #BFE3FF;
+    }
+    .star-violet .celestial-lens-aperture {
+      border-color: #B9A2FF;
+    }
+    .star-violet .celestial-lens-halo {
+      background: radial-gradient(circle, #B9A2FF 0%, transparent 70%);
+    }
+    .star-violet .celestial-lens-rating {
+      border-color: rgba(185, 162, 255, 0.6);
+      color: #B9A2FF;
+    }
+
+    /* Integrated Astrolabe Title Plate */
+    .celestial-node-info {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 125px;
+      pointer-events: none;
+    }
+    @media (max-width: 640px) {
+      .celestial-node-info {
+        max-width: 90px;
+        margin-top: 4px;
+      }
+    }
+    .celestial-node-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.15;
+      color: #FFFFFF;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95), 0 0 12px rgba(242, 179, 94, 0.4);
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      transition: color 0.2s ease;
+    }
+    @media (max-width: 640px) {
+      .celestial-node-title {
+        font-size: 11px;
+        -webkit-line-clamp: 1;
+      }
+    }
+    .celestial-node-capsule:hover .celestial-node-title {
+      color: #F2B35E;
+    }
+    .celestial-node-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 9.5px;
+      font-weight: 500;
+      color: rgba(191, 227, 255, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      margin-top: 2px;
+    }
+    @media (max-width: 640px) {
+      .celestial-node-meta {
+        font-size: 8.5px;
+      }
+    }
+    .celestial-node-meta .meta-dot {
+      opacity: 0.4;
+    }
+
+    /* Quick Play Starlight Ray on Hover */
+    .celestial-quick-play {
+      position: absolute;
+      top: 34px;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.6);
+      opacity: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(242, 179, 94, 0.95);
+      color: #0E1233;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 0 20px #F2B35E;
+      transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      border: none;
+      cursor: pointer;
+    }
+    @media (max-width: 640px) {
+      .celestial-quick-play {
+        top: 26px;
+        width: 26px;
+        height: 26px;
+        font-size: 9px;
+      }
+    }
+    .celestial-node-capsule:hover .celestial-quick-play {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+
+    /* Legacy compatibility for node */
     .celestial-star-node {
       position: absolute;
       transform: translate(-50%, -50%);
       border-radius: 50%;
       cursor: pointer;
       z-index: 25;
-      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, filter 0.2s ease;
       touch-action: manipulation;
-    }
-    .celestial-star-node::before {
-      content: "";
-      position: absolute;
-      inset: -6px;
-      border-radius: 50%;
-      background: inherit;
-      opacity: 0.25;
-      filter: blur(4px);
-      pointer-events: none;
-    }
-    .celestial-star-node:hover {
-      transform: translate(-50%, -50%) scale(1.75);
-      z-index: 35;
-    }
-
-    /* Star Color Hierarchy */
-    .star-amber {
-      background: #F2B35E;
-      box-shadow: 0 0 10px #F2B35E, 0 0 20px rgba(242, 179, 94, 0.55);
-    }
-    .star-ice {
-      background: #BFE3FF;
-      box-shadow: 0 0 10px #BFE3FF, 0 0 20px rgba(191, 227, 255, 0.55);
-    }
-    .star-violet {
-      background: #B9A2FF;
-      box-shadow: 0 0 10px #B9A2FF, 0 0 20px rgba(185, 162, 255, 0.55);
-    }
-
-    /* Star Magnitudes */
-    .mag-large {
-      width: 14px;
-      height: 14px;
-    }
-    .mag-medium {
-      width: 10px;
-      height: 10px;
-    }
-    .mag-small {
-      width: 7px;
-      height: 7px;
     }
 
     /* Tonight's Zenith Focal Star */
