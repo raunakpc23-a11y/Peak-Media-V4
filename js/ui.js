@@ -127,6 +127,106 @@
     }, 120);
   };
 
+  // Return to Opening View from any sub-view
+  window.returnToOpeningPage = function(targetId) {
+    window.switchTab('discover');
+    if (targetId) {
+      setTimeout(() => {
+        const el = document.getElementById(targetId);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
+      }, 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.updateHomeVinylPlayer) setTimeout(window.updateHomeVinylPlayer, 60);
+    }
+  };
+
+  // Direct gateway to Member Profile from Opening View
+  window.openProfileFromHome = function() {
+    window.switchTab('profile');
+    if (window.renderProfileTab) window.renderProfileTab();
+  };
+
+  window.closeProfileToHome = function() {
+    window.returnToOpeningPage('homeProfileVaultCard');
+  };
+
+  // Direct gateway to Shelves & Library from Opening View
+  window.openShelvesFromHome = function() {
+    window.switchTab('hub');
+    if (window.renderShelves) window.renderShelves();
+    if (window.refreshDNA) window.refreshDNA();
+  };
+
+  window.closeShelvesToHome = function() {
+    window.returnToOpeningPage('homeProfileVaultCard');
+  };
+
+  // Cinema Games launcher from cartridge cards
+  window.openCinemaGame = function(gameKey) {
+    if (gameKey === 'duel') {
+      window.switchTab('duel');
+    } else if (gameKey === 'roulette') {
+      if (window.openSurpriseModal) window.openSurpriseModal();
+    } else if (gameKey === 'timemachine') {
+      if (window.tmOpen) window.tmOpen();
+    } else if (gameKey === 'match') {
+      window.switchTab('match');
+    } else if (gameKey === 'marathon') {
+      if (window.openMarathonModal) window.openMarathonModal();
+    } else if (gameKey === 'opposite') {
+      if (window.oppToggle) window.oppToggle();
+    } else {
+      window.switchTab('play');
+    }
+  };
+
+  // Quick Format Stream Filter on Opening View
+  window.filterOpeningShelves = function(formatKey) {
+    document.querySelectorAll('.stream-filter-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.filter === formatKey);
+    });
+
+    const pWrap = document.getElementById('shelfWrap-pantheon');
+    const bWrap = document.getElementById('shelfWrap-blockbusters');
+    const mWrap = document.getElementById('shelfWrap-mind');
+    const sWrap = document.getElementById('shelfWrap-series');
+    const iWrap = document.getElementById('shelfWrap-indian');
+
+    if (formatKey === 'all') {
+      if (pWrap) pWrap.classList.remove('hidden');
+      if (bWrap) bWrap.classList.remove('hidden');
+      if (mWrap) mWrap.classList.remove('hidden');
+      if (sWrap) sWrap.classList.remove('hidden');
+      if (iWrap) iWrap.classList.remove('hidden');
+    } else if (formatKey === 'films') {
+      if (pWrap) pWrap.classList.remove('hidden');
+      if (bWrap) bWrap.classList.remove('hidden');
+      if (mWrap) mWrap.classList.remove('hidden');
+      if (sWrap) sWrap.classList.add('hidden');
+      if (iWrap) iWrap.classList.remove('hidden');
+    } else if (formatKey === 'series') {
+      if (pWrap) pWrap.classList.add('hidden');
+      if (bWrap) bWrap.classList.add('hidden');
+      if (mWrap) mWrap.classList.add('hidden');
+      if (sWrap) sWrap.classList.remove('hidden');
+      if (iWrap) iWrap.classList.add('hidden');
+    } else if (formatKey === 'indian') {
+      if (pWrap) pWrap.classList.add('hidden');
+      if (bWrap) bWrap.classList.add('hidden');
+      if (mWrap) mWrap.classList.add('hidden');
+      if (sWrap) sWrap.classList.add('hidden');
+      if (iWrap) iWrap.classList.remove('hidden');
+    } else if (formatKey === 'pantheon') {
+      if (pWrap) pWrap.classList.remove('hidden');
+      if (bWrap) bWrap.classList.add('hidden');
+      if (mWrap) mWrap.classList.add('hidden');
+      if (sWrap) sWrap.classList.add('hidden');
+      if (iWrap) iWrap.classList.add('hidden');
+    }
+  };
+
   // Star-streak flight transition across stations
   window.flyToStation = function (dest) {
     if (dest === 'music') {

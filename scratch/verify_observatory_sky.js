@@ -34,19 +34,27 @@ const html = fs.readFileSync('index.html', 'utf8');
 const expectedElements = [
   'id="tab-discover"',
   'id="heroBanner"',
-  'id="homeGamesBar"',
+  'id="homePlayLab"',
   'id="homeVinylShowcase"',
   'id="homeVinylDisc"',
   'id="homeVinylThumb"',
   'id="homeVinylTitle"',
   'id="homeVinylPlayBtn"',
+  'id="homeProfileVaultCard"',
+  'id="homeProfileWatchlistCount"',
+  'id="homeProfileWatchedCount"',
+  'id="homeProfileFavCount"',
+  'id="streamFilterBar"',
+  'id="shelfWrap-pantheon"',
+  'id="shelfWrap-blockbusters"',
+  'id="shelfWrap-mind"',
+  'id="shelfWrap-series"',
+  'id="shelfWrap-indian"',
   'id="discoverPantheonRow"',
   'id="discoverBlockbustersRow"',
   'id="discoverMindRow"',
   'id="discoverTvRow"',
-  'id="discoverIndianRow"',
-  'id="headerNavPills"',
-  'id="stationPlatesDock"'
+  'id="discoverIndianRow"'
 ];
 
 expectedElements.forEach(item => {
@@ -58,12 +66,29 @@ expectedElements.forEach(item => {
   }
 });
 
+// Verify tabs bar has been cleanly removed
+const forbiddenElements = [
+  'id="headerNavPills"',
+  '<nav id="headerNavPills"'
+];
+
+forbiddenElements.forEach(item => {
+  if (html.includes(item)) {
+    console.error(`[FAIL] Found forbidden tab bar in HTML: "${item}"`);
+    errors++;
+  } else {
+    console.log(`[PASS] Cleaned tab bar element: "${item}"`);
+  }
+});
+
 // Check that pseudo-sci-fi text has been eliminated from the UI
 const forbiddenPhrases = [
   'HILLTOP APERTURE',
   'STARS IN VAULT',
   'Aperture: 800mm',
-  'Focal Star Acquired'
+  'Focal Star Acquired',
+  "Chief Astronomer · Keeper's Log",
+  "PEAK OBSERVATORY · CHIEF ASTRONOMER'S LEDGER"
 ];
 
 forbiddenPhrases.forEach(phrase => {

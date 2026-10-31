@@ -97,27 +97,14 @@
         </div>
       </div>
 
-      <!-- Center: Clean Navigation Pills -->
-      <nav class="flex items-center gap-1 sm:gap-1.5 p-1 rounded-2xl bg-black/60 border border-white/10 backdrop-blur-md" id="headerNavPills" aria-label="Main Navigation">
-        <button type="button" class="nav-header-pill active" data-dest="discover" onclick="switchTab('discover')">
-          <i class="fa-solid fa-house text-xs"></i> <span class="hidden sm:inline">Home</span>
-        </button>
-        <button type="button" class="nav-header-pill" data-dest="movies" onclick="switchTab('movies')">
-          <i class="fa-solid fa-clapperboard text-xs"></i> <span class="hidden sm:inline">Movies</span>
-        </button>
-        <button type="button" class="nav-header-pill" data-dest="shows" onclick="switchTab('shows')">
-          <i class="fa-solid fa-tv text-xs"></i> <span class="hidden sm:inline">Shows</span>
-        </button>
-        <button type="button" class="nav-header-pill" data-dest="music" onclick="openMusicFromVinyl()">
-          <i class="fa-solid fa-record-vinyl text-xs text-purple-400"></i> <span class="hidden sm:inline">Music</span>
-        </button>
-        <button type="button" class="nav-header-pill" data-dest="play" onclick="switchTab('play')">
-          <i class="fa-solid fa-gamepad text-xs text-amber-400"></i> <span class="hidden sm:inline">Games</span>
-        </button>
-        <button type="button" class="nav-header-pill" data-dest="hub" onclick="switchTab('hub')">
-          <i class="fa-solid fa-bookmark text-xs text-cyan-400"></i> <span class="hidden sm:inline">Shelves</span>
-        </button>
-      </nav>
+      <!-- Center: Clean Omni-Search Input Trigger (Unified Search, No Tabs) -->
+      <div class="flex-1 max-w-lg mx-2 sm:mx-6">
+        <div class="relative w-full cursor-pointer group" onclick="triggerOmniSearch()" title="Search catalog (Press /)">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-brand-gold text-xs transition-colors"></i>
+          <input type="text" readonly placeholder="Search movies, series, soundtracks, genres... (/)" class="w-full pl-9 pr-8 py-2 sm:py-2.5 rounded-xl bg-black/60 border border-white/10 group-hover:border-brand-gold/40 text-xs text-gray-300 placeholder-gray-500 cursor-pointer transition-all shadow-inner focus:outline-none">
+          <kbd class="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-white/10 text-[10px] font-mono text-gray-400 border border-white/10">/</kbd>
+        </div>
+      </div>
 
       <!-- Hidden navigation buttons for background state sync -->
       <div class="hidden" aria-hidden="true">
@@ -129,20 +116,15 @@
         <span id="hdrReelCount"></span>
       </div>
 
-      <!-- Right: Search, Reading Lamp (Settings), Profile Badge -->
+      <!-- Right: Reading Lamp (Settings), Profile Badge -->
       <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-        <!-- Search Trigger -->
-        <button type="button" onclick="switchTab('browse')" title="Search (/)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Search">
-          <i class="fa-solid fa-magnifying-glass text-xs"></i>
-        </button>
-
         <!-- Reading Lamp (Atmosphere & Theme Controls) -->
         <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Atmosphere &amp; Theme Settings" class="brass-pulllamp-btn active:scale-95" aria-label="Settings">
           <i class="fa-solid fa-lightbulb text-sm"></i>
         </button>
 
-        <!-- User Profile Badge -->
-        <button type="button" id="userProfileBtn" onclick="switchTab('profile')" title="Profile &amp; Preferences" class="h-9 sm:h-10 pl-1.5 pr-2.5 sm:pr-3 rounded-xl bg-black/60 hover:bg-black/80 border border-white/10 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95 shadow-inner">
+        <!-- User Profile Badge (Gateway to Profile from Header) -->
+        <button type="button" id="userProfileBtn" onclick="openProfileFromHome()" title="Profile &amp; Member Vault" class="h-9 sm:h-10 pl-1.5 pr-2.5 sm:pr-3 rounded-xl bg-black/60 hover:bg-black/80 border border-white/10 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95 shadow-inner">
           <span id="headerAvatarBadge" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center text-xs">🎬</span>
           <span id="headerUsernameLabel" class="hidden sm:inline text-gray-300 text-[11px] font-semibold">Profile</span>
         </button>
@@ -254,82 +236,156 @@
       <!-- 1. FEATURED CINEMATIC SPOTLIGHT HERO -->
       <div id="heroBanner" class="relative rounded-3xl overflow-hidden min-h-[380px] sm:min-h-[460px] p-6 sm:p-10 border border-white/10 shadow-2xl bg-gradient-to-br from-[#121729]/95 via-[#0b0e18] to-[#060810] flex flex-col justify-between transition-all"></div>
 
-      <!-- 2. CINEMA GAMES & DECISION TOOLS BAR -->
-      <div class="space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-            <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-white">Cinema Games &amp; Decision Tools</h2>
+      <!-- 2. CINEMA PLAY LAB & DECISION STATION (Unique Interactive Game Cartridges) -->
+      <div id="homePlayLab" class="play-lab-deck p-5 sm:p-7 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-400 shrink-0 shadow-lg">
+              <i class="fa-solid fa-gamepad text-base"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 font-mono">Cinema Play Lab</span>
+              </div>
+              <h2 class="text-lg sm:text-xl font-display font-bold text-white tracking-tight">Interactive Cinema Tools &amp; Games</h2>
+            </div>
           </div>
-          <button type="button" onclick="switchTab('play')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
-            <span>All Games</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          <button type="button" onclick="openCinemaGame('all')" class="self-start sm:self-auto text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-2 font-bold px-3.5 py-2 rounded-xl bg-brand-gold/10 hover:bg-brand-gold/20 border border-brand-gold/30 active:scale-95">
+            <span>Explore All Games</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
 
-        <div id="homeGamesBar" class="cinema-games-bar">
-          <!-- Movie Duel -->
-          <div onclick="switchTab('duel')" class="game-action-tile group" title="Launch Movie Duel">
-            <div class="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-trophy text-xs"></i>
+        <div class="play-lab-grid">
+          <!-- Cartridge 1: Movie Duel -->
+          <div class="game-cartridge-card group" style="--cartridge-glow: #f5c518; --cartridge-glow-shadow: rgba(245, 197, 24, 0.35);" onclick="openCinemaGame('duel')" title="Launch Movie Duel">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  Tournament
+                </span>
+                <div class="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+                  <i class="fa-solid fa-trophy text-sm"></i>
+                </div>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors">Movie Duel</h3>
+                <p class="text-xs text-gray-400 mt-1 leading-relaxed">Head-to-head bracket showdown between titan films. Pick your champions until one ultimate victor reigns.</p>
+              </div>
             </div>
-            <div>
-              <div class="text-xs font-bold text-white group-hover:text-brand-gold transition-colors">Movie Duel</div>
-              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Head-to-head showdown</div>
-            </div>
-          </div>
-
-          <!-- Surprise Roulette -->
-          <div onclick="openSurpriseModal()" class="game-action-tile group" title="Launch Surprise Roulette">
-            <div class="w-8 h-8 rounded-xl bg-yellow-500/15 border border-yellow-400/30 flex items-center justify-center text-brand-gold group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-dice text-xs"></i>
-            </div>
-            <div>
-              <div class="text-xs font-bold text-white group-hover:text-brand-gold transition-colors">Roulette</div>
-              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Instant random pick</div>
-            </div>
-          </div>
-
-          <!-- Time Machine -->
-          <div onclick="tmOpen()" class="game-action-tile group" title="Launch Time Machine">
-            <div class="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-clock-rotate-left text-xs"></i>
-            </div>
-            <div>
-              <div class="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">Time Machine</div>
-              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Hop cinema decades</div>
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-amber-300 group-hover:text-amber-200">
+              <span>Enter Duel Arena</span>
+              <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
             </div>
           </div>
 
-          <!-- CineSwipe -->
-          <div onclick="switchTab('match')" class="game-action-tile group" title="Launch CineSwipe Matchmaker">
-            <div class="w-8 h-8 rounded-xl bg-rose-500/15 border border-rose-400/30 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-fire-flame-curved text-xs"></i>
+          <!-- Cartridge 2: Surprise Roulette -->
+          <div class="game-cartridge-card group" style="--cartridge-glow: #f59e0b; --cartridge-glow-shadow: rgba(245, 158, 11, 0.35);" onclick="openCinemaGame('roulette')" title="Launch Surprise Roulette">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-yellow-400/20 text-yellow-300 border border-yellow-400/30">
+                  Instant Roll
+                </span>
+                <div class="w-9 h-9 rounded-xl bg-yellow-400/10 border border-yellow-400/30 flex items-center justify-center text-brand-gold group-hover:scale-110 transition-transform">
+                  <i class="fa-solid fa-dice text-sm"></i>
+                </div>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white group-hover:text-yellow-400 transition-colors">Surprise Roulette</h3>
+                <p class="text-xs text-gray-400 mt-1 leading-relaxed">Can't decide what to watch? Let fate spin through 3,400+ curated films and deliver a hand-picked choice instantly.</p>
+              </div>
             </div>
-            <div>
-              <div class="text-xs font-bold text-white group-hover:text-rose-300 transition-colors">CineSwipe</div>
-              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Swipe matchmaker</div>
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-yellow-300 group-hover:text-yellow-200">
+              <span>Spin Roulette</span>
+              <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
             </div>
           </div>
 
-          <!-- Marathon Architect -->
-          <div onclick="openMarathonModal()" class="game-action-tile group" title="Launch Marathon Architect">
-            <div class="w-8 h-8 rounded-xl bg-purple-500/15 border border-purple-400/30 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-film text-xs"></i>
+          <!-- Cartridge 3: Time Machine -->
+          <div class="game-cartridge-card group" style="--cartridge-glow: #38bdf8; --cartridge-glow-shadow: rgba(56, 189, 248, 0.35);" onclick="openCinemaGame('timemachine')" title="Launch Time Machine">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-sky-400/20 text-sky-300 border border-sky-400/30">
+                  Time Travel
+                </span>
+                <div class="w-9 h-9 rounded-xl bg-sky-400/10 border border-sky-400/30 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform">
+                  <i class="fa-solid fa-clock-rotate-left text-sm"></i>
+                </div>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white group-hover:text-sky-300 transition-colors">Time Machine</h3>
+                <p class="text-xs text-gray-400 mt-1 leading-relaxed">Leap across 7 decades of cinematic history. Filter landmark films and cultural shifts decade by decade from 1950 to today.</p>
+              </div>
             </div>
-            <div>
-              <div class="text-xs font-bold text-white group-hover:text-purple-300 transition-colors">Marathon</div>
-              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Binge plan architect</div>
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-sky-300 group-hover:text-sky-200">
+              <span>Launch Portal</span>
+              <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
             </div>
           </div>
 
-          <!-- Opposite Day -->
-          <div onclick="oppToggle()" class="game-action-tile group" title="Toggle Opposite Day Taste Inverter">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-shuffle text-xs"></i>
+          <!-- Cartridge 4: CineSwipe -->
+          <div class="game-cartridge-card group" style="--cartridge-glow: #f43f5e; --cartridge-glow-shadow: rgba(244, 63, 94, 0.35);" onclick="openCinemaGame('match')" title="Launch CineSwipe Matchmaker">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-rose-400/20 text-rose-300 border border-rose-400/30">
+                  Matchmaker
+                </span>
+                <div class="w-9 h-9 rounded-xl bg-rose-400/10 border border-rose-400/30 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+                  <i class="fa-solid fa-fire-flame-curved text-sm"></i>
+                </div>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white group-hover:text-rose-400 transition-colors">CineSwipe Match</h3>
+                <p class="text-xs text-gray-400 mt-1 leading-relaxed">Swipe right on movies you love, pass on what you don't. Build rapid personalized recommendation queues in seconds.</p>
+              </div>
             </div>
-            <div>
-              <div class="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">Opposite Day</div>
-              <div class="text-[10px] text-gray-400 leading-tight mt-0.5">Invert your taste</div>
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-rose-300 group-hover:text-rose-200">
+              <span>Start Swiping</span>
+              <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Cartridge 5: Marathon Architect -->
+          <div class="game-cartridge-card group" style="--cartridge-glow: #a855f7; --cartridge-glow-shadow: rgba(168, 85, 247, 0.35);" onclick="openCinemaGame('marathon')" title="Launch Marathon Architect">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-purple-400/20 text-purple-300 border border-purple-400/30">
+                  Binge Planner
+                </span>
+                <div class="w-9 h-9 rounded-xl bg-purple-400/10 border border-purple-400/30 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+                  <i class="fa-solid fa-film text-sm"></i>
+                </div>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white group-hover:text-purple-300 transition-colors">Marathon Architect</h3>
+                <p class="text-xs text-gray-400 mt-1 leading-relaxed">Calculate runtimes, intermission breaks, and curate flawless multi-movie screening sessions for your next movie night.</p>
+              </div>
+            </div>
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-purple-300 group-hover:text-purple-200">
+              <span>Build Marathon</span>
+              <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Cartridge 6: Opposite Day -->
+          <div class="game-cartridge-card group" style="--cartridge-glow: #10b981; --cartridge-glow-shadow: rgba(168, 85, 247, 0.35);" onclick="openCinemaGame('opposite')" title="Toggle Opposite Day Taste Inverter">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
+                  Taste Inverter
+                </span>
+                <div class="w-9 h-9 rounded-xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                  <i class="fa-solid fa-shuffle text-sm"></i>
+                </div>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">Opposite Day</h3>
+                <p class="text-xs text-gray-400 mt-1 leading-relaxed">Flip your habits. Invert your rating weights and genre comfort zones to uncover hidden masterpieces you would never search for.</p>
+              </div>
+            </div>
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-emerald-300 group-hover:text-emerald-200">
+              <span id="homeOppositeCardBtnText">Invert Taste</span>
+              <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
             </div>
           </div>
         </div>
@@ -426,10 +482,77 @@
         </div>
       </div>
 
-      <!-- 4. THE 5 FLUID CURATED SHELVES -->
+      <!-- 4. PERSONAL MEMBER PASSPORT & LIBRARY VAULT CARD (Direct gateway to Profile & Shelves) -->
+      <div id="homeProfileVaultCard" class="profile-vault-panel p-5 sm:p-7 relative">
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6">
+          <!-- Left: Identity & Badge -->
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-400/20 to-teal-500/10 border border-emerald-400/30 flex items-center justify-center text-2xl shadow-lg shrink-0">
+              <span id="homePassportAvatar">🎬</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1">
+                  <i class="fa-solid fa-shield-halved text-[9px]"></i> Member Vault
+                </span>
+                <span class="text-xs text-gray-400 font-mono">Elite Cinephile</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-display font-bold text-white mt-1">Personal Cinema Library</h3>
+              <p class="text-xs text-gray-400 mt-0.5">Custom shelves, taste DNA, bookmarks, and curated lists</p>
+            </div>
+          </div>
+
+          <!-- Center: Live Counter Badges -->
+          <div class="grid grid-cols-3 gap-2 sm:gap-3 py-2 px-3 sm:px-4 rounded-2xl bg-black/40 border border-white/10 shrink-0">
+            <div class="text-center px-2 py-1">
+              <div id="homeProfileWatchlistCount" class="text-lg sm:text-xl font-extrabold text-amber-400 font-mono">0</div>
+              <div class="text-[10px] sm:text-[11px] font-medium text-gray-400 uppercase tracking-wider">Watchlist</div>
+            </div>
+            <div class="text-center px-2 py-1 border-x border-white/10">
+              <div id="homeProfileWatchedCount" class="text-lg sm:text-xl font-extrabold text-emerald-400 font-mono">0</div>
+              <div class="text-[10px] sm:text-[11px] font-medium text-gray-400 uppercase tracking-wider">Watched</div>
+            </div>
+            <div class="text-center px-2 py-1">
+              <div id="homeProfileFavCount" class="text-lg sm:text-xl font-extrabold text-brand-gold font-mono">0</div>
+              <div class="text-[10px] sm:text-[11px] font-medium text-gray-400 uppercase tracking-wider">Favorites</div>
+            </div>
+          </div>
+
+          <!-- Right: Action Buttons -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button type="button" onclick="openProfileFromHome()" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95">
+              <i class="fa-solid fa-user text-xs"></i>
+              <span>Open Profile</span>
+            </button>
+            <button type="button" onclick="openShelvesFromHome()" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95">
+              <i class="fa-solid fa-bookmark text-xs text-cyan-400"></i>
+              <span>Shelves &amp; Library</span>
+            </button>
+            <button type="button" onclick="openOnboardingWizard(true)" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white transition-all active:scale-95" title="Recalibrate Taste Preferences">
+              <i class="fa-solid fa-sliders text-xs text-amber-400"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. STREAM QUICK FORMAT FILTER -->
+      <div id="streamFilterBar" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 border-b border-white/10">
+        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5 mr-1">
+          <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i> Filter Stream:
+        </span>
+        <button type="button" class="stream-filter-chip active" data-filter="all" onclick="filterOpeningShelves('all')">All Vault</button>
+        <button type="button" class="stream-filter-chip" data-filter="films" onclick="filterOpeningShelves('films')">Films</button>
+        <button type="button" class="stream-filter-chip" data-filter="series" onclick="filterOpeningShelves('series')">Series</button>
+        <button type="button" class="stream-filter-chip" data-filter="indian" onclick="filterOpeningShelves('indian')">Indian Cinema</button>
+        <button type="button" class="stream-filter-chip" data-filter="pantheon" onclick="filterOpeningShelves('pantheon')">9.0+ Masterworks</button>
+      </div>
+
+      <!-- 6. THE 5 FLUID CURATED SHELVES -->
       
       <!-- Shelf 1: Essential Masterworks (Pantheon 9.0+) -->
-      <div class="curated-shelf-wrapper space-y-3">
+      <div id="shelfWrap-pantheon" class="curated-shelf-wrapper space-y-3">
         <div class="flex items-baseline justify-between px-1">
           <div>
             <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
@@ -447,7 +570,7 @@
       </div>
 
       <!-- Shelf 2: Popular Hits & Box Office -->
-      <div class="curated-shelf-wrapper space-y-3">
+      <div id="shelfWrap-blockbusters" class="curated-shelf-wrapper space-y-3">
         <div class="flex items-baseline justify-between px-1">
           <div>
             <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
@@ -465,7 +588,7 @@
       </div>
 
       <!-- Shelf 3: Mind Benders & Thrillers -->
-      <div class="curated-shelf-wrapper space-y-3">
+      <div id="shelfWrap-mind" class="curated-shelf-wrapper space-y-3">
         <div class="flex items-baseline justify-between px-1">
           <div>
             <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
@@ -483,7 +606,7 @@
       </div>
 
       <!-- Shelf 4: Prestige Series -->
-      <div class="curated-shelf-wrapper space-y-3">
+      <div id="shelfWrap-series" class="curated-shelf-wrapper space-y-3">
         <div class="flex items-baseline justify-between px-1">
           <div>
             <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
@@ -501,7 +624,7 @@
       </div>
 
       <!-- Shelf 5: Indian Cinema Classics -->
-      <div class="curated-shelf-wrapper space-y-3">
+      <div id="shelfWrap-indian" class="curated-shelf-wrapper space-y-3">
         <div class="flex items-baseline justify-between px-1">
           <div>
             <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
@@ -522,6 +645,18 @@
 
     <!-- TAB 1: MOVIES -->
     <section id="tab-movies" class="tab-pane hidden fade-in space-y-4">
+      <!-- Sticky Return Navigation to Opening View -->
+      <div class="sticky top-16 z-20 py-2.5 px-4 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
+        <button type="button" onclick="returnToOpeningPage()" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 shadow">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Main Page</span>
+        </button>
+        <div class="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-clapperboard text-amber-400"></i>
+          <span>Movie Catalog</span>
+        </div>
+      </div>
+
       <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
         <div class="flex items-center gap-2 flex-1 max-w-md">
           <div class="relative flex-1">
@@ -574,6 +709,18 @@
 
     <!-- TAB 2: TV SHOWS -->
     <section id="tab-shows" class="tab-pane hidden fade-in space-y-4">
+      <!-- Sticky Return Navigation to Opening View -->
+      <div class="sticky top-16 z-20 py-2.5 px-4 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
+        <button type="button" onclick="returnToOpeningPage()" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 shadow">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Main Page</span>
+        </button>
+        <div class="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-tv text-sky-400"></i>
+          <span>TV Series &amp; Shows</span>
+        </div>
+      </div>
+
       <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
         <div class="flex items-center gap-2 flex-1 max-w-md">
           <div class="relative flex-1">
@@ -625,6 +772,18 @@
 
     <!-- TAB 3: CATEGORIES -->
     <section id="tab-categories" class="tab-pane hidden fade-in space-y-4">
+      <!-- Sticky Return Navigation to Opening View -->
+      <div class="sticky top-16 z-20 py-2.5 px-4 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
+        <button type="button" onclick="returnToOpeningPage()" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 shadow">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Main Page</span>
+        </button>
+        <div class="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-layer-group text-purple-400"></i>
+          <span>Genres &amp; Categories</span>
+        </div>
+      </div>
+
       <div class="border-b border-white/10 pb-3">
         <div id="genreQuickPills" class="flex flex-wrap gap-1.5 max-h-[76px] overflow-y-auto no-scrollbar py-1"></div>
       </div>
@@ -668,11 +827,23 @@
 
     <!-- TAB: PLAY HUB (Interactive Experiences Landing Page) -->
     <section id="tab-play" class="tab-pane hidden fade-in space-y-6">
+      <!-- Sticky Return Navigation to Opening View -->
+      <div class="sticky top-16 z-20 py-2.5 px-4 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
+        <button type="button" onclick="returnToOpeningPage('homePlayLab')" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 shadow">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Main Page</span>
+        </button>
+        <div class="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-gamepad text-amber-400"></i>
+          <span>Cinema Games &amp; Tools</span>
+        </div>
+      </div>
+
       <div class="border-b border-white/10 pb-4">
         <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
-          <i class="fa-solid fa-scale-balanced text-brand-gold"></i> Instruments
+          <i class="fa-solid fa-gamepad text-brand-gold"></i> Cinema Games &amp; Decision Lab
         </h1>
-        <p class="text-xs sm:text-sm text-gray-400 mt-1">Observatory calibration dials, celestial face-offs, star synchronizers, and gravitational physics.</p>
+        <p class="text-xs sm:text-sm text-gray-400 mt-1">Interactive cinema tools, head-to-head showdown tournaments, marathon planner, and discovery engines.</p>
       </div>
 
       <!-- Asymmetric Kinetic Tile Grid -->
@@ -917,6 +1088,18 @@
 
     <!-- TAB: TOURNAMENT & CINESWIPE -->
     <section id="tab-duel" class="tab-pane hidden fade-in space-y-4">
+      <!-- Sticky Return Navigation to Opening View -->
+      <div class="sticky top-16 z-20 py-2.5 px-4 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
+        <button type="button" onclick="returnToOpeningPage('homePlayLab')" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 shadow">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Main Page</span>
+        </button>
+        <div class="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-trophy text-amber-400"></i>
+          <span>Movie Duel Arena</span>
+        </div>
+      </div>
+
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
         <div class="flex items-center gap-3">
           <button type="button" onclick="switchTab('play')" title="Back to Play" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95">
@@ -1386,6 +1569,18 @@
 
     <!-- TAB: UNIVERSES (Cinematic Universes & Franchises) -->
     <section id="tab-universes" class="tab-pane hidden fade-in space-y-5">
+      <!-- Sticky Return Navigation to Opening View -->
+      <div class="sticky top-16 z-20 py-2.5 px-4 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
+        <button type="button" onclick="returnToOpeningPage()" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 shadow">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Main Page</span>
+        </button>
+        <div class="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-globe text-cyan-400"></i>
+          <span>Cinematic Universes</span>
+        </div>
+      </div>
+
       <div class="border-b border-white/10 pb-3 flex items-center justify-between">
         <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">Universes</h1>
       </div>
@@ -1395,6 +1590,18 @@
 
     <!-- TAB: MATCHMAKER (Play Subtab) -->
     <section id="tab-match" class="tab-pane hidden fade-in space-y-4">
+      <!-- Sticky Return Navigation to Opening View -->
+      <div class="sticky top-16 z-20 py-2.5 px-4 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
+        <button type="button" onclick="returnToOpeningPage('homePlayLab')" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 shadow">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Main Page</span>
+        </button>
+        <div class="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-fire-flame-curved text-rose-400"></i>
+          <span>CineSwipe Matchmaker</span>
+        </div>
+      </div>
+
       <div id="recSection" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
         <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
           <div class="flex items-center gap-3">
@@ -1442,14 +1649,25 @@
     </section>
 
     <section id="tab-hub" class="tab-pane hidden fade-in space-y-6">
+      <!-- Sticky Return Navigation to Opening View -->
+      <div class="sticky top-16 z-20 py-2.5 px-4 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
+        <button type="button" onclick="closeShelvesToHome()" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 shadow">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Main Page</span>
+        </button>
+        <div class="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-bookmark text-cyan-400"></i>
+          <span>Personal Shelves &amp; Library</span>
+        </div>
+      </div>
       
       <!-- Hub Header: Title + Segmented Switcher + 3-Dot Overflow Menu -->
       <div class="border-b border-white/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
           <h1 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight flex items-center gap-2.5">
-            <i class="fa-solid fa-map text-brand-gold"></i> Chart Table
+            <i class="fa-solid fa-bookmark text-brand-gold"></i> Personal Shelves &amp; Library
           </h1>
-          <span class="text-xs text-gray-400 font-mono hidden sm:inline-block">· Starlight Vault &amp; Trajectories</span>
+          <span class="text-xs text-gray-400 font-mono hidden sm:inline-block">· Watchlist, Watched, Favorites &amp; Collections</span>
         </div>
         
         <div class="flex items-center gap-2">
@@ -1825,6 +2043,18 @@
 
     <!-- TAB: PROFILE & SETTINGS + SEPARATE ADMIN & CLOUD CONTROL BLOCK -->
     <section id="tab-profile" class="tab-pane hidden fade-in space-y-8">
+      <!-- Sticky Return Navigation to Opening View -->
+      <div class="sticky top-16 z-20 py-2.5 px-4 rounded-2xl bg-black/85 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
+        <button type="button" onclick="closeProfileToHome()" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 shadow">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Main Page</span>
+        </button>
+        <div class="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-user text-emerald-400"></i>
+          <span>Member Profile &amp; Preferences</span>
+        </div>
+      </div>
+
       <!-- BLOCK 1: PERSONAL PROFILE & SETTINGS -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Personal Profile Card -->
@@ -1832,9 +2062,9 @@
           <div class="flex items-center gap-4">
             <div id="profileBigAvatar" class="w-16 h-16 rounded-2xl bg-brand-gold/15 border-2 border-brand-gold flex items-center justify-center p-2 shadow-lg shrink-0"></div>
             <div class="min-w-0 flex-1">
-              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Chief Astronomer · Keeper's Log</div>
-              <h2 id="profileDisplayName" class="text-2xl font-display font-extrabold text-white truncate">Keeper</h2>
-              <div id="profileLangSummary" class="text-xs text-gray-400 font-mono">Telemetry: All Frequencies · Primary Galaxy: Sci-Fi</div>
+              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Member Profile &amp; Taste Passport</div>
+              <h2 id="profileDisplayName" class="text-2xl font-display font-extrabold text-white truncate">Member</h2>
+              <div id="profileLangSummary" class="text-xs text-gray-400 font-mono">Catalog: All Titles · Preferred Genre: Sci-Fi</div>
             </div>
           </div>
 
@@ -1926,8 +2156,8 @@
 
       <!-- KEEPER'S LOG SIGN-OFF -->
       <div class="pt-4 flex items-center justify-between border-t border-amber-500/20 text-xs text-amber-200/50 font-mono select-none">
-        <span class="flex items-center gap-2"><i class="fa-solid fa-feather text-brand-gold"></i> PEAK OBSERVATORY · CHIEF ASTRONOMER'S LEDGER</span>
-        <span>EPOCH 2026 · ALL RIGHTS RESERVED</span>
+        <span class="flex items-center gap-2"><i class="fa-solid fa-clapperboard text-brand-gold"></i> PEAK MEDIA · CINEMA ARCHIVE &amp; SOUNDTRACK LOUNGE</span>
+        <span>EST. 2026 · ALL RIGHTS RESERVED</span>
       </div>
     </section>
 
@@ -2247,27 +2477,9 @@
     </div>
   </div>
 
-  <!-- QUICK BOTTOM STATIONS DOCK (Mobile & Desktop) -->
-  <div id="stationPlatesDock" class="station-plates-dock" aria-label="Navigation Stations">
-    <button type="button" onclick="switchTab('discover')" data-station="discover" id="station-discover" class="station-plate active" title="Home">
-      <i class="fa-solid fa-house text-sm"></i> <span class="text-[10px] sm:text-xs">Home</span>
-    </button>
-    <button type="button" onclick="switchTab('movies')" data-station="movies" id="station-movies" class="station-plate" title="Movies">
-      <i class="fa-solid fa-clapperboard text-sm text-amber-400"></i> <span class="text-[10px] sm:text-xs">Movies</span>
-    </button>
-    <button type="button" onclick="switchTab('shows')" data-station="shows" id="station-shows" class="station-plate" title="Shows">
-      <i class="fa-solid fa-tv text-sm text-sky-400"></i> <span class="text-[10px] sm:text-xs">Shows</span>
-    </button>
-    <button type="button" onclick="openMusicFromVinyl()" data-station="music" id="station-music" class="station-plate" title="Music Lounge">
-      <i class="fa-solid fa-record-vinyl text-sm text-purple-400"></i> <span class="text-[10px] sm:text-xs">Music</span>
-    </button>
-    <button type="button" onclick="switchTab('play')" data-station="play" id="station-play" class="station-plate" title="Cinema Games">
-      <i class="fa-solid fa-gamepad text-sm text-rose-400"></i> <span class="text-[10px] sm:text-xs">Games</span>
-    </button>
-    <button type="button" onclick="switchTab('hub')" data-station="space" id="station-space" class="station-plate" title="Shelves &amp; Library">
-      <i class="fa-solid fa-bookmark text-sm text-cyan-400"></i> <span class="text-[10px] sm:text-xs">Shelves</span>
-      <span id="dockWishBadge" class="hidden px-1.5 py-0.2 text-[9px] font-black rounded-full bg-rose-500 text-white">0</span>
-    </button>
+  <!-- Hidden background state holder for dock badge sync -->
+  <div id="stationPlatesDock" class="hidden" aria-hidden="true">
+    <span id="dockWishBadge"></span>
   </div>
 
   <!-- ORBITING MOON MINI-PLAYER (Satellite Audio Node) -->

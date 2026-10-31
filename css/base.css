@@ -1313,51 +1313,109 @@
     .eq-9 { animation-delay: 0.3s !important; }
     .eq-10 { animation-delay: 0.45s !important; }
 
-    /* Cinema Games Action Strip */
-    .cinema-games-bar {
+    /* Stream Quick Format Switcher */
+    .stream-filter-chip {
+      padding: 0.45rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .stream-filter-chip:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .stream-filter-chip.active {
+      color: #000000;
+      background: #f5c518;
+      border-color: #f5c518;
+      box-shadow: 0 4px 14px rgba(245, 197, 24, 0.35);
+    }
+
+    /* Cinema Play Lab & Decision Station */
+    .play-lab-deck {
+      position: relative;
+      border-radius: 1.75rem;
+      background: linear-gradient(135deg, rgba(17, 22, 38, 0.9) 0%, rgba(10, 13, 24, 0.95) 50%, rgba(6, 8, 16, 0.98) 100%);
+      border: 1px solid rgba(245, 197, 24, 0.25);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+
+    .play-lab-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin: 1.75rem 0;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 1rem;
     }
     @media (min-width: 640px) {
-      .cinema-games-bar {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
+      .play-lab-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
     @media (min-width: 1024px) {
-      .cinema-games-bar {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 0.875rem;
+      .play-lab-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
-    .game-action-tile {
+    .game-cartridge-card {
       position: relative;
       border-radius: 1.25rem;
-      padding: 1rem 0.875rem;
-      background: rgba(13, 17, 28, 0.75);
+      padding: 1.25rem;
+      background: rgba(10, 14, 25, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
       justify-content: space-between;
-      gap: 0.65rem;
+      gap: 1rem;
       cursor: pointer;
-      transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
     }
-    .game-action-tile:hover {
-      transform: translateY(-4px);
-      background: rgba(20, 26, 44, 0.95);
-      border-color: rgba(245, 197, 24, 0.45);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(245, 197, 24, 0.15);
+    .game-cartridge-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--cartridge-glow, #f5c518);
+      opacity: 0.6;
+      transition: opacity 0.25s ease, height 0.25s ease;
     }
-    .game-action-tile:active {
-      transform: scale(0.97);
+    .game-cartridge-card:hover {
+      transform: translateY(-5px);
+      background: rgba(16, 22, 38, 0.95);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.8), 0 0 25px var(--cartridge-glow-shadow, rgba(245, 197, 24, 0.2));
+    }
+    .game-cartridge-card:hover::before {
+      opacity: 1;
+      height: 4px;
+    }
+    .game-cartridge-card:active {
+      transform: scale(0.98);
+    }
+
+    /* Personal Member Passport & Library Vault Card */
+    .profile-vault-panel {
+      position: relative;
+      border-radius: 1.75rem;
+      background: linear-gradient(135deg, rgba(8, 22, 20, 0.88) 0%, rgba(10, 15, 28, 0.95) 50%, rgba(5, 8, 16, 0.98) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      overflow: hidden;
     }
 
     /* Fluid Curated Shelves */

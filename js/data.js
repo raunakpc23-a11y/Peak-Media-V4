@@ -15872,6 +15872,13 @@ Odd Taxi|2021|87
       document.getElementById('hubWishlistCount').textContent = wishlistTitles.length;
       document.getElementById('hubWatchedCount').textContent = watchedTitles.length;
 
+      const hpWatchlist = document.getElementById('homeProfileWatchlistCount');
+      if (hpWatchlist) hpWatchlist.textContent = wishlistTitles.length;
+      const hpWatched = document.getElementById('homeProfileWatchedCount');
+      if (hpWatched) hpWatched.textContent = watchedTitles.length;
+      const hpFav = document.getElementById('homeProfileFavCount');
+      if (hpFav) hpFav.textContent = favTitles.length;
+
       const navBadge = document.getElementById('navWishlistBadge');
       if (wishlistTitles.length > 0) {
         navBadge.textContent = wishlistTitles.length;

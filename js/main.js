@@ -152,6 +152,8 @@
       if (lbl) lbl.textContent = obProfile.username || 'Guest';
       const av = $('headerAvatarBadge');
       if (av) av.innerHTML = window.getAvatar3CHTML(obProfile.avatar);
+      const passAv = $('homePassportAvatar');
+      if (passAv) passAv.innerHTML = window.getAvatar3CHTML(obProfile.avatar);
       const hubH = document.querySelector('#tab-hub h1 span');
       if (hubH && obProfile.username) hubH.textContent = `${obProfile.username}'s Library`;
     }
