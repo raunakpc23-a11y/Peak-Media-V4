@@ -868,3 +868,129 @@
   global.closeFullscreen = closeFullscreen;
 
 })(window);
+
+/* ===== PEAK MEDIA: BLOOM TRANSITION (paste at the very END of js/motion.js) ===== */
+(function () {
+  var busy = false, last = null;
+  var reduced = function () { return matchMedia('(prefers-reduced-motion: reduce)').matches || document.body.classList.contains('reduce-fx'); };
+  var st = document.createElement('style');
+  st.textContent =
+    '.bloom-root{position:fixed;inset:0;z-index:10050;overflow:hidden}' +
+    '.bloom-wash{position:absolute;inset:0;background:var(--bg);background:radial-gradient(ellipse at 50% 50%,color-mix(in srgb,var(--ac) 30%,var(--bg)) 0%,var(--bg) 65%)}' +
+    '.bloom-logo{position:absolute;left:50%;top:50%;display:grid;place-items:center;will-change:transform,opacity}' +
+    '.bloom-logo .vinyl-center-label{width:38%!important;height:38%!important}' +
+    '.portal-glade-in{animation:none!important}';
+  document.head.appendChild(st);
+
+  var glyph = function (el) { return el.classList.contains('vinyl-record-disc') ? el : (el.querySelector('i[class*="fa-"],svg') || el); };
+  var ctr = function (r) { return [r.left + r.width / 2, r.top + r.height / 2]; };
+  var angle = function (el) { var m = getComputedStyle(el).transform.match(/matrix\(([^)]+)\)/); if (!m) return 0; var v = m[1].split(','); return Math.atan2(v[1], v[0]) * 180 / Math.PI; };
+
+  function logo(src, F) {
+    var r = src.getBoundingClientRect(), w = document.createElement('div'), n, s0;
+    w.className = 'bloom-logo';
+    w.style.cssText = 'width:' + F + 'px;height:' + F + 'px;margin:' + (-F / 2) + 'px 0 0 ' + (-F / 2) + 'px';
+    if (src.classList.contains('vinyl-record-disc')) {
+      n = src.cloneNode(true); n.removeAttribute('id');
+      n.querySelectorAll('[id]').forEach(function (e) { e.removeAttribute('id'); });
+      n.classList.remove('m-hover-scale');
+      n.style.cssText = 'width:' + F + 'px;height:' + F + 'px;animation:none;transition:none;transform:rotate(' + angle(src) + 'deg)';
+      s0 = (r.width || 96) / F;
+    } else if (src.tagName.toLowerCase() === 'svg') {
+      n = src.cloneNode(true); n.style.cssText = 'width:' + F * .8 + 'px;height:' + F * .8 + 'px'; s0 = (r.width || 24) / (F * .8);
+    } else {
+      n = document.createElement('i'); n.className = src.className;
+      n.style.cssText = 'font-size:' + F * .8 + 'px;line-height:1;transition:none;color:' + getComputedStyle(src).color;
+      s0 = (parseFloat(getComputedStyle(src).fontSize) || 24) / (F * .8);
+    }
+    w.appendChild(n); return { w: w, s0: s0, r: r };
+  }
+  function overlay(accent) {
+    var root = document.createElement('div'), wash = document.createElement('div');
+    root.className = 'bloom-root'; wash.className = 'bloom-wash';
+    var light = document.documentElement.getAttribute('data-mode') === 'light';
+    wash.style.cssText = '--ac:' + accent + ';--bg:' + (light ? '#f1f5f9' : '#05070d');
+    root.appendChild(wash); return { root: root, wash: wash };
+  }
+  function end(root) { if (root.parentNode) root.remove(); busy = false; var c = document.getElementById('fxCanvas'); if (c) c.style.visibility = ''; }
+  function begin() { busy = true; var c = document.getElementById('fxCanvas'); if (c) c.style.visibility = 'hidden'; }
+  function paneIn() {
+    if (busy || reduced()) return;
+    var p = document.querySelector('.tab-pane:not(.hidden)');
+    if (p) p.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: 'cubic-bezier(.22,1,.36,1)' });
+  }
+
+  // OPEN: logo flies to centre + grows, wash opens from it, page swaps, logo zooms through
+  function bloom(origin, commit) {
+    if (busy) return;
+    if (!origin || reduced()) { commit(); paneIn(); return; }
+    begin(); last = origin;
+    var vw = innerWidth, vh = innerHeight, F = Math.min(340, Math.min(vw, vh) * .42);
+    var src = glyph(origin), L = logo(src, F), c = ctr(L.r);
+    var accent = src.tagName && src.tagName !== 'I' ? '#a855f7' : getComputedStyle(src).color;
+    var R = Math.hypot(Math.max(c[0], vw - c[0]), Math.max(c[1], vh - c[1])) + 4;
+    var o = overlay(accent); o.root.appendChild(L.w); document.body.appendChild(o.root);
+    var ease = 'cubic-bezier(.65,0,.15,1)', at = 'at ' + c[0] + 'px ' + c[1] + 'px';
+    setTimeout(function () { end(o.root); }, 1600);
+    o.wash.animate([{ clipPath: 'circle(' + Math.max(L.r.width, L.r.height) * .6 + 'px ' + at + ')' }, { clipPath: 'circle(' + R + 'px ' + at + ')' }], { duration: 240, easing: ease, fill: 'forwards' });
+    var fly = L.w.animate([{ transform: 'translate(' + (c[0] - vw / 2) + 'px,' + (c[1] - vh / 2) + 'px) scale(' + L.s0 + ')' }, { transform: 'translate(0,0) scale(1)' }], { duration: 400, easing: ease, fill: 'forwards' });
+    setTimeout(function () { try { commit(); } catch (e) { console.error(e); } window.scrollTo({ top: 0, behavior: 'instant' }); }, 260);
+    fly.onfinish = function () {
+      var p = document.querySelector('.tab-pane:not(.hidden)');
+      L.w.animate([{ transform: 'scale(1)', opacity: 1 }, { transform: 'scale(3.2)', opacity: 0 }], { duration: 320, easing: 'cubic-bezier(.4,0,.9,.4)', fill: 'forwards' });
+      o.wash.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 280, delay: 60, fill: 'forwards' }).onfinish = function () { end(o.root); };
+      if (p) p.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], { duration: 320, delay: 40, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
+    };
+  }
+
+  // BACK: logo returns into the icon it came from
+  function back(commit) {
+    if (busy) return;
+    if (!last || !last.isConnected || reduced()) { commit(); paneIn(); return; }
+    begin();
+    var vw = innerWidth, vh = innerHeight, F = Math.min(340, Math.min(vw, vh) * .42), o = overlay('#a855f7'), src = glyph(last), L = logo(src, F);
+    o.root.appendChild(L.w); document.body.appendChild(o.root);
+    setTimeout(function () { end(o.root); }, 1500);
+    o.wash.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, fill: 'forwards' });
+    L.w.animate([{ opacity: 0, transform: 'scale(1.8)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 200, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' }).onfinish = function () {
+      try { commit(); } catch (e) { console.error(e); }
+      last.scrollIntoView({ block: 'center' });
+      requestAnimationFrame(function () {
+        var g = glyph(last).getBoundingClientRect(), c = ctr(g), s = Math.max(g.width, g.height) / (src.classList.contains('vinyl-record-disc') ? F : F * .8);
+        var t = 'translate(' + (c[0] - vw / 2) + 'px,' + (c[1] - vh / 2) + 'px) scale(' + s + ')';
+        L.w.animate([{ transform: 'none', opacity: 1 }, { transform: t, opacity: 1, offset: .85 }, { transform: t, opacity: 0 }], { duration: 380, easing: 'cubic-bezier(.65,0,.15,1)', fill: 'forwards' });
+        o.wash.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 340, fill: 'forwards' }).onfinish = function () { end(o.root); };
+      });
+    };
+  }
+
+  // WIRING (no HTML edits needed) — capture phase so it runs before inline onclick
+  document.addEventListener('click', function (e) {
+    var t = e.target, el, key, tool;
+    if ((el = t.closest('.portal-gateway-card'))) {
+      var m = (el.getAttribute('onclick') || '').match(/switchTab\('(\w+)'\)/); key = m ? m[1] : 'hub';
+    } else if ((el = t.closest('#decidersHomeRow .decider-glyph-btn'))) {
+      var d = (el.getAttribute('onclick') || '').match(/openDeciderTool\('(\w+)'\)/); if (!d) return; key = 'play'; tool = d[1];
+    } else if ((el = t.closest('#userProfileBtn'))) {
+      key = 'hub';
+    } else if ((el = t.closest('.brass-astrolabe-plate, #headerBackHomeBtn, .back-corner-mark'))) {
+      e.preventDefault(); e.stopPropagation(); window.returnToOpeningPage(); return;
+    } else return;
+    e.preventDefault(); e.stopPropagation();
+    bloom(el, function () { if (tool) window.openDeciderTool(tool); else window.switchTab(key); });
+  }, true);
+
+  function install() {
+    window.openMusicFromVinyl = function () {
+      var disc = document.getElementById('homeVinylDisc') || document.getElementById('homeVinylShowcase');
+      bloom(disc, function () { if (window.initMusicVault) { try { window.initMusicVault(); } catch (_) {} } window.switchTab('music'); });
+    };
+    window.returnToOpeningPage = function () {
+      if (!document.getElementById('tab-discover').classList.contains('hidden')) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+      back(function () { window.switchTab('discover'); if (window.updateHomeVinylPlayer) setTimeout(window.updateHomeVinylPlayer, 60); });
+    };
+    window.closeMusicToVinyl = window.returnToOpeningPage;
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install); else install();
+})();
+
