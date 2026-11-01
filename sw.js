@@ -19,7 +19,9 @@ const PRE_CACHE = [
   './css/widgets.css',
   './css/onboarding.css',
   './css/responsive.css',
+  './css/motion.css',
   './js/data.js',
+  './js/songs-data.js',
   './js/constellation.js',
   './js/hub-duel.js',
   './js/ui.js',
@@ -28,6 +30,7 @@ const PRE_CACHE = [
   './js/marathon.js',
   './js/universes.js',
   './js/mood_dial.js',
+  './js/motion.js',
   './js/main.js',
   './js/pwa.js',
 ];

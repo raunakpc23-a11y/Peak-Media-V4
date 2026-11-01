@@ -122,6 +122,18 @@
       if (window.renderDiscoverTab) setTimeout(window.renderDiscoverTab, 40);
       if (window.updateHomeVinylPlayer) setTimeout(window.updateHomeVinylPlayer, 60);
     }
+    if (key === 'movies' && window.filterAndRenderMovies && (!window._moviesRendered || window._moviesDirty)) {
+      window._moviesRendered = true;
+      window.filterAndRenderMovies(true);
+    }
+    if (key === 'shows' && window.filterAndRenderShows && (!window._showsRendered || window._showsDirty)) {
+      window._showsRendered = true;
+      window.filterAndRenderShows(true);
+    }
+    if (key === 'categories' && window.renderCategoriesTab && !window._categoriesRendered) {
+      window._categoriesRendered = true;
+      window.renderCategoriesTab();
+    }
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
     if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
     if (key === 'music' && window.initMusicVault) window.initMusicVault();
@@ -154,8 +166,26 @@
 
   // Expand Vinyl Disc on Home Page into Music Lounge (Gradually takes over the whole screen)
   window.openMusicFromVinyl = function() {
+    const disc = document.getElementById('homeVinylDisc') || document.getElementById('homeVinylShowcase');
+    const musicPane = document.getElementById('tab-music');
+    if (window.Motion && window.Motion.openFullscreen && disc && musicPane) {
+      if (typeof window.initMusicVault === 'function') {
+        try { window.initMusicVault(); } catch (_) {}
+      }
+      window.Motion.openFullscreen(disc, musicPane, {
+        spin: true,
+        dim: true,
+        onBeforeOpen: () => window.switchTab('music', true),
+        onClose: () => {
+          window.switchTab('discover', true);
+          const showcase = document.getElementById('homeVinylShowcase');
+          if (showcase) showcase.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
+        }
+      });
+      return;
+    }
     const showcase = document.getElementById('homeVinylShowcase');
-    const disc = document.getElementById('homeVinylDisc');
     if (disc && !document.body.classList.contains('reduce-fx')) {
       disc.classList.add('vinyl-screen-takeover');
       setTimeout(() => {
@@ -175,6 +205,10 @@
 
   // Return from Music Lounge back to Home Page with Vinyl in view
   window.closeMusicToVinyl = function() {
+    if (window.Motion && window.Motion.isOpen && window.Motion.isOpen()) {
+      window.Motion.closeFullscreen();
+      return;
+    }
     window.switchTab('discover');
     setTimeout(() => {
       const showcase = document.getElementById('homeVinylShowcase');
@@ -231,11 +265,16 @@
     const railBtn = document.getElementById('deciderRailBtn-' + tool);
     if (railBtn) railBtn.classList.add('active');
 
-    // 2. Hide all stage panels and show selected stage
-    document.querySelectorAll('.decider-stage-panel').forEach(p => p.classList.add('hidden'));
+    // 2. Smoothly swap stage panels or fall back to immediate toggle
+    const curActiveStage = document.querySelector('.decider-stage-panel:not(.hidden)');
     const targetStage = document.getElementById('stage-' + tool);
-    if (targetStage) {
-      targetStage.classList.remove('hidden');
+    if (window.Motion && window.Motion.swap && curActiveStage && targetStage && curActiveStage !== targetStage) {
+      window.Motion.swap(curActiveStage, targetStage);
+    } else {
+      document.querySelectorAll('.decider-stage-panel').forEach(p => p.classList.add('hidden'));
+      if (targetStage) {
+        targetStage.classList.remove('hidden');
+      }
     }
 
     // 3. Tool specific initializers
@@ -523,8 +562,28 @@
       parts.push(p);
     }
   }
-  function frame() {
+  let lastFrameTime = 0, isScrolling = false, scrollTimeout = null;
+  window.addEventListener('scroll', () => {
+    isScrolling = true;
+    if (scrollTimeout) clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => { isScrolling = false; }, 120);
+  }, { passive: true });
+
+  function frame(now) {
     raf = 0; if (reduce || mode === 'none' || document.hidden) { cx.clearRect(0, 0, W, H); return; }
+    // Pause canvas updates during active scrolling to guarantee smooth 60fps scrolling
+    if (isScrolling && !flightActive) {
+      raf = requestAnimationFrame(frame);
+      return;
+    }
+    // Throttle ambient particles to ~30fps when resting to halve GPU/CPU work
+    if (!flightActive) {
+      if (now && lastFrameTime && (now - lastFrameTime < 32)) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+      lastFrameTime = now;
+    }
     tt += .016; cx.clearRect(0, 0, W, H);
 
     // Star-Streak Flight Mode (300ms rush between Observatory stations)

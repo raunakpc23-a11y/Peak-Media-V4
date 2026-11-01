@@ -1,0 +1,111 @@
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-open: 600ms;
+  --dur-close: 450ms;
+  --dur-content: 250ms;
+  --stagger: 50ms;
+}
+
+body.motion-scroll-locked {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+.motion-clone-overlay {
+  position: fixed;
+  margin: 0;
+  box-sizing: border-box;
+  transform-origin: top left;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Dim layer between page (9000) and clone (9999); animated by motion.js */
+.motion-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.motion-page {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Search backdrop: dim + blur, opacity animated by motion.js */
+.motion-search-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+}
+
+/* Hover: scale 1.00 -> 1.06 over 200ms; inner [data-spin] rotates 1 turn / 8s only while hovered */
+.m-hover-scale {
+  transition: transform 200ms var(--ease-out);
+}
+.m-hover-scale:hover {
+  transform: scale(var(--hover-scale, 1.06));
+}
+.m-hover-scale:hover [data-spin],
+.m-hover-scale:hover.vinyl-record-disc,
+#homeVinylDisc.m-hover-scale:hover {
+  animation: motion-spin 8s linear infinite;
+}
+@keyframes motion-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Proportion preservation for vinyl elements inside clone */
+.motion-clone-overlay .vinyl-center-label {
+  width: 38% !important;
+  height: 38% !important;
+}
+
+/* Deciders panel stack swapper support */
+.deciders-viewport-stacked {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.deciders-viewport-stacked > .decider-stage-panel {
+  grid-area: 1 / 1;
+}
+
+/* Reduced motion: no hover scale/spin; JS skips the clone and only fades the page (150ms) */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-open: 150ms;
+    --dur-close: 150ms;
+    --dur-content: 150ms;
+    --stagger: 0ms;
+  }
+  .m-hover-scale { transition: none; }
+  .m-hover-scale:hover { transform: none; }
+  .m-hover-scale:hover [data-spin],
+  .m-hover-scale:hover.vinyl-record-disc,
+  #homeVinylDisc.m-hover-scale:hover { animation: none; }
+}
+
+body.reduce-fx {
+  --dur-open: 150ms;
+  --dur-close: 150ms;
+  --dur-content: 150ms;
+  --stagger: 0ms;
+}
+body.reduce-fx .m-hover-scale { transition: none; }
+body.reduce-fx .m-hover-scale:hover { transform: none; }
+body.reduce-fx .m-hover-scale:hover [data-spin],
+body.reduce-fx .m-hover-scale:hover.vinyl-record-disc,
+body.reduce-fx #homeVinylDisc.m-hover-scale:hover { animation: none; }

@@ -15443,9 +15443,11 @@ Odd Taxi|2021|87
     };
 
     // Generates high-contrast bespoke procedural SVG posters with typography
+    const posterSvgCache = {};
     function generateStylizedPosterDataURI(item) {
       if (!item) item = { title: 'Cinema' };
       const titleStr = item.cleanName || item.title || 'Cinema';
+      if (posterSvgCache[titleStr]) return posterSvgCache[titleStr];
       const safeTitle = titleStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       const genreStr = item.genre || 'Cinema';
       const ratingStr = item.rating || '8.5';
@@ -15515,7 +15517,9 @@ Odd Taxi|2021|87
         </g>
       </svg>`;
 
-      return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+      const res = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+      posterSvgCache[titleStr] = res;
+      return res;
     }
 
     // ==========================================
@@ -16004,8 +16008,9 @@ Odd Taxi|2021|87
       const isFav = favTitles.includes(item.title);
       const escTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
       const attrTitle = item.title.replace(/"/g, "&quot;");
-      const fallbackSvg = generateStylizedPosterDataURI(item);
-      const cachedPoster = posterCache[item.type + ':' + item.title] || fallbackSvg;
+      const cacheKey = item.type + ':' + item.title;
+      const cachedPoster = posterCache[cacheKey] || generateStylizedPosterDataURI(item);
+      const fallbackSvg = posterSvgCache[item.cleanName || item.title || 'Cinema'] || generateStylizedPosterDataURI(item);
       const widthClass = isCompactScroll ? "w-[124px] sm:w-48 shrink-0 snap-start" : "w-full";
       const isMovie = item.type === 'movie';
       const starPipClass = isMovie ? 'bg-amber-400 shadow-[0_0_8px_#f5c518]' : 'bg-cyan-400 shadow-[0_0_8px_#38bdf8]';
@@ -16023,6 +16028,7 @@ Odd Taxi|2021|87
             alt="${attrTitle}"
             class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
+            decoding="async"
           />
           <div class="absolute inset-0 poster-fade pointer-events-none"></div>
 
@@ -17953,13 +17959,22 @@ Odd Taxi|2021|87
     window.addEventListener('DOMContentLoaded', () => {
       populateGenreSelects();
       renderDiscoverTab();
-      filterAndRenderMovies(true);
-      filterAndRenderShows(true);
-      renderCategoriesTab();
       renderTags('recTags');
       renderTags('myTags');
       renderTags('friendTags');
       updateAllCountersAndViews();
+      // Idle warm-up: populate hidden tabs only when CPU is idle, avoiding initial boot lag
+      const warmUp = window.requestIdleCallback || ((cb) => setTimeout(cb, 1200));
+      warmUp(() => {
+        if (!window._moviesRendered && !document.getElementById('tab-movies').classList.contains('hidden')) {
+          window._moviesRendered = true;
+          filterAndRenderMovies(true);
+        }
+        if (!window._showsRendered && !document.getElementById('tab-shows').classList.contains('hidden')) {
+          window._showsRendered = true;
+          filterAndRenderShows(true);
+        }
+      });
     });
 
     window.renderTags = renderTags;
