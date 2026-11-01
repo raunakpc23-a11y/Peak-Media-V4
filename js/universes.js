@@ -531,7 +531,7 @@
       <div class="glass-card rounded-2xl border border-white/10 p-4 sm:p-5 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
           <div class="flex items-center gap-3">
-            <button id="uniBack" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200"><i class="fa-solid fa-arrow-left mr-1.5"></i>Back</button>
+            <button id="uniBack" class="back-corner-mark" title="Back" aria-label="Back"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h6a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-6" /><circle cx="8" cy="6" r="2" fill="currentColor" stroke="none" /><path d="M5 11l3-2.5 3.5 1.5M8 12.5v4.5l-3 4m3-4l3 4" /></svg></button>
             <div>
               <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white">${esc(u.n)}</h2>
               <div class="text-xs text-gray-400 mt-0.5">${totalW} of ${u.N.length} watched · ${S.length} titles</div>

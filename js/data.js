@@ -15121,51 +15121,89 @@ Odd Taxi|2021|87
       return unwatched([...movies, ...tvShows]);
     }
 
-    function spinSurpriseWheel() {
+    function runCinemaRouletteSpin() {
       if (isSpinning) return;
       isSpinning = true;
-      const pool = getEligibleSurprisePool();
+      const modal = document.getElementById('surpriseModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+      const pool = [...movies, ...tvShows];
+      if (!pool.length) {
+        isSpinning = false;
+        return;
+      }
       const display = document.getElementById('rouletteDisplay');
-      const inlineDisplay = document.getElementById('rouletteInlineWinner');
       const spinBtn = document.getElementById('spinBtn');
+      const topSpinBtn = document.getElementById('deciderTopSpinBtn');
       if (spinBtn) {
         spinBtn.disabled = true;
-        spinBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Shuffling...';
+        spinBtn.innerHTML = 'Spinning...';
       }
-      if (inlineDisplay) {
-        inlineDisplay.innerHTML = '<div class="text-xs text-brand-gold font-bold flex items-center gap-2"><i class="fa-solid fa-spinner fa-spin"></i> Spinning the roulette...</div>';
+      if (topSpinBtn) {
+        topSpinBtn.disabled = true;
+        topSpinBtn.innerHTML = 'Spinning...';
       }
 
-      let iterations = 0;
-      const interval = setInterval(() => {
-        iterations++;
+      // Fast to slow deceleration: 15 ticks from 40ms to 850ms
+      const delays = [40, 45, 55, 70, 90, 115, 145, 185, 235, 295, 370, 460, 570, 700, 850];
+      let stepIdx = 0;
+
+      function tick() {
         const temp = pool[Math.floor(Math.random() * pool.length)];
         const fallback = generateStylizedPosterDataURI(temp);
-        const poster = posterCache[temp.type + ':' + temp.title] || fallback;
+        const poster = (posterCache && posterCache[temp.type + ':' + temp.title]) || temp.thumb || fallback;
 
         if (display) {
           display.innerHTML = `
-            <img src="${poster}" class="w-16 h-24 object-cover rounded-xl shrink-0 border border-white/10 roulette-blur" alt="Spinning" />
-            <div class="flex-1 min-w-0">
-              <span class="text-[10px] font-extrabold uppercase tracking-wider text-brand-gold">Rolling Roulette...</span>
-              <div class="text-base font-bold text-white truncate">${temp.cleanName || temp.title}</div>
-              <div class="text-xs text-gray-400">${temp.genre} · ${temp.year} · ★ ${temp.rating}</div>
+            <div class="relative w-20 h-28 rounded-xl overflow-hidden shrink-0 border border-brand-gold/60 shadow-lg bg-black/60 transition-all">
+              <img src="${poster}" class="w-full h-full object-cover transition-opacity duration-150" alt="${temp.title}" />
+            </div>
+            <div class="flex-1 min-w-0 space-y-1">
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold animate-pulse">Flashing Roulette...</span>
+              <div class="text-base font-display font-black text-white truncate">${temp.cleanName || temp.title}</div>
+              <div class="text-xs text-gray-300 font-mono">${temp.year} · ${temp.genre} · ★ ${temp.rating}</div>
             </div>
           `;
         }
 
-        if (iterations >= 9) {
-          clearInterval(interval);
+        stepIdx++;
+        if (stepIdx < delays.length) {
+          setTimeout(tick, delays[stepIdx]);
+        } else {
           const winner = pool[Math.floor(Math.random() * pool.length)];
           currentSurpriseWinner = winner;
           renderWinnerDisplay(winner);
           isSpinning = false;
           if (spinBtn) {
             spinBtn.disabled = false;
-            spinBtn.innerHTML = '<i class="fa-solid fa-rotate mr-1"></i> Roll Again';
+            spinBtn.innerHTML = 'Spin Again';
+          }
+          if (topSpinBtn) {
+            topSpinBtn.disabled = false;
+            topSpinBtn.innerHTML = 'Spin';
           }
         }
-      }, 90);
+      }
+
+      tick();
+    }
+
+    function spinSurpriseWheel() {
+      runCinemaRouletteSpin();
+    }
+
+    function initCineMatchmaker() {
+      if (!activeTags.recTags || activeTags.recTags.length === 0) {
+        if (wishlistTitles.length >= 2) {
+          activeTags.recTags = wishlistTitles.slice(0, 3);
+        } else {
+          activeTags.recTags = ['Inception', 'Interstellar', 'The Dark Knight'];
+        }
+        renderTags('recTags');
+      }
+      generateRecommendation();
     }
 
     function renderWinnerDisplay(item) {
@@ -15685,7 +15723,9 @@ Odd Taxi|2021|87
     window.surpriseFriendList = surpriseFriendList;
     window.prefillFromWishlist = prefillFromWishlist;
     window.spinSurpriseWheel = spinSurpriseWheel;
+    window.runCinemaRouletteSpin = runCinemaRouletteSpin;
     window.generateRecommendation = generateRecommendation;
+    window.initCineMatchmaker = initCineMatchmaker;
     window.rejectRecommendation = rejectRecommendation;
     window.initTasteCompatibility = function() {
       renderTags('myTags');

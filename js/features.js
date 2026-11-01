@@ -23,10 +23,12 @@
       <button id="tmOff" class="px-3 py-1.5 rounded-lg border border-white/15 text-xs font-bold text-gray-300">Exit</button>
     </div>
     <div id="tmGlance" class="text-xs text-gray-300"></div></div></div>`;
-  const header=document.querySelector('header');header.parentNode.insertBefore(bar,header.nextSibling);
+  const header=document.querySelector('header');
+  if (header && header.parentNode) header.parentNode.insertBefore(bar,header.nextSibling);
   const row=document.createElement('div');row.id='tmRow';row.className='hidden';
   row.innerHTML='<h2 class="text-xl font-display font-bold text-white mb-3"><i class="fa-solid fa-clock-rotate-left text-brand-gold mr-2"></i><span id="tmRowT"></span></h2><div id="tmRowCards" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>';
-  $('tab-discover').insertBefore(row,$('tab-discover').firstChild);
+  const tabDisc = $('tab-discover');
+  if (tabDisc && tabDisc.insertBefore) tabDisc.insertBefore(row,tabDisc.firstChild);
   function era(y){return y<1950?'grain':y<1980?'sepia':y<1990?'neon':y>=2010?'glass':'';}
   function style(){
     ['grain','sepia','neon','glass'].forEach(e=>document.body.classList.remove('tm-'+e));
@@ -99,18 +101,19 @@
     if(!balls.length) draw();
   }
 
-  const walls=[{x:0,tag:['a dash of 70s',1975]},{x:W,tag:['a dash of 90s',1995]}];
+  const walls=[{x:0,tag:['Older Vault','older']},{x:W,tag:['Younger Vault','younger']}];
   const flips=[{x:150,y:600,tag:['extra dark','dark']},{x:370,y:600,tag:['crowd-pleaser','high']}];
   let balls=[],tags=[],aim=null,best=ls_get(),state={genres:[],years:[],rate:[]};
   function ls_get(){try{return JSON.parse(localStorage.getItem('cs_ricochet')||'[]')}catch(e){return[]}}
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
   function draw(){
+    if(!c) return;
     c.clearRect(0,0,W,H);
     c.fillStyle='rgba(255,255,255,.35)';c.font='11px sans-serif';c.textAlign='center';
     c.fillStyle='rgba(245,197,24,.5)';c.fillRect(0,0,4,H);c.fillRect(W-4,0,4,H);
-    c.save();c.translate(14,H/2);c.rotate(-Math.PI/2);c.fillStyle='rgba(245,197,24,.6)';c.fillText('70s WALL',0,0);c.restore();
-    c.save();c.translate(W-8,H/2);c.rotate(Math.PI/2);c.fillStyle='rgba(245,197,24,.6)';c.fillText('90s WALL',0,0);c.restore();
+    c.save();c.translate(14,H/2);c.rotate(-Math.PI/2);c.fillStyle='rgba(245,197,24,.6)';c.fillText('OLDER VAULT',0,0);c.restore();
+    c.save();c.translate(W-8,H/2);c.rotate(Math.PI/2);c.fillStyle='rgba(245,197,24,.6)';c.fillText('YOUNGER VAULT',0,0);c.restore();
     bumpers.forEach(b=>{
       c.beginPath();c.arc(b.x,b.y,b.r + (b.flash>0?3:0),0,7);
       c.fillStyle=b.col+(b.flash>0?'aa':'55');c.fill();
@@ -138,7 +141,10 @@
   function addTag(label){
     if(tags.length < 14){
       tags.push(label);
-      $('rcTags').insertAdjacentHTML('beforeend',`<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-brand-gold/15 border border-brand-gold/40 text-brand-gold">${esc(label)}</span>`);
+      const tagEl = $('rcTags');
+      if (tagEl && tagEl.insertAdjacentHTML) {
+        tagEl.insertAdjacentHTML('beforeend',`<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-brand-gold/15 border border-brand-gold/40 text-brand-gold">${esc(label)}</span>`);
+      }
     }
   }
 
@@ -184,7 +190,7 @@
       if(b.x<8||b.x>W-8){
         const w=b.x<8?walls[0]:walls[1];
         b.vx*=-.95; b.x=clamp(b.x,8,W-8);
-        b.years.push(w.tag[1]); state.years.push(w.tag[1]); addTag(w.tag[0]);
+        b.years.push(w.tag[1] === 'older' ? 1980 : 2020); state.years.push(w.tag[1] === 'older' ? 1980 : 2020); addTag(w.tag[0]);
       }
       if(b.y<8){ b.vy=Math.abs(b.vy)*.95; }
       bumpers.forEach(bmp=>{
@@ -282,6 +288,95 @@
     el.innerHTML=best.length?best.map((b,i)=>`<div><b class="text-white">${i+1}. ${esc(b.t)}</b> <span class="text-gray-500">(${b.y})</span><div class="text-[11px] text-gray-400">${esc(b.trail)}</div></div>`).join(''):'<span class="text-gray-500">No shots recorded yet.</span>';
   }
 
+  function rcShuffleArr(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  window.openVaultGroup = function(group) {
+    if (cv) draw();
+    tags = [];
+    if ($('rcTags')) $('rcTags').innerHTML = '';
+    const pool = (window.globalDatabase && Object.values(window.globalDatabase).length > 0)
+      ? Object.values(window.globalDatabase)
+      : [...(window.movies || []), ...(window.tvShows || [])];
+
+    let selection = [];
+    if (group === 'older') {
+      addTag('Older Vault Selection');
+      addTag('Timeless Classics + Mature Hits');
+      // Rich balanced mix: classic cinema (pre-2000) + modern acclaimed cinema (post-2000)
+      const classics = pool.filter(i => (i.year < 2000) && parseFloat(i.rating || 0) >= 7.8);
+      const moderns = pool.filter(i => (i.year >= 2000) && parseFloat(i.rating || 0) >= 8.0 && ['Drama', 'Crime', 'Biography', 'History', 'Thriller', 'Sci-Fi'].includes(i.genre));
+      const sClassics = rcShuffleArr(classics).slice(0, 3);
+      const sModerns = rcShuffleArr(moderns).slice(0, 3);
+      selection = rcShuffleArr([...sClassics, ...sModerns]);
+    } else {
+      addTag('Younger Vault Selection');
+      addTag('Dynamic Pop Hits + Cult Classics');
+      // Rich balanced mix: contemporary blockbusters & dynamic hits + foundational pop culture classics
+      const modernHits = pool.filter(i => (i.year >= 2014) && parseFloat(i.rating || 0) >= 7.5 && ['Sci-Fi', 'Action', 'Animation', 'Adventure', 'Fantasy'].includes(i.genre));
+      const cultClassics = pool.filter(i => (i.year < 2010) && parseFloat(i.rating || 0) >= 7.8 && ['Sci-Fi', 'Action', 'Animation', 'Comedy'].includes(i.genre));
+      const sModern = rcShuffleArr(modernHits).slice(0, 3);
+      const sCult = rcShuffleArr(cultClassics).slice(0, 3);
+      selection = rcShuffleArr([...sModern, ...sCult]);
+    }
+
+    if (!selection.length) {
+      selection = rcShuffleArr(pool).slice(0, 6);
+    }
+
+    const titlePrefix = group === 'older' ? 'Older Vault Balanced Mix' : 'Younger Vault Dynamic Mix';
+    const desc = group === 'older'
+      ? 'A balanced curation pairing golden-age milestones with sophisticated modern masterworks.'
+      : 'A high-energy mix pairing vibrant modern blockbusters with iconic cult classics.';
+
+    const resEl = $('rcResult');
+    if (resEl) {
+      resEl.innerHTML = `
+        <div class="space-y-3 animate-fadeIn">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <div>
+              <div class="text-xs font-extrabold uppercase tracking-widest ${group === 'older' ? 'text-amber-300' : 'text-cyan-300'}">
+                <i class="fa-solid fa-vault mr-1"></i> ${titlePrefix}
+              </div>
+              <p class="text-xs text-gray-300 mt-0.5">${desc}</p>
+            </div>
+            <button type="button" onclick="openVaultGroup('${group}')" class="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-xs font-bold text-gray-200">
+              <i class="fa-solid fa-rotate mr-1"></i> Reroll
+            </button>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+            ${selection.map(it => {
+              const fb = generateStylizedPosterDataURI(it);
+              const poster = (posterCache && posterCache[it.type + ':' + it.title]) || it.thumb || fb;
+              const escT = (it.title || '').replace(/'/g, "\\'");
+              return `
+                <div onclick="openDetailModal('${escT}')" class="group p-2 rounded-xl bg-black/50 border border-white/10 hover:border-brand-gold/60 cursor-pointer transition-all space-y-1.5 flex flex-col justify-between">
+                  <div class="relative w-full aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
+                    <img src="${poster}" loading="eager" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="${esc(it.title)}">
+                    <span class="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-brand-gold">★ ${it.rating}</span>
+                  </div>
+                  <div class="text-xs font-bold text-white truncate" title="${esc(it.cleanName || it.title)}">${esc(it.cleanName || it.title)}</div>
+                  <div class="text-[10px] text-gray-400 font-mono">${it.year} · ${esc(it.genre)}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+      attachThumbObservers(resEl);
+    }
+  };
+
+  window.rcInit = function() {
+    if (cv) draw();
+  };
+
   // Bind Multi-Ball & Physics Lab Controls
   document.querySelectorAll('.rc-ball-btn').forEach(btn=>{
     btn.onclick=()=>{
@@ -346,7 +441,7 @@
     const w=watchedTitles.map(db).filter(Boolean), g={};
     w.forEach(i=>g[i.genre]=(g[i.genre]||0)+1);
     const yr=w.length?w.reduce((a,i)=>a+i.year,0)/w.length:2000;
-    const rs=Object.values(myRatings);const ar=rs.length?rs.reduce((a,b)=>a+b,0)/rs.length:4;
+    const rs=(typeof myRatings!=='undefined'&&myRatings)?Object.values(myRatings):[];const ar=rs.length?rs.reduce((a,b)=>a+b,0)/rs.length:4;
     return{g,yr,ar,n:w.length};
   }
   function opposite(){
@@ -358,25 +453,25 @@
     const line=`Loves ${og.toLowerCase()} from around ${Math.round(oy/10)*10}s and ${lowBar?'prefers unloved gems over crowd favourites':'only trusts the crowd favourites'}.`;
     return{tg,og,oy,lowBar,nm,line,p};
   }
-  function picks(t,n=8){
+  function picks(t,n=12){
     const o=opposite(),p=o.p,tot=Math.max(1,p.n);
-    return Object.values(globalDatabase).filter(i=>i.thumb&&!watchedTitles.includes(i.title)).map(i=>{
-      const mine=(p.g[i.genre]||0)/tot+Math.max(0,1-Math.abs(i.year-p.yr)/40)*.5+(parseFloat(i.rating)-7)*.1;
-      const opp=(i.genre===o.og?1:(i.genre===OPPG[o.og]?.2:0))+Math.max(0,1-Math.abs(i.year-o.oy)/40)*.5+(o.lowBar?(8.4-parseFloat(i.rating))*.1:(parseFloat(i.rating)-7)*.1);
+    const pool = (window.globalDatabase && Object.values(window.globalDatabase).length > 0)
+      ? Object.values(window.globalDatabase)
+      : [...(window.movies || []), ...(window.tvShows || [])];
+    const filtered = pool.filter(i=>!watchedTitles.includes(i.title));
+    const list = filtered.length ? filtered : pool;
+    return list.map(i=>{
+      const r = parseFloat(i.rating || 7.5);
+      const yr = i.year || 2010;
+      const mine=(p.g[i.genre]||0)/tot+Math.max(0,1-Math.abs(yr-p.yr)/40)*.5+(r-7)*.1;
+      const opp=(i.genre===o.og?1:(i.genre===OPPG[o.og]?.2:0))+Math.max(0,1-Math.abs(yr-o.oy)/40)*.5+(o.lowBar?(8.4-r)*.1:(r-7)*.1);
       return[i,(1-t)*mine+t*opp+Math.random()*.15];
     }).sort((a,b)=>b[1]-a[1]).slice(0,n).map(x=>x[0]);
   }
   const ban=document.createElement('div');ban.id='oppBar';ban.className='hidden';
-  ban.innerHTML=`<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="glass-card rounded-2xl border border-fuchsia-400/50 p-4 mt-3 space-y-3">
-    <div class="flex items-center gap-3 flex-wrap"><i class="fa-solid fa-shuffle text-fuchsia-300"></i><span class="text-xs font-extrabold uppercase tracking-widest text-fuchsia-300">Opposite Day is on</span>
-      <span id="oppName" class="text-lg font-display font-extrabold text-white"></span><span id="oppLine" class="text-xs text-gray-400 flex-1 min-w-[12rem]"></span>
-      <button id="oppOff" class="px-3 py-1.5 rounded-lg border border-white/15 text-xs font-bold text-gray-300">Turn off</button></div>
-    <div class="flex items-center gap-3 text-xs font-bold text-gray-300"><span>Me</span><input id="oppSlider" type="range" min="0" max="100" class="flex-1 accent-fuchsia-400" aria-label="Me to Opposite"><span>Opposite</span></div>
-    <div id="oppPicks" class="hscroll flex gap-3 overflow-x-auto pb-2"></div></div></div>`;
-  const hd=document.querySelector('header');hd.parentNode.insertBefore(ban,hd.nextSibling);
+
   function oppRender(){
     if($('oppState')) $('oppState').textContent=on?'On':'Off';
-    ban.classList.toggle('hidden',!on);
     const o=opposite();
     if($('oppName')) $('oppName').textContent=o.nm;
     if($('oppLine')) $('oppLine').textContent=o.line;
@@ -392,7 +487,25 @@
     }
     const stagePicks = $('oppStagePicks');
     if (stagePicks) {
-      stagePicks.innerHTML = picks(blend).map(i=>`<div class="shrink-0 w-28 space-y-1.5"><img src="${img(i)}" data-title="${esc(i.title)}" class="lazy-poster w-28 h-40 object-cover rounded-xl border border-white/10 cursor-pointer" onclick="openDetailModal('${i.title.replace(/'/g,"\\'")}')" alt=""><div class="text-[11px] text-white font-bold truncate">${esc(i.cleanName||i.title)}</div><button data-t="${esc(i.title)}" class="steal w-full py-1 rounded-lg ${wishlistTitles.includes(i.title)?'bg-rose-500 text-white':'bg-fuchsia-500/80 text-white'} text-[11px] font-bold">${wishlistTitles.includes(i.title)?'Saved ✓':'Save'}</button></div>`).join('');
+      const oppItems = picks(blend, 12);
+      stagePicks.innerHTML = oppItems.map(i => {
+        const fb = generateStylizedPosterDataURI(i);
+        const poster = (posterCache && posterCache[i.type + ':' + i.title]) || i.thumb || fb;
+        const isSaved = wishlistTitles.includes(i.title);
+        const escTitle = (i.title || '').replace(/'/g, "\\'");
+        return `
+          <div class="shrink-0 w-32 space-y-1.5">
+            <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 hover:border-emerald-400 transition-all cursor-pointer bg-black/40" onclick="openDetailModal('${escTitle}')">
+              <img src="${poster}" loading="eager" decoding="async" class="w-full h-full object-cover" alt="${esc(i.title)}">
+              <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-brand-gold border border-brand-gold/30">★ ${i.rating}</span>
+            </div>
+            <div class="text-[11px] text-white font-bold truncate" title="${esc(i.cleanName || i.title)}">${esc(i.cleanName || i.title)}</div>
+            <button data-t="${esc(i.title)}" class="steal w-full py-1.5 rounded-lg ${isSaved ? 'bg-emerald-500 text-black font-extrabold' : 'bg-emerald-400/20 hover:bg-emerald-400/35 border border-emerald-400/40 text-emerald-300'} text-xs font-bold transition-all">
+              ${isSaved ? 'Saved ✓' : 'Save'}
+            </button>
+          </div>
+        `;
+      }).join('');
       attachThumbObservers(stagePicks);
     }
 

@@ -155,9 +155,13 @@
       if (lbl) lbl.textContent = obProfile.username || 'Guest';
       const av = $('headerAvatarBadge');
       if (av) av.innerHTML = window.getAvatar3CHTML(obProfile.avatar);
+      const hubAv = $('hubAvatarBadge');
+      if (hubAv) hubAv.innerHTML = window.getAvatar3CHTML(obProfile.avatar);
+      const bigAv = $('profileBigAvatar');
+      if (bigAv) bigAv.innerHTML = window.getAvatar3CHTML(obProfile.avatar);
       const passAv = $('homePassportAvatar');
       if (passAv) passAv.innerHTML = window.getAvatar3CHTML(obProfile.avatar);
-      const hubH = document.querySelector('#tab-hub h1 span');
+      const hubH = $('hubTitleText') || document.querySelector('#tab-hub h1 span:last-child');
       if (hubH && obProfile.username) hubH.textContent = `${obProfile.username}'s Library`;
     }
 
@@ -2215,6 +2219,7 @@
     };
 
     window.selectThemeDirect = function(themeId) {
+      if (themeId === 'dawn') themeId = 'space';
       const sw = document.querySelector(`#swatchRow .swatch[data-id="${themeId}"]`);
       if (sw) sw.click();
       else {

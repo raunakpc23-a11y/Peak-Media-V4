@@ -340,9 +340,12 @@
 
   function renderMoodDialRecommendations(sector) {
     const row = $('moodRow');
-    if (!row || !window.globalDatabase) return;
+    if (!row) return;
 
-    const items = Object.values(window.globalDatabase);
+    const items = (window.globalDatabase && Object.values(window.globalDatabase).length > 0)
+      ? Object.values(window.globalDatabase)
+      : [...(window.movies || []), ...(window.tvShows || [])];
+
     const matchesLang = item => {
       if (!window.globalLangFilter || window.globalLangFilter === 'all') return true;
       return item.lang === window.globalLangFilter;
@@ -350,14 +353,16 @@
 
     // Filter candidate items matching the active sector's genres
     let pool = items.filter(i => {
-      return matchesLang(i) &&
-             i.thumb &&
-             sector.genres.includes(i.genre) &&
-             parseFloat(i.rating || 0) >= 6.8;
+      if (!matchesLang(i)) return false;
+      const g = i.genre || '';
+      return sector.genres.some(sg => g.includes(sg)) && parseFloat(i.rating || 0) >= 6.8;
     });
 
     if (pool.length < 8) {
-      pool = items.filter(i => matchesLang(i) && i.thumb && sector.genres.includes(i.genre));
+      pool = items.filter(i => matchesLang(i) && sector.genres.some(sg => (i.genre || '').includes(sg)));
+    }
+    if (pool.length === 0) {
+      pool = items.slice(0, 16);
     }
 
     // Dynamic Intensity Spectrum Sorting:

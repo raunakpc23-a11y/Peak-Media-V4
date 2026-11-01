@@ -2,7 +2,9 @@
   // TASTE CONSTELLATION — force-directed taste web (canvas)
   // ==========================================
   (function () {
-    const cv = document.getElementById('cxCanvas'), ctx = cv.getContext('2d');
+    const cv = document.getElementById('cxCanvas');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
     const S = { nodes: [], links: [], by: {}, explored: new Set(), k: 1, tx: 0, ty: 0, alpha: 1, sel: null, hover: null, drag: null, pan: null, moved: 0, W: 0, H: 0, dpr: 1, loop: false, type: 'all', wish: true, built: false };
     const GH = 26, MAXSEED = 36;
     const stars = Array.from({ length: 90 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + .3, p: Math.random() * 6 }));

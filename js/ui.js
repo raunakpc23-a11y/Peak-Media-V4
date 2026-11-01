@@ -69,6 +69,7 @@
     // Toggle Header Back Home Button (Show only Back/Exit on other pages, show only Home Logo on Home)
     const headerBackBtn = $('headerBackHomeBtn');
     const headerBrandPlate = $('headerBrandPlate') || document.querySelector('.brass-astrolabe-plate');
+    const headerSearch = $('headerSearchBarContainer');
     if (key === 'discover') {
       if (headerBackBtn) {
         headerBackBtn.classList.add('hidden');
@@ -77,6 +78,9 @@
       if (headerBrandPlate) {
         headerBrandPlate.classList.remove('hidden');
       }
+      if (headerSearch) {
+        headerSearch.classList.remove('hidden');
+      }
     } else {
       if (headerBackBtn) {
         headerBackBtn.classList.remove('hidden');
@@ -84,6 +88,13 @@
       }
       if (headerBrandPlate) {
         headerBrandPlate.classList.add('hidden');
+      }
+      if (headerSearch) {
+        if (key === 'profile') {
+          headerSearch.classList.add('hidden');
+        } else {
+          headerSearch.classList.remove('hidden');
+        }
       }
     }
 
@@ -295,8 +306,8 @@
     if (tool === 'mood') {
       if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 40);
     } else if (tool === 'roulette') {
-      if (window.spinSurpriseWheel) window.spinSurpriseWheel();
-      else if (window.spinMoodDialRoulette) window.spinMoodDialRoulette();
+      if (window.runCinemaRouletteSpin) window.runCinemaRouletteSpin();
+      else if (window.spinSurpriseWheel) window.spinSurpriseWheel();
     } else if (tool === 'swipe') {
       if (window.initSwipeStage) window.initSwipeStage();
     } else if (tool === 'duel') {
@@ -311,6 +322,7 @@
       if (window.initTasteCompatibility) window.initTasteCompatibility();
       else if (window.openCineMatchCompatModal) window.openCineMatchCompatModal();
     } else if (tool === 'ricochet') {
+      if (window.rcInit) window.rcInit();
       if (window.rcLaunch) window.rcLaunch();
     } else if (tool === 'opposite') {
       if (window.oppRender) window.oppRender();
@@ -324,7 +336,7 @@
   };
 
   window.selectProfileTool = function(tool) {
-    const tools = ['account', 'taste', 'collection', 'style'];
+    const tools = ['account', 'taste', 'collection'];
     tools.forEach(t => {
       const btn = document.getElementById('profileRailBtn-' + t);
       const stage = document.getElementById('profileStage-' + t);
@@ -333,6 +345,8 @@
     });
     if (tool === 'taste') {
       if (window.refreshDNA) window.refreshDNA();
+    } else if (tool === 'collection') {
+      if (window.syncProfileThemeStudio) window.syncProfileThemeStudio();
     }
   };
 
@@ -344,9 +358,9 @@
     const slider = document.getElementById('decadesSlider');
     if (slider && slider.value !== String(year)) slider.value = year;
     const dial = document.getElementById('tmDial');
-    if (dial) {
+    if (dial && dial.dispatchEvent) {
       dial.value = year;
-      dial.dispatchEvent(new Event('input'));
+      try { dial.dispatchEvent(new Event('input')); } catch (_) {}
     }
     const y = parseInt(year, 10);
     const glance = document.getElementById('decadesGlanceBox');
@@ -355,29 +369,27 @@
     }
     const row = document.getElementById('decadesCardsRow');
     if (row && window.movies) {
-      const pool = (window.movies || []).concat(window.shows || []);
+      const pool = (window.movies || []).concat(window.tvShows || []);
       const exact = pool.filter(m => parseInt(m.year, 10) === y);
       const near = pool.filter(m => Math.abs(parseInt(m.year, 10) - y) <= 2 && parseInt(m.year, 10) !== y)
         .sort((a, b) => parseInt(b.year, 10) - parseInt(a.year, 10) || parseFloat(b.rating || 0) - parseFloat(a.rating || 0));
-      const match = [...exact, ...near].slice(0, 16);
-      if (window.createCardHTML) {
-        row.innerHTML = match.map(m => window.createCardHTML(m, true)).join('');
-        if (window.attachThumbObservers) window.attachThumbObservers(row);
-      } else {
-        row.innerHTML = match.map(m => {
-          const poster = (window.posterCache && window.posterCache[m.type + ':' + m.title]) || (window.generateStylizedPosterDataURI ? window.generateStylizedPosterDataURI(m) : '');
-          return `
-            <div class="shelf-card group cursor-pointer shrink-0 w-32 space-y-1.5" onclick="openDetailModal('${m.title.replace(/'/g, "\\'")}')">
-              <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 group-hover:border-brand-gold transition-all">
-                <img src="${poster}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${m.title}">
-                <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/75 text-[10px] font-bold text-brand-gold">★ ${m.rating}</span>
-              </div>
-              <div class="text-xs font-bold text-white truncate">${m.cleanName || m.title}</div>
-              <div class="text-[11px] text-gray-400 font-mono">${m.year} · ${m.genre}</div>
+      const match = [...exact, ...near].slice(0, 20);
+      row.innerHTML = match.map(m => {
+        const fallback = window.generateStylizedPosterDataURI ? window.generateStylizedPosterDataURI(m) : '';
+        const cached = (window.posterCache && window.posterCache[m.type + ':' + m.title]) || m.thumb || fallback;
+        const escTitle = (m.title || '').replace(/'/g, "\\'");
+        return `
+          <div class="shelf-card group cursor-pointer shrink-0 w-32 space-y-1.5" onclick="openDetailModal('${escTitle}')">
+            <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 group-hover:border-brand-gold transition-all bg-black/40">
+              <img src="${cached}" loading="eager" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${m.title}">
+              <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[10px] font-bold text-brand-gold border border-brand-gold/30">★ ${m.rating}</span>
             </div>
-          `;
-        }).join('');
-      }
+            <div class="text-xs font-bold text-white truncate" title="${m.cleanName || m.title}">${m.cleanName || m.title}</div>
+            <div class="text-[11px] text-gray-400 font-mono">${m.year} · ${m.genre}</div>
+          </div>
+        `;
+      }).join('');
+      if (window.attachThumbObservers) window.attachThumbObservers(row);
     }
   };
 
@@ -542,7 +554,6 @@
   // ---------- themes ----------
   const THEMES = {
     space: { n: 'Deep Cosmos', c: '#38bdf8', fx: 'stars' },
-    dawn: { n: 'Dawn Cartography', c: '#b45309', fx: 'none' },
     clear: { n: 'Summit Gold', c: '#F5C518', fx: 'none' },
     noir: { n: 'Noir Rain', c: '#94a3b8', fx: 'rain' },
     neon: { n: 'Cyber Cyan', c: '#06b6d4', fx: 'neon' },
@@ -559,7 +570,8 @@
   const AUTO = { 'Sci-Fi': 'space', Drama: 'noir', Crime: 'noir', Thriller: 'neon', Horror: 'blood', Fantasy: 'aurora', Comedy: 'clear', Romance: 'golden', Action: 'neon', Animation: 'aurora', Western: 'golden', War: 'noir', Documentary: 'clear' };
   const SHIFT = { 'Sci-Fi': 'Romance', Drama: 'Comedy', Crime: 'Comedy', Thriller: 'Animation', Horror: 'Comedy', Fantasy: 'Action', Comedy: 'Drama', Romance: 'Sci-Fi', Action: 'Fantasy', Animation: 'Drama', Western: 'Sci-Fi', War: 'Comedy', Documentary: 'Fantasy' };
   let pin = ls.get('cs_theme_v2', 'space');            // 'auto' or a theme id
-  let themeMode = 'dark'; // Dark mode is permanent
+  if (pin === 'dawn') pin = 'space';
+  const themeMode = 'dark'; // Strictly dark mode permanent
   let reduce = ls.get('cs_reduce', false); // Calm Mode Off by default, visual effects active
   let current = 'space', forecast = null;
 
@@ -700,14 +712,20 @@
   }
 
   function apply(id) {
-    current = id; const t = THEMES[id] || THEMES.space;
+    if (!THEMES[id] || id === 'dawn') id = 'space';
+    current = id; const t = THEMES[id];
     
-    // Always Dark Mode
+    // Strictly Dark Mode only
     document.documentElement.setAttribute('data-mode', 'dark');
-    document.documentElement.className = 'dark';
+    document.documentElement.className = 'dark bg-[#03050a]';
+    document.documentElement.style.backgroundColor = '#03050a';
+    document.documentElement.style.colorScheme = 'dark';
     document.body.setAttribute('data-mode', 'dark');
     document.body.classList.remove('mode-light');
     document.body.classList.add('mode-dark');
+    document.body.style.backgroundColor = 'var(--bg, #03050a)';
+    document.body.style.backgroundImage = 'var(--bgimg)';
+    document.body.style.color = 'var(--text-main, #f3f4f6)';
     
     document.documentElement.setAttribute('data-palette', id);
     document.documentElement.setAttribute('data-theme', id);
@@ -732,7 +750,7 @@
   function refresh() {
     forecast = makeForecast();
     let paletteToApply = (pin === 'auto' ? forecast.theme : pin);
-    if (!THEMES[paletteToApply]) paletteToApply = 'space';
+    if (!THEMES[paletteToApply] || paletteToApply === 'dawn') paletteToApply = 'space';
     apply(paletteToApply);
     const t = $('wxText'); if (t) t.textContent = forecast.text;
     const k = $('wxKicker'); if (k) k.textContent = 'Atmosphere · ' + (THEMES[current] ? THEMES[current].n : 'Cosmic');
@@ -754,7 +772,7 @@
     const b = e.target.closest('.swatch'); if (!b) return;
     pin = b.dataset.id;
     ls.set('cs_theme_v2', pin);
-    // Swatch changes palette accent, preserving current Light/Dark/Default mode
+    // Swatch changes palette accent in dark mode
     refresh();
     const t = THEMES[pin];
     if (t && typeof window.showToast === 'function') {

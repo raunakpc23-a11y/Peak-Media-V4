@@ -928,7 +928,7 @@
     } else if ((el = t.closest('#decidersHomeRow .decider-glyph-btn'))) {
       var d = (el.getAttribute('onclick') || '').match(/openDeciderTool\('(\w+)'\)/); if (!d) return; key = 'play'; tool = d[1];
     } else if ((el = t.closest('#userProfileBtn'))) {
-      key = 'hub';
+      key = 'profile';
     } else if ((el = t.closest('.brass-astrolabe-plate, #headerBackHomeBtn, .back-corner-mark'))) {
       e.preventDefault(); e.stopPropagation(); window.returnToOpeningPage(); return;
     } else return;
