@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v5.8-spatial-system-themes';
+const CACHE_NAME = 'peak-media-v5.9-tactile-portals-big-vinyl';
 
 // All local files to pre-cache the moment the SW installs
 const PRE_CACHE = [

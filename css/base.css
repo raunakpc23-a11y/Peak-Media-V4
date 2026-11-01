@@ -1358,6 +1358,109 @@
       transform: scale(0.95);
     }
 
+    /* Tactile 3D Arcade Token Coin */
+    .arcade-token-coin {
+      position: relative;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fef08a 0%, #f59e0b 45%, #b45309 80%, #78350f 100%);
+      border: 3.5px solid #fde047;
+      box-shadow: 
+        0 12px 28px rgba(0, 0, 0, 0.75),
+        0 0 25px rgba(245, 158, 11, 0.35),
+        inset 0 3px 5px rgba(255, 255, 255, 0.65),
+        inset 0 -3px 5px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      user-select: none;
+    }
+    .arcade-token-coin:hover {
+      transform: translateY(-3px) scale(1.06) rotate(-3deg);
+      box-shadow: 
+        0 18px 36px rgba(0, 0, 0, 0.85),
+        0 0 32px rgba(245, 158, 11, 0.55),
+        inset 0 3px 7px rgba(255, 255, 255, 0.8);
+    }
+    .arcade-token-coin:active {
+      transform: scale(0.95);
+    }
+    .arcade-token-rim {
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(255, 255, 255, 0.45);
+      pointer-events: none;
+    }
+    .arcade-token-inner {
+      position: relative;
+      width: 70%;
+      height: 70%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #1e1b4b 0%, #0f172a 100%);
+      border: 1.5px solid rgba(254, 240, 138, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.85), 0 0 10px rgba(245, 158, 11, 0.3);
+    }
+
+    /* Tactile Cinema Portal Icons */
+    .cinema-clapper-icon {
+      position: relative;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 2px solid rgba(245, 197, 24, 0.35);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55), 0 0 18px rgba(245, 197, 24, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .group:hover .cinema-clapper-icon,
+    .cinema-clapper-icon:hover {
+      transform: translateY(-2px) scale(1.05);
+      border-color: #f5c518;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.75), 0 0 25px rgba(245, 197, 24, 0.3);
+    }
+
+    .cinema-crt-icon {
+      position: relative;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, #0e1e2d 0%, #050b14 100%);
+      border: 2px solid rgba(56, 189, 248, 0.35);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55), 0 0 18px rgba(56, 189, 248, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .group:hover .cinema-crt-icon,
+    .cinema-crt-icon:hover {
+      transform: translateY(-2px) scale(1.05);
+      border-color: #38bdf8;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.75), 0 0 25px rgba(56, 189, 248, 0.3);
+    }
+
+    .cinema-ticket-icon {
+      position: relative;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, #13241c 0%, #06120b 100%);
+      border: 2px solid rgba(52, 211, 153, 0.35);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55), 0 0 18px rgba(52, 211, 153, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .group:hover .cinema-ticket-icon,
+    .cinema-ticket-icon:hover {
+      transform: translateY(-2px) scale(1.05);
+      border-color: #34d399;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.75), 0 0 25px rgba(52, 211, 153, 0.3);
+    }
+
     /* Theme Mode Filter Pill (System / Light / Dark) */
     .theme-pill-system, .theme-pill-light, .theme-pill-dark {
       display: inline-flex;
@@ -1445,11 +1548,27 @@
     [data-theme="dawn"] #heroBanner,
     [data-theme="dawn"] #homePlayLab,
     [data-theme="dawn"] #homeVinylShowcase,
-    [data-theme="dawn"] #homeProfileVaultCard {
+    [data-theme="dawn"] #homeProfileVaultCard,
+    [data-theme="dawn"] .portal-gateway-card {
       background: #ffffff !important;
       border-color: rgba(0, 0, 0, 0.08) !important;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05) !important;
       color: #0f172a !important;
+    }
+    [data-theme="dawn"] .cinema-clapper-icon {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+      border-color: #f59e0b !important;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2) !important;
+    }
+    [data-theme="dawn"] .cinema-crt-icon {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%) !important;
+      border-color: #0284c7 !important;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2) !important;
+    }
+    [data-theme="dawn"] .cinema-ticket-icon {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+      border-color: #10b981 !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
     }
     [data-theme="dawn"] .text-white {
       color: #0f172a !important;
