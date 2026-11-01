@@ -879,8 +879,7 @@
   function overlay(accent) {
     var root = document.createElement('div'), wash = document.createElement('div');
     root.className = 'bloom-root'; wash.className = 'bloom-wash';
-    var light = document.documentElement.getAttribute('data-mode') === 'light';
-    wash.style.cssText = '--ac:' + accent + ';--bg:' + (light ? '#f1f5f9' : '#05070d');
+    wash.style.cssText = '--ac:' + accent + ';--bg:#05070d';
     root.appendChild(wash); return { root: root, wash: wash };
   }
   function end(root) { if (root.parentNode) root.remove(); busy = false; var c = document.getElementById('fxCanvas'); if (c) c.style.visibility = ''; }

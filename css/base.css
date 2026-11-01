@@ -99,155 +99,6 @@
       background-color: var(--surface-elevated, rgba(10, 14, 25, 0.7));
     }
 
-    /* High-Fidelity Light Mode Suite */
-    [data-mode="light"], .mode-light {
-      --bg: #f8f6f0 !important;
-      --card-bg: rgba(255, 255, 255, 0.96) !important;
-      --card-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 247, 250, 0.95) 100%) !important;
-      --card-border: rgba(0, 0, 0, 0.1) !important;
-      --surface-elevated: rgba(255, 255, 255, 0.98) !important;
-      --text-main: #0f172a !important;
-      --text-muted: #64748b !important;
-      --bgimg: radial-gradient(circle at 50% 0%, rgba(217,119,6,.06), transparent 70%), radial-gradient(ellipse at 80% 80%, rgba(226,232,240,.6), transparent 50%) !important;
-    }
-    [data-mode="light"] body, .mode-light {
-      background-color: #f8f6f0 !important;
-      color: #0f172a !important;
-    }
-    [data-mode="light"] .glass-nav, .mode-light .glass-nav {
-      background: rgba(255, 255, 255, 0.94) !important;
-      border-color: rgba(0, 0, 0, 0.08) !important;
-      box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05);
-    }
-    [data-mode="light"] .glass-card, .mode-light .glass-card {
-      background: rgba(255, 255, 255, 0.94) !important;
-      border-color: rgba(0, 0, 0, 0.09) !important;
-      box-shadow: 0 10px 30px -4px rgba(0,0,0,0.06) !important;
-      color: #0f172a !important;
-    }
-    [data-mode="light"] .card-footer-meta, .mode-light .card-footer-meta {
-      background: rgba(255, 255, 255, 0.96) !important;
-      border-top-color: rgba(0, 0, 0, 0.08) !important;
-      color: #0f172a !important;
-    }
-    /* Dark fade scrim behind text over artwork in both light and dark modes */
-    .poster-fade {
-      background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.65) 75%, rgba(0, 0, 0, 0.9) 100%) !important;
-    }
-    [data-mode="light"] .text-white, .mode-light .text-white {
-      color: #0f172a !important;
-    }
-    [data-mode="light"] .poster-fade + div .text-white,
-    [data-mode="light"] .poster-aspect .text-white,
-    [data-mode="light"] .relative.group .text-white {
-      color: #ffffff !important;
-    }
-    [data-mode="light"] .text-gray-100, .mode-light .text-gray-100,
-    [data-mode="light"] .text-gray-200, .mode-light .text-gray-200,
-    [data-mode="light"] .text-gray-300, .mode-light .text-gray-300 {
-      color: #334155 !important;
-    }
-    [data-mode="light"] .text-gray-400, .mode-light .text-gray-400 {
-      color: #64748b !important;
-    }
-    [data-mode="light"] .text-gray-500, .mode-light .text-gray-500 {
-      color: #94a3b8 !important;
-    }
-    [data-mode="light"] .bg-black\/60, .mode-light .bg-black\/60,
-    [data-mode="light"] .bg-black\/50, .mode-light .bg-black\/50,
-    [data-mode="light"] .bg-black\/40, .mode-light .bg-black\/40,
-    [data-mode="light"] .bg-black\/70, .mode-light .bg-black\/70,
-    [data-mode="light"] .bg-black\/80, .mode-light .bg-black\/80,
-    [data-mode="light"] .bg-\[\#0c101c\], .mode-light .bg-\[\#0c101c\],
-    [data-mode="light"] .bg-\[\#0d111a\], .mode-light .bg-\[\#0d111a\] {
-      background-color: rgba(241, 245, 249, 0.95) !important;
-      color: #0f172a !important;
-    }
-    [data-mode="light"] .bg-white\/5, .mode-light .bg-white\/5,
-    [data-mode="light"] .bg-white\/10, .mode-light .bg-white\/10 {
-      background-color: rgba(0, 0, 0, 0.04) !important;
-    }
-    [data-mode="light"] .border-white\/10, .mode-light .border-white\/10,
-    [data-mode="light"] .border-white\/15, .mode-light .border-white\/15,
-    [data-mode="light"] .border-white\/20, .mode-light .border-white\/20 {
-      border-color: rgba(0, 0, 0, 0.08) !important;
-    }
-    [data-mode="light"] input, [data-mode="light"] select, [data-mode="light"] textarea {
-      background-color: #ffffff !important;
-      color: #0f172a !important;
-      border-color: rgba(0, 0, 0, 0.15) !important;
-    }
-    [data-mode="light"] .station-plates-dock {
-      background: rgba(255, 255, 255, 0.94) !important;
-      border-color: rgba(0, 0, 0, 0.12) !important;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
-    }
-    [data-mode="light"] .station-plate {
-      background: rgba(241, 245, 249, 0.9) !important;
-      border-color: rgba(0, 0, 0, 0.08) !important;
-      color: #334155 !important;
-    }
-    [data-mode="light"] .telescope-barrel {
-      background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f8fafc 80%, #f1f5f9 100%) !important;
-      border-color: rgba(217, 119, 6, 0.35) !important;
-      box-shadow: 0 20px 50px -15px rgba(0,0,0,0.1), inset 0 0 60px rgba(0,0,0,0.02) !important;
-    }
-    [data-mode="light"] .home-vinyl-panel {
-      background: rgba(255, 255, 255, 0.92) !important;
-      border-color: rgba(0, 0, 0, 0.1) !important;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.07) !important;
-    }
-    [data-mode="light"] .radio-tuner-glass {
-      background: rgba(255, 255, 255, 0.94) !important;
-      border-color: rgba(147, 51, 234, 0.2) !important;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06) !important;
-    }
-    body { background-image: var(--bgimg); background-attachment: fixed; transition: background-color .8s; }
-    #fxCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-    main, footer { position: relative; z-index: 1; }
-    .sub-pill { padding: 7px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; color: #cbd5e1; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); transition: all .2s; display: inline-flex; gap: 8px; align-items: center; }
-    .sub-pill:hover { color: #fff; background: rgba(255,255,255,.1); }
-    .sub-pill.on { background: rgb(var(--gold) / .18); color: var(--gold-hex); border-color: rgb(var(--gold) / .5); }
-    .swatch { width: 30px; height: 30px; border-radius: 9999px; border: 2px solid transparent; cursor: pointer; transition: transform .15s; }
-    .swatch:hover { transform: scale(1.12); } .swatch.on { border-color: #fff; box-shadow: 0 0 0 2px rgb(var(--gold) / .6); }
-    .tgl { width: 40px; height: 22px; border-radius: 9999px; background: #334155; position: relative; transition: background .2s; flex: none; }
-    .tgl::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .2s; }
-    .tgl.on { background: var(--gold-hex); } .tgl.on::after { transform: translateX(18px); }
-    .wx-card { transition: background .6s, border-color .6s; }
-    body.reduce-fx *, body.reduce-fx *::before, body.reduce-fx *::after { animation-duration: .01s !important; animation-iteration-count: 1 !important; }
-    body {
-      background-color: var(--bg);
-      color: #F3F4F6;
-      overflow-x: hidden;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
-    ::-webkit-scrollbar {
-      width: 7px;
-      height: 7px;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #232B3E;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--gold-hex);
-    }
-    .glass-nav {
-      background: rgba(8, 10, 15, 0.85);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-    .glass-card {
-      background: var(--card-bg, rgba(17, 21, 32, 0.78));
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
-    }
     /* ==========================================================================
        THE OBSERVATORY TELESCOPE APPARATUS
        ========================================================================== */
@@ -1132,13 +983,7 @@
       transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
-    /* Light Mode Header */
-    [data-mode="light"] .observatory-master-console, 
-    .mode-light .observatory-master-console {
-      background: rgba(255, 255, 255, 0.94) !important;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
-      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-    }
+
 
     /* Header Brand Plate */
     .brass-astrolabe-plate {
@@ -1158,12 +1003,7 @@
       border-color: var(--gold-hex, #38bdf8);
       box-shadow: 0 0 14px rgba(var(--gold, 56 189 248), 0.25);
     }
-    [data-mode="light"] .brass-astrolabe-plate, 
-    .mode-light .brass-astrolabe-plate {
-      background: #ffffff !important;
-      border-color: rgba(0, 0, 0, 0.1) !important;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
-    }
+
 
     /* Brand Logo Box inside Brand Plate */
     .header-brand-icon-box {
@@ -1171,11 +1011,7 @@
       border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12));
       transition: background 0.3s ease, border-color 0.3s ease;
     }
-    [data-mode="light"] .header-brand-icon-box,
-    .mode-light .header-brand-icon-box {
-      background: rgba(0, 0, 0, 0.04) !important;
-      border-color: rgba(0, 0, 0, 0.1) !important;
-    }
+
 
     /* Omni-Search Box (Filter / Search Trigger in Top Bar) */
     .header-search-bar {
@@ -1188,17 +1024,7 @@
       background: rgba(255, 255, 255, 0.1) !important;
       border-color: var(--gold-hex, #38bdf8) !important;
     }
-    [data-mode="light"] .header-search-bar,
-    .mode-light .header-search-bar {
-      background: #ffffff !important;
-      border-color: rgba(0, 0, 0, 0.12) !important;
-      color: #0f172a !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-    }
-    [data-mode="light"] .header-search-bar::placeholder,
-    .mode-light .header-search-bar::placeholder {
-      color: #94a3b8 !important;
-    }
+
 
     /* Top Bar Action Buttons (Style/Filter Option & Profile) */
     .header-action-btn {
@@ -1212,19 +1038,7 @@
       border-color: var(--gold-hex, #38bdf8) !important;
       color: var(--gold-hex, #38bdf8) !important;
     }
-    [data-mode="light"] .header-action-btn,
-    .mode-light .header-action-btn {
-      background: #ffffff !important;
-      border-color: rgba(0, 0, 0, 0.1) !important;
-      color: #1e293b !important;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
-    }
-    [data-mode="light"] .header-action-btn:hover,
-    .mode-light .header-action-btn:hover {
-      background: rgba(0, 0, 0, 0.04) !important;
-      border-color: var(--gold-hex, #b45309) !important;
-      color: var(--gold-hex, #b45309) !important;
-    }
+
     .console-station-plate {
       padding: 6px 14px;
       border-radius: 12px;
@@ -2093,12 +1907,7 @@
     .decider-glyph-btn:active {
       transform: scale(0.95);
     }
-    [data-mode="light"] .decider-glyph-btn {
-      color: #64748b;
-    }
-    [data-mode="light"] .decider-glyph-btn:hover, [data-mode="light"] .decider-glyph-btn:focus-visible {
-      color: var(--gold-hex, #b45309) !important;
-    }
+
 
     /* Single Screen Deciders Page Container */
     .deciders-page-screen {
@@ -2166,15 +1975,7 @@
       color: #ffffff;
       transform: scale(1.05);
     }
-    [data-mode="light"] .back-corner-mark {
-      background: rgba(0, 0, 0, 0.05);
-      border-color: rgba(0, 0, 0, 0.1);
-      color: #334155;
-    }
-    [data-mode="light"] .back-corner-mark:hover {
-      background: rgba(0, 0, 0, 0.1);
-      color: #0f172a;
-    }
+
     .shelf-scroll-row {
       display: flex;
       gap: 1rem;

@@ -559,7 +559,7 @@
   const AUTO = { 'Sci-Fi': 'space', Drama: 'noir', Crime: 'noir', Thriller: 'neon', Horror: 'blood', Fantasy: 'aurora', Comedy: 'clear', Romance: 'golden', Action: 'neon', Animation: 'aurora', Western: 'golden', War: 'noir', Documentary: 'clear' };
   const SHIFT = { 'Sci-Fi': 'Romance', Drama: 'Comedy', Crime: 'Comedy', Thriller: 'Animation', Horror: 'Comedy', Fantasy: 'Action', Comedy: 'Drama', Romance: 'Sci-Fi', Action: 'Fantasy', Animation: 'Drama', Western: 'Sci-Fi', War: 'Comedy', Documentary: 'Fantasy' };
   let pin = ls.get('cs_theme_v2', 'space');            // 'auto' or a theme id
-  let themeMode = ls.get('cs_theme_mode', 'system');   // 'system' (default) | 'light' | 'dark'
+  let themeMode = 'dark'; // Dark mode is permanent
   let reduce = ls.get('cs_reduce', false); // Calm Mode Off by default, visual effects active
   let current = 'space', forecast = null;
 
@@ -699,15 +699,15 @@
     setTimeout(kick, 80);
   }
 
-  function apply(id, modeToUse) {
+  function apply(id) {
     current = id; const t = THEMES[id] || THEMES.space;
-    const isLight = modeToUse === 'light';
     
-    // Apply Mode and Palette attributes independently to both html and body
-    document.documentElement.setAttribute('data-mode', isLight ? 'light' : 'dark');
-    document.body.setAttribute('data-mode', isLight ? 'light' : 'dark');
-    document.body.classList.toggle('mode-light', isLight);
-    document.body.classList.toggle('mode-dark', !isLight);
+    // Always Dark Mode
+    document.documentElement.setAttribute('data-mode', 'dark');
+    document.documentElement.className = 'dark';
+    document.body.setAttribute('data-mode', 'dark');
+    document.body.classList.remove('mode-light');
+    document.body.classList.add('mode-dark');
     
     document.documentElement.setAttribute('data-palette', id);
     document.documentElement.setAttribute('data-theme', id);
@@ -715,11 +715,11 @@
     document.body.setAttribute('data-theme', id);
     document.body.classList.toggle('reduce-fx', !!reduce);
 
-    mode = isLight ? 'none' : t.fx;
+    mode = t.fx;
     if (mode === 'aurora') parts = []; else seed();
     if (mode === 'aurora' && reduce) parts = [];
     kick();
-    if (reduce || isLight) cx.clearRect(0, 0, W, H);
+    if (reduce) cx.clearRect(0, 0, W, H);
 
     $('vibeName').textContent = pin === 'auto' ? t.n + ' (auto)' : t.n;
     $('swatchName').textContent = t.n + (pin === 'auto' ? ' · dynamic palette' : ' · selected palette');
@@ -727,143 +727,21 @@
     document.querySelectorAll('.swatch').forEach(e => e.classList.toggle('on', e.dataset.id === id));
     $('reduceTgl').classList.toggle('on', !!reduce);
     const pb = $('wxPin'); if (pb) pb.textContent = pin === 'auto' ? 'Pin this palette' : 'Back to auto';
-    updateThemeModeUI(isLight);
-  }
-
-  function updateThemeModeUI(isLight) {
-    const isSys = themeMode === 'system';
-
-    // Update Style drawer simple Dark Mode toggle
-    const vibeToggle = $('vibeDarkModeToggle');
-    const vibeKnob = $('vibeDarkModeKnob');
-    const vibeIcon = $('vibeModeIcon');
-    if (vibeToggle && vibeKnob) {
-      if (isLight) {
-        vibeToggle.className = 'w-11 h-6 rounded-full bg-white/20 p-0.5 transition-colors relative flex items-center';
-        vibeToggle.setAttribute('aria-checked', 'false');
-        vibeKnob.className = 'w-5 h-5 rounded-full bg-white shadow-md transform translate-x-0 transition-transform';
-        if (vibeIcon) vibeIcon.className = 'fa-solid fa-sun text-amber-400';
-      } else {
-        vibeToggle.className = 'w-11 h-6 rounded-full bg-brand-gold p-0.5 transition-colors relative flex items-center';
-        vibeToggle.setAttribute('aria-checked', 'true');
-        vibeKnob.className = 'w-5 h-5 rounded-full bg-black shadow-md transform translate-x-5 transition-transform';
-        if (vibeIcon) vibeIcon.className = 'fa-solid fa-moon text-brand-gold';
-      }
-    }
-
-    // Update 3-position segmented switch in Style drawer (if present)
-    const btnLight = $('modeBtn-light');
-    const btnDefault = $('modeBtn-default');
-    const btnDark = $('modeBtn-dark');
-    
-    if (btnLight) {
-      btnLight.className = themeMode === 'light'
-        ? 'mode-toggle-btn px-2.5 py-1 rounded-lg bg-brand-gold text-black shadow font-bold transition-all'
-        : 'mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition-all';
-    }
-    if (btnDefault) {
-      btnDefault.className = themeMode === 'system'
-        ? 'mode-toggle-btn px-2.5 py-1 rounded-lg bg-brand-gold text-black shadow font-bold transition-all'
-        : 'mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition-all';
-    }
-    if (btnDark) {
-      btnDark.className = themeMode === 'dark'
-        ? 'mode-toggle-btn px-2.5 py-1 rounded-lg bg-brand-gold text-black shadow font-bold transition-all'
-        : 'mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition-all';
-    }
-
-    // Header theme button icon & title
-    const hdrIcon = $('headerThemeIcon');
-    if (hdrIcon) {
-      if (isSys) {
-        hdrIcon.className = 'fa-solid fa-circle-half-stroke text-xs ' + (isLight ? 'text-amber-600' : 'text-amber-400');
-      } else if (themeMode === 'light') {
-        hdrIcon.className = 'fa-solid fa-sun text-xs text-amber-500';
-      } else {
-        hdrIcon.className = 'fa-solid fa-moon text-xs text-sky-400';
-      }
-    }
-    const hdrBtn = $('headerThemeBtn');
-    if (hdrBtn) {
-      hdrBtn.title = `Mode: ${isSys ? 'Default (System)' : (themeMode === 'light' ? 'Light' : 'Dark')} · Click to toggle`;
-    }
-
-    // Stream Filter Bar Theme Pill (sync if present)
-    const filterBtn = $('themeModeFilterBtn');
-    const filterIcon = $('themeModeFilterIcon');
-    const filterLabel = $('themeModeFilterLabel');
-    if (filterBtn && filterIcon && filterLabel) {
-      if (isSys) {
-        filterIcon.className = 'fa-solid fa-circle-half-stroke ' + (isLight ? 'text-amber-600' : 'text-amber-400');
-        filterLabel.textContent = `Mode: Default (${isLight ? 'Light' : 'Dark'})`;
-      } else if (themeMode === 'light') {
-        filterIcon.className = 'fa-solid fa-sun text-amber-500';
-        filterLabel.textContent = 'Mode: Light';
-      } else {
-        filterIcon.className = 'fa-solid fa-moon text-sky-400';
-        filterLabel.textContent = 'Mode: Dark';
-      }
-    }
   }
 
   function refresh() {
     forecast = makeForecast();
-
-    // 1. Determine effective mode (Light vs Dark)
-    let effectiveMode = 'dark';
-    if (themeMode === 'light') {
-      effectiveMode = 'light';
-    } else if (themeMode === 'dark') {
-      effectiveMode = 'dark';
-    } else {
-      // System Default: check prefers-color-scheme
-      const prefersDark = !window.matchMedia || window.matchMedia('(prefers-color-scheme: dark)').matches;
-      effectiveMode = prefersDark ? 'dark' : 'light';
-    }
-
-    // 2. Determine palette
     let paletteToApply = (pin === 'auto' ? forecast.theme : pin);
     if (!THEMES[paletteToApply]) paletteToApply = 'space';
-
-    apply(paletteToApply, effectiveMode);
+    apply(paletteToApply);
     const t = $('wxText'); if (t) t.textContent = forecast.text;
     const k = $('wxKicker'); if (k) k.textContent = 'Atmosphere · ' + (THEMES[current] ? THEMES[current].n : 'Cosmic');
   }
 
-  window.toggleSystemThemeMode = function() {
-    // Cycle: system -> light -> dark -> system
-    if (themeMode === 'system') {
-      themeMode = 'light';
-    } else if (themeMode === 'light') {
-      themeMode = 'dark';
-    } else {
-      themeMode = 'system';
-    }
-    ls.set('cs_theme_mode', themeMode);
-    refresh();
-  };
-
-  window.setThemeMode = function(mode) {
-    if (['system', 'light', 'dark'].includes(mode)) {
-      themeMode = mode;
-      ls.set('cs_theme_mode', themeMode);
-      refresh();
-    }
-  };
-
-  window.toggleDarkModeSwitch = function() {
-    const isCurrentlyLight = document.documentElement.getAttribute('data-mode') === 'light';
-    window.setThemeMode(isCurrentlyLight ? 'dark' : 'light');
-  };
-
-  // Watch for OS Dark/Light changes in real time
-  if (window.matchMedia) {
-    try {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if (themeMode === 'system') refresh();
-      });
-    } catch (_) {}
-  }
+  // Compatibility no-ops (Light mode permanently removed)
+  window.toggleSystemThemeMode = function() {};
+  window.setThemeMode = function() {};
+  window.toggleDarkModeSwitch = function() {};
 
   // ---------- Palettes & Accents Menu ----------
   const CORE_THEME_IDS = ['space', 'clear', 'noir', 'neon', 'aurora', 'golden', 'blood', 'velvet'];

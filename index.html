@@ -5,11 +5,8 @@
   <script>
     (function() {
       try {
-        var m = localStorage.getItem('cs_theme_mode') || 'system';
-        var isDark = m === 'system' ? (!window.matchMedia || window.matchMedia('(prefers-color-scheme: dark)').matches) : (m === 'dark');
-        var eff = isDark ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-mode', eff);
-        document.documentElement.className = eff;
+        document.documentElement.setAttribute('data-mode', 'dark');
+        document.documentElement.className = 'dark';
         var p = localStorage.getItem('cs_theme_v2') || 'space';
         document.documentElement.setAttribute('data-palette', p);
         document.documentElement.setAttribute('data-theme', p);
@@ -188,15 +185,7 @@
         <button type="button" onclick="document.getElementById('vibePanel').classList.add('hidden')" aria-label="Close style panel" title="Close" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- Mode Selector: Simple Dark Mode Toggle Switch -->
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-gray-300 flex items-center gap-2">
-          <i id="vibeModeIcon" class="fa-solid fa-moon text-brand-gold"></i> Dark Mode
-        </span>
-        <button type="button" id="vibeDarkModeToggle" onclick="toggleDarkModeSwitch()" role="switch" aria-checked="true" aria-label="Toggle Dark Mode" class="w-11 h-6 rounded-full bg-brand-gold p-0.5 transition-colors relative flex items-center">
-          <span id="vibeDarkModeKnob" class="w-5 h-5 rounded-full bg-black shadow-md transform translate-x-5 transition-transform"></span>
-        </button>
-      </div>
+
 
       <!-- Palettes & Accent Colors -->
       <div class="pt-1">
@@ -500,11 +489,7 @@
               <span>Indian Cinema</span>
             </button>
           </div>
-          <!-- Hidden theme mode filter elements to preserve background synchronization -->
-          <button type="button" id="themeModeFilterBtn" class="hidden" onclick="toggleSystemThemeMode()">
-            <i id="themeModeFilterIcon"></i>
-            <span id="themeModeFilterLabel"></span>
-          </button>
+
         </div>
       </div>
 
