@@ -164,6 +164,37 @@
       border-color: rgb(var(--gold) / 0.5);
     }
 
+    /* Toggle Switch Component (e.g. Calm Mode Toggle) */
+    .tgl {
+      width: 40px;
+      height: 22px;
+      border-radius: 9999px;
+      background: #334155;
+      position: relative;
+      transition: background 0.2s ease;
+      flex: none;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .tgl::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease;
+    }
+    .tgl.on {
+      background: var(--gold-hex, #F5C518) !important;
+    }
+    .tgl.on::after {
+      transform: translateX(18px);
+    }
+
     /* Universal Card & Surface Elements That Bind To Theme Variables */
     #heroBanner, #homeVinylShowcase, #homePlayLab, .portal-gateway-card, .theme-card-bg, .theme-box-card, .card-footer-meta, .decider-stage-panel > div, .curated-shelf-wrapper {
       background: var(--card-gradient) !important;
@@ -983,68 +1014,7 @@
       box-shadow: 0 0 8px #f5c518;
     }
 
-    /* ==========================================================================
-       HANDHELD FLASHLIGHT BEAM (LIGHTS OUT MODE)
-       ========================================================================== */
-    .flashlight-aperture {
-      display: none;
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 85;
-      background: radial-gradient(
-        circle 190px at var(--flashlight-x, 50vw) var(--flashlight-y, 50vh),
-        transparent 0%,
-        rgba(2, 4, 8, 0.4) 55%,
-        rgba(2, 4, 8, 0.94) 80%,
-        #020408 100%
-      );
-      transition: opacity 0.3s ease;
-    }
-    .lights-out-mode .flashlight-aperture {
-      display: block;
-    }
-    .lights-out-mode {
-      background-color: #010204 !important;
-    }
-    .lights-out-mode header,
-    .lights-out-mode .station-plates-dock {
-      opacity: 0.3;
-      transition: opacity 0.3s ease;
-    }
-    .lights-out-mode header:hover,
-    .lights-out-mode .station-plates-dock:hover {
-      opacity: 1;
-    }
-    .flashlight-crosshair {
-      position: absolute;
-      top: var(--flashlight-y, 50vh);
-      left: var(--flashlight-x, 50vw);
-      width: 44px;
-      height: 44px;
-      transform: translate(-50%, -50%);
-      border: 1px dashed rgba(245, 197, 24, 0.45);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    .flashlight-crosshair::before,
-    .flashlight-crosshair::after {
-      content: "";
-      position: absolute;
-      background: rgba(245, 197, 24, 0.6);
-    }
-    .flashlight-crosshair::before {
-      top: 50%;
-      left: -8px;
-      right: -8px;
-      height: 1px;
-    }
-    .flashlight-crosshair::after {
-      left: 50%;
-      top: -8px;
-      bottom: -8px;
-      width: 1px;
-    }
+
 
     /* ==========================================================================
        OBSERVATORY MASTER CONSOLE (HEADER) - DYNAMIC THEME & PALETTE ADAPTIVE
@@ -1810,6 +1780,20 @@
       transform: scale(0.95);
     }
 
+    /* Custom Decider marks: bespoke SVG glyphs, scale with their type size */
+    .decider-mark {
+      width: 1em;
+      height: 1em;
+      display: block;
+      flex: 0 0 auto;
+      overflow: visible;
+    }
+    h1 .decider-mark,
+    h2 .decider-mark {
+      width: 1.2em;
+      height: 1.2em;
+    }
+
 
     /* Single Screen Deciders Page Container */
     .deciders-page-screen {
@@ -1876,6 +1860,84 @@
       background: rgba(255, 255, 255, 0.14);
       color: #ffffff;
       transform: scale(1.05);
+    }
+
+    /* Custom Leave-Tab button — a traveller walking back home */
+    .leave-tab-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      min-width: 2.25rem;
+      padding: 0;
+      border-radius: 0.8rem;
+      border: 1px solid rgba(125, 211, 252, 0.28);
+      background:
+        radial-gradient(120% 160% at 18% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
+        linear-gradient(160deg, rgba(15, 23, 42, 0.96), rgba(4, 8, 16, 0.96));
+      color: #dbeafe;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 6px 18px -10px rgba(56, 189, 248, 0.55);
+      overflow: hidden;
+      cursor: pointer;
+      transition:
+        transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        color 0.22s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .leave-tab-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.14) 45%, transparent 65%);
+      transform: translateX(-130%);
+      transition: transform 0.6s ease;
+      pointer-events: none;
+    }
+    .leave-tab-btn:hover {
+      color: #ffffff;
+      border-color: rgba(250, 204, 21, 0.55);
+      transform: translateY(-1px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        0 10px 24px -10px rgba(250, 204, 21, 0.4),
+        0 0 0 1px rgba(56, 189, 248, 0.2);
+    }
+    .leave-tab-btn:hover::before {
+      transform: translateX(130%);
+    }
+    .leave-tab-btn:active {
+      transform: translateY(0) scale(0.96);
+    }
+    .leave-tab-btn:focus-visible {
+      outline: 2px solid rgba(125, 211, 252, 0.7);
+      outline-offset: 2px;
+    }
+    .leave-tab-btn.hidden {
+      display: none;
+    }
+    .leave-tab-glyph {
+      width: 1.75rem;
+      height: 1.75rem;
+      flex: 0 0 auto;
+      overflow: visible;
+      filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.35));
+      transition: transform 0.25s ease;
+    }
+    .leave-tab-btn:hover .leave-tab-glyph {
+      transform: translateX(-1px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .leave-tab-btn,
+      .leave-tab-btn::before,
+      .leave-tab-glyph {
+        transition: none !important;
+      }
     }
 
     .shelf-scroll-row {

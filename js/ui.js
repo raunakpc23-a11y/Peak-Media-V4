@@ -755,7 +755,8 @@
     $('swatchName').textContent = t.n + (pin === 'auto' ? ' · dynamic palette' : ' · selected palette');
     $('autoBtn').className = 'text-[11px] font-bold px-2 py-0.5 rounded-lg border ' + (pin === 'auto' ? 'border-brand-gold text-brand-gold bg-brand-gold/10' : 'border-white/15 text-gray-300');
     document.querySelectorAll('.swatch').forEach(e => e.classList.toggle('on', e.dataset.id === id));
-    $('reduceTgl').classList.toggle('on', !!reduce);
+    const rt = $('reduceTgl'); if (rt) rt.classList.toggle('on', !!reduce);
+    const prt = $('profileReduceTgl'); if (prt) prt.classList.toggle('on', !!reduce);
     const pb = $('wxPin'); if (pb) pb.textContent = pin === 'auto' ? 'Pin this palette' : 'Back to auto';
   }
 

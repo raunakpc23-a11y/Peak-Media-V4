@@ -934,7 +934,7 @@
       var d = (el.getAttribute('onclick') || '').match(/openDeciderTool\('(\w+)'\)/); if (!d) return; key = 'play'; tool = d[1];
     } else if ((el = t.closest('#userProfileBtn'))) {
       key = 'profile';
-    } else if ((el = t.closest('.brass-astrolabe-plate, #headerBackHomeBtn, .back-corner-mark'))) {
+    } else if ((el = t.closest('.brass-astrolabe-plate, #headerBackHomeBtn, .leave-tab-btn, .back-corner-mark'))) {
       e.preventDefault(); e.stopPropagation(); window.returnToOpeningPage(); return;
     } else return;
     e.preventDefault(); e.stopPropagation();

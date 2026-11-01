@@ -2256,6 +2256,8 @@
       if (lbl && found) lbl.textContent = found[1];
       const fxTxt = $('profileFxStateText');
       if (fxTxt) fxTxt.textContent = isCalm ? 'Calm Mode: On' : 'Calm Mode: Off';
+      const profTgl = $('profileReduceTgl');
+      if (profTgl) profTgl.classList.toggle('on', isCalm);
       const hubFx = $('hubFxQuickText');
       if (hubFx) hubFx.textContent = isCalm ? 'Calm Mode: On' : 'Calm Mode: Off';
     };
@@ -2727,23 +2729,7 @@
       showToast('Exported Top 3 Golden Tickets archive!', 'fa-download', 'text-brand-gold');
     };
 
-    // ---------------------------------------------------------
-    // CINEMA HALL LIGHTS-OUT (HANDHELD FLASHLIGHT BEAM)
-    // ---------------------------------------------------------
-    window.toggleCinemaLightsOut = function() {
-      const active = document.body.classList.toggle('lights-out-mode');
-      const tgl = $('lightsOutTgl');
-      if (tgl) tgl.classList.toggle('on', active);
-      showToast(active ? 'Lights Out: Handheld Flashlight Beam Active' : 'Dome Lamp Restored', 'fa-moon', 'text-brand-gold');
-    };
-
-    // Track Handheld Flashlight Aperture across the astronomical dome
-    document.addEventListener('pointermove', e => {
-      if (document.body.classList.contains('lights-out-mode')) {
-        document.documentElement.style.setProperty('--flashlight-x', `${e.clientX}px`);
-        document.documentElement.style.setProperty('--flashlight-y', `${e.clientY}px`);
-      }
-    }, { passive: true });
+    window.toggleCinemaLightsOut = function() {};
 
     window.playOSTForTitle = function(title) {
       ensureMusicLoaded();
