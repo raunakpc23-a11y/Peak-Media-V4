@@ -50,19 +50,22 @@
   function stop(){clearInterval(timer);timer=0;$('tmPlay').innerHTML='<i class="fa-solid fa-play"></i> Play';}
   window.tmOpen=()=>{
     if(year==null)year=1994;
-    bar.classList.remove('hidden');row.classList.remove('hidden');$('tmDial').value=year;$('tmState').textContent=year;
-    $('vibePanel').classList.add('hidden');refresh();
+    bar.classList.remove('hidden');row.classList.remove('hidden');
+    if($('tmDial')) $('tmDial').value=year;
+    if($('tmState')) $('tmState').textContent=year;
+    if($('vibePanel')) $('vibePanel').classList.add('hidden');
+    refresh();
   };
-  $('tmDial').oninput=e=>{year=+e.target.value;$('tmState').textContent=year;refresh();};
-  $('tmOff').onclick=()=>{stop();year=null;bar.classList.add('hidden');row.classList.add('hidden');$('tmState').textContent='Off';style();filterAndRenderMovies(true);filterAndRenderShows(true);};
-  $('tmPlay').onclick=()=>{
+  if($('tmDial')) $('tmDial').oninput=e=>{year=+e.target.value;if($('tmState'))$('tmState').textContent=year;refresh();};
+  if($('tmOff')) $('tmOff').onclick=()=>{stop();year=null;bar.classList.add('hidden');row.classList.add('hidden');if($('tmState'))$('tmState').textContent='Off';style();if(window.filterAndRenderMovies)filterAndRenderMovies(true);if(window.filterAndRenderShows)filterAndRenderShows(true);};
+  if($('tmPlay')) $('tmPlay').onclick=()=>{
     if(timer){stop();return;}
     if(year>=NOW)year=1930;
     $('tmPlay').innerHTML='<i class="fa-solid fa-pause"></i> Pause';
-    timer=setInterval(()=>{year++;$('tmDial').value=year;$('tmState').textContent=year;refresh();if(year>=NOW)stop();},900);
+    timer=setInterval(()=>{year++;if($('tmDial'))$('tmDial').value=year;if($('tmState'))$('tmState').textContent=year;refresh();if(year>=NOW)stop();},900);
   };
   // ---------- MOOD RICOCHET (MULTI-BALL & PHYSICS LAB) ----------
-  const cv=$('rcCv'),c=cv.getContext('2d'),W=520,H=693;
+  const cv=$('rcCv'),c=cv?cv.getContext('2d'):null,W=520,H=693;
   const ALL_GEN=['Sci-Fi','Drama','Crime','Thriller','Horror','Fantasy','Comedy','Romance','Action','Animation','Western','War','Documentary'];
   const gcol=g=>(typeof genreThemes!=='undefined'&&genreThemes[g]&&genreThemes[g].accent)||'#F5C518';
   const BALL_COLORS=['#FFFFFF','#F5C518','#22d3ee','#f472b6','#4ade80'];
@@ -315,6 +318,8 @@
 
   $('rcLaunch').onclick=()=>launch();
   if($('rcShuffle'))$('rcShuffle').onclick=shuffleBumpers;
+  window.rcLaunch = () => launch();
+  window.rcShuffle = shuffleBumpers;
   cv.addEventListener('pointermove',e=>{if(balls.length)return;const r=cv.getBoundingClientRect();aim=[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H];draw();});
   cv.addEventListener('pointerleave',()=>{aim=null;if(!balls.length)draw();});
   cv.addEventListener('pointerdown',e=>{if(balls.length)return;const r=cv.getBoundingClientRect();launch((e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H);});
@@ -370,19 +375,58 @@
     <div id="oppPicks" class="hscroll flex gap-3 overflow-x-auto pb-2"></div></div></div>`;
   const hd=document.querySelector('header');hd.parentNode.insertBefore(ban,hd.nextSibling);
   function oppRender(){
-    $('oppState').textContent=on?'On':'Off';ban.classList.toggle('hidden',!on);
+    if($('oppState')) $('oppState').textContent=on?'On':'Off';
+    ban.classList.toggle('hidden',!on);
+    const o=opposite();
+    if($('oppName')) $('oppName').textContent=o.nm;
+    if($('oppLine')) $('oppLine').textContent=o.line;
+    if($('oppSlider')) $('oppSlider').value=Math.round(blend*100);
+
+    // Sync Stage Opposite (The Deciders)
+    if($('oppStageName')) $('oppStageName').textContent = o.nm;
+    if($('oppStageLine')) $('oppStageLine').textContent = o.line;
+    if($('oppStageSlider')) $('oppStageSlider').value = Math.round(blend*100);
+    if($('oppStageToggleBtn')) {
+      $('oppStageToggleBtn').textContent = on ? 'Turn Off' : 'Turn On';
+      $('oppStageToggleBtn').className = on ? 'px-3.5 py-1.5 rounded-xl bg-rose-500 text-white font-extrabold text-xs shadow' : 'px-3.5 py-1.5 rounded-xl bg-emerald-400 text-black font-extrabold text-xs shadow';
+    }
+    const stagePicks = $('oppStagePicks');
+    if (stagePicks) {
+      stagePicks.innerHTML = picks(blend).map(i=>`<div class="shrink-0 w-28 space-y-1.5"><img src="${img(i)}" data-title="${esc(i.title)}" class="lazy-poster w-28 h-40 object-cover rounded-xl border border-white/10 cursor-pointer" onclick="openDetailModal('${i.title.replace(/'/g,"\\'")}')" alt=""><div class="text-[11px] text-white font-bold truncate">${esc(i.cleanName||i.title)}</div><button data-t="${esc(i.title)}" class="steal w-full py-1 rounded-lg ${wishlistTitles.includes(i.title)?'bg-rose-500 text-white':'bg-fuchsia-500/80 text-white'} text-[11px] font-bold">${wishlistTitles.includes(i.title)?'Saved ✓':'Save'}</button></div>`).join('');
+      attachThumbObservers(stagePicks);
+    }
+
     if(!on)return;
-    const o=opposite();$('oppName').textContent=o.nm;$('oppLine').textContent=o.line;$('oppSlider').value=Math.round(blend*100);
     const opEl=$('oppPicks');
-    opEl.innerHTML=picks(blend).map(i=>`<div class="shrink-0 w-28 space-y-1.5"><img src="${img(i)}" data-title="${esc(i.title)}" class="lazy-poster w-28 h-40 object-cover rounded-xl border border-white/10 cursor-pointer" onclick="openDetailModal('${i.title.replace(/'/g,"\\'")}')" alt=""><div class="text-[11px] text-white font-bold truncate">${esc(i.cleanName||i.title)}</div><button data-t="${esc(i.title)}" class="steal w-full py-1 rounded-lg ${wishlistTitles.includes(i.title)?'bg-rose-500 text-white':'bg-fuchsia-500/80 text-white'} text-[11px] font-bold">${wishlistTitles.includes(i.title)?'Stolen ✓':'Steal it'}</button></div>`).join('');
-    attachThumbObservers(opEl);
+    if(opEl) {
+      opEl.innerHTML=picks(blend).map(i=>`<div class="shrink-0 w-28 space-y-1.5"><img src="${img(i)}" data-title="${esc(i.title)}" class="lazy-poster w-28 h-40 object-cover rounded-xl border border-white/10 cursor-pointer" onclick="openDetailModal('${i.title.replace(/'/g,"\\'")}')" alt=""><div class="text-[11px] text-white font-bold truncate">${esc(i.cleanName||i.title)}</div><button data-t="${esc(i.title)}" class="steal w-full py-1 rounded-lg ${wishlistTitles.includes(i.title)?'bg-rose-500 text-white':'bg-fuchsia-500/80 text-white'} text-[11px] font-bold">${wishlistTitles.includes(i.title)?'Stolen ✓':'Steal it'}</button></div>`).join('');
+      attachThumbObservers(opEl);
+    }
   }
-  $('oppPicks').onclick=e=>{const b=e.target.closest('.steal');if(!b)return;const t=b.dataset.t;if(!wishlistTitles.includes(t)){wishlistTitles.push(t);showToast(`Stole "${t}" into your Watchlist!`,'fa-heart','text-fuchsia-300');updateAllCountersAndViews();}b.textContent='Stolen ✓';};
+  document.addEventListener('click', e => {
+    const b = e.target.closest('#oppStagePicks .steal');
+    if (!b) return;
+    const t = b.dataset.t;
+    if (!wishlistTitles.includes(t)) {
+      wishlistTitles.push(t);
+      showToast(`Saved "${t}" to Watchlist!`, 'fa-heart', 'text-fuchsia-300');
+      updateAllCountersAndViews();
+    }
+    b.textContent = 'Saved ✓';
+  });
+  window.setOppBlend = function(val) {
+    blend = val / 100;
+    jset('cs_opp_blend', val);
+    oppRender();
+    discoverFlip();
+  };
+  window.oppRender = oppRender;
+  if($('oppPicks')) $('oppPicks').onclick=e=>{const b=e.target.closest('.steal');if(!b)return;const t=b.dataset.t;if(!wishlistTitles.includes(t)){wishlistTitles.push(t);showToast(`Stole "${t}" into your Watchlist!`,'fa-heart','text-fuchsia-300');updateAllCountersAndViews();}b.textContent='Stolen ✓';};
   let oppRaf=0;
-  $('oppSlider').oninput=e=>{blend=e.target.value/100;jset('cs_opp_blend',e.target.value);if(!oppRaf){oppRaf=requestAnimationFrame(()=>{oppRaf=0;oppRender();discoverFlip();});}};
+  if($('oppSlider')) $('oppSlider').oninput=e=>{blend=e.target.value/100;jset('cs_opp_blend',e.target.value);if(!oppRaf){oppRaf=requestAnimationFrame(()=>{oppRaf=0;oppRender();discoverFlip();});}};
   function discoverFlip(){ if(typeof activeMood!=='undefined'&&activeMood)selectMood(activeMood); if(window.cxOpen&&!$('tab-web').classList.contains('hidden'))setTimeout(window.cxOpen,30); }
-  window.oppToggle=()=>{on=!on;jset('cs_opp_on',on);$('vibePanel').classList.add('hidden');oppRender();discoverFlip();};
-  $('oppOff').onclick=()=>window.oppToggle();
+  window.oppToggle=()=>{on=!on;jset('cs_opp_on',on);if($('vibePanel')) $('vibePanel').classList.add('hidden');oppRender();discoverFlip();};
+  if($('oppOff')) $('oppOff').onclick=()=>window.oppToggle();
   // mood picks follow the blend
   const _sm=window.selectMood;
   window.selectMood=function(m){

@@ -27,7 +27,7 @@
   window.initCinemaMoodDial = function() {
     renderMoodDialWheel();
     renderMoodDialShortcuts();
-    setSectorByIndex(1, false);
+    setSectorByIndex(1, true);
     setupDialInteractions();
   };
 

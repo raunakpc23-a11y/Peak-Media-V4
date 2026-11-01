@@ -444,11 +444,11 @@
       });
     }
     seg('duelSize', 'size'); seg('duelSrc', 'src');
-    const popPool = () => shuffle(allTitles.map(t => globalDatabase[t]).filter(i => i.thumb && i.rank <= 150));
+    const popPool = () => shuffle(allTitles.map(t => globalDatabase[t]).filter(i => i && i.thumb && (i.rank <= 150 || !i.rank)));
     function pickEntrants() {
       let pool = [];
       if (D.src === 'wish') pool = shuffle(wishlistTitles.map(t => globalDatabase[t]).filter(Boolean));
-      else if (D.src === 'mood') { const gs = moods[$('duelMood').value] || []; pool = shuffle(allTitles.map(t => globalDatabase[t]).filter(i => gs.includes(i.genre) && i.thumb && i.rating >= 7.6)); }
+      else if (D.src === 'mood') { const gs = ($('duelMood') && moods[$('duelMood').value]) || []; pool = shuffle(allTitles.map(t => globalDatabase[t]).filter(i => i && gs.includes(i.genre) && i.thumb && i.rating >= 7.6)); }
       else pool = popPool();
       const out = pool.slice(0, D.size);
       if (out.length < D.size) { const have = new Set(out.map(i => i.title)); popPool().forEach(i => { if (out.length < D.size && !have.has(i.title)) { out.push(i); have.add(i.title); } }); showToast('Not enough titles in that source — topped up with popular picks', 'fa-circle-info', 'text-gray-400'); }
@@ -656,7 +656,7 @@
       const count = Math.max(12, D.size || 16);
       let pool = [];
       if (D.src === 'wish') pool = shuffle(wishlistTitles.map(t => globalDatabase[t]).filter(Boolean));
-      else if (D.src === 'mood') { const gs = moods[$('duelMood').value] || []; pool = shuffle(allTitles.map(t => globalDatabase[t]).filter(i => gs.includes(i.genre) && i.thumb && i.rating >= 7.6)); }
+      else if (D.src === 'mood') { const gs = ($('duelMood') && moods[$('duelMood').value]) || []; pool = shuffle(allTitles.map(t => globalDatabase[t]).filter(i => i && gs.includes(i.genre) && i.thumb && i.rating >= 7.6)); }
       else pool = popPool();
 
       csDeck = pool.slice(0, count);
@@ -666,9 +666,9 @@
       }
       csIndex = 0;
 
-      $('duelSetup').classList.add('hidden');
-      $('duelArena').classList.add('hidden');
-      $('duelChamp').classList.add('hidden');
+      if ($('duelSetup')) $('duelSetup').classList.add('hidden');
+      if ($('duelArena')) $('duelArena').classList.add('hidden');
+      if ($('duelChamp')) $('duelChamp').classList.add('hidden');
       if ($('cineSwipeArena')) $('cineSwipeArena').classList.remove('hidden');
 
       renderCineSwipeCard();
@@ -676,7 +676,7 @@
     }
 
     function renderCineSwipeCard() {
-      const stage = $('csCardStage');
+      const stage = $('swipeDeckContainer') || $('csCardStage');
       const counter = $('csDeckCounter');
       if (!stage) return;
 
@@ -876,18 +876,18 @@
       }
     });
     function autoOne() { if (D.busy) return; const cur = D.rounds[D.r]; choose(judge(cur[D.m * 2], cur[D.m * 2 + 1]).win, true); }
-    $('duelAuto').onclick = autoOne;
-    $('duelAutoAll').onclick = () => {
+    if ($('duelAuto')) $('duelAuto').onclick = autoOne;
+    if ($('duelAutoAll')) $('duelAutoAll').onclick = () => {
       stopDuelAuto();
       const go = () => {
-        if ($('duelArena').classList.contains('hidden')) { stopDuelAuto(); return; }
+        if (!$('duelArena') || $('duelArena').classList.contains('hidden')) { stopDuelAuto(); return; }
         if (!D.busy) autoOne();
         D.autoTimer = setTimeout(go, 1000);
       };
       go();
     };
-    $('duelQuit').onclick = () => { stopDuelAuto(); D.busy = true; $('duelArena').classList.add('hidden'); $('duelSetup').classList.remove('hidden'); };
-    $('duelBuild').onclick = startDuel;
+    if ($('duelQuit')) $('duelQuit').onclick = () => { stopDuelAuto(); D.busy = true; if($('duelArena')) $('duelArena').classList.add('hidden'); if($('duelSetup')) $('duelSetup').classList.remove('hidden'); };
+    if ($('duelBuild')) $('duelBuild').onclick = startDuel;
     const DUEL_PRESETS = {
       pantheon: ["The Shawshank Redemption", "The Godfather", "The Dark Knight", "Pulp Fiction", "Schindler's List", "12 Angry Men", "The Lord of the Rings: The Return of the King", "Inception"],
       scifi: ["Inception", "Interstellar", "The Matrix", "Dune: Part Two", "Blade Runner 2049", "Arrival", "Terminator 2: Judgment Day", "Back to the Future"],
@@ -905,9 +905,23 @@
       D.path = {};
       D.rounds = [D.entrants.slice()];
       D.r = 0; D.m = 0; D.matches = []; D.winners = [];
-      $('duelChamp').classList.add('hidden');
-      $('duelArena').classList.remove('hidden');
+      if ($('duelChamp')) $('duelChamp').classList.add('hidden');
+      if ($('duelArena')) $('duelArena').classList.remove('hidden');
       showMatch();
+    };
+
+    window.initSwipeStage = function() {
+      startCineSwipe();
+    };
+    window.swipePass = function() {
+      csSwipe('left');
+    };
+    window.swipeLike = function() {
+      csSwipe('right');
+    };
+    window.csPickTonight = csPickTonight;
+    window.initDuelTournament = function() {
+      if (D.rounds.length === 0) window.launchPresetDuel('pantheon');
     };
 
     // Auto-start a live 4-title showdown on initial load so Watch Duel is never empty!

@@ -137,20 +137,15 @@
         <span id="hdrReelCount"></span>
       </div>
 
-      <!-- Right: Theme Mode, Settings, Profile Avatar with Progress Ring -->
+      <!-- Right: Style, Profile Avatar with Progress Ring -->
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 relative">
-        <!-- Light / Dark / System Theme Toggle Button in Header -->
-        <button type="button" id="headerThemeBtn" onclick="toggleSystemThemeMode()" title="Theme (System / Light / Dark)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Theme Mode">
-          <i id="headerThemeIcon" class="fa-solid fa-circle-half-stroke text-xs text-amber-400"></i>
-        </button>
-
         <!-- Style Controls -->
         <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Style" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Style">
           <i class="fa-solid fa-sliders text-xs"></i>
         </button>
 
-        <!-- Profile Avatar Button with Circular SVG Progress Ring -->
-        <button type="button" id="userProfileBtn" onclick="toggleProfileStatsPopover(event)" title="Profile &amp; Collection" class="relative h-9 sm:h-10 px-2 sm:px-2.5 rounded-xl bg-black/60 hover:bg-black/80 border border-white/10 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95 shadow-inner" aria-label="Profile">
+        <!-- Profile Avatar Button with Circular SVG Progress Ring (Opens Library) -->
+        <button type="button" id="userProfileBtn" onclick="switchTab('hub')" title="Library &amp; Profile" class="relative h-9 sm:h-10 px-2 sm:px-2.5 rounded-xl bg-black/60 hover:bg-black/80 border border-white/10 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95 shadow-inner" aria-label="Library &amp; Profile">
           <div class="relative w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center">
             <svg class="w-full h-full -rotate-90" viewBox="0 0 40 40">
               <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-opacity="0.15" stroke-width="3.5" />
@@ -199,14 +194,14 @@
         <button type="button" onclick="document.getElementById('vibePanel').classList.add('hidden')" aria-label="Close style panel" title="Close" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- Mode Selector: 3-position switch (Light / Default / Dark) -->
+      <!-- Mode Selector: Simple Dark Mode Toggle Switch -->
       <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-gray-300">Mode</span>
-        <div class="flex items-center bg-black/60 p-0.5 rounded-xl border border-white/10 text-xs font-bold" role="group" aria-label="Display Mode">
-          <button type="button" onclick="setThemeMode('light')" id="modeBtn-light" class="mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all" title="Light Mode">Light</button>
-          <button type="button" onclick="setThemeMode('system')" id="modeBtn-default" class="mode-toggle-btn px-2.5 py-1 rounded-lg bg-brand-gold text-black shadow transition-all" title="System Default Mode">Default</button>
-          <button type="button" onclick="setThemeMode('dark')" id="modeBtn-dark" class="mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all" title="Dark Mode">Dark</button>
-        </div>
+        <span class="text-xs font-bold text-gray-300 flex items-center gap-2">
+          <i id="vibeModeIcon" class="fa-solid fa-moon text-brand-gold"></i> Dark Mode
+        </span>
+        <button type="button" id="vibeDarkModeToggle" onclick="toggleDarkModeSwitch()" role="switch" aria-checked="true" aria-label="Toggle Dark Mode" class="w-11 h-6 rounded-full bg-brand-gold p-0.5 transition-colors relative flex items-center">
+          <span id="vibeDarkModeKnob" class="w-5 h-5 rounded-full bg-black shadow-md transform translate-x-5 transition-transform"></span>
+        </button>
       </div>
 
       <!-- Palettes & Accent Colors -->
@@ -274,7 +269,6 @@
         <div id="telescopeCoords"></div>
         <div id="personalProfileSection"></div>
         <div id="personalCuratedRow"></div>
-        <div id="moodRow"></div>
       </div>
 
       <!-- 1. FEATURED CINEMATIC SPOTLIGHT HERO (Living Projector Spotlight) -->
@@ -914,16 +908,23 @@
           <!-- STAGE 3: SWIPE -->
           <div id="stage-swipe" class="decider-stage-panel hidden space-y-4">
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl text-center space-y-3">
-              <h2 class="text-lg font-bold text-white flex items-center justify-center gap-2">
-                <i class="fa-solid fa-layer-group text-sky-400"></i> CineSwipe
-              </h2>
-              <p class="text-xs text-gray-300">Swipe right to add to your evening watchlist, left to pass.</p>
+              <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-layer-group text-sky-400"></i> CineSwipe
+                </h2>
+                <span id="csDeckCounter" class="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-mono text-xs font-semibold">1 / 16</span>
+              </div>
+              <p class="text-xs text-gray-300">Swipe right or click Save to add to your evening watchlist, left to pass.</p>
               <div id="swipeDeckContainer" class="relative max-w-sm mx-auto h-[380px] flex items-center justify-center"></div>
-              <div class="flex items-center justify-center gap-6 pt-2">
-                <button type="button" onclick="if(window.swipePass) window.swipePass();" class="w-12 h-12 rounded-full bg-white/10 hover:bg-rose-500/20 text-rose-400 border border-white/10 flex items-center justify-center text-lg active:scale-95 transition-all" aria-label="Pass">
+              <div class="flex items-center justify-center gap-4 sm:gap-6 pt-2">
+                <button id="csPassBtn" type="button" onclick="if(window.swipePass) window.swipePass();" class="w-12 h-12 rounded-full bg-white/10 hover:bg-rose-500/20 text-rose-400 border border-white/10 flex items-center justify-center text-lg active:scale-95 transition-all" aria-label="Pass" title="Pass">
                   <i class="fa-solid fa-xmark"></i>
                 </button>
-                <button type="button" onclick="if(window.swipeLike) window.swipeLike();" class="w-12 h-12 rounded-full bg-white/10 hover:bg-emerald-500/20 text-emerald-400 border border-white/10 flex items-center justify-center text-lg active:scale-95 transition-all" aria-label="Like">
+                <button id="csPickTonightBtn" type="button" onclick="if(window.csPickTonight) window.csPickTonight();" class="px-5 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
+                  <i class="fa-solid fa-play"></i>
+                  <span>Watch Now</span>
+                </button>
+                <button id="csKeepBtn" type="button" onclick="if(window.swipeLike) window.swipeLike();" class="w-12 h-12 rounded-full bg-white/10 hover:bg-emerald-500/20 text-emerald-400 border border-white/10 flex items-center justify-center text-lg active:scale-95 transition-all" aria-label="Save" title="Save">
                   <i class="fa-solid fa-heart"></i>
                 </button>
               </div>
@@ -933,30 +934,247 @@
           <!-- STAGE 4: DUEL (2 Short Steps: Setup -> Result) -->
           <div id="stage-duel" class="decider-stage-panel hidden space-y-4">
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
-              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
                   <i class="fa-solid fa-trophy text-amber-400"></i> Cinema Duel
                 </h2>
-                <div class="flex items-center gap-2 text-xs">
-                  <span id="duelStepBadge" class="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 font-bold">Step 1: Pick</span>
+                <!-- Themed Curations Pills -->
+                <div class="flex flex-wrap gap-1.5 items-center" id="duelPresetGrid">
+                  <button type="button" onclick="launchPresetDuel('pantheon')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Essential</button>
+                  <button type="button" onclick="launchPresetDuel('scifi')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Sci-Fi</button>
+                  <button type="button" onclick="launchPresetDuel('bollywood')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Indian</button>
+                  <button type="button" onclick="launchPresetDuel('tv')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Series</button>
+                  <button type="button" onclick="launchPresetDuel('action')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Action</button>
+                  <button type="button" onclick="launchPresetDuel('thriller')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Thriller</button>
                 </div>
               </div>
-              <div id="duelStageContent" class="space-y-4"></div>
+              <div id="duelStageContent" class="space-y-4">
+                <!-- Controls Bar for Contenders, Source -->
+                <div id="duelSetup" class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                    <div>
+                      <div class="text-[11px] font-bold text-gray-400 mb-1">Contenders</div>
+                      <div class="flex gap-1.5" id="duelSize">
+                        <button data-v="4" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-brand-gold text-black">4</button>
+                        <button data-v="8" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">8</button>
+                        <button data-v="16" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">16</button>
+                        <button data-v="32" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">32</button>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="text-[11px] font-bold text-gray-400 mb-1">Source</div>
+                      <div class="flex gap-1.5" id="duelSrc">
+                        <button data-v="wish" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-brand-gold text-black">Watchlist</button>
+                        <button data-v="mood" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">Mood</button>
+                        <button data-v="pop" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">Popular</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="duelMoodWrap" class="hidden pt-1">
+                    <select id="duelMood" class="w-full px-3 py-1.5 bg-black/50 border border-white/15 rounded-xl text-xs text-white"></select>
+                  </div>
+                  <button id="duelBuild" class="w-full py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs transition-opacity shadow">Start Tournament</button>
+                </div>
+
+                <!-- Duel Arena -->
+                <div id="duelArena" class="glass-card rounded-2xl p-4 sm:p-6 border border-white/10 space-y-4 relative overflow-hidden">
+                  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+                    <div id="duelRound" class="text-xs font-bold tracking-wide text-gray-200">Face-Off</div>
+                    <div class="flex flex-wrap gap-1.5">
+                      <button id="duelAuto" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-gray-200 text-xs font-medium transition-all">Auto-judge</button>
+                      <button id="duelAutoAll" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-xs font-medium transition-all">Auto-all</button>
+                      <button id="duelQuit" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 text-xs font-medium transition-all">Reset</button>
+                    </div>
+                  </div>
+                  <div id="duelStage" class="flex items-center justify-center gap-3 sm:gap-8 py-2 min-h-[300px] sm:min-h-[360px]"></div>
+                  <div id="duelBracket" class="flex flex-wrap gap-x-5 gap-y-2 justify-center pt-2 border-t border-white/10"></div>
+                </div>
+
+                <!-- Duel Champion -->
+                <div id="duelChamp" class="hidden glass-card rounded-3xl p-6 sm:p-10 border border-brand-gold/40 text-center space-y-4 relative overflow-hidden"></div>
+              </div>
             </div>
           </div>
 
-          <!-- STAGE 5: MARATHON (2 Short Steps: Setup -> Result) -->
+          <!-- STAGE 5: MARATHON (Single-Session Architect + Series Binge Calculator) -->
           <div id="stage-marathon" class="decider-stage-panel hidden space-y-4">
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
-              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
                   <i class="fa-solid fa-film text-emerald-400"></i> Binge Marathon
                 </h2>
-                <div class="flex items-center gap-2 text-xs">
-                  <span id="marathonStepBadge" class="px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 font-bold">Step 1: Plan</span>
+                <!-- Dual Mode Switcher -->
+                <div class="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.05] border border-white/10 shrink-0">
+                  <button id="mhModeSessionBtn" type="button" onclick="switchMarathonMode('session')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-brand-gold text-black shadow transition-all">
+                    <i class="fa-solid fa-stopwatch"></i> <span>Session</span>
+                  </button>
+                  <button id="mhModeBingeBtn" type="button" onclick="switchMarathonMode('binge')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 text-gray-300 hover:text-white transition-all">
+                    <i class="fa-solid fa-calendar-days text-brand-gold"></i> <span>Binge</span>
+                  </button>
                 </div>
               </div>
-              <div id="marathonStageContent" class="space-y-4"></div>
+              <div id="marathonStageContent" class="space-y-4">
+                <!-- MODE 1: SINGLE-SESSION MARATHON ARCHITECT -->
+                <div id="mhSessionSection" class="space-y-4">
+                  <!-- Blueprints -->
+                  <div class="space-y-2">
+                    <div class="text-xs font-bold text-gray-400">Curated Blueprints</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+                      <button type="button" onclick="applyMarathonPreset(4, '20:00', 'cosy', 'Horror')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Double Feature</div>
+                        <div class="text-[11px] text-gray-400">4 hrs · 20:00 · Classic</div>
+                      </button>
+                      <button type="button" onclick="applyMarathonPreset(6, '18:00', 'epic', '')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Weekend Retrospective</div>
+                        <div class="text-[11px] text-gray-400">6 hrs · 18:00 · Epic</div>
+                      </button>
+                      <button type="button" onclick="applyMarathonPreset(6, '21:00', 'thrilling', 'Comedy')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Midnight Suspense</div>
+                        <div class="text-[11px] text-gray-400">6 hrs · 21:00 · Tension</div>
+                      </button>
+                      <button type="button" onclick="applyMarathonPreset(5, '19:00', 'funny', 'Horror')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Comedy Showcase</div>
+                        <div class="text-[11px] text-gray-400">5 hrs · 19:00 · Light</div>
+                      </button>
+                      <button type="button" onclick="applyMarathonPreset(8, '16:00', 'thoughtful', '')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Director's Cut</div>
+                        <div class="text-[11px] text-gray-400">8 hrs · 16:00 · Prestige</div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 items-end">
+                      <label class="text-xs text-gray-400 font-bold">Total Hours<input id="mhHours" type="number" min="2" max="16" value="8" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
+                      <label class="text-xs text-gray-400 font-bold">Start Time<input id="mhStart" type="time" value="18:00" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
+                      <label class="text-xs text-gray-400 font-bold">Core Vibe<select id="mhMood" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="cosy">Cosy &amp; Warm</option><option value="thrilling">Thrilling &amp; Tense</option><option value="thoughtful">Thoughtful &amp; Deep</option><option value="epic" selected>Epic &amp; Grand</option><option value="funny">Pure Comedy</option></select></label>
+                      <label class="text-xs text-gray-400 font-bold">Energy Curve<select id="mhArcShape" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="wave" selected>Classic Wave</option><option value="escalate">Escalator</option><option value="frontload">Front-Loaded</option><option value="coaster">Rollercoaster</option><option value="latepeak">Late Peak</option></select></label>
+                      <label class="text-xs text-gray-400 font-bold">Intermission<select id="mhBreakLen" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="0">0 min</option><option value="10">10 min</option><option value="15" selected>15 min</option><option value="25">25 min</option></select></label>
+                      <label class="text-xs text-gray-400 font-bold">Exclude Genre<select id="mhNo" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="">None</option><option>Horror</option><option>Thriller</option><option>Crime</option><option>Romance</option><option>Animation</option><option>Action</option><option>Sci-Fi</option><option>Drama</option><option>Comedy</option><option>Fantasy</option><option>Western</option><option>War</option><option>Documentary</option></select></label>
+                      <button id="mhBuild" class="col-span-2 sm:col-span-4 lg:col-span-1 px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm shadow hover:opacity-95 transition-all">Build Timeline</button>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 pt-2 border-t border-white/10 text-xs text-gray-400">
+                      <span>Adjust any slot's energy or swap titles below</span>
+                      <div class="flex items-center gap-1.5">
+                        <button type="button" onclick="mhAddSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-brand-gold"><i class="fa-solid fa-plus mr-1"></i>Add Slot</button>
+                        <button type="button" onclick="mhRemoveSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-300"><i class="fa-solid fa-minus mr-1"></i>Remove</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="mhOut" class="space-y-4">
+                    <div id="mhCurve" class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3"></div>
+                    <div id="mhList" class="space-y-2.5"></div>
+                    <div class="flex gap-2 flex-wrap">
+                      <button id="mhCopy" class="px-4 py-2 rounded-xl border border-white/15 text-xs sm:text-sm font-bold text-gray-200"><i class="fa-solid fa-copy mr-1.5"></i>Copy Plan</button>
+                      <button id="mhWish" class="px-4 py-2 rounded-xl bg-rose-500 text-white text-xs sm:text-sm font-bold"><i class="fa-solid fa-heart mr-1.5"></i>Add to Watchlist</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- MODE 2: SERIES BINGE CALCULATOR -->
+                <div id="mhBingeSection" class="hidden space-y-4">
+                  <!-- Targets -->
+                  <div class="space-y-2">
+                    <div class="text-xs font-bold text-gray-400">Popular Targets</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+                      <button type="button" onclick="selectBingePresetCard('breaking-bad')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Breaking Bad</div>
+                        <div class="text-[11px] text-gray-400">5 Seasons · 62 Eps</div>
+                      </button>
+                      <button type="button" onclick="selectBingePresetCard('game-of-thrones')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Game of Thrones</div>
+                        <div class="text-[11px] text-gray-400">8 Seasons · 73 Eps</div>
+                      </button>
+                      <button type="button" onclick="selectBingePresetCard('stranger-things')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Stranger Things</div>
+                        <div class="text-[11px] text-gray-400">4 Seasons · 34 Eps</div>
+                      </button>
+                      <button type="button" onclick="selectBingePresetCard('ramayan-1987')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Ramayan (1987)</div>
+                        <div class="text-[11px] text-gray-400">1 Season · 78 Eps</div>
+                      </button>
+                      <button type="button" onclick="selectBingePresetCard('mcu-infinity')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">MCU Infinity Saga</div>
+                        <div class="text-[11px] text-gray-400">23 Films</div>
+                      </button>
+                      <button type="button" onclick="selectBingePresetCard('harry-potter')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
+                        <div class="text-xs font-bold text-white">Harry Potter</div>
+                        <div class="text-[11px] text-gray-400">8 Films</div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Binge Configuration Form -->
+                  <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div class="sm:col-span-2 space-y-1.5">
+                        <label class="text-xs text-gray-400 font-bold">Series or Saga</label>
+                        <select id="bingeShowSelect" onchange="onBingeShowSelected()" class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-semibold text-sm"></select>
+                      </div>
+                      <div class="grid grid-cols-2 gap-2">
+                        <label class="text-xs text-gray-400 font-bold">Start Date
+                          <input id="bingeStartDate" type="date" onchange="calculateBingeSchedule()" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs">
+                        </label>
+                        <label class="text-xs text-gray-400 font-bold">Daily Time
+                          <input id="bingeStartTime" type="time" value="20:00" onchange="calculateBingeSchedule()" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs">
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- Pace Presets -->
+                    <div class="space-y-2 pt-2 border-t border-white/10">
+                      <label class="text-xs text-gray-400 font-bold">Viewing Pace</label>
+                      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                        <button type="button" data-pace="casual" onclick="setBingePace('casual')" class="binge-pace-btn p-2.5 rounded-xl bg-brand-gold text-black font-bold text-left border border-brand-gold shadow transition-all">
+                          <div class="text-xs font-bold">Casual</div>
+                          <div class="text-[11px] opacity-80 mt-0.5">2 hrs / day</div>
+                        </button>
+                        <button type="button" data-pace="speedrun" onclick="setBingePace('speedrun')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                          <div class="text-xs font-bold">Sprint</div>
+                          <div class="text-[11px] opacity-80 mt-0.5">5 hrs / day</div>
+                        </button>
+                        <button type="button" data-pace="weekend" onclick="setBingePace('weekend')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                          <div class="text-xs font-bold">Weekend</div>
+                          <div class="text-[11px] opacity-80 mt-0.5">Sat &amp; Sun focus</div>
+                        </button>
+                        <button type="button" data-pace="bite" onclick="setBingePace('bite')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                          <div class="text-xs font-bold">Daily Episode</div>
+                          <div class="text-[11px] opacity-80 mt-0.5">1 ep / day</div>
+                        </button>
+                        <button type="button" data-pace="custom" onclick="setBingePace('custom')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
+                          <div class="text-xs font-bold">Custom</div>
+                          <div class="text-[11px] opacity-80 mt-0.5">Manual slider</div>
+                        </button>
+                      </div>
+
+                      <div id="bingeCustomHoursRow" class="hidden pt-2 flex items-center gap-4">
+                        <span class="text-xs text-gray-400 font-bold shrink-0">Daily Hours:</span>
+                        <input id="bingeCustomHoursSlider" type="range" min="0.5" max="10" step="0.5" value="2.5" oninput="onBingeCustomHoursChange(this.value)" class="flex-1 accent-brand-gold cursor-pointer">
+                        <span id="bingeCustomHoursLbl" class="text-xs font-bold text-brand-gold w-24 text-right">2.5 hrs/day</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Calculated KPI Cards -->
+                  <div id="bingeKpiGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
+
+                  <!-- Day-by-Day Interactive Schedule & Episode Checklist -->
+                  <div class="space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                      <h3 class="text-base font-display font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-brand-gold"></i> Schedule &amp; Progress
+                      </h3>
+                      <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" onclick="copyBingeSchedule()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-gray-200 text-xs font-bold transition-all"><i class="fa-solid fa-copy mr-1.5"></i>Copy</button>
+                        <button type="button" onclick="exportBingeICal()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-brand-gold text-xs font-bold transition-all"><i class="fa-solid fa-calendar-arrow-down mr-1.5"></i>Export .ics</button>
+                        <button type="button" onclick="addBingeSeriesToWatchlist()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 text-xs font-bold transition-all"><i class="fa-solid fa-heart mr-1.5"></i>Watchlist</button>
+                        <button type="button" onclick="resetBingeProgress()" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-gray-200 text-xs transition-all" title="Reset Episode Checks"><i class="fa-solid fa-rotate-left"></i></button>
+                      </div>
+                    </div>
+                    <div id="bingeScheduleList" class="space-y-3 max-h-[600px] overflow-y-auto pr-1"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -986,14 +1204,50 @@
 
           <!-- STAGE 7: MATCHMAKER (Lives only here now) -->
           <div id="stage-matchmaker" class="decider-stage-panel hidden space-y-4">
-            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
-              <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <i class="fa-solid fa-wand-magic-sparkles text-rose-400"></i> Matchmaker
-                </h2>
-                <button type="button" onclick="if(window.dealNextFourMatches) window.dealNextFourMatches();" class="text-xs text-brand-gold hover:underline font-semibold">Deal 4 Fresh Picks</button>
+            <div id="matchmakerContent" class="space-y-4">
+              <div id="recSection" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
+                <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+                  <div class="flex items-center gap-3">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                      <i class="fa-solid fa-wand-magic-sparkles text-rose-400"></i> Matchmaker
+                    </h2>
+                  </div>
+                  <button onclick="prefillFromWishlist('recTags')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
+                    <i class="fa-solid fa-bolt text-brand-gold mr-1"></i> Watchlist
+                  </button>
+                </div>
+
+                <!-- Selected Seed Chips -->
+                <div id="recTags" class="flex flex-wrap gap-2 min-h-[44px] p-2.5 rounded-xl bg-black/45 border border-white/10 items-center"></div>
+
+                <!-- Autocomplete Input -->
+                <div class="flex flex-col sm:flex-row gap-2.5">
+                  <div class="relative flex-1 autocomplete-wrapper">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input type="text" id="recInput" placeholder="Add a title you love..."
+                      oninput="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
+                      onfocus="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
+                      class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+                    <div id="recSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-30 divide-y divide-white/5"></div>
+                  </div>
+                  <button onclick="generateRecommendation()" class="px-5 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95 whitespace-nowrap">
+                    Find Matches
+                  </button>
+                </div>
+
+                <div id="recInitialPrompt" class="hidden"></div>
+
+                <!-- Output Results -->
+                <div id="recResultBox" class="hidden pt-3 border-t border-white/10 space-y-3">
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="text-xs sm:text-sm font-bold text-white">Top Matches</h3>
+                    <button id="rejectBtn" onclick="rejectRecommendation()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 border border-white/15 transition-all">
+                      <i class="fa-solid fa-rotate mr-1"></i> Next
+                    </button>
+                  </div>
+                  <div id="recCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+                </div>
               </div>
-              <div id="matchmakerContent" class="space-y-4"></div>
             </div>
           </div>
 
@@ -1087,16 +1341,72 @@
 
           <!-- STAGE 9: RICOCHET -->
           <div id="stage-ricochet" class="decider-stage-panel hidden space-y-4">
-            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-3">
-              <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
                   <i class="fa-solid fa-circle-nodes text-cyan-400"></i> Mood Ricochet
                 </h2>
-                <button type="button" onclick="if(window.rcLaunch) window.rcLaunch();" class="px-3.5 py-1.5 rounded-xl bg-cyan-400 text-black font-extrabold text-xs shadow hover:scale-105 active:scale-95 transition-all">
-                  Launch Ball
-                </button>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="if(window.rcShuffle) window.rcShuffle();" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs border border-white/15">Shuffle</button>
+                  <button type="button" onclick="if(window.rcLaunch) window.rcLaunch();" class="px-4 py-1.5 rounded-xl bg-cyan-400 text-black font-extrabold text-xs shadow hover:scale-105 active:scale-95 transition-all">
+                    Launch
+                  </button>
+                </div>
               </div>
-              <div id="ricochetCanvasHolder" class="flex justify-center"></div>
+              <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-5 items-start">
+                <div class="space-y-3 mx-auto w-full max-w-[520px]">
+                  <canvas id="rcCv" width="520" height="693" class="w-full h-auto rounded-2xl border border-white/10 bg-black/40"></canvas>
+                  <div class="flex gap-2 items-center flex-wrap pt-1">
+                    <span class="text-xs text-gray-400 font-semibold">Launch Power</span>
+                    <input id="rcPower" type="range" min="40" max="100" value="80" class="accent-yellow-400 flex-1 min-w-[8rem]" aria-label="Launch power">
+                  </div>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold text-white">Physics Controls</span>
+                      <span id="rcActiveModeBadge" class="px-2.5 py-1 rounded-full bg-brand-gold/15 border border-brand-gold/40 text-brand-gold text-[11px] font-bold">1 Ball · Normal</span>
+                    </div>
+
+                    <!-- Ball Count Selector -->
+                    <div class="space-y-1.5">
+                      <label class="text-xs font-bold text-gray-400">Balls</label>
+                      <div class="grid grid-cols-4 gap-2" id="rcBallCountGroup">
+                        <button type="button" data-balls="1" class="rc-ball-btn py-1.5 rounded-xl text-xs font-extrabold bg-brand-gold text-black shadow">1</button>
+                        <button type="button" data-balls="2" class="rc-ball-btn py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">2</button>
+                        <button type="button" data-balls="3" class="rc-ball-btn py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">3</button>
+                        <button type="button" data-balls="4" class="rc-ball-btn py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">4</button>
+                      </div>
+                    </div>
+
+                    <!-- Gravity & Bumpers -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-gray-400">Gravity</label>
+                        <div class="grid grid-cols-3 gap-1.5" id="rcGravGroup">
+                          <button type="button" data-grav="normal" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-bold bg-cyan-500/25 border border-cyan-400/50 text-cyan-200">Normal</button>
+                          <button type="button" data-grav="moon" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">Low</button>
+                          <button type="button" data-grav="hyper" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">Hyper</button>
+                        </div>
+                      </div>
+                      <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-gray-400">Bumpers</label>
+                        <div class="grid grid-cols-2 gap-1.5" id="rcBumperLayoutGroup">
+                          <button type="button" data-layout="standard" class="rc-layout-btn py-1.5 rounded-lg text-[11px] font-bold bg-purple-500/25 border border-purple-400/50 text-purple-200">10</button>
+                          <button type="button" data-layout="mega" class="rc-layout-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">14</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="rcTags" class="flex flex-wrap gap-2 min-h-[2rem]"></div>
+                  <div id="rcResult" class="glass-card rounded-2xl p-4 border border-white/10 text-xs text-gray-400">Launch to reveal selection</div>
+                  <div id="rcOptionalHistoryBox" class="hidden">
+                    <div id="rcBest"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1104,396 +1414,34 @@
           <div id="stage-opposite" class="decider-stage-panel hidden space-y-4">
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <i class="fa-solid fa-shuffle text-emerald-300"></i> Opposite Day
-                </h2>
-              </div>
-              <div id="oppositeStageContent" class="space-y-4"></div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB ALIAS: CINEMA MOOD DIAL (Preserved for internal routing) -->
-    <section id="tab-mood" class="tab-pane hidden"></section>
-
-    <!-- TAB: TOURNAMENT & CINESWIPE -->
-    <section id="tab-duel" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-        <div class="flex items-center gap-3">
-          <button type="button" onclick="switchTab('play')" title="Back to Play" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95">
-            <i class="fa-solid fa-arrow-left text-xs"></i>
-          </button>
-          <div class="flex items-center p-0.5 rounded-xl bg-black/50 border border-white/10" id="duelModeSwitchBar">
-            <button type="button" id="duelBtnTourney" onclick="window.setDuelSubMode('tourney')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-gold text-black shadow">
-              <i class="fa-solid fa-trophy mr-1 text-[11px]"></i> Tournament
-            </button>
-            <button type="button" id="duelBtnSwipe" onclick="window.setDuelSubMode('swipe')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white">
-              <i class="fa-solid fa-layer-group mr-1 text-[11px]"></i> CineSwipe
-            </button>
-          </div>
-        </div>
-        <!-- Themed Curations Pills -->
-        <div class="flex flex-wrap gap-1.5 items-center" id="duelPresetGrid">
-          <button type="button" onclick="launchPresetDuel('pantheon')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Essential</button>
-          <button type="button" onclick="launchPresetDuel('scifi')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Sci-Fi</button>
-          <button type="button" onclick="launchPresetDuel('bollywood')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Indian</button>
-          <button type="button" onclick="launchPresetDuel('tv')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Series</button>
-          <button type="button" onclick="launchPresetDuel('action')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Action</button>
-          <button type="button" onclick="launchPresetDuel('thriller')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">Thriller</button>
-        </div>
-      </div>
-
-      <!-- Clean Integrated Controls Bar for Contenders, Source -->
-      <div id="duelSetup" class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
-          <div>
-            <div class="text-[11px] font-bold text-gray-400 mb-1">Contenders</div>
-            <div class="flex gap-1.5" id="duelSize">
-              <button data-v="4" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-brand-gold text-black">4</button>
-              <button data-v="8" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">8</button>
-              <button data-v="16" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">16</button>
-              <button data-v="32" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">32</button>
-            </div>
-          </div>
-
-          <div>
-            <div class="text-[11px] font-bold text-gray-400 mb-1">Source</div>
-            <div class="flex gap-1.5" id="duelSrc">
-              <button data-v="wish" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-brand-gold text-black">Watchlist</button>
-              <button data-v="mood" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">Mood</button>
-              <button data-v="pop" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white/5 text-gray-300">Popular</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="duelMoodWrap" class="hidden pt-1">
-          <select id="duelMood" class="w-full px-3 py-1.5 bg-black/50 border border-white/15 rounded-xl text-xs text-white"></select>
-        </div>
-
-        <button id="duelBuild" class="w-full py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs transition-opacity shadow">Start Tournament</button>
-      </div>
-
-      <div id="duelArena" class="glass-card rounded-2xl p-4 sm:p-6 border border-white/10 space-y-4 relative overflow-hidden">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <div id="duelRound" class="text-xs font-bold tracking-wide text-gray-200">Face-Off</div>
-          <div class="flex flex-wrap gap-1.5">
-            <button id="duelAuto" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-gray-200 text-xs font-medium transition-all">Auto-judge</button>
-            <button id="duelAutoAll" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-xs font-medium transition-all">Auto-all</button>
-            <button id="duelQuit" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 text-xs font-medium transition-all">Reset</button>
-          </div>
-        </div>
-        <div id="duelStage" class="flex items-center justify-center gap-3 sm:gap-8 py-2 min-h-[300px] sm:min-h-[360px]"></div>
-        <div id="duelBracket" class="flex flex-wrap gap-x-5 gap-y-2 justify-center pt-2 border-t border-white/10"></div>
-      </div>
-
-      <!-- CineSwipe Arena -->
-      <div id="cineSwipeArena" class="hidden glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4 relative overflow-hidden">
-        <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <div class="text-sm font-bold text-white">CineSwipe</div>
-          <div class="flex items-center gap-2">
-            <span id="csDeckCounter" class="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-mono text-xs font-semibold">1 / 16</span>
-            <button id="csQuit" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 text-xs font-medium">Exit</button>
-          </div>
-        </div>
-
-        <!-- Card Stage -->
-        <div class="relative flex items-center justify-center py-2 min-h-[460px] sm:min-h-[500px]">
-          <div id="csCardStage" class="relative w-full max-w-[320px] sm:max-w-[350px] h-[450px] sm:h-[480px]"></div>
-        </div>
-
-        <!-- Controls: Pass / Lock / Keep -->
-        <div class="flex flex-col items-center gap-2 pt-1">
-          <div class="flex items-center justify-center gap-4 sm:gap-6">
-            <button id="csPassBtn" type="button" class="group flex flex-col items-center gap-1 focus:outline-none" title="Pass">
-              <div class="w-12 h-12 rounded-full bg-rose-500/15 group-hover:bg-rose-500/25 border-2 border-rose-500/50 text-rose-400 text-lg flex items-center justify-center shadow transition-transform group-hover:scale-105 active:scale-95">
-                <i class="fa-solid fa-xmark"></i>
-              </div>
-              <span class="text-[10px] font-bold text-rose-400/80 uppercase tracking-wider">Pass</span>
-            </button>
-
-            <button id="csPickTonightBtn" type="button" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
-              <i class="fa-solid fa-play"></i>
-              <span>Watch Now</span>
-            </button>
-
-            <button id="csKeepBtn" type="button" class="group flex flex-col items-center gap-1 focus:outline-none" title="Keep">
-              <div class="w-12 h-12 rounded-full bg-emerald-500/15 group-hover:bg-emerald-500/25 border-2 border-emerald-500/50 text-emerald-400 text-lg flex items-center justify-center shadow transition-transform group-hover:scale-105 active:scale-95">
-                <i class="fa-solid fa-heart"></i>
-              </div>
-              <span class="text-[10px] font-bold text-emerald-400/80 uppercase tracking-wider">Save</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div id="duelChamp" class="hidden glass-card rounded-3xl p-6 sm:p-10 border border-brand-gold/40 text-center space-y-4 relative overflow-hidden"></div>
-    </section>
-
-    <!-- TAB: MOOD RICOCHET -->
-    <section id="tab-ricochet" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex items-center justify-between border-b border-white/10 pb-4">
-        <div class="flex items-center gap-3">
-          <button type="button" onclick="switchTab('play')" title="Back to Play" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95">
-            <i class="fa-solid fa-arrow-left text-xs"></i>
-          </button>
-          <h1 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-circle-dot text-brand-gold"></i> Mood Ricochet
-          </h1>
-        </div>
-      </div>
-
-      <div class="grid lg:grid-cols-[auto_1fr] gap-6 items-start">
-        <div class="space-y-3 mx-auto w-full max-w-[520px]">
-          <canvas id="rcCv" width="520" height="693"></canvas>
-          <div class="flex gap-2 items-center flex-wrap">
-            <button id="rcLaunch" class="px-5 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm shadow-lg"><i class="fa-solid fa-rocket mr-1.5"></i>Launch</button>
-            <button id="rcShuffle" class="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold text-xs"><i class="fa-solid fa-shuffle mr-1"></i>Shuffle Bumpers</button>
-            <div class="flex items-center gap-2 ml-auto">
-              <span class="text-[11px] text-gray-400 font-semibold">Power</span>
-              <input id="rcPower" type="range" min="40" max="100" value="80" class="accent-yellow-400 w-28 sm:w-36" aria-label="Launch power">
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-white">Physics Controls</span>
-              <span id="rcActiveModeBadge" class="px-2.5 py-1 rounded-full bg-brand-gold/15 border border-brand-gold/40 text-brand-gold text-[11px] font-bold">1 Ball · Normal</span>
-            </div>
-
-            <!-- Ball Count Selector (1, 2, 3, 4) -->
-            <div class="space-y-1.5">
-              <label class="text-xs font-bold text-gray-400">Balls</label>
-              <div class="grid grid-cols-4 gap-2" id="rcBallCountGroup">
-                <button type="button" data-balls="1" class="rc-ball-btn py-2 rounded-xl text-xs font-extrabold bg-brand-gold text-black shadow">1</button>
-                <button type="button" data-balls="2" class="rc-ball-btn py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">2</button>
-                <button type="button" data-balls="3" class="rc-ball-btn py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">3</button>
-                <button type="button" data-balls="4" class="rc-ball-btn py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10">4</button>
-              </div>
-            </div>
-
-            <!-- Gravity & Bounce Physics Selector -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-gray-400">Gravity</label>
-                <div class="grid grid-cols-3 gap-1.5" id="rcGravGroup">
-                  <button type="button" data-grav="normal" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-bold bg-cyan-500/25 border border-cyan-400/50 text-cyan-200">Normal</button>
-                  <button type="button" data-grav="moon" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">Low</button>
-                  <button type="button" data-grav="hyper" class="rc-grav-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">Hyper</button>
+                <div>
+                  <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-shuffle text-emerald-300"></i> Opposite Day
+                  </h2>
+                  <div id="oppStageLine" class="text-xs text-gray-400 mt-0.5">Explore movies beyond your normal habits</div>
                 </div>
+                <button type="button" onclick="if(window.oppToggle) window.oppToggle();" id="oppStageToggleBtn" class="px-3.5 py-1.5 rounded-xl bg-emerald-400 text-black font-extrabold text-xs shadow">
+                  Toggle Opposite Day
+                </button>
               </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-gray-400">Bumpers</label>
-                <div class="grid grid-cols-2 gap-1.5" id="rcBumperLayoutGroup">
-                  <button type="button" data-layout="standard" class="rc-layout-btn py-1.5 rounded-lg text-[11px] font-bold bg-purple-500/25 border border-purple-400/50 text-purple-200">10</button>
-                  <button type="button" data-layout="mega" class="rc-layout-btn py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-gray-300 border border-white/10">14</button>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between text-xs font-bold text-gray-300">
+                  <span id="oppStageName" class="text-brand-gold">Opposite Taste</span>
+                  <span>Balance</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs font-bold text-gray-300">
+                  <span>My Usual</span>
+                  <input id="oppStageSlider" type="range" min="0" max="100" value="50" oninput="if(window.setOppBlend) window.setOppBlend(this.value);" class="flex-1 accent-emerald-400" aria-label="Me to Opposite">
+                  <span>Complete Opposite</span>
+                </div>
+                <div class="pt-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">Opposite Masterworks</div>
+                  <div id="oppStagePicks" class="hscroll flex gap-3 overflow-x-auto pb-2"></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div id="rcTags" class="flex flex-wrap gap-2 min-h-[2rem]"></div>
-          <div id="rcResult" class="glass-card rounded-2xl p-4 border border-white/10 text-xs text-gray-400">Launch to reveal selection</div>
-
-          <!-- Optional Toggleable Shot History -->
-          <div>
-            <button type="button" onclick="document.getElementById('rcOptionalHistoryBox').classList.toggle('hidden')" class="text-xs text-gray-400 hover:text-brand-gold font-semibold flex items-center gap-1.5">
-              <i class="fa-solid fa-clock-rotate-left"></i> <span>Recent Shots</span>
-            </button>
-            <div id="rcOptionalHistoryBox" class="hidden mt-2 glass-card rounded-2xl p-4 border border-white/10">
-              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold mb-2">Recent Shots</div>
-              <div id="rcBest" class="space-y-2 text-xs text-gray-300"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB: MARATHON ARCHITECT & BINGE CALCULATOR -->
-    <section id="tab-marathon" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-        <div class="flex items-center gap-3">
-          <button type="button" onclick="switchTab('play')" title="Back to Play" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95">
-            <i class="fa-solid fa-arrow-left text-xs"></i>
-          </button>
-          <h1 class="text-xl sm:text-2xl font-display font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-hourglass-half text-brand-gold"></i> Marathon Architect
-          </h1>
-        </div>
-        <!-- Dual Mode Switcher -->
-        <div class="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.05] border border-white/10 shrink-0">
-          <button id="mhModeSessionBtn" type="button" onclick="switchMarathonMode('session')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-brand-gold text-black shadow transition-all">
-            <i class="fa-solid fa-stopwatch"></i> <span>Session</span>
-          </button>
-          <button id="mhModeBingeBtn" type="button" onclick="switchMarathonMode('binge')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 text-gray-300 hover:text-white transition-all">
-            <i class="fa-solid fa-calendar-days text-brand-gold"></i> <span>Binge</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- MODE 1: SINGLE-SESSION MARATHON ARCHITECT -->
-      <div id="mhSessionSection" class="space-y-6">
-        <!-- Blueprints -->
-        <div class="space-y-2">
-          <div class="text-xs font-bold text-gray-400">Curated Blueprints</div>
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
-            <button type="button" onclick="applyMarathonPreset(4, '20:00', 'cosy', 'Horror')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Double Feature</div>
-              <div class="text-[11px] text-gray-400">4 hrs · 20:00 · Classic</div>
-            </button>
-            <button type="button" onclick="applyMarathonPreset(6, '18:00', 'epic', '')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Weekend Retrospective</div>
-              <div class="text-[11px] text-gray-400">6 hrs · 18:00 · Epic</div>
-            </button>
-            <button type="button" onclick="applyMarathonPreset(6, '21:00', 'thrilling', 'Comedy')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Midnight Suspense</div>
-              <div class="text-[11px] text-gray-400">6 hrs · 21:00 · Tension</div>
-            </button>
-            <button type="button" onclick="applyMarathonPreset(5, '19:00', 'funny', 'Horror')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Comedy Showcase</div>
-              <div class="text-[11px] text-gray-400">5 hrs · 19:00 · Light</div>
-            </button>
-            <button type="button" onclick="applyMarathonPreset(8, '16:00', 'thoughtful', '')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Director's Cut</div>
-              <div class="text-[11px] text-gray-400">8 hrs · 16:00 · Prestige</div>
-            </button>
-          </div>
-        </div>
-
-        <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
-          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 items-end">
-            <label class="text-xs text-gray-400 font-bold">Total Hours<input id="mhHours" type="number" min="2" max="16" value="8" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
-            <label class="text-xs text-gray-400 font-bold">Start Time<input id="mhStart" type="time" value="18:00" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"></label>
-            <label class="text-xs text-gray-400 font-bold">Core Vibe<select id="mhMood" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="cosy">Cosy &amp; Warm</option><option value="thrilling">Thrilling &amp; Tense</option><option value="thoughtful">Thoughtful &amp; Deep</option><option value="epic" selected>Epic &amp; Grand</option><option value="funny">Pure Comedy</option></select></label>
-            <label class="text-xs text-gray-400 font-bold">Energy Curve<select id="mhArcShape" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="wave" selected>Classic Wave</option><option value="escalate">Escalator</option><option value="frontload">Front-Loaded</option><option value="coaster">Rollercoaster</option><option value="latepeak">Late Peak</option></select></label>
-            <label class="text-xs text-gray-400 font-bold">Intermission<select id="mhBreakLen" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="0">0 min</option><option value="10">10 min</option><option value="15" selected>15 min</option><option value="25">25 min</option></select></label>
-            <label class="text-xs text-gray-400 font-bold">Exclude Genre<select id="mhNo" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/50 border border-white/15 text-white"><option value="">None</option><option>Horror</option><option>Thriller</option><option>Crime</option><option>Romance</option><option>Animation</option><option>Action</option><option>Sci-Fi</option><option>Drama</option><option>Comedy</option><option>Fantasy</option><option>Western</option><option>War</option><option>Documentary</option></select></label>
-            <button id="mhBuild" class="col-span-2 sm:col-span-4 lg:col-span-1 px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs sm:text-sm shadow hover:opacity-95 transition-all">Build Timeline</button>
-          </div>
-          <div class="flex items-center justify-between gap-2 pt-2 border-t border-white/10 text-xs text-gray-400">
-            <span>Adjust any slot's energy or swap titles below</span>
-            <div class="flex items-center gap-1.5">
-              <button type="button" onclick="mhAddSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-brand-gold"><i class="fa-solid fa-plus mr-1"></i>Add Slot</button>
-              <button type="button" onclick="mhRemoveSlot()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-300"><i class="fa-solid fa-minus mr-1"></i>Remove</button>
-            </div>
-          </div>
-        </div>
-        <div id="mhOut" class="space-y-4">
-          <div id="mhCurve" class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3"></div>
-          <div id="mhList" class="space-y-2.5"></div>
-          <div class="flex gap-2 flex-wrap">
-            <button id="mhCopy" class="px-4 py-2 rounded-xl border border-white/15 text-xs sm:text-sm font-bold text-gray-200"><i class="fa-solid fa-copy mr-1.5"></i>Copy Plan</button>
-            <button id="mhWish" class="px-4 py-2 rounded-xl bg-rose-500 text-white text-xs sm:text-sm font-bold"><i class="fa-solid fa-heart mr-1.5"></i>Add to Watchlist</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- MODE 2: SERIES BINGE CALCULATOR -->
-      <div id="mhBingeSection" class="hidden space-y-6">
-        <!-- Targets -->
-        <div class="space-y-2">
-          <div class="text-xs font-bold text-gray-400">Popular Targets</div>
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-            <button type="button" onclick="selectBingePresetCard('breaking-bad')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Breaking Bad</div>
-              <div class="text-[11px] text-gray-400">5 Seasons · 62 Eps</div>
-            </button>
-            <button type="button" onclick="selectBingePresetCard('game-of-thrones')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Game of Thrones</div>
-              <div class="text-[11px] text-gray-400">8 Seasons · 73 Eps</div>
-            </button>
-            <button type="button" onclick="selectBingePresetCard('stranger-things')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Stranger Things</div>
-              <div class="text-[11px] text-gray-400">4 Seasons · 34 Eps</div>
-            </button>
-            <button type="button" onclick="selectBingePresetCard('ramayan-1987')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Ramayan (1987)</div>
-              <div class="text-[11px] text-gray-400">1 Season · 78 Eps</div>
-            </button>
-            <button type="button" onclick="selectBingePresetCard('mcu-infinity')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">MCU Infinity Saga</div>
-              <div class="text-[11px] text-gray-400">23 Films</div>
-            </button>
-            <button type="button" onclick="selectBingePresetCard('harry-potter')" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-gold/50 text-left space-y-1 transition-all">
-              <div class="text-xs font-bold text-white">Harry Potter</div>
-              <div class="text-[11px] text-gray-400">8 Films</div>
-            </button>
-          </div>
-        </div>
-
-        <!-- Binge Configuration Form -->
-        <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="sm:col-span-2 space-y-1.5">
-              <label class="text-xs text-gray-400 font-bold">Series or Saga</label>
-              <select id="bingeShowSelect" onchange="onBingeShowSelected()" class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-semibold text-sm"></select>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <label class="text-xs text-gray-400 font-bold">Start Date
-                <input id="bingeStartDate" type="date" onchange="calculateBingeSchedule()" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs">
-              </label>
-              <label class="text-xs text-gray-400 font-bold">Daily Time
-                <input id="bingeStartTime" type="time" value="20:00" onchange="calculateBingeSchedule()" class="mt-1 w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs">
-              </label>
-            </div>
-          </div>
-
-          <!-- Pace Presets -->
-          <div class="space-y-2 pt-2 border-t border-white/10">
-            <label class="text-xs text-gray-400 font-bold">Viewing Pace</label>
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-              <button type="button" data-pace="casual" onclick="setBingePace('casual')" class="binge-pace-btn p-2.5 rounded-xl bg-brand-gold text-black font-bold text-left border border-brand-gold shadow transition-all">
-                <div class="text-xs font-bold">Casual</div>
-                <div class="text-[11px] opacity-80 mt-0.5">2 hrs / day</div>
-              </button>
-              <button type="button" data-pace="speedrun" onclick="setBingePace('speedrun')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
-                <div class="text-xs font-bold">Sprint</div>
-                <div class="text-[11px] opacity-80 mt-0.5">5 hrs / day</div>
-              </button>
-              <button type="button" data-pace="weekend" onclick="setBingePace('weekend')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
-                <div class="text-xs font-bold">Weekend</div>
-                <div class="text-[11px] opacity-80 mt-0.5">Sat &amp; Sun focus</div>
-              </button>
-              <button type="button" data-pace="bite" onclick="setBingePace('bite')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
-                <div class="text-xs font-bold">Daily Episode</div>
-                <div class="text-[11px] opacity-80 mt-0.5">1 ep / day</div>
-              </button>
-              <button type="button" data-pace="custom" onclick="setBingePace('custom')" class="binge-pace-btn p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 hover:text-white text-left border border-white/10 transition-all">
-                <div class="text-xs font-bold">Custom</div>
-                <div class="text-[11px] opacity-80 mt-0.5">Manual slider</div>
-              </button>
-            </div>
-
-            <div id="bingeCustomHoursRow" class="hidden pt-2 flex items-center gap-4">
-              <span class="text-xs text-gray-400 font-bold shrink-0">Daily Hours:</span>
-              <input id="bingeCustomHoursSlider" type="range" min="0.5" max="10" step="0.5" value="2.5" oninput="onBingeCustomHoursChange(this.value)" class="flex-1 accent-brand-gold cursor-pointer">
-              <span id="bingeCustomHoursLbl" class="text-xs font-bold text-brand-gold w-24 text-right">2.5 hrs/day</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Calculated KPI Cards -->
-        <div id="bingeKpiGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
-
-        <!-- Day-by-Day Interactive Schedule & Episode Checklist -->
-        <div class="space-y-3">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <h3 class="text-base font-display font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-list-check text-brand-gold"></i> Schedule &amp; Progress
-            </h3>
-            <div class="flex flex-wrap items-center gap-2">
-              <button type="button" onclick="copyBingeSchedule()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-gray-200 text-xs font-bold transition-all"><i class="fa-solid fa-copy mr-1.5"></i>Copy</button>
-              <button type="button" onclick="exportBingeICal()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-brand-gold text-xs font-bold transition-all"><i class="fa-solid fa-calendar-arrow-down mr-1.5"></i>Export .ics</button>
-              <button type="button" onclick="addBingeSeriesToWatchlist()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 text-xs font-bold transition-all"><i class="fa-solid fa-heart mr-1.5"></i>Watchlist</button>
-              <button type="button" onclick="resetBingeProgress()" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-gray-200 text-xs transition-all" title="Reset Episode Checks"><i class="fa-solid fa-rotate-left"></i></button>
-            </div>
-          </div>
-
-          <div id="bingeScheduleList" class="space-y-3 max-h-[600px] overflow-y-auto pr-1"></div>
         </div>
       </div>
     </section>
@@ -1509,54 +1457,6 @@
       <div id="uniView" class="hidden space-y-4"></div>
     </section>
 
-    <!-- TAB: MATCHMAKER (Play Subtab) -->
-    <section id="tab-match" class="tab-pane hidden fade-in space-y-4">
-      <div id="recSection" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
-        <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <div class="flex items-center gap-3">
-            <button type="button" onclick="switchTab('play')" title="Back to Play" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95">
-              <i class="fa-solid fa-arrow-left text-xs"></i>
-            </button>
-            <h1 class="text-xl sm:text-2xl font-display font-bold text-white">Matchmaker</h1>
-          </div>
-          <button onclick="prefillFromWishlist('recTags')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
-            <i class="fa-solid fa-bolt text-brand-gold mr-1"></i> Watchlist
-          </button>
-        </div>
-
-        <!-- Selected Seed Chips -->
-        <div id="recTags" class="flex flex-wrap gap-2 min-h-[44px] p-2.5 rounded-xl bg-black/45 border border-white/10 items-center"></div>
-
-        <!-- Autocomplete Input -->
-        <div class="flex flex-col sm:flex-row gap-2.5">
-          <div class="relative flex-1 autocomplete-wrapper">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-            <input type="text" id="recInput" placeholder="Add a title you love..."
-              oninput="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
-              onfocus="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
-              class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-            <div id="recSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-30 divide-y divide-white/5"></div>
-          </div>
-          <button onclick="generateRecommendation()" class="px-5 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95 whitespace-nowrap">
-            Find Matches
-          </button>
-        </div>
-
-        <div id="recInitialPrompt" class="hidden"></div>
-
-        <!-- Output Results -->
-        <div id="recResultBox" class="hidden pt-3 border-t border-white/10 space-y-3">
-          <div class="flex items-center justify-between gap-2">
-            <h3 class="text-xs sm:text-sm font-bold text-white">Top Matches</h3>
-            <button id="rejectBtn" onclick="rejectRecommendation()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 border border-white/15 transition-all">
-              <i class="fa-solid fa-rotate mr-1"></i> Next
-            </button>
-          </div>
-          <div id="recCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
-        </div>
-      </div>
-    </section>
-
     <section id="tab-hub" class="tab-pane hidden fade-in space-y-6">
       <!-- Hub Header: Title + Spine View Icon + Back up and Restore -->
       <div class="border-b border-white/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -1570,6 +1470,12 @@
         </div>
         
         <div class="flex items-center gap-2">
+          <!-- Member Profile Button -->
+          <button type="button" onclick="switchTab('profile')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200 hover:text-white flex items-center gap-1.5 transition-all" title="Member Profile">
+            <i class="fa-solid fa-user text-brand-gold"></i>
+            <span class="hidden sm:inline">Profile</span>
+          </button>
+
           <!-- Spine View as one small icon -->
           <button type="button" id="toggleLibrarySpineViewBtn" onclick="toggleLibrarySpineView()" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-brand-gold transition-all" title="Spine View" aria-label="Spine View">
             <i class="fa-solid fa-bars-staggered text-xs"></i>
@@ -1912,7 +1818,22 @@
     </section>
 
     <!-- TAB: PROFILE & SETTINGS + SEPARATE ADMIN & CLOUD CONTROL BLOCK -->
-    <section id="tab-profile" class="tab-pane hidden fade-in space-y-8">
+    <section id="tab-profile" class="tab-pane hidden fade-in space-y-6">
+      <!-- Profile Header with Back Mark & Title & Library Button -->
+      <div class="border-b border-white/10 pb-4 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="returnToOpeningPage()" class="back-corner-mark" title="Back" aria-label="Back to Main Page">
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+          </button>
+          <h1 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight flex items-center gap-2.5">
+            <i class="fa-solid fa-user text-brand-gold"></i> Member Profile
+          </h1>
+        </div>
+        <button type="button" onclick="switchTab('hub')" class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200 hover:text-white flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-bookmark text-brand-gold"></i> <span>Library</span>
+        </button>
+      </div>
+
       <!-- BLOCK 1: PERSONAL PROFILE & SETTINGS -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Personal Profile Card -->

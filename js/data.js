@@ -17423,9 +17423,15 @@ Odd Taxi|2021|87
       isSpinning = true;
       const pool = getEligibleSurprisePool();
       const display = document.getElementById('rouletteDisplay');
+      const inlineDisplay = document.getElementById('rouletteInlineWinner');
       const spinBtn = document.getElementById('spinBtn');
-      spinBtn.disabled = true;
-      spinBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Shuffling...';
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Shuffling...';
+      }
+      if (inlineDisplay) {
+        inlineDisplay.innerHTML = '<div class="text-xs text-brand-gold font-bold flex items-center gap-2"><i class="fa-solid fa-spinner fa-spin"></i> Spinning the roulette...</div>';
+      }
 
       let iterations = 0;
       const interval = setInterval(() => {
@@ -17434,14 +17440,16 @@ Odd Taxi|2021|87
         const fallback = generateStylizedPosterDataURI(temp);
         const poster = posterCache[temp.type + ':' + temp.title] || fallback;
 
-        display.innerHTML = `
-          <img src="${poster}" class="w-16 h-24 object-cover rounded-xl shrink-0 border border-white/10 roulette-blur" alt="Spinning" />
-          <div class="flex-1 min-w-0">
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-brand-gold">Rolling Roulette...</span>
-            <div class="text-base font-bold text-white truncate">${temp.cleanName || temp.title}</div>
-            <div class="text-xs text-gray-400">${temp.genre} · ${temp.year} · ★ ${temp.rating}</div>
-          </div>
-        `;
+        if (display) {
+          display.innerHTML = `
+            <img src="${poster}" class="w-16 h-24 object-cover rounded-xl shrink-0 border border-white/10 roulette-blur" alt="Spinning" />
+            <div class="flex-1 min-w-0">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-brand-gold">Rolling Roulette...</span>
+              <div class="text-base font-bold text-white truncate">${temp.cleanName || temp.title}</div>
+              <div class="text-xs text-gray-400">${temp.genre} · ${temp.year} · ★ ${temp.rating}</div>
+            </div>
+          `;
+        }
 
         if (iterations >= 9) {
           clearInterval(interval);
@@ -17449,37 +17457,56 @@ Odd Taxi|2021|87
           currentSurpriseWinner = winner;
           renderWinnerDisplay(winner);
           isSpinning = false;
-          spinBtn.disabled = false;
-          spinBtn.innerHTML = '<i class="fa-solid fa-rotate mr-1"></i> Roll Again';
+          if (spinBtn) {
+            spinBtn.disabled = false;
+            spinBtn.innerHTML = '<i class="fa-solid fa-rotate mr-1"></i> Roll Again';
+          }
         }
       }, 90);
     }
 
     function renderWinnerDisplay(item) {
       const display = document.getElementById('rouletteDisplay');
+      const inlineDisplay = document.getElementById('rouletteInlineWinner');
       const fallback = generateStylizedPosterDataURI(item);
       const poster = posterCache[item.type + ':' + item.title] || fallback;
 
-      display.innerHTML = `
-        <img src="${poster}" data-title="${item.title.replace(/"/g, '&quot;')}" onerror="this.onerror=null;this.src='${fallback}';" class="lazy-poster w-20 h-28 object-cover rounded-xl shrink-0 border border-brand-gold/40 shadow-lg shadow-brand-gold/15 fade-in" />
-        <div class="flex-1 min-w-0 space-y-1 fade-in">
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded-full bg-brand-gold text-black text-[10px] font-black uppercase">Selected Pick</span>
-            <span class="text-brand-gold font-bold text-xs">★ ${item.rating}</span>
+      if (display) {
+        display.innerHTML = `
+          <img src="${poster}" data-title="${item.title.replace(/"/g, '&quot;')}" onerror="this.onerror=null;this.src='${fallback}';" class="lazy-poster w-20 h-28 object-cover rounded-xl shrink-0 border border-brand-gold/40 shadow-lg shadow-brand-gold/15 fade-in" />
+          <div class="flex-1 min-w-0 space-y-1 fade-in">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-full bg-brand-gold text-black text-[10px] font-black uppercase">Selected Pick</span>
+              <span class="text-brand-gold font-bold text-xs">★ ${item.rating}</span>
+            </div>
+            <h4 class="text-lg font-display font-extrabold text-white truncate">${item.cleanName || item.title}</h4>
+            <div class="text-xs text-gray-300">${item.genre} · ${item.year} · ${item.platformName}</div>
+            <div class="pt-1 flex gap-2">
+              <button onclick="toggleWishlist('${item.title.replace(/'/g, "\\'")}', event); renderWinnerDisplay(currentSurpriseWinner);" class="text-xs px-2.5 py-1 rounded-lg ${wishlistTitles.includes(item.title) ? 'bg-rose-500 text-white font-bold' : 'bg-white/10 hover:bg-white/20 text-gray-200'}">
+                <i class="fa-solid fa-heart mr-1 ${wishlistTitles.includes(item.title) ? 'text-white' : 'text-rose-400'}"></i> ${wishlistTitles.includes(item.title) ? 'In Watchlist' : 'Watchlist'}
+              </button>
+              <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(item.cleanName + ' ' + item.year + ' trailer')}" target="_blank" rel="noopener" class="text-xs px-2.5 py-1 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-300">
+                <i class="fa-brands fa-youtube mr-1"></i> Trailer
+              </a>
+            </div>
           </div>
-          <h4 class="text-lg font-display font-extrabold text-white truncate">${item.cleanName || item.title}</h4>
-          <div class="text-xs text-gray-300">${item.genre} · ${item.year} · ${item.platformName}</div>
-          <div class="pt-1 flex gap-2">
-            <button onclick="toggleWishlist('${item.title.replace(/'/g, "\\'")}', event); renderWinnerDisplay(currentSurpriseWinner);" class="text-xs px-2.5 py-1 rounded-lg ${wishlistTitles.includes(item.title) ? 'bg-rose-500 text-white font-bold' : 'bg-white/10 hover:bg-white/20 text-gray-200'}">
-              <i class="fa-solid fa-heart mr-1 ${wishlistTitles.includes(item.title) ? 'text-white' : 'text-rose-400'}"></i> ${wishlistTitles.includes(item.title) ? 'In Watchlist' : 'Watchlist'}
-            </button>
-            <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(item.cleanName + ' ' + item.year + ' trailer')}" target="_blank" rel="noopener" class="text-xs px-2.5 py-1 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-300">
-              <i class="fa-brands fa-youtube mr-1"></i> Trailer
-            </a>
+        `;
+        attachThumbObservers(display);
+      }
+
+      if (inlineDisplay) {
+        inlineDisplay.innerHTML = `
+          <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-brand-gold/30 max-w-md w-full text-left">
+            <img src="${poster}" class="w-16 h-24 object-cover rounded-xl shrink-0 border border-brand-gold/40 shadow" />
+            <div class="flex-1 min-w-0 space-y-1">
+              <span class="text-[10px] font-black uppercase tracking-wider text-brand-gold">Winning Pick</span>
+              <h4 class="text-base font-bold text-white truncate">${item.cleanName || item.title}</h4>
+              <div class="text-xs text-gray-300">★ ${item.rating} · ${item.genre} (${item.year})</div>
+              <button type="button" onclick="openDetailModal('${item.title.replace(/'/g, "\\'")}')" class="mt-1 px-3 py-1 rounded-lg bg-brand-gold text-black font-extrabold text-xs">Inspect Film →</button>
+            </div>
           </div>
-        </div>
-      `;
-      attachThumbObservers(display);
+        `;
+      }
     }
 
     function inspectCurrentSurprise() {
@@ -17940,6 +17967,9 @@ Odd Taxi|2021|87
     window.loadDemoCompatibility = loadDemoCompatibility;
     window.surpriseFriendList = surpriseFriendList;
     window.prefillFromWishlist = prefillFromWishlist;
+    window.spinSurpriseWheel = spinSurpriseWheel;
+    window.generateRecommendation = generateRecommendation;
+    window.rejectRecommendation = rejectRecommendation;
     window.initTasteCompatibility = function() {
       renderTags('myTags');
       renderTags('friendTags');

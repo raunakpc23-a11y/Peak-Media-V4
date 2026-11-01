@@ -29,7 +29,8 @@
     return Math.max(0.18, Math.min(0.98, base + rBoost));
   }
   function build(){
-    const total=Math.max(2,+$('mhHours').value||8)*60,mood=$('mhMood').value,no=$('mhNo').value,mg=MOODG[mood]||MOODG.epic;
+    if (!$('mhHours') || !$('mhMood')) return;
+    const total=Math.max(2,+$('mhHours').value||8)*60,mood=$('mhMood') ? $('mhMood').value : 'epic',no=$('mhNo') ? $('mhNo').value : '',mg=MOODG[mood]||MOODG.epic;
     const shape=($('mhArcShape')&&$('mhArcShape').value)||'wave';
     const brk=getBreakMins();
     let pool=Object.values(globalDatabase).filter(i=>i.thumb&&!watchedTitles.includes(i.title)&&parseFloat(i.rating)>=7.3&&i.genre!==no);
@@ -164,10 +165,14 @@
   function move(a,b){if(b<0||b>=plan.length||a===b)return;const rows=[...document.querySelectorAll('.mh-row')],y0=rows.map(r=>r.getBoundingClientRect().top);const [x]=plan.splice(a,1);plan.splice(b,0,x);draw(false);
     // FLIP animation
     document.querySelectorAll('.mh-row').forEach((r,k)=>{const old=y0[plan.indexOf(plan[k])]; const from=y0[(k===b)?a:(a<b?(k>=a&&k<b?k+1:k):(k>b&&k<=a?k-1:k))];if(from!=null){const d=from-r.getBoundingClientRect().top;r.style.transition='none';r.style.transform=`translateY(${d}px)`;requestAnimationFrame(()=>{r.style.transition='transform .4s';r.style.transform='none';});}});}
-  $('mhBuild').onclick=build;
+  if($('mhBuild')) $('mhBuild').onclick=build;
   if($('mhArcShape')) $('mhArcShape').onchange=build;
   if($('mhBreakLen')) $('mhBreakLen').onchange=()=>draw(false);
   if($('mhStart')) $('mhStart').onchange=()=>draw(false);
+  window.buildMarathonSchedule = build;
+  window.openMarathonModal = function() {
+    build();
+  };
   window.applyMarathonPreset = function(hours, startTime, mood, excludeGenre) {
     if($('mhHours')) $('mhHours').value = hours;
     if($('mhStart')) $('mhStart').value = startTime;
@@ -178,15 +183,17 @@
   };
   // Auto-build default marathon schedule so Marathon Architect is full and visual immediately!
   setTimeout(() => { if (!plan.length) build(); }, 80);
-  $('mhList').onclick=e=>{const b=e.target.closest('[data-mv]');if(b){const i=+b.dataset.i;move(i,i+ +b.dataset.mv);}};
+  if($('mhList')) $('mhList').onclick=e=>{const b=e.target.closest('[data-mv]');if(b){const i=+b.dataset.i;move(i,i+ +b.dataset.mv);}};
   let dragI=null;
-  $('mhList').addEventListener('dragstart',e=>{const r=e.target.closest('.mh-row');if(!r)return;dragI=+r.dataset.i;r.classList.add('drag');e.dataTransfer.effectAllowed='move';});
-  $('mhList').addEventListener('dragend',e=>{document.querySelectorAll('.mh-row').forEach(r=>r.classList.remove('drag'));});
-  $('mhList').addEventListener('dragover',e=>{if(dragI!=null)e.preventDefault();});
-  $('mhList').addEventListener('drop',e=>{const r=e.target.closest('.mh-row');if(!r||dragI==null)return;e.preventDefault();const to=+r.dataset.i,from=dragI;dragI=null;move(from,to);});
-  $('mhCopy').onclick=()=>{const {out}=blocks();const t='My Watch Marathon\n'+out.map(b=>b.kind==='film'?`${fmt(b.start)}  ${b.i.cleanName||b.i.title} (${b.i.year}) ~${b.len}m`:`${fmt(b.start)}  -- ${b.n} (${b.len}m)`).join('\n');
+  if($('mhList')) {
+    $('mhList').addEventListener('dragstart',e=>{const r=e.target.closest('.mh-row');if(!r)return;dragI=+r.dataset.i;r.classList.add('drag');e.dataTransfer.effectAllowed='move';});
+    $('mhList').addEventListener('dragend',e=>{document.querySelectorAll('.mh-row').forEach(r=>r.classList.remove('drag'));});
+    $('mhList').addEventListener('dragover',e=>{if(dragI!=null)e.preventDefault();});
+    $('mhList').addEventListener('drop',e=>{const r=e.target.closest('.mh-row');if(!r||dragI==null)return;e.preventDefault();const to=+r.dataset.i,from=dragI;dragI=null;move(from,to);});
+  }
+  if($('mhCopy')) $('mhCopy').onclick=()=>{const {out}=blocks();const t='My Watch Marathon\n'+out.map(b=>b.kind==='film'?`${fmt(b.start)}  ${b.i.cleanName||b.i.title} (${b.i.year}) ~${b.len}m`:`${fmt(b.start)}  -- ${b.n} (${b.len}m)`).join('\n');
     (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>showToast('Plan copied','fa-copy','text-brand-gold'),()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showToast('Plan copied','fa-copy','text-brand-gold');}catch(e){}ta.remove();});};
-  $('mhWish').onclick=()=>{let n=0;plan.forEach(i=>{if(!wishlistTitles.includes(i.title)){wishlistTitles.push(i.title);n++;}});showToast(`Added ${n} titles to your Watchlist in order`,'fa-heart','text-rose-400');updateAllCountersAndViews();};
+  if($('mhWish')) $('mhWish').onclick=()=>{let n=0;plan.forEach(i=>{if(!wishlistTitles.includes(i.title)){wishlistTitles.push(i.title);n++;}});showToast(`Added ${n} titles to your Watchlist in order`,'fa-heart','text-rose-400');updateAllCountersAndViews();};
 
 })();
 

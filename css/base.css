@@ -14,66 +14,79 @@
       --gold: 245 197 24; --gold-hex: #F5C518; --bg: #03050a; --bgimg: none;
       --card-gradient: linear-gradient(135deg, rgba(24, 20, 10, 0.88) 0%, rgba(12, 10, 5, 0.96) 100%);
       --card-border: rgba(245, 197, 24, 0.3);
+      --surface-elevated: rgba(24, 20, 10, 0.75);
     }
     [data-theme="dawn"], [data-palette="dawn"]   { 
       --gold: 180 83 9;   --gold-hex: #b45309; --bg: #f4eedb; --bgimg: radial-gradient(circle at 50% 0%, rgba(217,119,6,.08), transparent 70%); 
       --card-gradient: linear-gradient(135deg, #ffffff 0%, #fdfbf7 100%);
       --card-border: rgba(180, 83, 9, 0.2);
+      --surface-elevated: rgba(255, 255, 255, 0.96);
     }
     [data-theme="noir"], [data-palette="noir"]   { 
       --gold: 148 163 184; --gold-hex: #94a3b8; --bg: #050608; --bgimg: radial-gradient(ellipse at 50% -10%, rgba(71,85,105,.35), transparent 60%); 
       --card-gradient: linear-gradient(135deg, rgba(16, 18, 22, 0.88) 0%, rgba(8, 10, 12, 0.96) 100%);
       --card-border: rgba(148, 163, 184, 0.3);
+      --surface-elevated: rgba(16, 18, 22, 0.75);
     }
     [data-theme="neon"], [data-palette="neon"]   { 
       --gold: 6 182 212;   --gold-hex: #06b6d4; --bg: #02070c; --bgimg: radial-gradient(circle at 15% 10%, rgba(6,182,212,.18), transparent 45%), radial-gradient(circle at 85% 30%, rgba(56,189,248,.15), transparent 45%); 
       --card-gradient: linear-gradient(135deg, rgba(6, 24, 34, 0.88) 0%, rgba(3, 12, 18, 0.96) 100%);
       --card-border: rgba(6, 182, 212, 0.3);
+      --surface-elevated: rgba(6, 24, 34, 0.75);
     }
     [data-theme="aurora"], [data-palette="aurora"] { 
       --gold: 52 211 153;  --gold-hex: #34d399; --bg: #020a08; --bgimg: linear-gradient(180deg, rgba(52,211,153,.14), rgba(129,140,248,.10) 40%, transparent 70%); 
       --card-gradient: linear-gradient(135deg, rgba(6, 26, 20, 0.88) 0%, rgba(3, 14, 12, 0.96) 100%);
       --card-border: rgba(52, 211, 153, 0.3);
+      --surface-elevated: rgba(6, 26, 20, 0.75);
     }
     [data-theme="golden"], [data-palette="golden"] { 
       --gold: 255 159 28;  --gold-hex: #ff9f1c; --bg: #0a0602; --bgimg: radial-gradient(ellipse at 50% 110%, rgba(255,159,28,.28), transparent 60%); 
       --card-gradient: linear-gradient(135deg, rgba(30, 18, 6, 0.88) 0%, rgba(14, 8, 3, 0.96) 100%);
       --card-border: rgba(255, 159, 28, 0.3);
+      --surface-elevated: rgba(30, 18, 6, 0.75);
     }
     [data-theme="blood"], [data-palette="blood"]   { 
       --gold: 239 68 68;   --gold-hex: #ef4444; --bg: #0c0203; --bgimg: radial-gradient(circle at 50% -20%, rgba(239,68,68,.30), transparent 55%); 
       --card-gradient: linear-gradient(135deg, rgba(30, 8, 10, 0.88) 0%, rgba(14, 4, 6, 0.96) 100%);
       --card-border: rgba(239, 68, 68, 0.3);
+      --surface-elevated: rgba(30, 8, 10, 0.75);
     }
     [data-theme="space"], [data-palette="space"]   { 
       --gold: 56 189 248;  --gold-hex: #38bdf8; --bg: #020409; --bgimg: radial-gradient(ellipse at 70% 0%, rgba(56,189,248,.25), transparent 55%), radial-gradient(ellipse at 10% 80%, rgba(14,165,233,.14), transparent 50%); 
       --card-gradient: linear-gradient(135deg, rgba(8, 18, 34, 0.88) 0%, rgba(4, 8, 16, 0.96) 100%);
       --card-border: rgba(56, 189, 248, 0.3);
+      --surface-elevated: rgba(8, 18, 34, 0.75);
     }
     [data-theme="velvet"], [data-palette="velvet"]  { 
       --gold: 168 85 247;  --gold-hex: #a855f7; --bg: #07030c; --bgimg: radial-gradient(ellipse at 75% 10%, rgba(168,85,247,.26), transparent 55%), radial-gradient(ellipse at 20% 85%, rgba(217,70,239,.14), transparent 50%); 
       --card-gradient: linear-gradient(135deg, rgba(22, 10, 34, 0.88) 0%, rgba(10, 4, 18, 0.96) 100%);
       --card-border: rgba(168, 85, 247, 0.3);
+      --surface-elevated: rgba(22, 10, 34, 0.75);
     }
     [data-theme="sakura"], [data-palette="sakura"]  { 
       --gold: 244 114 182; --gold-hex: #f472b6; --bg: #0b0309; --bgimg: radial-gradient(ellipse at 65% 0%, rgba(244,114,182,.24), transparent 55%), radial-gradient(ellipse at 15% 80%, rgba(251,113,133,.12), transparent 50%); 
       --card-gradient: linear-gradient(135deg, rgba(26, 10, 22, 0.88) 0%, rgba(14, 4, 12, 0.96) 100%);
       --card-border: rgba(244, 114, 182, 0.3);
+      --surface-elevated: rgba(26, 10, 22, 0.75);
     }
     [data-theme="frost"], [data-palette="frost"]   { 
       --gold: 125 211 252; --gold-hex: #7dd3fc; --bg: #02060b; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(125,211,252,.26), transparent 60%), radial-gradient(ellipse at 85% 90%, rgba(56,189,248,.15), transparent 50%); 
       --card-gradient: linear-gradient(135deg, rgba(8, 20, 34, 0.88) 0%, rgba(4, 10, 18, 0.96) 100%);
       --card-border: rgba(125, 211, 252, 0.3);
+      --surface-elevated: rgba(8, 20, 34, 0.75);
     }
     [data-theme="solar"], [data-palette="solar"]   { 
       --gold: 251 146 60;  --gold-hex: #fb923c; --bg: #0a0401; --bgimg: radial-gradient(ellipse at 50% -10%, rgba(251,146,60,.28), transparent 58%), radial-gradient(ellipse at 20% 90%, rgba(234,88,12,.15), transparent 50%); 
       --card-gradient: linear-gradient(135deg, rgba(28, 14, 6, 0.88) 0%, rgba(14, 6, 2, 0.96) 100%);
       --card-border: rgba(251, 146, 60, 0.3);
+      --surface-elevated: rgba(28, 14, 6, 0.75);
     }
     [data-theme="obsidian"], [data-palette="obsidian"] { 
       --gold: 148 163 184; --gold-hex: #94a3b8; --bg: #020305; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(100,116,139,.16), transparent 55%); 
       --card-gradient: linear-gradient(135deg, rgba(14, 16, 20, 0.88) 0%, rgba(6, 8, 10, 0.96) 100%);
       --card-border: rgba(100, 116, 139, 0.3);
+      --surface-elevated: rgba(14, 16, 20, 0.75);
     }
 
     /* Universal Card & Surface Elements That Bind To Theme Variables */
@@ -81,6 +94,9 @@
       background: var(--card-gradient) !important;
       border-color: var(--card-border) !important;
       transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+    }
+    .bg-black\/60, .bg-black\/50, .bg-black\/40, .bg-black\/70, .bg-black\/80, .bg-black\/35, .bg-black\/30 {
+      background-color: var(--surface-elevated, rgba(10, 14, 25, 0.7));
     }
 
     /* High-Fidelity Light Mode Suite */

@@ -6,7 +6,11 @@
   const ls = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
 
   // ---------- move existing blocks to their new homes ----------
-  const rec = $('recSection'); if (rec && $('tab-match')) $('tab-match').appendChild(rec);
+  const rec = $('recSection');
+  if (rec) {
+    const mmc = $('matchmakerContent') || $('stage-matchmaker') || $('tab-match');
+    if (mmc && rec.parentNode !== mmc) mmc.appendChild(rec);
+  }
 
   // ---------- navigation ----------
   const GROUPS = {
@@ -238,7 +242,7 @@
     if (tool === 'mood') {
       if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 40);
     } else if (tool === 'roulette') {
-      if (window.openSurpriseModal) window.openSurpriseModal();
+      if (window.spinSurpriseWheel) window.spinSurpriseWheel();
       else if (window.spinMoodDialRoulette) window.spinMoodDialRoulette();
     } else if (tool === 'swipe') {
       if (window.initSwipeStage) window.initSwipeStage();
@@ -247,7 +251,7 @@
     } else if (tool === 'marathon') {
       if (window.openMarathonModal) window.openMarathonModal();
     } else if (tool === 'decades') {
-      if (window.tmOpen) window.tmOpen();
+      window.onDecadesSliderChange(1994);
     } else if (tool === 'matchmaker') {
       if (window.initCineMatchmaker) window.initCineMatchmaker();
     } else if (tool === 'compatibility') {
@@ -256,7 +260,8 @@
     } else if (tool === 'ricochet') {
       if (window.rcLaunch) window.rcLaunch();
     } else if (tool === 'opposite') {
-      if (window.oppToggle) window.oppToggle();
+      if (window.oppRender) window.oppRender();
+      else if (window.oppToggle) window.oppToggle();
     }
   };
 
@@ -270,10 +275,34 @@
     if (lbl) lbl.textContent = year;
     const badge = document.getElementById('decadesYearBadge');
     if (badge) badge.textContent = year;
+    const slider = document.getElementById('decadesSlider');
+    if (slider && slider.value !== String(year)) slider.value = year;
     const dial = document.getElementById('tmDial');
     if (dial) {
       dial.value = year;
       dial.dispatchEvent(new Event('input'));
+    }
+    const y = parseInt(year, 10);
+    const glance = document.getElementById('decadesGlanceBox');
+    if (glance) {
+      glance.textContent = `Browsing cinema releases around the year ${y}.`;
+    }
+    const row = document.getElementById('decadesCardsRow');
+    if (row && window.movies) {
+      const match = window.movies.filter(m => Math.abs(parseInt(m.year, 10) - y) <= 1).slice(0, 10);
+      row.innerHTML = match.map(m => {
+        const poster = (window.posterCache && window.posterCache[m.type + ':' + m.title]) || (window.generateStylizedPosterDataURI ? window.generateStylizedPosterDataURI(m) : '');
+        return `
+          <div class="shelf-card group cursor-pointer shrink-0 w-32 space-y-1.5" onclick="openDetailModal('${m.title.replace(/'/g, "\\'")}')">
+            <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 group-hover:border-brand-gold transition-all">
+              <img src="${poster}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${m.title}">
+              <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/75 text-[10px] font-bold text-brand-gold">★ ${m.rating}</span>
+            </div>
+            <div class="text-xs font-bold text-white truncate">${m.cleanName || m.title}</div>
+            <div class="text-[11px] text-gray-400 font-mono">${m.year} · ${m.genre}</div>
+          </div>
+        `;
+      }).join('');
     }
   };
 
@@ -602,7 +631,25 @@
   function updateThemeModeUI(isLight) {
     const isSys = themeMode === 'system';
 
-    // Update 3-position segmented switch in Style drawer
+    // Update Style drawer simple Dark Mode toggle
+    const vibeToggle = $('vibeDarkModeToggle');
+    const vibeKnob = $('vibeDarkModeKnob');
+    const vibeIcon = $('vibeModeIcon');
+    if (vibeToggle && vibeKnob) {
+      if (isLight) {
+        vibeToggle.className = 'w-11 h-6 rounded-full bg-white/20 p-0.5 transition-colors relative flex items-center';
+        vibeToggle.setAttribute('aria-checked', 'false');
+        vibeKnob.className = 'w-5 h-5 rounded-full bg-white shadow-md transform translate-x-0 transition-transform';
+        if (vibeIcon) vibeIcon.className = 'fa-solid fa-sun text-amber-400';
+      } else {
+        vibeToggle.className = 'w-11 h-6 rounded-full bg-brand-gold p-0.5 transition-colors relative flex items-center';
+        vibeToggle.setAttribute('aria-checked', 'true');
+        vibeKnob.className = 'w-5 h-5 rounded-full bg-black shadow-md transform translate-x-5 transition-transform';
+        if (vibeIcon) vibeIcon.className = 'fa-solid fa-moon text-brand-gold';
+      }
+    }
+
+    // Update 3-position segmented switch in Style drawer (if present)
     const btnLight = $('modeBtn-light');
     const btnDefault = $('modeBtn-default');
     const btnDark = $('modeBtn-dark');
@@ -700,6 +747,11 @@
       ls.set('cs_theme_mode', themeMode);
       refresh();
     }
+  };
+
+  window.toggleDarkModeSwitch = function() {
+    const isCurrentlyLight = document.documentElement.getAttribute('data-mode') === 'light';
+    window.setThemeMode(isCurrentlyLight ? 'dark' : 'light');
   };
 
   // Watch for OS Dark/Light changes in real time
