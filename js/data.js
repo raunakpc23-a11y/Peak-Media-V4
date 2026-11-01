@@ -15728,8 +15728,13 @@ Odd Taxi|2021|87
     window.initCineMatchmaker = initCineMatchmaker;
     window.rejectRecommendation = rejectRecommendation;
     window.initTasteCompatibility = function() {
+      // Compatibility: no preloading
+      activeTags.myTags = [];
+      activeTags.friendTags = [];
       renderTags('myTags');
       renderTags('friendTags');
+      const scoreBox = document.getElementById('compatScoreBox');
+      if (scoreBox) scoreBox.classList.add('hidden');
     };
     window.generateStylizedPosterDataURI = generateStylizedPosterDataURI;
     window.posterCache = posterCache;

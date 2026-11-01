@@ -776,16 +776,21 @@
         if (window.initSwipeStage) window.initSwipeStage();
       } else if (tool === 'duel') {
         if (window.initDuelTournament) window.initDuelTournament();
-      } else if (tool === 'match') {
-        if (window.initMatchmakerDecider) window.initMatchmakerDecider();
-      } else if (tool === 'marathon') {
-        if (window.renderMarathonDecider) window.renderMarathonDecider();
-      } else if (tool === 'compat') {
-        if (window.renderTasteCompatibility) window.renderTasteCompatibility();
-      } else if (tool === 'decades') {
-        if (window.initDecadesGlance) window.initDecadesGlance();
       } else if (tool === 'opposite') {
-        if (window.renderOppositesGlance) window.renderOppositesGlance();
+        if (window.oppRender) window.oppRender();
+        else if (window.renderOppositesGlance) window.renderOppositesGlance();
+      } else if (tool === 'matchmaker' || tool === 'match') {
+        if (window.initCineMatchmaker) window.initCineMatchmaker();
+        else if (window.initMatchmakerDecider) window.initMatchmakerDecider();
+      } else if (tool === 'compatibility' || tool === 'compat') {
+        if (window.initTasteCompatibility) window.initTasteCompatibility();
+        else if (window.renderTasteCompatibility) window.renderTasteCompatibility();
+      } else if (tool === 'marathon') {
+        if (window.openMarathonModal) window.openMarathonModal();
+        else if (window.renderMarathonDecider) window.renderMarathonDecider();
+      } else if (tool === 'decades') {
+        if (window.onDecadesSliderChange) window.onDecadesSliderChange(2026);
+        else if (window.initDecadesGlance) window.initDecadesGlance();
       } else if (tool === 'series') {
         if (window.renderSeriesPacer) window.renderSeriesPacer();
       }

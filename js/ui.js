@@ -70,6 +70,18 @@
     const headerBackBtn = $('headerBackHomeBtn');
     const headerBrandPlate = $('headerBrandPlate') || document.querySelector('.brass-astrolabe-plate');
     const headerSearch = $('headerSearchBarContainer');
+    const headerRightControls = document.querySelector('.observatory-master-console .shrink-0.relative');
+    const masterHeader = document.querySelector('.observatory-master-console');
+
+    // On Deciders (play), Music/Vinyl (music), and Profile (profile), hide top bar (search, profile, filters, exit)
+    const isImmersiveDeck = (key === 'play' || key === 'music' || key === 'profile');
+    if (masterHeader) {
+      masterHeader.classList.toggle('hidden', isImmersiveDeck);
+    }
+    if (headerRightControls) {
+      headerRightControls.classList.toggle('hidden', isImmersiveDeck);
+    }
+
     if (key === 'discover') {
       if (headerBackBtn) {
         headerBackBtn.classList.add('hidden');
@@ -90,7 +102,7 @@
         headerBrandPlate.classList.add('hidden');
       }
       if (headerSearch) {
-        if (key === 'profile') {
+        if (key === 'profile' || isImmersiveDeck) {
           headerSearch.classList.add('hidden');
         } else {
           headerSearch.classList.remove('hidden');

@@ -921,7 +921,11 @@
     };
     window.csPickTonight = csPickTonight;
     window.initDuelTournament = function() {
-      if (D.rounds.length === 0) window.launchPresetDuel('pantheon');
+      if (D.rounds.length === 0) {
+        window.launchPresetDuel('pantheon');
+      } else {
+        showMatch();
+      }
     };
 
     // Auto-start a live 4-title showdown on initial load so Watch Duel is never empty!
