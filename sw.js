@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v6.8-flat-decider-marks';
+const CACHE_NAME = 'peak-media-v6.9-big-decider-marks';
 
 // All local files to pre-cache the moment the SW installs
 const PRE_CACHE = [
