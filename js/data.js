@@ -16107,13 +16107,15 @@ Odd Taxi|2021|87
       banner.style.background = 'transparent';
 
       const suggestionsHTML = spotlightTitles.map((s, i) => {
-        const sItem = globalDatabase[s.title] || {};
+        const sItem = globalDatabase[s.title] || movies.find(m => m.title === s.title) || tvShows.find(t => t.title === s.title) || { title: s.title, type: 'movie' };
+        const sEscTitle = (sItem.cleanName || sItem.title || s.title).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        const sAttrTitle = (sItem.title || s.title).replace(/"/g, "&quot;");
         const sFallback = generateStylizedPosterDataURI(sItem);
-        const sPoster = posterCache[sItem.type + ':' + sItem.title] || sFallback;
+        const sPoster = posterCache[(sItem.type || 'movie') + ':' + (sItem.title || s.title)] || sFallback;
         const isActive = i === currentSpotlightIdx;
         return `
-          <button type="button" onclick="renderHeroSpotlight(${i}, true)" title="${escTitle}" class="relative shrink-0 rounded-xl overflow-hidden transition-all duration-200 group ${isActive ? 'ring-2 ring-brand-gold scale-105 shadow-md shadow-brand-gold/30' : 'opacity-65 hover:opacity-100 hover:scale-105 ring-1 ring-white/10'}">
-            <img src="${sPoster}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${sFallback}';" class="w-9 h-14 sm:w-11 sm:h-16 md:w-12 md:h-18 object-cover lazy-poster" alt="${attrTitle}" />
+          <button type="button" onclick="renderHeroSpotlight(${i}, true)" title="${sEscTitle}" class="relative shrink-0 rounded-xl overflow-hidden transition-all duration-200 group ${isActive ? 'ring-2 ring-brand-gold scale-105 shadow-md shadow-brand-gold/30' : 'opacity-65 hover:opacity-100 hover:scale-105 ring-1 ring-white/10'}">
+            <img src="${sPoster}" data-title="${sAttrTitle}" data-type="${sItem.type || 'movie'}" onerror="this.onerror=null;this.src='${sFallback}';" class="w-9 h-14 sm:w-11 sm:h-16 md:w-12 md:h-18 object-cover lazy-poster" alt="${sAttrTitle}" />
           </button>
         `;
       }).join('');
@@ -16303,6 +16305,7 @@ Odd Taxi|2021|87
       if (!window.globalLangFilter || window.globalLangFilter === 'all') return true;
       return item.lang === window.globalLangFilter;
     }
+    window.matchesGlobalLang = matchesGlobalLang;
 
     function selectMood(m) {
       activeMood = m;

@@ -144,17 +144,38 @@
       </div>
     </div>
 
-    <!-- Unified Settings Drawer -->
+    <!-- Unified Style Drawer (Theme Mode, Palettes & Catalog Settings) -->
     <div id="vibePanel" class="hidden fixed right-3 sm:right-6 top-16 sm:top-20 w-[min(94vw,20rem)] z-[95] glass-card rounded-2xl border border-white/15 p-4 space-y-3.5 shadow-2xl animate-fadeIn">
       <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
         <span class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-brand-gold"></i> Atmosphere &amp; Theme
+          <i class="fa-solid fa-palette text-brand-gold"></i> Style
         </span>
-        <button type="button" onclick="document.getElementById('vibePanel').classList.add('hidden')" aria-label="Close settings panel" title="Close" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" onclick="document.getElementById('vibePanel').classList.add('hidden')" aria-label="Close style panel" title="Close" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- Language Selector Inside Settings -->
+      <!-- Mode Selector: 3-position switch (Light / Default / Dark) -->
       <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-gray-300">Mode</span>
+        <div class="flex items-center bg-black/60 p-0.5 rounded-xl border border-white/10 text-xs font-bold" role="group" aria-label="Display Mode">
+          <button type="button" onclick="setThemeMode('light')" id="modeBtn-light" class="mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all" title="Light Mode">Light</button>
+          <button type="button" onclick="setThemeMode('system')" id="modeBtn-default" class="mode-toggle-btn px-2.5 py-1 rounded-lg bg-brand-gold text-black shadow transition-all" title="System Default Mode">Default</button>
+          <button type="button" onclick="setThemeMode('dark')" id="modeBtn-dark" class="mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all" title="Dark Mode">Dark</button>
+        </div>
+      </div>
+
+      <!-- Palettes & Accent Colors -->
+      <div class="pt-1">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-gray-300">Palettes</span>
+          <button type="button" id="autoBtn" class="text-[11px] font-bold px-2 py-0.5 rounded-lg border border-white/15 text-gray-300 hover:text-white">Auto</button>
+        </div>
+        <div id="swatchRow" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1"></div>
+        <div id="swatchName" class="text-[11px] text-gray-400 mt-1"></div>
+        <span id="vibeName" class="hidden"></span>
+      </div>
+
+      <!-- Catalog Language -->
+      <div class="flex items-center justify-between pt-2 border-t border-white/10">
         <span class="text-xs font-bold text-gray-300">Catalog Language</span>
         <div class="flex items-center bg-black/50 p-0.5 rounded-lg border border-white/10 text-[11px] font-bold" role="group" aria-label="Language Switch">
           <button type="button" onclick="setGlobalLanguage('all')" data-glang="all" class="glang-btn px-2.5 py-1 rounded-md bg-brand-gold text-black transition-all">All</button>
@@ -163,18 +184,7 @@
         </div>
       </div>
 
-      <!-- Theme Swatches -->
-      <div class="pt-1">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-bold text-gray-300">Theme</span>
-          <button type="button" id="autoBtn" class="text-[11px] font-bold px-2 py-0.5 rounded-lg border border-white/15 text-gray-300 hover:text-white">Auto</button>
-        </div>
-        <div id="swatchRow" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1"></div>
-        <div id="swatchName" class="text-[11px] text-gray-400 mt-1"></div>
-        <span id="vibeName" class="hidden"></span>
-      </div>
-
-      <!-- Atmosphere Toggles: Calm Mode & Lights Out -->
+      <!-- Effects: Calm Mode & Lights Out -->
       <div class="space-y-2 pt-2 border-t border-white/10">
         <label class="flex items-center justify-between gap-3 cursor-pointer select-none" onclick="toggleReduce()">
           <span class="text-xs font-bold text-gray-200">Calm Mode</span>
@@ -224,127 +234,90 @@
       <!-- 1. FEATURED CINEMATIC SPOTLIGHT HERO (Living Projector Spotlight) -->
       <div id="heroBanner" class="relative rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-6 md:p-7 border border-white/10 shadow-2xl bg-gradient-to-br from-[#101424] via-[#090c16] to-[#05070e] transition-all"></div>
 
-      <!-- 2 & 3. INTERACTIVE DECIDERS & VINYL LOUNGE (Responsive Dual-Module Deck) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 sm:gap-4">
+      <!-- 2 & 3. DECIDERS & MUSIC FINALE (Responsive Dual-Module Deck) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 sm:gap-4 items-stretch">
         
-        <!-- THE DECIDERS (Tactile Cinema Discovery Console with Big Arcade Token) -->
-        <div id="homePlayLab" class="p-3.5 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl bg-black/60 border border-amber-500/25 backdrop-blur-md shadow-lg flex flex-col justify-between gap-3.5">
-          <!-- Top Row: Title & Link to Play Lobby -->
+        <!-- THE DECIDERS (Plain Icon Buttons with No Boxes and No Names) -->
+        <div id="homePlayLab" class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-black/60 border border-amber-500/25 backdrop-blur-md shadow-lg flex flex-col justify-between gap-3">
+          <!-- Top Row: Title & direct click to The Deciders page -->
           <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2 cursor-pointer group" onclick="switchTab('play')" title="Open The Deciders">
               <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#f59e0b]"></span>
-              <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white">The Deciders</span>
+              <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-amber-400 transition-colors">The Deciders</span>
             </div>
-            <button type="button" onclick="switchTab('play')" class="text-[11px] text-amber-400 hover:text-white font-mono flex items-center gap-1 transition-colors group">
-              <span>Play Lobby</span> <i class="fa-solid fa-arrow-right text-[9px] group-hover:translate-x-0.5 transition-transform"></i>
+            <button type="button" onclick="switchTab('play')" class="text-xs text-amber-400 hover:text-white font-mono flex items-center gap-1 transition-colors">
+              <i class="fa-solid fa-arrow-right text-[11px]"></i>
             </button>
           </div>
 
-          <!-- Main Row: Big 3D Arcade Token + 6 Decider Modes -->
-          <div class="flex items-center gap-3 sm:gap-4">
-            <!-- Big 3D Arcade Token (Clicks to Play Lobby) -->
-            <div class="shrink-0 cursor-pointer group/token flex flex-col items-center" onclick="switchTab('play')" title="Click to open Cinema Play Lobby">
-              <div class="arcade-token-coin w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28">
-                <div class="arcade-token-rim"></div>
-                <div class="arcade-token-inner group-hover/token:scale-105 transition-transform">
-                  <i class="fa-solid fa-gamepad text-xl sm:text-2xl md:text-3xl text-amber-400 group-hover/token:text-brand-gold transition-colors"></i>
-                </div>
-              </div>
-              <span class="text-[10px] font-mono font-bold text-amber-400/90 uppercase tracking-widest mt-1">Play</span>
-            </div>
-
-            <!-- The 6 Decider Modes in 2 balanced rows -->
-            <div class="flex-1 flex flex-col gap-2 min-w-0">
-              <!-- Row 1: The 3 Core Interactive Experiences -->
-              <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
-                <button type="button" onclick="openCinemaGame('duel')" class="decider-pill group justify-center text-center py-2" title="Movie Duel · Head-to-head tournament showdown">
-                  <span class="w-6 h-6 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-400 text-xs shrink-0 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-trophy"></i>
-                  </span>
-                  <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors truncate">Duel</span>
-                </button>
-
-                <button type="button" onclick="openCinemaGame('match')" class="decider-pill group justify-center text-center py-2" title="CineSwipe · Instant swipe matchmaker">
-                  <span class="w-6 h-6 rounded-lg bg-rose-400/15 border border-rose-400/30 flex items-center justify-center text-rose-400 text-xs shrink-0 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-fire-flame-curved"></i>
-                  </span>
-                  <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors truncate">CineSwipe</span>
-                </button>
-
-                <button type="button" onclick="openCinemaGame('marathon')" class="decider-pill group justify-center text-center py-2" title="Marathon Architect · Binge runtime & intermission planner">
-                  <span class="w-6 h-6 rounded-lg bg-purple-400/15 border border-purple-400/30 flex items-center justify-center text-purple-400 text-xs shrink-0 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-film"></i>
-                  </span>
-                  <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors truncate">Marathon</span>
-                </button>
-              </div>
-
-              <!-- Row 2: The 3 Quick Decision Tools -->
-              <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
-                <button type="button" onclick="openCinemaGame('timemachine')" class="decider-icon-btn group justify-center text-center py-1.5" title="Time Machine · Leap across cinema decades (1950–Present)" aria-label="Time Machine">
-                  <i class="fa-solid fa-clock-rotate-left text-xs text-sky-400 group-hover:scale-110 transition-transform"></i>
-                  <span class="text-[11px] font-semibold text-gray-300 truncate">Decades</span>
-                </button>
-
-                <button type="button" onclick="openCinemaGame('roulette')" class="decider-icon-btn group justify-center text-center py-1.5" title="Surprise Roulette · Spin 3,400+ films for an instant pick" aria-label="Surprise Roulette">
-                  <i class="fa-solid fa-dice text-xs text-yellow-400 group-hover:scale-110 transition-transform"></i>
-                  <span class="text-[11px] font-semibold text-gray-300 truncate">Roulette</span>
-                </button>
-
-                <button type="button" onclick="openCinemaGame('opposite')" id="homeOppositeDeciderBtn" class="decider-icon-btn group justify-center text-center py-1.5" title="Opposite Day · Flip genre habits to discover counter-gems" aria-label="Opposite Day">
-                  <i class="fa-solid fa-shuffle text-xs text-emerald-400 group-hover:scale-110 transition-transform"></i>
-                  <span class="text-[11px] font-semibold text-gray-300 truncate">Opposite</span>
-                </button>
-              </div>
-            </div>
+          <!-- Plain icon buttons with NO boxes and NO text names — each grows on hover and takes over the page on click -->
+          <div class="flex items-center justify-around gap-2 py-2 flex-wrap">
+            <button type="button" onclick="openCinemaGame('duel')" class="p-2 text-amber-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Duel">
+              <i class="fa-solid fa-trophy text-2xl sm:text-3xl"></i>
+            </button>
+            <button type="button" onclick="openCinemaGame('series')" class="p-2 text-sky-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Series">
+              <i class="fa-solid fa-tv text-2xl sm:text-3xl"></i>
+            </button>
+            <button type="button" onclick="openCinemaGame('mood')" class="p-2 text-purple-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Mood">
+              <i class="fa-solid fa-compass text-2xl sm:text-3xl"></i>
+            </button>
+            <button type="button" onclick="openCinemaGame('match')" class="p-2 text-rose-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Matchmaker">
+              <i class="fa-solid fa-wand-magic-sparkles text-2xl sm:text-3xl"></i>
+            </button>
+            <button type="button" onclick="openCinemaGame('marathon')" class="p-2 text-emerald-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Marathon">
+              <i class="fa-solid fa-film text-2xl sm:text-3xl"></i>
+            </button>
+            <button type="button" onclick="openCinemaGame('architect')" class="p-2 text-cyan-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Architect">
+              <i class="fa-solid fa-hourglass-half text-2xl sm:text-3xl"></i>
+            </button>
+            <button type="button" onclick="openCinemaGame('timemachine')" class="p-2 text-blue-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Decades">
+              <i class="fa-solid fa-clock-rotate-left text-2xl sm:text-3xl"></i>
+            </button>
+            <button type="button" onclick="openCinemaGame('roulette')" class="p-2 text-yellow-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Roulette">
+              <i class="fa-solid fa-dice text-2xl sm:text-3xl"></i>
+            </button>
+            <button type="button" onclick="openCinemaGame('opposite')" id="homeOppositeDeciderBtn" class="p-2 text-emerald-300 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Opposite">
+              <i class="fa-solid fa-shuffle text-2xl sm:text-3xl"></i>
+            </button>
           </div>
         </div>
 
-        <!-- VINYL LOUNGE CONSOLE (Tactile Audio Turntable Dock with Big Vinyl Record) -->
-        <div id="homeVinylShowcase" class="p-3.5 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#140b24]/90 via-[#0a0d18]/95 to-[#05070e] border border-purple-500/25 backdrop-blur-md shadow-lg flex flex-col justify-between gap-3.5 group">
-          <!-- Top Row: Big Vinyl Disc, Tonearm, Track Info & Audio Equalizer -->
-          <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-2.5">
-            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-              <!-- Big Vinyl Record Turntable (Clicks to open Music Lounge with expanding animation) -->
-              <div class="relative shrink-0 cursor-pointer group/vinyl" onclick="openMusicFromVinyl()" title="Click to open Music Lounge">
-                <div id="homeVinylDisc" class="vinyl-record-disc w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full relative flex items-center justify-center shadow-2xl transition-transform group-hover/vinyl:scale-105">
-                  <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
-                  <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
-                  <div class="vinyl-center-label relative w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-[#120d20]">
-                    <img id="homeVinylThumb" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg" alt="Album Art" class="w-full h-full object-cover" />
-                    <!-- Center Spindle Hole -->
-                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <span class="w-2.5 h-2.5 rounded-full bg-brand-gold border border-black shadow"></span>
-                    </div>
-                  </div>
+        <!-- MUSIC LAUNCHER (Compact box, finale/visualizer takes most space, seamless expand to Music page) -->
+        <div id="homeVinylShowcase" class="p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#140b24]/90 via-[#0a0d18]/95 to-[#05070e] border border-purple-500/25 backdrop-blur-md shadow-lg flex items-center justify-between gap-4 group">
+          <!-- Finale / Turntable Visualizer (Takes most of the space, grows on hover, expands to music page on click) -->
+          <div class="relative shrink-0 cursor-pointer flex items-center justify-center p-1" onclick="openMusicFromVinyl()" title="Click to open Music Lounge">
+            <div id="homeVinylDisc" class="vinyl-record-disc w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full relative flex items-center justify-center shadow-2xl transition-transform group-hover:scale-105">
+              <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
+              <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
+              <div class="vinyl-center-label relative w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-[#120d20]">
+                <img id="homeVinylThumb" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg" alt="Album Art" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <span class="w-2.5 h-2.5 rounded-full bg-brand-gold border border-black shadow"></span>
                 </div>
-                <!-- Articulated Metallic Tone Arm -->
-                <div id="homeVinylToneArm" class="vinyl-tone-arm">
-                  <div class="tone-arm-pivot"></div>
-                  <div class="tone-arm-rod"></div>
-                  <div class="tone-arm-head"></div>
-                </div>
-              </div>
-
-              <!-- Track Info & Metadata -->
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center gap-2">
-                  <span class="text-[9px] font-extrabold uppercase tracking-widest text-purple-300 font-mono flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping"></span> Vinyl Vault
-                  </span>
-                  <span id="homeVinylStatusBadge" class="text-[9px] text-gray-400 font-mono hidden sm:inline">Ready to Spin</span>
-                </div>
-                <h3 id="homeVinylTitle" class="text-xs sm:text-sm font-bold text-white tracking-tight truncate cursor-pointer hover:text-purple-300 transition-colors mt-0.5" onclick="openMusicFromVinyl()">
-                  Starboy (Official Theme)
-                </h3>
-                <p id="homeVinylArtist" class="text-[10px] sm:text-[11px] text-purple-200/70 truncate mt-0.5">
-                  The Weeknd · Pop &amp; Hits
-                </p>
               </div>
             </div>
+            <!-- Articulated Tone Arm -->
+            <div id="homeVinylToneArm" class="vinyl-tone-arm">
+              <div class="tone-arm-pivot"></div>
+              <div class="tone-arm-rod"></div>
+              <div class="tone-arm-head"></div>
+            </div>
+          </div>
 
-            <!-- Mini Equalizer Visualizer -->
-            <div class="flex items-center gap-0.5 h-5 px-1 shrink-0">
+          <!-- Metadata & Audio Control Row (Borderless, compact, very small text, no box around play control) -->
+          <div class="flex-1 min-w-0 flex flex-col justify-between gap-2.5">
+            <!-- Very small Title & Artist -->
+            <div class="min-w-0 cursor-pointer" onclick="openMusicFromVinyl()">
+              <h3 id="homeVinylTitle" class="text-xs sm:text-sm font-bold text-white tracking-tight truncate hover:text-purple-300 transition-colors">
+                Starboy (Official Theme)
+              </h3>
+              <p id="homeVinylArtist" class="text-[10px] text-purple-200/70 truncate mt-0.5">
+                The Weeknd · Pop &amp; Hits
+              </p>
+            </div>
+
+            <!-- Equalizer Soundwave -->
+            <div class="flex items-center gap-0.5 h-4 cursor-pointer" onclick="openMusicFromVinyl()">
               <span class="eq-bar eq-1"></span>
               <span class="eq-bar eq-2"></span>
               <span class="eq-bar eq-3"></span>
@@ -352,120 +325,104 @@
               <span class="eq-bar eq-5"></span>
               <span class="eq-bar eq-6"></span>
             </div>
-          </div>
 
-          <!-- Bottom Row: Audio Controls -->
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-              <!-- Play/Pause Button -->
-              <button type="button" id="homeVinylPlayBtn" onclick="toggleHomeVinylPlayback(event)" class="px-4 py-1.5 sm:px-5 sm:py-2 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
-                <i id="homeVinylPlayIcon" class="fa-solid fa-play text-[10px]"></i>
-                <span id="homeVinylPlayText">Play</span>
+            <!-- Borderless Floating Audio Controls (Grows slightly on hover, triggers playback/next) -->
+            <div class="flex items-center gap-3 pt-1">
+              <button type="button" id="homeVinylPlayBtn" onclick="toggleHomeVinylPlayback(event)" class="text-brand-gold hover:text-yellow-300 hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 focus:outline-none" title="Play / Pause Track">
+                <i id="homeVinylPlayIcon" class="fa-solid fa-play text-base"></i>
+                <span id="homeVinylPlayText" class="text-xs font-extrabold uppercase tracking-wider">Play</span>
               </button>
 
-              <!-- Next Button -->
-              <button type="button" onclick="window.musicNext(); if(window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1 transition-all active:scale-95" title="Next Song">
-                <i class="fa-solid fa-forward-step text-[11px] text-purple-300"></i>
-                <span class="hidden sm:inline">Next</span>
+              <button type="button" onclick="window.musicNext(); if(window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();" class="text-gray-300 hover:text-white hover:scale-110 active:scale-95 transition-all flex items-center gap-1 focus:outline-none" title="Next Song">
+                <i class="fa-solid fa-forward-step text-sm text-purple-300"></i>
+                <span class="text-xs font-semibold">Next</span>
               </button>
             </div>
+          </div>
+          <!-- Hidden status badge for background sync -->
+          <span id="homeVinylStatusBadge" class="hidden"></span>
+        </div>
 
-            <!-- Open Music Lounge Button -->
-            <button type="button" onclick="openMusicFromVinyl()" class="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-400/40 text-purple-200 hover:text-white font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95">
-              <i class="fa-solid fa-up-right-and-down-left-from-center text-[10px]"></i>
-              <span>Music Lounge</span>
+      </div>
+
+      <!-- 4. FILMS / TV SERIES / LIBRARY (3 Large Icons with a Single Label Below Each) -->
+      <div class="grid grid-cols-3 gap-3 sm:gap-6">
+        
+        <!-- Portal 1: Films -->
+        <div onclick="switchTab('movies')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-black/60 border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Films">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-amber-500/20 transition-all shadow-md">
+            <i class="fa-solid fa-clapperboard text-3xl sm:text-4xl md:text-5xl text-amber-400 group-hover:text-brand-gold transition-colors"></i>
+          </div>
+          <span class="text-sm sm:text-base font-display font-black uppercase tracking-wider text-white group-hover:text-brand-gold transition-colors">Films</span>
+        </div>
+
+        <!-- Portal 2: TV Series -->
+        <div onclick="switchTab('shows')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-black/60 border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="TV Series">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-sky-500/20 transition-all shadow-md">
+            <i class="fa-solid fa-tv text-3xl sm:text-4xl md:text-5xl text-sky-400 group-hover:text-sky-300 transition-colors"></i>
+          </div>
+          <span class="text-sm sm:text-base font-display font-black uppercase tracking-wider text-white group-hover:text-sky-300 transition-colors">TV Series</span>
+        </div>
+
+        <!-- Portal 3: Library (Preserves #homeProfileVaultCard and all counter IDs for sync/verification) -->
+        <div id="homeProfileVaultCard" onclick="openShelvesFromHome()" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-black/60 border border-emerald-500/25 hover:border-emerald-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Library">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all shadow-md">
+            <i class="fa-solid fa-ticket text-3xl sm:text-4xl md:text-5xl text-emerald-400 group-hover:text-emerald-300 transition-colors"></i>
+          </div>
+          <span class="text-sm sm:text-base font-display font-black uppercase tracking-wider text-white group-hover:text-emerald-400 transition-colors">Library</span>
+          <!-- Hidden background sync elements -->
+          <div class="hidden" aria-hidden="true">
+            <span id="homePassportAvatar">🎬</span>
+            <span id="homeProfileWatchlistCount">0</span>
+            <span id="homeProfileWatchedCount">0</span>
+            <span id="homeProfileFavCount">0</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 5. CONTENT FILTERS (Directly starts with Masterworks, Popular Hits, Box Office + small filter button at far side) -->
+      <div id="streamFilterBar" class="flex items-center justify-between gap-3 pt-2 pb-1 border-b border-white/10">
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <button type="button" onclick="document.getElementById('shelfWrap-pantheon').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-brand-gold/15 border border-brand-gold/30 text-brand-gold hover:bg-brand-gold/25 transition-all">
+            Masterworks
+          </button>
+          <button type="button" onclick="document.getElementById('shelfWrap-blockbusters').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 transition-all">
+            Popular Hits
+          </button>
+          <button type="button" onclick="document.getElementById('shelfWrap-blockbusters').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 transition-all">
+            Box Office
+          </button>
+        </div>
+
+        <!-- Small Filter Button at Far Side -->
+        <div class="relative shrink-0 flex items-center gap-2">
+          <button type="button" id="streamFilterDropdownBtn" onclick="toggleStreamFilterMenu()" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all" title="Filter stream">
+            <i class="fa-solid fa-sliders text-[11px] text-brand-gold"></i>
+            <span>Filter</span>
+            <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
+          </button>
+          <div id="streamFilterMenu" class="hidden absolute right-0 top-full mt-1.5 z-40 w-44 rounded-2xl bg-[#0c101c] border border-white/15 p-2 space-y-1 shadow-2xl animate-fadeIn">
+            <button type="button" onclick="filterOpeningShelves('all'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+              <span>All Vault</span>
+            </button>
+            <button type="button" onclick="filterOpeningShelves('films'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+              <span>Films Only</span>
+            </button>
+            <button type="button" onclick="filterOpeningShelves('series'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+              <span>Series Only</span>
+            </button>
+            <button type="button" onclick="filterOpeningShelves('indian'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+              <span>Indian Cinema</span>
+            </button>
+            <button type="button" onclick="filterOpeningShelves('pantheon'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+              <span>9.0+ Masterworks</span>
             </button>
           </div>
-        </div>
-
-      </div>
-
-      <!-- 4. GATEWAY DECK: FEATURE FILMS, TV SERIES & PERSONAL LIBRARY (3 Responsive Columns) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
-        
-        <!-- Portal 1: Feature Films (Big 35mm Clapperboard) -->
-        <div onclick="switchTab('movies')" class="portal-gateway-card p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-black/60 border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex items-center gap-3.5 cursor-pointer group transition-all" title="Explore Feature Films">
-          <div class="cinema-clapper-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0 group-hover:scale-105 transition-transform">
-            <i class="fa-solid fa-clapperboard text-2xl sm:text-3xl text-amber-400 group-hover:text-brand-gold transition-colors"></i>
-          </div>
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center justify-between">
-              <h3 class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-brand-gold transition-colors">Feature Films</h3>
-              <i class="fa-solid fa-arrow-right text-[10px] text-gray-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all"></i>
-            </div>
-            <p class="text-[10px] sm:text-[11px] text-gray-400 font-mono mt-0.5 truncate">2,400+ Curated Movies</p>
-            <span class="inline-block mt-1 text-[10px] font-bold text-amber-400/90 group-hover:text-amber-300">Explore Catalog &rarr;</span>
-          </div>
-        </div>
-
-        <!-- Portal 2: TV Series & Shows (Big Retro CRT TV) -->
-        <div onclick="switchTab('shows')" class="portal-gateway-card p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-black/60 border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex items-center gap-3.5 cursor-pointer group transition-all" title="Explore TV Series & Shows">
-          <div class="cinema-crt-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0 group-hover:scale-105 transition-transform">
-            <i class="fa-solid fa-tv text-2xl sm:text-3xl text-sky-400 group-hover:text-sky-300 transition-colors"></i>
-          </div>
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center justify-between">
-              <h3 class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-sky-300 transition-colors">TV Series</h3>
-              <i class="fa-solid fa-arrow-right text-[10px] text-gray-500 group-hover:text-sky-400 group-hover:translate-x-1 transition-all"></i>
-            </div>
-            <p class="text-[10px] sm:text-[11px] text-gray-400 font-mono mt-0.5 truncate">800+ Sagas &amp; Seasons</p>
-            <span class="inline-block mt-1 text-[10px] font-bold text-sky-400/90 group-hover:text-sky-300">Explore Series &rarr;</span>
-          </div>
-        </div>
-
-        <!-- Portal 3: Personal Library (Big Golden Cinema Ticket, preserving #homeProfileVaultCard and all counter IDs) -->
-        <div id="homeProfileVaultCard" class="portal-gateway-card p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-black/60 border border-emerald-500/25 backdrop-blur-md shadow-lg flex items-center gap-3.5">
-          <div onclick="openShelvesFromHome()" class="cinema-ticket-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0 cursor-pointer group/ticket hover:scale-105 transition-transform" title="Open Personal Shelves">
-            <span id="homePassportAvatar" class="text-2xl sm:text-3xl">🎬</span>
-          </div>
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center justify-between">
-              <h3 onclick="openShelvesFromHome()" class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white hover:text-emerald-400 cursor-pointer transition-colors">Library &amp; Pass</h3>
-              <button type="button" onclick="openProfileFromHome()" class="text-[10px] text-emerald-400 hover:text-white font-mono flex items-center gap-1 transition-colors" title="Screening Pass">
-                <span>Pass</span> <i class="fa-solid fa-user text-[9px]"></i>
-              </button>
-            </div>
-            <!-- Live Counter Pills -->
-            <div class="flex items-center gap-1.5 mt-1 overflow-x-auto no-scrollbar py-0.5">
-              <button type="button" onclick="openShelvesFromHome()" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] font-mono text-gray-300 flex items-center gap-1 border border-white/5" title="View Watchlist">
-                <span id="homeProfileWatchlistCount" class="font-extrabold text-amber-400">0</span>
-                <span class="text-gray-400 text-[9px]">Want</span>
-              </button>
-              <button type="button" onclick="openShelvesFromHome()" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] font-mono text-gray-300 flex items-center gap-1 border border-white/5" title="View Watched Films">
-                <span id="homeProfileWatchedCount" class="font-extrabold text-emerald-400">0</span>
-                <span class="text-gray-400 text-[9px]">Seen</span>
-              </button>
-              <button type="button" onclick="openShelvesFromHome()" class="px-2 py-0.5 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] font-mono text-gray-300 flex items-center gap-1 border border-white/5" title="View Favorites">
-                <span id="homeProfileFavCount" class="font-extrabold text-brand-gold">0</span>
-                <span class="text-gray-400 text-[9px]">Fav</span>
-              </button>
-            </div>
-            <div class="flex items-center gap-2 mt-1.5">
-              <button type="button" onclick="openShelvesFromHome()" class="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1">
-                <span>My Shelves</span> <i class="fa-solid fa-bookmark text-[8px]"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- 5. STREAM QUICK FORMAT FILTER & THEME TOGGLE -->
-      <div id="streamFilterBar" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2.5 border-b border-white/10">
-        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5 mr-1">
-          <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i> Filter Stream:
-        </span>
-        <button type="button" class="stream-filter-chip active" data-filter="all" onclick="filterOpeningShelves('all')">All Vault</button>
-        <button type="button" class="stream-filter-chip" data-filter="films" onclick="filterOpeningShelves('films')">Films</button>
-        <button type="button" class="stream-filter-chip" data-filter="series" onclick="filterOpeningShelves('series')">Series</button>
-        <button type="button" class="stream-filter-chip" data-filter="indian" onclick="filterOpeningShelves('indian')">Indian Cinema</button>
-        <button type="button" class="stream-filter-chip" data-filter="pantheon" onclick="filterOpeningShelves('pantheon')">9.0+ Masterworks</button>
-
-        <!-- Right: Theme Mode Filter Button (System Default / Light / Dark) -->
-        <div class="ml-auto shrink-0 flex items-center gap-2 pl-2">
-          <button type="button" id="themeModeFilterBtn" onclick="toggleSystemThemeMode()" class="theme-pill-system" title="Toggle Theme (System / Light / Dark)">
-            <i id="themeModeFilterIcon" class="fa-solid fa-circle-half-stroke text-amber-400"></i>
-            <span id="themeModeFilterLabel">Theme: System</span>
+          <!-- Hidden theme mode filter elements to preserve background synchronization -->
+          <button type="button" id="themeModeFilterBtn" class="hidden" onclick="toggleSystemThemeMode()">
+            <i id="themeModeFilterIcon"></i>
+            <span id="themeModeFilterLabel"></span>
           </button>
         </div>
       </div>
@@ -711,253 +668,95 @@
     </section>
 
     <!-- TAB: PLAY HUB (Interactive Experiences Landing Page) -->
-    <section id="tab-play" class="tab-pane hidden fade-in space-y-6">
-      <div class="border-b border-white/10 pb-4">
-        <h1 class="text-2xl sm:text-3xl font-display font-extrabold text-white flex items-center gap-2.5">
-          <i class="fa-solid fa-gamepad text-brand-gold"></i> Cinema Games &amp; Decision Lab
-        </h1>
-        <p class="text-xs sm:text-sm text-gray-400 mt-1">Interactive cinema tools, head-to-head showdown tournaments, marathon planner, and discovery engines.</p>
-      </div>
-
-      <!-- Asymmetric Kinetic Tile Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-        <!-- 1. Mood Dial (Double Hero Tile) -->
-        <div onclick="switchTab('mood')" class="play-tile tile-hero md:col-span-2 p-6 sm:p-7 bg-gradient-to-br from-amber-500/15 via-[#0e1424] to-[#07090e] border border-amber-500/30 flex flex-col justify-between min-h-[220px] group">
-          <div class="flex items-start justify-between gap-4">
-            <div class="space-y-2 max-w-md">
-              <span class="px-2.5 py-0.5 rounded-full bg-brand-gold/20 text-brand-gold text-[10px] font-extrabold uppercase tracking-widest border border-brand-gold/30">Signature Experience</span>
-              <h2 class="text-xl sm:text-2xl font-display font-bold text-white group-hover:text-brand-gold transition-colors">Mood Dial</h2>
-              <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">Calibrate movies by vibe, emotional spectrum, and intensity.</p>
-            </div>
-            <!-- Kinetic Rotary Dial Motif -->
-            <div class="motif-dial shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-dashed border-amber-400/40 bg-black/40 flex items-center justify-center relative shadow-inner">
-              <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg flex items-center justify-center text-black font-extrabold text-sm sm:text-base">
-                <i class="fa-solid fa-compass"></i>
-              </div>
-              <div class="absolute -top-1 w-2 h-2 rounded-full bg-brand-gold shadow-[0_0_8px_rgba(245,197,24,0.9)]"></div>
-            </div>
-          </div>
-          <div class="pt-4 flex items-center justify-between border-t border-white/10 mt-4">
-            <span class="text-xs font-mono text-gray-400">Rotary Spectrum Calibration</span>
-            <div class="flex items-center text-xs font-bold text-brand-gold group-hover:translate-x-1.5 transition-transform">
-              <span>Launch Dial</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[11px]"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Duel & CineSwipe -->
-        <div onclick="switchTab('duel')" class="play-tile p-5 sm:p-6 bg-gradient-to-br from-rose-500/15 via-[#0e1424] to-[#07090e] border border-rose-500/25 flex flex-col justify-between min-h-[220px] group">
-          <div class="flex items-start justify-between gap-3">
-            <div class="space-y-1.5">
-              <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg border border-rose-500/30">
-                <i class="fa-solid fa-trophy"></i>
-              </div>
-              <h2 class="text-lg font-display font-bold text-white group-hover:text-rose-400 transition-colors pt-1">Duel &amp; CineSwipe</h2>
-              <p class="text-xs text-gray-300 leading-relaxed">Tournament bracket elimination &amp; rapid swipe showdowns.</p>
-            </div>
-            <!-- Kinetic Face-Off Cards Motif -->
-            <div class="relative w-16 h-20 shrink-0 pt-1">
-              <div class="motif-card-a absolute left-0 top-1 w-10 h-14 rounded-lg bg-rose-600/30 border border-rose-400/50 shadow flex items-center justify-center text-[10px] text-rose-200">
-                <i class="fa-solid fa-clapperboard"></i>
-              </div>
-              <div class="motif-card-b absolute right-0 top-2 w-10 h-14 rounded-lg bg-amber-500/30 border border-amber-400/50 shadow flex items-center justify-center text-[10px] text-amber-200">
-                <i class="fa-solid fa-film"></i>
-              </div>
-            </div>
-          </div>
-          <div class="pt-3 flex items-center justify-between border-t border-white/10 mt-3">
-            <span class="text-[11px] font-mono text-gray-400">Brackets &amp; Swipe</span>
-            <div class="flex items-center text-xs font-bold text-rose-400 group-hover:translate-x-1.5 transition-transform">
-              <span>Enter Arena</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[11px]"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. Matchmaker -->
-        <div onclick="switchTab('match')" class="play-tile p-5 sm:p-6 bg-gradient-to-br from-purple-500/15 via-[#0e1424] to-[#07090e] border border-purple-500/25 flex flex-col justify-between min-h-[200px] group">
-          <div class="flex items-start justify-between gap-3">
-            <div class="space-y-1.5">
-              <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg border border-purple-500/30">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
-              </div>
-              <h2 class="text-lg font-display font-bold text-white group-hover:text-purple-400 transition-colors pt-1">Matchmaker</h2>
-              <p class="text-xs text-gray-300 leading-relaxed">Bridge two tastes into unified co-watch picks.</p>
-            </div>
-            <!-- Kinetic Venn Motif -->
-            <div class="relative w-16 h-14 shrink-0 flex items-center justify-center">
-              <div class="motif-venn-a absolute left-1 w-9 h-9 rounded-full bg-purple-500/35 border border-purple-400/60 shadow"></div>
-              <div class="motif-venn-b absolute right-1 w-9 h-9 rounded-full bg-cyan-500/35 border border-cyan-400/60 shadow"></div>
-            </div>
-          </div>
-          <div class="pt-3 flex items-center justify-between border-t border-white/10 mt-3">
-            <span class="text-[11px] font-mono text-gray-400">Dual-Taste Synergy</span>
-            <div class="flex items-center text-xs font-bold text-purple-400 group-hover:translate-x-1.5 transition-transform">
-              <span>Find Matches</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[11px]"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Ricochet Lab -->
-        <div onclick="switchTab('ricochet')" class="play-tile p-5 sm:p-6 bg-gradient-to-br from-cyan-500/15 via-[#0e1424] to-[#07090e] border border-cyan-500/25 flex flex-col justify-between min-h-[200px] group">
-          <div class="flex items-start justify-between gap-3">
-            <div class="space-y-1.5">
-              <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg border border-cyan-500/30">
-                <i class="fa-solid fa-circle-dot"></i>
-              </div>
-              <h2 class="text-lg font-display font-bold text-white group-hover:text-cyan-400 transition-colors pt-1">Ricochet Lab</h2>
-              <p class="text-xs text-gray-300 leading-relaxed">Pinball bumper chaos physics for randomized selection.</p>
-            </div>
-            <!-- Kinetic Bumper Motif -->
-            <div class="relative w-16 h-14 shrink-0 border border-white/10 rounded-xl bg-black/40 p-1 flex items-center justify-center overflow-hidden">
-              <div class="w-4 h-4 rounded-full bg-cyan-400/20 border border-cyan-400/40"></div>
-              <div class="motif-ball absolute left-2 top-2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.9)]"></div>
-            </div>
-          </div>
-          <div class="pt-3 flex items-center justify-between border-t border-white/10 mt-3">
-            <span class="text-[11px] font-mono text-gray-400">Chaos Bumper Physics</span>
-            <div class="flex items-center text-xs font-bold text-cyan-400 group-hover:translate-x-1.5 transition-transform">
-              <span>Launch Pinball</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[11px]"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. Marathon Architect -->
-        <div onclick="switchTab('marathon')" class="play-tile p-5 sm:p-6 bg-gradient-to-br from-emerald-500/15 via-[#0e1424] to-[#07090e] border border-emerald-500/25 flex flex-col justify-between min-h-[200px] group">
-          <div class="flex items-start justify-between gap-3">
-            <div class="space-y-1.5">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg border border-emerald-500/30">
-                <i class="fa-solid fa-hourglass-half"></i>
-              </div>
-              <h2 class="text-lg font-display font-bold text-white group-hover:text-emerald-400 transition-colors pt-1">Marathon Architect</h2>
-              <p class="text-xs text-gray-300 leading-relaxed">Structured binge blueprints, runtimes, and pacing.</p>
-            </div>
-            <!-- Kinetic Timeline Continuum Motif -->
-            <div class="w-16 h-14 shrink-0 flex items-center justify-center gap-1">
-              <span class="motif-bar-seg w-2.5 h-8 rounded-sm bg-white/15"></span>
-              <span class="motif-bar-seg w-2.5 h-11 rounded-sm bg-white/20"></span>
-              <span class="motif-bar-seg w-2.5 h-6 rounded-sm bg-white/15"></span>
-              <span class="motif-bar-seg w-2.5 h-9 rounded-sm bg-white/20"></span>
-            </div>
-          </div>
-          <div class="pt-3 flex items-center justify-between border-t border-white/10 mt-3">
-            <span class="text-[11px] font-mono text-gray-400">Runtime Timeline Blueprint</span>
-            <div class="flex items-center text-xs font-bold text-emerald-400 group-hover:translate-x-1.5 transition-transform">
-              <span>Plan Marathon</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[11px]"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- 6. Compatibility Analysis -->
-        <div onclick="switchTab('compat')" class="play-tile p-5 sm:p-6 bg-gradient-to-br from-indigo-500/15 via-[#0e1424] to-[#07090e] border border-indigo-500/25 flex flex-col justify-between min-h-[200px] group">
-          <div class="flex items-start justify-between gap-3">
-            <div class="space-y-1.5">
-              <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg border border-indigo-500/30">
-                <i class="fa-solid fa-people-arrows"></i>
-              </div>
-              <h2 class="text-lg font-display font-bold text-white group-hover:text-indigo-400 transition-colors pt-1">Compatibility</h2>
-              <p class="text-xs text-gray-300 leading-relaxed">Analyze taste friction &amp; synergy score with a friend.</p>
-            </div>
-            <!-- Kinetic Synergy Radial Ring Motif -->
-            <div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
-              <svg class="w-14 h-14 -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
-                <circle class="motif-ring-circle" cx="50" cy="50" r="42" fill="none" stroke="#818cf8" stroke-width="8" stroke-linecap="round"/>
-              </svg>
-              <span class="absolute text-[11px] font-mono font-bold text-indigo-300">92%</span>
-            </div>
-          </div>
-          <div class="pt-3 flex items-center justify-between border-t border-white/10 mt-3">
-            <span class="text-[11px] font-mono text-gray-400">Taste Friction Matrix</span>
-            <div class="flex items-center text-xs font-bold text-indigo-400 group-hover:translate-x-1.5 transition-transform">
-              <span>Run Analysis</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[11px]"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB: CINEMA MOOD DIAL (Play Subtab) -->
-    <section id="tab-mood" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+    <!-- TAB: PLAY HUB (The Deciders: One Coherent Non-Scrolling Single Screen) -->
+    <section id="tab-play" class="tab-pane hidden fade-in max-w-7xl mx-auto flex flex-col justify-start min-h-[calc(100vh-140px)] space-y-3">
+      <!-- Title & Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-2.5 shrink-0">
         <div class="flex items-center gap-3">
-          <button type="button" onclick="switchTab('play')" title="Back to Play" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95">
+          <button type="button" onclick="returnToOpeningPage()" title="Back to Home" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95">
             <i class="fa-solid fa-arrow-left text-xs"></i>
           </button>
-          <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2">
-            <i class="fa-solid fa-compass text-brand-gold"></i> Mood Dial
-          </h1>
+          <div>
+            <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2">
+              <i class="fa-solid fa-compass text-brand-gold"></i> The Deciders
+            </h1>
+          </div>
         </div>
-        <button type="button" onclick="spinMoodDialRoulette()" id="moodDialSpinBtn" class="self-start sm:self-auto px-3.5 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-2 shadow hover:opacity-95 active:scale-95 transition-all">
+        <button type="button" onclick="spinMoodDialRoulette()" id="moodDialSpinBtn" class="px-3.5 py-1.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-2 shadow hover:opacity-95 active:scale-95 transition-all">
           <i class="fa-solid fa-dice text-sm"></i> <span>Roulette</span>
         </button>
       </div>
 
-      <!-- Rotary Dial & Active Mood Card Deck -->
-      <div class="glass-card rounded-2xl p-4 sm:p-6 border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-5 shadow-2xl">
-        <!-- Circular Interactive Dial -->
-        <div class="relative flex items-center justify-center shrink-0">
-          <svg id="moodDialSvg" width="280" height="280" class="select-none cursor-grab active:cursor-grabbing touch-none transition-transform"></svg>
-        </div>
-
-        <!-- Active Sector Info & Interactive Sliders Deck -->
-        <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-3.5 p-4 sm:p-5 rounded-xl bg-black/40 border border-white/10 transition-all w-full">
-          <div class="flex items-center gap-2.5">
-            <span id="moodDialActiveIcon" class="text-2xl">🌌</span>
-            <h3 id="moodDialActiveName" class="text-lg sm:text-xl font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
-          </div>
-          <p id="moodDialActiveDesc" class="text-xs text-gray-300 leading-relaxed">Reality-bending paradoxes, space odysseys, and psychological twists</p>
-
-          <!-- PRIMARY INTERACTIVE LIVE MOOD SLIDER -->
-          <div class="space-y-1.5 pt-2 border-t border-white/10">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-gray-300 font-bold">Mood:</span>
-              <span id="moodDialSliderSectorLbl" class="font-extrabold text-brand-gold text-xs">Mind-Bending</span>
-            </div>
-            <div class="relative px-1">
-              <input id="moodDialSectorSlider" type="range" min="0" max="7" step="1" value="0" oninput="onMoodDialSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab active:cursor-grabbing">
-            </div>
-            <div class="flex justify-between text-[10px] text-gray-400 font-medium px-1">
-              <span>Mind-Bending</span>
-              <span>Comedy</span>
-              <span>Action</span>
-              <span>Noir</span>
-              <span>Heartfelt</span>
-              <span>Whimsical</span>
-              <span>Psych</span>
-              <span>Epic</span>
-            </div>
-          </div>
-
-          <!-- Intensity Calibration Slider -->
-          <div class="space-y-1.5 pt-2 border-t border-white/10">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-gray-300 font-bold">Intensity:</span>
-              <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold text-xs">50% Balanced</span>
-            </div>
-            <input id="moodDialIntensitySlider" type="range" min="0" max="100" step="1" value="50" oninput="setMoodDialIntensity(this.value)" class="w-full spectrum-slider cursor-grab active:cursor-grabbing">
-            <div class="flex justify-between text-[10px] text-gray-500 font-medium px-0.5">
-              <span>0% Chill</span>
-              <span>50% Balanced</span>
-              <span>100% Hardcore</span>
-            </div>
-          </div>
-
-          <!-- Quick Mood Sector Pills -->
-          <div class="pt-1.5 border-t border-white/10">
-            <div id="moodDialPillsBox" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
-            <div id="moodPills" class="hidden"></div>
-          </div>
-        </div>
+      <!-- 9 Tools Switcher Ribbon (One-Word Names: Decades, Roulette, Opposite, Duel, Series, Mood, Matchmaker, Marathon, Architect) -->
+      <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar shrink-0 py-1" role="tablist" aria-label="The Deciders Tools">
+        <button type="button" onclick="selectDeciderTool('mood')" id="deciderBtn-mood" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-gold text-black shadow-md transition-all">Mood</button>
+        <button type="button" onclick="selectDeciderTool('duel')" id="deciderBtn-duel" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Duel</button>
+        <button type="button" onclick="selectDeciderTool('series')" id="deciderBtn-series" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Series</button>
+        <button type="button" onclick="selectDeciderTool('marathon')" id="deciderBtn-marathon" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Marathon</button>
+        <button type="button" onclick="selectDeciderTool('architect')" id="deciderBtn-architect" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Architect</button>
+        <button type="button" onclick="selectDeciderTool('matchmaker')" id="deciderBtn-matchmaker" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Matchmaker</button>
+        <button type="button" onclick="selectDeciderTool('decades')" id="deciderBtn-decades" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Decades</button>
+        <button type="button" onclick="selectDeciderTool('roulette')" id="deciderBtn-roulette" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Roulette</button>
+        <button type="button" onclick="selectDeciderTool('opposite')" id="deciderBtn-opposite" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Opposite</button>
       </div>
 
-      <!-- Recommendations Track -->
-      <div class="space-y-2">
-        <h2 class="text-lg font-display font-bold text-white">Recommendations</h2>
-        <div class="has-arrows">
-          <div id="moodRow" class="hscroll flex gap-4 overflow-x-auto pb-4 pt-1 snap-x"></div>
+      <!-- Active Centerpiece: Creative Mood Dial Stage -->
+      <div id="deciderMoodStage" class="flex-1 min-h-0 flex flex-col justify-between gap-3 overflow-hidden">
+        <div class="glass-card rounded-2xl p-3 sm:p-5 border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6 shadow-xl shrink-0">
+          <!-- Circular Interactive Rotary Dial -->
+          <div class="relative flex items-center justify-center shrink-0">
+            <svg id="moodDialSvg" width="230" height="230" class="select-none cursor-grab active:cursor-grabbing touch-none transition-transform"></svg>
+          </div>
+
+          <!-- Active Sector Deck & Sliders -->
+          <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-2 p-3 sm:p-4 rounded-xl bg-black/40 border border-white/10 w-full">
+            <div class="flex items-center gap-2">
+              <span id="moodDialActiveIcon" class="text-xl">🌌</span>
+              <h3 id="moodDialActiveName" class="text-base sm:text-lg font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
+            </div>
+            <p id="moodDialActiveDesc" class="text-xs text-gray-300 leading-snug line-clamp-1">Reality-bending paradoxes, space odysseys, and psychological twists</p>
+
+            <!-- Spectrum Mood Slider -->
+            <div class="space-y-1 pt-1.5 border-t border-white/10">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-gray-300 font-bold">Mood:</span>
+                <span id="moodDialSliderSectorLbl" class="font-extrabold text-brand-gold">Mind-Bending</span>
+              </div>
+              <input id="moodDialSectorSlider" type="range" min="0" max="7" step="1" value="0" oninput="onMoodDialSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab active:cursor-grabbing h-1.5">
+            </div>
+
+            <!-- Intensity Calibration Slider -->
+            <div class="space-y-1 pt-1 border-t border-white/10">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-gray-300 font-bold">Intensity:</span>
+                <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold">50% Balanced</span>
+              </div>
+              <input id="moodDialIntensitySlider" type="range" min="0" max="100" step="1" value="50" oninput="setMoodDialIntensity(this.value)" class="w-full spectrum-slider cursor-grab active:cursor-grabbing h-1.5">
+            </div>
+
+            <!-- Quick Sector Pills -->
+            <div class="pt-1 border-t border-white/10">
+              <div id="moodDialPillsBox" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
+              <div id="moodPills" class="hidden"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Recommendations Track -->
+        <div class="shrink-0 space-y-1">
+          <div class="flex items-center justify-between px-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-300">Live Recommendations</span>
+            <span class="text-[11px] text-gray-400 font-mono">Calibrated to dial</span>
+          </div>
+          <div class="has-arrows">
+            <div id="moodRow" class="hscroll flex gap-3 overflow-x-auto pb-1 pt-0.5 snap-x"></div>
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- TAB ALIAS: CINEMA MOOD DIAL (Preserved for internal routing) -->
+    <section id="tab-mood" class="tab-pane hidden"></section>
 
     <!-- TAB: TOURNAMENT & CINESWIPE -->
     <section id="tab-duel" class="tab-pane hidden fade-in space-y-4">
@@ -1697,46 +1496,39 @@
     <!-- TAB: MUSIC (THE LISTENING DISH) -->
     <section id="tab-music" class="tab-pane hidden fade-in space-y-4 sm:space-y-6">
       
-      <!-- MUSIC LOUNGE & SOUNDTRACK VAULT HERO -->
-      <div class="relative rounded-3xl overflow-hidden p-4 sm:p-6 shadow-2xl border border-purple-500/35 bg-gradient-to-br from-[#120a1f] via-[#090b14] to-[#04060b] radio-dish-halo">
-        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          
+      <!-- MUSIC LOUNGE & SOUNDTRACK VAULT HERO (Compact Slim Header) -->
+      <div class="relative rounded-2xl overflow-hidden p-2.5 sm:p-3.5 shadow-xl border border-purple-500/35 bg-gradient-to-br from-[#120a1f] via-[#090b14] to-[#04060b]">
+        <div class="relative z-10 flex items-center justify-between gap-3">
           <!-- Lounge Title & Callout -->
-          <div class="flex items-center gap-3.5 min-w-0">
-            <div class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-purple-950/60 border border-purple-400/50 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(192,132,252,0.35)]">
-              <i class="fa-solid fa-record-vinyl text-2xl text-purple-300"></i>
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-purple-950/60 border border-purple-400/50 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(192,132,252,0.35)]">
+              <i class="fa-solid fa-record-vinyl text-lg text-purple-300"></i>
             </div>
-            
             <div class="min-w-0">
-              <div class="text-[10px] font-black uppercase tracking-widest text-purple-300 font-mono flex items-center gap-2">
+              <div class="text-[9px] font-black uppercase tracking-widest text-purple-300 font-mono flex items-center gap-1.5">
                 <span>SOUNDTRACK &amp; VINYL VAULT</span>
                 <span>·</span>
-                <span class="inline-block w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_#c084fc] animate-ping"></span>
                 <span>4,400+ TRACKS</span>
               </div>
-              <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2 mt-0.5">
+              <h1 class="text-base sm:text-lg font-display font-extrabold text-white tracking-tight flex items-center gap-2">
                 Music Lounge
               </h1>
-              <span class="text-xs text-purple-200/70 font-sans hidden sm:inline-block">Curated soundtracks, Hindi melodies, and global hits</span>
             </div>
           </div>
 
-          <!-- Quick Controls: Back to Home, Shuffle, Resume, New Mix, Stop -->
-          <div class="flex flex-wrap items-center gap-2 shrink-0">
-            <button type="button" onclick="closeMusicToVinyl()" title="Return to Home" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 shadow">
-              <i class="fa-solid fa-arrow-left text-xs"></i> <span>Back to Home</span>
+          <!-- Quick Controls: Back to Home, Shuffle, Resume, Stop -->
+          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <button type="button" onclick="closeMusicToVinyl()" title="Return to Home" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 shadow">
+              <i class="fa-solid fa-arrow-left text-[11px]"></i> <span>Home</span>
             </button>
-            <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="px-3.5 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95">
-              <i class="fa-solid fa-shuffle text-purple-300"></i> <span>Shuffle</span>
+            <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
+              <i class="fa-solid fa-shuffle text-purple-300 text-xs"></i> <span>Shuffle</span>
             </button>
-            <button type="button" id="musicResumeBtn" onclick="musicResumeLast()" title="Resume Last Track" class="px-3.5 py-2 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
-              <i class="fa-solid fa-play"></i> <span>Resume</span>
+            <button type="button" id="musicResumeBtn" onclick="musicResumeLast()" title="Resume Last Track" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
+              <i class="fa-solid fa-play text-[11px]"></i> <span>Resume</span>
             </button>
-            <button type="button" onclick="openCreateSongPlaylistModal()" title="Create Custom Playlist" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-plus text-brand-gold"></i> <span>New Mix</span>
-            </button>
-            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Stop Audio" aria-label="Stop Music Player" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
-              <i class="fa-solid fa-xmark text-sm"></i>
+            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Stop Audio" aria-label="Stop Music Player" class="w-8 h-8 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
+              <i class="fa-solid fa-xmark text-xs"></i>
             </button>
           </div>
         </div>
@@ -1744,83 +1536,82 @@
         <span id="musicTotalPlaylistsCount" class="hidden"></span>
       </div>
 
-      <!-- ANALOG RADIO TUNING SCALE & ROTARY BASE -->
-      <div class="radio-tuner-glass space-y-4">
-        
-        <!-- Search & Frequency Sweep -->
-        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2.5">
+      <!-- ANALOG RADIO TUNING SCALE & ROTARY BASE (Compact Height) -->
+      <div class="radio-tuner-glass p-2.5 sm:p-3 rounded-2xl space-y-2">
+        <!-- Search & Filter Controls Row -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <div class="relative flex-1 min-w-0">
-            <i class="fa-solid fa-tower-broadcast absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400 text-xs sm:text-sm"></i>
-            <input type="text" id="musicSearchInput" placeholder="Tune radio: search titles, artists, movie OSTs..." class="w-full pl-9 pr-3 py-2.5 bg-black/70 border border-purple-500/30 rounded-xl text-xs sm:text-sm text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 font-mono">
+            <i class="fa-solid fa-tower-broadcast absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-xs"></i>
+            <input type="text" id="musicSearchInput" placeholder="Search tracks, artists, OSTs..." class="w-full pl-8 pr-3 py-1.5 bg-black/70 border border-purple-500/30 rounded-xl text-xs text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 font-mono">
           </div>
 
-          <!-- Quick Filters: All / Hindi / English / Favs / Advanced -->
           <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
-            <button type="button" onclick="setSimpleMusicLang('all')" id="mlang-all" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-500 text-white shadow transition-all">All Waves</button>
-            <button type="button" onclick="setSimpleMusicLang('hi')" id="mlang-hi" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">Hindi</button>
-            <button type="button" onclick="setSimpleMusicLang('en')" id="mlang-en" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">English</button>
-            <button type="button" onclick="setMusicViewMode(musicViewMode === 'favs' ? 'all' : 'favs')" id="mview-favs" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">
-              <i class="fa-solid fa-heart text-rose-400 mr-1"></i>Favs
+            <button type="button" onclick="setSimpleMusicLang('all')" id="mlang-all" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-500 text-white shadow transition-all">All</button>
+            <button type="button" onclick="setSimpleMusicLang('hi')" id="mlang-hi" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">Hindi</button>
+            <button type="button" onclick="setSimpleMusicLang('en')" id="mlang-en" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">English</button>
+            <button type="button" onclick="setMusicViewMode(musicViewMode === 'favs' ? 'all' : 'favs')" id="mview-favs" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">
+              <i class="fa-solid fa-heart text-rose-400 mr-1 text-[10px]"></i>Favs
             </button>
-            <button type="button" onclick="document.getElementById('musicAdvancedFilters').classList.toggle('hidden')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-purple-300 border border-purple-500/30 transition-all flex items-center gap-1">
-              <i class="fa-solid fa-sliders"></i> <span>Knobs</span>
+            <button type="button" onclick="document.getElementById('musicAdvancedFilters').classList.toggle('hidden')" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/5 hover:bg-white/10 text-purple-300 border border-purple-500/30 transition-all flex items-center gap-1">
+              <i class="fa-solid fa-sliders text-[10px]"></i> <span>Knobs</span>
             </button>
           </div>
         </div>
 
-        <!-- 3 Knurled Brass Rotary Knobs for Dish Base (Language, Spectrum Mood, Epoch Era) -->
-        <div class="grid grid-cols-3 gap-2 sm:gap-4 p-3 rounded-2xl bg-black/60 border border-purple-500/20 text-center select-none">
-          <!-- Knob 1: Language -->
-          <div class="knurled-rotary-knob">
-            <span class="text-[9px] font-mono font-black text-amber-200/70 tracking-widest uppercase">FREQUENCY</span>
-            <div class="rotary-knob-dial" id="knobDialLang" onclick="cycleMusicKnob('lang')" title="Rotate Language Knob">
+        <!-- 3 Knurled Rotary Knobs (Compact Horizontal Strip) -->
+        <div class="flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-xl bg-black/60 border border-purple-500/20 text-center select-none overflow-x-auto">
+          <!-- Knob 1: Language / Frequency -->
+          <div class="flex items-center gap-2 shrink-0">
+            <div class="rotary-knob-dial w-6 h-6 sm:w-7 sm:h-7 shrink-0 cursor-pointer" id="knobDialLang" onclick="cycleMusicKnob('lang')" title="Rotate Frequency Knob">
               <div class="rotary-knob-indicator"></div>
             </div>
-            <span id="knobLabelLang" class="text-[11px] font-mono text-purple-200 font-bold">ALL</span>
+            <div class="text-left leading-none">
+              <div class="text-[8px] font-mono font-bold text-amber-200/70 uppercase">WAVE</div>
+              <div id="knobLabelLang" class="text-[11px] font-mono text-purple-200 font-bold">ALL</div>
+            </div>
           </div>
           <!-- Knob 2: Spectrum Mood -->
-          <div class="knurled-rotary-knob">
-            <span class="text-[9px] font-mono font-black text-amber-200/70 tracking-widest uppercase">SPECTRUM</span>
-            <div class="rotary-knob-dial" id="knobDialMood" onclick="cycleMusicKnob('mood')" title="Rotate Spectrum Mood Knob">
+          <div class="flex items-center gap-2 shrink-0">
+            <div class="rotary-knob-dial w-6 h-6 sm:w-7 sm:h-7 shrink-0 cursor-pointer" id="knobDialMood" onclick="cycleMusicKnob('mood')" title="Rotate Spectrum Knob">
               <div class="rotary-knob-indicator"></div>
             </div>
-            <span id="knobLabelMood" class="text-[11px] font-mono text-purple-200 font-bold truncate max-w-[90px]">ALL MOODS</span>
+            <div class="text-left leading-none">
+              <div class="text-[8px] font-mono font-bold text-amber-200/70 uppercase">SPECTRUM</div>
+              <div id="knobLabelMood" class="text-[11px] font-mono text-purple-200 font-bold truncate max-w-[90px]">ALL MOODS</div>
+            </div>
           </div>
           <!-- Knob 3: Epoch Era -->
-          <div class="knurled-rotary-knob">
-            <span class="text-[9px] font-mono font-black text-amber-200/70 tracking-widest uppercase">EPOCH</span>
-            <div class="rotary-knob-dial" id="knobDialEra" onclick="cycleMusicKnob('era')" title="Rotate Epoch Era Knob">
+          <div class="flex items-center gap-2 shrink-0">
+            <div class="rotary-knob-dial w-6 h-6 sm:w-7 sm:h-7 shrink-0 cursor-pointer" id="knobDialEra" onclick="cycleMusicKnob('era')" title="Rotate Epoch Era Knob">
               <div class="rotary-knob-indicator"></div>
             </div>
-            <span id="knobLabelEra" class="text-[11px] font-mono text-purple-200 font-bold">ALL ERAS</span>
+            <div class="text-left leading-none">
+              <div class="text-[8px] font-mono font-bold text-amber-200/70 uppercase">EPOCH</div>
+              <div id="knobLabelEra" class="text-[11px] font-mono text-purple-200 font-bold">ALL ERAS</div>
+            </div>
           </div>
         </div>
 
         <!-- Backlit Horizontal Analog Radio Tuning Scale -->
-        <div class="space-y-1.5 pt-1">
-          <div class="flex items-center justify-between text-[10px] font-mono text-purple-300/80 px-1 font-bold">
-            <span class="flex items-center gap-1.5"><i class="fa-solid fa-satellite-dish text-brand-gold text-[10px]"></i> TUNING SCALE (88.5 — 108.0 MHz)</span>
-            <button type="button" onclick="resetMusicFilters()" class="text-brand-gold hover:underline">Reset Scale</button>
-          </div>
-          
-          <div class="radio-tuner-track relative" id="radioTunerTrack">
+        <div class="space-y-0.5 pt-0.5">
+          <div class="radio-tuner-track relative py-0.5" id="radioTunerTrack">
             <div id="radioNeedle" class="radio-needle" style="left: 14px;"></div>
-            <div id="musicPlaylistsRow" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth w-full"></div>
+            <div id="musicPlaylistsRow" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 scroll-smooth w-full"></div>
           </div>
         </div>
 
         <!-- Hidden Select Elements for programmatic synchronization -->
-        <div id="musicAdvancedFilters" class="hidden pt-2.5 border-t border-purple-500/20 space-y-2.5">
+        <div id="musicAdvancedFilters" class="hidden pt-2 border-t border-purple-500/20 space-y-2">
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <select id="musicFilterLang" class="dark-select px-3 py-2 bg-[#0d111a] border border-purple-500/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-purple-400 cursor-pointer">
+            <select id="musicFilterLang" class="dark-select px-2.5 py-1.5 bg-[#0d111a] border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none">
               <option value="all">Language: All</option>
               <option value="hi">Hindi &amp; Indian</option>
               <option value="en">English &amp; Global</option>
             </select>
-            <select id="musicFilterPlaylist" class="dark-select px-3 py-2 bg-[#0d111a] border border-purple-500/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-purple-400 cursor-pointer">
+            <select id="musicFilterPlaylist" class="dark-select px-2.5 py-1.5 bg-[#0d111a] border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none">
               <option value="all">All Stations</option>
             </select>
-            <select id="musicFilterMood" class="dark-select px-3 py-2 bg-[#0d111a] border border-purple-500/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-purple-400 cursor-pointer">
+            <select id="musicFilterMood" class="dark-select px-2.5 py-1.5 bg-[#0d111a] border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none">
               <option value="all">All Moods</option>
               <option value="Romantic & Melody">Romantic &amp; Melody</option>
               <option value="Party & Energy">Party &amp; Energy</option>
@@ -1829,7 +1620,7 @@
               <option value="R&B & Hip-Hop">R&amp;B &amp; Hip-Hop</option>
               <option value="Nostalgia & Classics">Nostalgia &amp; Classics</option>
             </select>
-            <select id="musicFilterEra" class="dark-select px-3 py-2 bg-[#0d111a] border border-purple-500/30 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-purple-400 cursor-pointer">
+            <select id="musicFilterEra" class="dark-select px-2.5 py-1.5 bg-[#0d111a] border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none">
               <option value="all">All Eras</option>
               <option value="2020s">2020s</option>
               <option value="2010s">2010s</option>
@@ -1838,18 +1629,18 @@
               <option value="1980s">1980s</option>
             </select>
           </div>
-          <div id="musicArtistChips" class="flex flex-wrap gap-1.5 items-center"></div>
+          <div id="musicArtistChips" class="flex flex-wrap gap-1 items-center"></div>
         </div>
         <button type="button" id="mview-all" class="hidden"></button>
       </div>
 
       <!-- Results Count & Queue Play Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-400 px-1">
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-400 px-1 pt-1">
         <div>Showing <strong id="musicShowingCount" class="text-white">0</strong> tracks · Page <strong id="musicCurPageLbl" class="text-white">1</strong></div>
         <div class="flex items-center gap-3">
-          <button type="button" onclick="musicPlayFilteredAll()" class="text-brand-gold hover:underline font-bold flex items-center gap-1"><i class="fa-solid fa-play"></i> Play Current List</button>
+          <button type="button" onclick="musicPlayFilteredAll()" class="text-brand-gold hover:underline font-bold flex items-center gap-1"><i class="fa-solid fa-play text-xs"></i> Play Current List</button>
           <span>·</span>
-          <button type="button" onclick="toggleMusicQueueDrawer()" class="text-gray-200 hover:text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-list-ol text-brand-gold"></i> Queue (<span id="musicQueueCountLbl">0</span>)</button>
+          <button type="button" onclick="toggleMusicQueueDrawer()" class="text-gray-200 hover:text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-list-ol text-brand-gold text-xs"></i> Queue (<span id="musicQueueCountLbl">0</span>)</button>
         </div>
       </div>
 

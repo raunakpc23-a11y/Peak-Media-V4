@@ -148,15 +148,22 @@
     }
   });
 
-  // Expand Vinyl Disc on Home Page into Music Lounge
+  // Expand Vinyl Disc on Home Page into Music Lounge (Gradually takes over the whole screen)
   window.openMusicFromVinyl = function() {
     const showcase = document.getElementById('homeVinylShowcase');
-    if (showcase && !document.body.classList.contains('reduce-fx')) {
-      showcase.classList.add('vinyl-expanding');
+    const disc = document.getElementById('homeVinylDisc');
+    if (disc && !document.body.classList.contains('reduce-fx')) {
+      disc.classList.add('vinyl-screen-takeover');
       setTimeout(() => {
         window.switchTab('music');
-        showcase.classList.remove('vinyl-expanding');
-      }, 350);
+        disc.classList.remove('vinyl-screen-takeover');
+      }, 400);
+    } else if (showcase && !document.body.classList.contains('reduce-fx')) {
+      showcase.classList.add('vinyl-screen-takeover');
+      setTimeout(() => {
+        window.switchTab('music');
+        showcase.classList.remove('vinyl-screen-takeover');
+      }, 400);
     } else {
       window.switchTab('music');
     }
@@ -210,20 +217,61 @@
     window.returnToOpeningPage('homeProfileVaultCard');
   };
 
+  // The Deciders Tool Switcher (One-word navigation across all 9 tools)
+  window.selectDeciderTool = function(tool) {
+    document.querySelectorAll('.decider-tool-btn').forEach(b => {
+      b.className = 'decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all';
+    });
+    const activeBtn = document.getElementById('deciderBtn-' + tool);
+    if (activeBtn) {
+      activeBtn.className = 'decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-gold text-black shadow-md transition-all';
+    }
+    if (tool === 'mood') {
+      window.switchTab('play');
+      if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 40);
+    } else if (tool === 'duel') {
+      window.switchTab('duel');
+    } else if (tool === 'series') {
+      window.switchTab('shows');
+    } else if (tool === 'marathon') {
+      if (window.openMarathonModal) window.openMarathonModal();
+      else window.switchTab('marathon');
+    } else if (tool === 'architect') {
+      window.switchTab('hub');
+    } else if (tool === 'matchmaker') {
+      window.switchTab('match');
+    } else if (tool === 'decades') {
+      if (window.tmOpen) window.tmOpen();
+    } else if (tool === 'roulette') {
+      if (window.openSurpriseModal) window.openSurpriseModal();
+      else if (window.spinMoodDialRoulette) window.spinMoodDialRoulette();
+    } else if (tool === 'opposite') {
+      if (window.oppToggle) window.oppToggle();
+    }
+  };
+
   // Cinema Games launcher from cartridge cards
   window.openCinemaGame = function(gameKey) {
     if (gameKey === 'duel') {
       window.switchTab('duel');
     } else if (gameKey === 'roulette') {
       if (window.openSurpriseModal) window.openSurpriseModal();
-    } else if (gameKey === 'timemachine') {
+    } else if (gameKey === 'timemachine' || gameKey === 'decades') {
       if (window.tmOpen) window.tmOpen();
-    } else if (gameKey === 'match') {
+    } else if (gameKey === 'match' || gameKey === 'matchmaker') {
       window.switchTab('match');
     } else if (gameKey === 'marathon') {
       if (window.openMarathonModal) window.openMarathonModal();
+      else window.switchTab('marathon');
     } else if (gameKey === 'opposite') {
       if (window.oppToggle) window.oppToggle();
+    } else if (gameKey === 'mood') {
+      window.switchTab('play');
+      if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 40);
+    } else if (gameKey === 'series') {
+      window.switchTab('shows');
+    } else if (gameKey === 'architect') {
+      window.switchTab('hub');
     } else {
       window.switchTab('play');
     }
@@ -484,29 +532,64 @@
   seed();
   kick();
 
-  function apply(id) {
+  function apply(id, modeToUse) {
     current = id; const t = THEMES[id] || THEMES.space;
-    document.body.setAttribute('data-theme', id); document.body.classList.toggle('reduce-fx', !!reduce);
-    mode = t.fx; if (mode === 'aurora') parts = []; else seed(); if (mode === 'aurora' && reduce) parts = [];
-    kick(); if (reduce) cx.clearRect(0, 0, W, H);
+    const isLight = modeToUse === 'light';
+    
+    // Apply Mode and Palette attributes independently to both html and body
+    document.documentElement.setAttribute('data-mode', isLight ? 'light' : 'dark');
+    document.body.setAttribute('data-mode', isLight ? 'light' : 'dark');
+    document.body.classList.toggle('mode-light', isLight);
+    document.body.classList.toggle('mode-dark', !isLight);
+    
+    document.documentElement.setAttribute('data-palette', id);
+    document.body.setAttribute('data-theme', id);
+    document.body.classList.toggle('reduce-fx', !!reduce);
+
+    mode = isLight ? 'none' : t.fx;
+    if (mode === 'aurora') parts = []; else seed();
+    if (mode === 'aurora' && reduce) parts = [];
+    kick();
+    if (reduce || isLight) cx.clearRect(0, 0, W, H);
+
     $('vibeName').textContent = pin === 'auto' ? t.n + ' (auto)' : t.n;
-    $('swatchName').textContent = t.n + (pin === 'auto' ? ' · chosen by your forecast' : ' · pinned');
-    $('autoBtn').className = 'text-[11px] font-bold px-2 py-1 rounded-lg border ' + (pin === 'auto' ? 'border-brand-gold text-brand-gold bg-brand-gold/10' : 'border-white/15 text-gray-300');
+    $('swatchName').textContent = t.n + (pin === 'auto' ? ' · dynamic palette' : ' · selected palette');
+    $('autoBtn').className = 'text-[11px] font-bold px-2 py-0.5 rounded-lg border ' + (pin === 'auto' ? 'border-brand-gold text-brand-gold bg-brand-gold/10' : 'border-white/15 text-gray-300');
     document.querySelectorAll('.swatch').forEach(e => e.classList.toggle('on', e.dataset.id === id));
     $('reduceTgl').classList.toggle('on', !!reduce);
-    const pb = $('wxPin'); if (pb) pb.textContent = pin === 'auto' ? 'Pin this theme' : 'Back to auto';
-    updateThemeModeUI();
+    const pb = $('wxPin'); if (pb) pb.textContent = pin === 'auto' ? 'Pin this palette' : 'Back to auto';
+    updateThemeModeUI(isLight);
   }
 
-  function updateThemeModeUI() {
-    const isDark = current !== 'dawn';
+  function updateThemeModeUI(isLight) {
     const isSys = themeMode === 'system';
+
+    // Update 3-position segmented switch in Style drawer
+    const btnLight = $('modeBtn-light');
+    const btnDefault = $('modeBtn-default');
+    const btnDark = $('modeBtn-dark');
+    
+    if (btnLight) {
+      btnLight.className = themeMode === 'light'
+        ? 'mode-toggle-btn px-2.5 py-1 rounded-lg bg-brand-gold text-black shadow font-bold transition-all'
+        : 'mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition-all';
+    }
+    if (btnDefault) {
+      btnDefault.className = themeMode === 'system'
+        ? 'mode-toggle-btn px-2.5 py-1 rounded-lg bg-brand-gold text-black shadow font-bold transition-all'
+        : 'mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition-all';
+    }
+    if (btnDark) {
+      btnDark.className = themeMode === 'dark'
+        ? 'mode-toggle-btn px-2.5 py-1 rounded-lg bg-brand-gold text-black shadow font-bold transition-all'
+        : 'mode-toggle-btn px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition-all';
+    }
 
     // Header theme button icon & title
     const hdrIcon = $('headerThemeIcon');
     if (hdrIcon) {
       if (isSys) {
-        hdrIcon.className = 'fa-solid fa-circle-half-stroke text-xs ' + (isDark ? 'text-amber-400' : 'text-amber-600');
+        hdrIcon.className = 'fa-solid fa-circle-half-stroke text-xs ' + (isLight ? 'text-amber-600' : 'text-amber-400');
       } else if (themeMode === 'light') {
         hdrIcon.className = 'fa-solid fa-sun text-xs text-amber-500';
       } else {
@@ -515,51 +598,49 @@
     }
     const hdrBtn = $('headerThemeBtn');
     if (hdrBtn) {
-      hdrBtn.title = `Theme: ${isSys ? 'System Default' : (themeMode === 'light' ? 'Light Mode' : 'Dark Mode')} (${isDark ? 'Dark' : 'Light'}) · Click to toggle`;
+      hdrBtn.title = `Mode: ${isSys ? 'Default (System)' : (themeMode === 'light' ? 'Light' : 'Dark')} · Click to toggle`;
     }
 
-    // Stream Filter Bar Theme Pill
+    // Stream Filter Bar Theme Pill (sync if present)
     const filterBtn = $('themeModeFilterBtn');
     const filterIcon = $('themeModeFilterIcon');
     const filterLabel = $('themeModeFilterLabel');
     if (filterBtn && filterIcon && filterLabel) {
       if (isSys) {
-        filterIcon.className = 'fa-solid fa-circle-half-stroke ' + (isDark ? 'text-amber-400' : 'text-amber-600');
-        filterLabel.textContent = `Theme: System (${isDark ? 'Dark' : 'Light'})`;
-        filterBtn.className = 'theme-pill-system';
+        filterIcon.className = 'fa-solid fa-circle-half-stroke ' + (isLight ? 'text-amber-600' : 'text-amber-400');
+        filterLabel.textContent = `Mode: Default (${isLight ? 'Light' : 'Dark'})`;
       } else if (themeMode === 'light') {
         filterIcon.className = 'fa-solid fa-sun text-amber-500';
-        filterLabel.textContent = 'Theme: Light';
-        filterBtn.className = 'theme-pill-light';
+        filterLabel.textContent = 'Mode: Light';
       } else {
         filterIcon.className = 'fa-solid fa-moon text-sky-400';
-        filterLabel.textContent = 'Theme: Dark';
-        filterBtn.className = 'theme-pill-dark';
+        filterLabel.textContent = 'Mode: Dark';
       }
     }
   }
 
   function refresh() {
     forecast = makeForecast();
-    let themeToApply = 'space';
 
+    // 1. Determine effective mode (Light vs Dark)
+    let effectiveMode = 'dark';
     if (themeMode === 'light') {
-      themeToApply = 'dawn';
+      effectiveMode = 'light';
     } else if (themeMode === 'dark') {
-      themeToApply = (pin === 'auto' ? forecast.theme : (pin === 'dawn' ? 'space' : pin));
+      effectiveMode = 'dark';
     } else {
-      // System Default Mode (checks OS prefers-color-scheme)
+      // System Default: check prefers-color-scheme
       const prefersDark = !window.matchMedia || window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) {
-        themeToApply = (pin === 'auto' ? forecast.theme : (pin === 'dawn' ? 'space' : pin));
-      } else {
-        themeToApply = 'dawn';
-      }
+      effectiveMode = prefersDark ? 'dark' : 'light';
     }
 
-    apply(themeToApply);
+    // 2. Determine palette
+    let paletteToApply = (pin === 'auto' ? forecast.theme : pin);
+    if (!THEMES[paletteToApply]) paletteToApply = 'space';
+
+    apply(paletteToApply, effectiveMode);
     const t = $('wxText'); if (t) t.textContent = forecast.text;
-    const k = $('wxKicker'); if (k) k.textContent = 'Cinematic Weather Report · ' + (THEMES[current] ? THEMES[current].n : 'Atmosphere');
+    const k = $('wxKicker'); if (k) k.textContent = 'Atmosphere · ' + (THEMES[current] ? THEMES[current].n : 'Cosmic');
   }
 
   window.toggleSystemThemeMode = function() {
@@ -592,35 +673,48 @@
     } catch (_) {}
   }
 
-  // ---------- Vibe menu ----------
-  const CORE_THEME_IDS = ['space', 'clear', 'noir', 'neon', 'aurora', 'blood'];
+  // ---------- Palettes & Accents Menu ----------
+  const CORE_THEME_IDS = ['space', 'clear', 'noir', 'neon', 'aurora', 'golden', 'blood', 'velvet'];
   $('swatchRow').innerHTML = CORE_THEME_IDS.map(id => {
     const t = THEMES[id];
     return t ? `<button class="swatch" data-id="${id}" title="${t.n}" style="background:${t.c}"></button>` : '';
   }).join('');
+
   $('swatchRow').onclick = e => {
     const b = e.target.closest('.swatch'); if (!b) return;
     pin = b.dataset.id;
     ls.set('cs_theme_v2', pin);
-    if (pin === 'dawn') {
-      themeMode = 'light';
-    } else {
-      themeMode = 'dark';
-    }
-    ls.set('cs_theme_mode', themeMode);
+    // Swatch changes palette accent, preserving current Light/Dark/Default mode
     refresh();
   };
+
   $('autoBtn').onclick = () => {
     pin = 'auto';
-    themeMode = 'system';
     ls.set('cs_theme_v2', pin);
-    ls.set('cs_theme_mode', themeMode);
     refresh();
   };
+
   window.toggleReduce = () => { reduce = !reduce; ls.set('cs_reduce', reduce); refresh(); };
   window.toggleVibe = e => { e && e.stopPropagation(); $('vibePanel').classList.toggle('hidden'); };
-  document.addEventListener('click', e => { if (!e.target.closest('#vibePanel') && !e.target.closest('#vibeBtn') && !e.target.closest('[onclick*="openThemeEffectsModal"]') && !e.target.closest('[onclick*="toggleVibe"]')) $('vibePanel').classList.add('hidden'); });
+  document.addEventListener('click', e => { 
+    if (!e.target.closest('#vibePanel') && !e.target.closest('#vibeBtn') && !e.target.closest('[onclick*="openThemeEffectsModal"]') && !e.target.closest('[onclick*="toggleVibe"]')) {
+      $('vibePanel').classList.add('hidden');
+    }
+  });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') $('vibePanel').classList.add('hidden'); });
+
+  // Stream Filter Bar Dropdown Toggle
+  window.toggleStreamFilterMenu = function() {
+    const menu = document.getElementById('streamFilterMenu');
+    if (menu) menu.classList.toggle('hidden');
+  };
+  document.addEventListener('click', function(e) {
+    const menu = document.getElementById('streamFilterMenu');
+    const btn = document.getElementById('streamFilterDropdownBtn');
+    if (menu && !menu.classList.contains('hidden') && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+      menu.classList.add('hidden');
+    }
+  });
 
   // ---------- Atmosphere bar removed from forefront of Home ----------
 

@@ -13,13 +13,89 @@
     [data-theme="solar"]    { --gold: 251 146 60;  --gold-hex: #fb923c; --bg: #0a0401; --bgimg: radial-gradient(ellipse at 50% -10%, rgba(251,146,60,.28), transparent 58%), radial-gradient(ellipse at 20% 90%, rgba(234,88,12,.15), transparent 50%); }
     [data-theme="obsidian"] { --gold: 148 163 184; --gold-hex: #94a3b8; --bg: #020305; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(100,116,139,.16), transparent 55%); }
 
-    /* Dawn Paper Chart Light Mode */
-    [data-theme="dawn"] body { color: #1e293b !important; }
-    [data-theme="dawn"] .glass-nav { background: rgba(244, 238, 219, 0.94); border-color: rgba(0,0,0,0.08); }
-    [data-theme="dawn"] .glass-card { background: rgba(255, 252, 245, 0.88); border-color: rgba(0,0,0,0.08); color: #1e293b; }
-    [data-theme="dawn"] .text-white { color: #0f172a !important; }
-    [data-theme="dawn"] .text-gray-300, [data-theme="dawn"] .text-gray-400 { color: #475569 !important; }
-    [data-theme="dawn"] .station-plates-dock { background: rgba(235, 227, 206, 0.92); border-color: rgba(0,0,0,0.12); }
+    /* High-Fidelity Light Mode Suite */
+    [data-mode="light"], .mode-light {
+      --bg: #f8f6f0 !important;
+      --bgimg: radial-gradient(circle at 50% 0%, rgba(217,119,6,.06), transparent 70%), radial-gradient(ellipse at 80% 80%, rgba(226,232,240,.6), transparent 50%) !important;
+    }
+    [data-mode="light"] body, .mode-light {
+      background-color: #f8f6f0 !important;
+      color: #0f172a !important;
+    }
+    [data-mode="light"] .glass-nav, .mode-light .glass-nav {
+      background: rgba(255, 255, 255, 0.94) !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+      box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05);
+    }
+    [data-mode="light"] .glass-card, .mode-light .glass-card {
+      background: rgba(255, 255, 255, 0.92) !important;
+      border-color: rgba(0, 0, 0, 0.09) !important;
+      box-shadow: 0 10px 30px -4px rgba(0,0,0,0.06) !important;
+      color: #0f172a !important;
+    }
+    [data-mode="light"] .text-white, .mode-light .text-white {
+      color: #0f172a !important;
+    }
+    [data-mode="light"] .text-gray-100, .mode-light .text-gray-100,
+    [data-mode="light"] .text-gray-200, .mode-light .text-gray-200,
+    [data-mode="light"] .text-gray-300, .mode-light .text-gray-300 {
+      color: #334155 !important;
+    }
+    [data-mode="light"] .text-gray-400, .mode-light .text-gray-400 {
+      color: #64748b !important;
+    }
+    [data-mode="light"] .text-gray-500, .mode-light .text-gray-500 {
+      color: #94a3b8 !important;
+    }
+    [data-mode="light"] .bg-black\/60, .mode-light .bg-black\/60,
+    [data-mode="light"] .bg-black\/50, .mode-light .bg-black\/50,
+    [data-mode="light"] .bg-black\/40, .mode-light .bg-black\/40,
+    [data-mode="light"] .bg-black\/70, .mode-light .bg-black\/70,
+    [data-mode="light"] .bg-black\/80, .mode-light .bg-black\/80,
+    [data-mode="light"] .bg-\[\#0c101c\], .mode-light .bg-\[\#0c101c\],
+    [data-mode="light"] .bg-\[\#0d111a\], .mode-light .bg-\[\#0d111a\] {
+      background-color: rgba(241, 245, 249, 0.95) !important;
+      color: #0f172a !important;
+    }
+    [data-mode="light"] .bg-white\/5, .mode-light .bg-white\/5,
+    [data-mode="light"] .bg-white\/10, .mode-light .bg-white\/10 {
+      background-color: rgba(0, 0, 0, 0.04) !important;
+    }
+    [data-mode="light"] .border-white\/10, .mode-light .border-white\/10,
+    [data-mode="light"] .border-white\/15, .mode-light .border-white\/15,
+    [data-mode="light"] .border-white\/20, .mode-light .border-white\/20 {
+      border-color: rgba(0, 0, 0, 0.08) !important;
+    }
+    [data-mode="light"] input, [data-mode="light"] select, [data-mode="light"] textarea {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border-color: rgba(0, 0, 0, 0.15) !important;
+    }
+    [data-mode="light"] .station-plates-dock {
+      background: rgba(255, 255, 255, 0.94) !important;
+      border-color: rgba(0, 0, 0, 0.12) !important;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+    }
+    [data-mode="light"] .station-plate {
+      background: rgba(241, 245, 249, 0.9) !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+      color: #334155 !important;
+    }
+    [data-mode="light"] .telescope-barrel {
+      background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f8fafc 80%, #f1f5f9 100%) !important;
+      border-color: rgba(217, 119, 6, 0.35) !important;
+      box-shadow: 0 20px 50px -15px rgba(0,0,0,0.1), inset 0 0 60px rgba(0,0,0,0.02) !important;
+    }
+    [data-mode="light"] .home-vinyl-panel {
+      background: rgba(255, 255, 255, 0.92) !important;
+      border-color: rgba(0, 0, 0, 0.1) !important;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.07) !important;
+    }
+    [data-mode="light"] .radio-tuner-glass {
+      background: rgba(255, 255, 255, 0.94) !important;
+      border-color: rgba(147, 51, 234, 0.2) !important;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06) !important;
+    }
     body { background-image: var(--bgimg); background-attachment: fixed; transition: background-color .8s; }
     #fxCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
     main, footer { position: relative; z-index: 1; }
@@ -1168,10 +1244,33 @@
       will-change: transform, opacity;
     }
     .home-vinyl-panel.vinyl-expanding {
-      transform: scale(1.6);
+      transform: scale(2.5);
       opacity: 0;
-      filter: blur(10px);
+      filter: blur(12px);
       pointer-events: none;
+    }
+    .vinyl-turntable-deck:hover .vinyl-record-disc,
+    .vinyl-turntable-deck:hover #homeVinylDisc {
+      transform: scale(1.06);
+    }
+    .vinyl-screen-takeover {
+      animation: vinylScreenTakeover 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+      z-index: 99999 !important;
+      pointer-events: none;
+    }
+    @keyframes vinylScreenTakeover {
+      0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(4) rotate(90deg);
+        opacity: 0.95;
+      }
+      100% {
+        transform: scale(16) rotate(180deg);
+        opacity: 0;
+      }
     }
 
     /* The Vinyl Record Disc */

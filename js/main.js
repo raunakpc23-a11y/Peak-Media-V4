@@ -609,12 +609,13 @@
       });
       const countBadge = $('activeLangCountBadge');
       if (countBadge) {
-        const poolCount = [...movies, ...tvShows].filter(matchesGlobalLang).length;
+        const matcher = window.matchesGlobalLang || (item => (!window.globalLangFilter || window.globalLangFilter === 'all' || item.lang === window.globalLangFilter));
+        const poolCount = [...(movies || []), ...(tvShows || [])].filter(matcher).length;
         countBadge.textContent = `Showing ${poolCount.toLocaleString()} titles`;
       }
-      renderDiscoverTab();
-      filterAndRenderMovies(true);
-      filterAndRenderShows(true);
+      if (typeof window.renderDiscoverTab === 'function') window.renderDiscoverTab();
+      if (typeof window.filterAndRenderMovies === 'function') window.filterAndRenderMovies(true);
+      if (typeof window.filterAndRenderShows === 'function') window.filterAndRenderShows(true);
     };
 
     window.openLangCompareModal = function() {
@@ -1251,19 +1252,60 @@
     };
 
     window.musicNext = function() {
-      if (!musicQueue.length) return;
+      ensureMusicLoaded();
+      if (!musicCatalog || !musicCatalog.length) return;
+      if (!musicQueue || !musicQueue.length) {
+        musicQueue = [...musicCatalog];
+        musicQueueIdx = 0;
+      }
       if (musicShuffle) {
         musicQueueIdx = Math.floor(Math.random() * musicQueue.length);
       } else {
         musicQueueIdx = (musicQueueIdx + 1) % musicQueue.length;
       }
       startTrackFromQueue();
+      if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
     };
 
     window.musicPrev = function() {
-      if (!musicQueue.length) return;
+      ensureMusicLoaded();
+      if (!musicCatalog || !musicCatalog.length) return;
+      if (!musicQueue || !musicQueue.length) {
+        musicQueue = [...musicCatalog];
+        musicQueueIdx = 0;
+      }
       musicQueueIdx = (musicQueueIdx - 1 + musicQueue.length) % musicQueue.length;
       startTrackFromQueue();
+      if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
+    };
+
+    window.toggleHomeVinylPlayback = function(e) {
+      if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+      }
+      ensureMusicLoaded();
+      if (!musicCatalog || !musicCatalog.length) return;
+      if (!musicQueue || !musicQueue.length) {
+        musicQueue = [...musicCatalog];
+        musicQueueIdx = 0;
+      }
+      if (musicQueueIdx < 0) musicQueueIdx = 0;
+
+      if (isPlayingMusic) {
+        window.musicPause();
+      } else {
+        if (ytPlayer && typeof ytPlayer.playVideo === 'function' && ytReady) {
+          ytPlayer.playVideo();
+          isPlayingMusic = true;
+          const mp = $('musicMiniPlayer');
+          if (mp) mp.classList.remove('hidden');
+          updateMiniPlayerUI();
+        } else {
+          startTrackFromQueue();
+        }
+      }
+      if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
     };
 
     window.musicToggleShuffle = function() {
@@ -3137,6 +3179,7 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
       updateHeaderProfileUI();
       window.setGlobalLanguage('all');
       if (window.initMusicVault) window.initMusicVault();
+      if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
       initDraggableVideoDock();
       initConnectivityMonitoring();
       PeakVaultStorage.hydrate();
