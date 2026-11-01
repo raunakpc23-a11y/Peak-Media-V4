@@ -1133,7 +1133,8 @@
       const playText = $('homeVinylPlayText');
       const statusBadge = $('homeVinylStatusBadge');
 
-      const s = (musicQueue && musicQueueIdx >= 0 && musicQueue[musicQueueIdx]) ? musicQueue[musicQueueIdx] : (musicCatalog && musicCatalog[0]);
+      const defaultSong = { id: 'lY2yjAdbvdQ', t: 'Shawn Mendes - Treat You Better', a: 'Shawn Mendes', l: 'en', m: 'Romantic & Melody' };
+      const s = (musicQueue && musicQueueIdx >= 0 && musicQueue[musicQueueIdx]) ? musicQueue[musicQueueIdx] : ((musicCatalog && musicCatalog[0]) || defaultSong);
       if (s) {
         if (thumb) thumb.src = `https://i.ytimg.com/vi/${s.id}/mqdefault.jpg`;
         if (title) title.textContent = s.t;
@@ -3183,7 +3184,6 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
       updateHeaderProfileUI();
       const savedLang = getLS('cs_lang_filter', 'all');
       window.setGlobalLanguage(savedLang, false);
-      if (window.initMusicVault) window.initMusicVault();
       if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
       initDraggableVideoDock();
       initConnectivityMonitoring();

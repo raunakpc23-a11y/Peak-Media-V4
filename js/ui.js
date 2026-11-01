@@ -653,8 +653,15 @@
   }
   const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
   document.addEventListener('visibilitychange', kick);
-  seed();
-  kick();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      seed();
+      setTimeout(kick, 80);
+    });
+  } else {
+    seed();
+    setTimeout(kick, 80);
+  }
 
   function apply(id, modeToUse) {
     current = id; const t = THEMES[id] || THEMES.space;

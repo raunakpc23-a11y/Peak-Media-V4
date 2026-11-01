@@ -463,11 +463,5 @@
     });
   }
 
-  // Auto-init once DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(window.initCinemaMoodDial, 100));
-  } else {
-    setTimeout(window.initCinemaMoodDial, 100);
-  }
-
+  // Initialized on-demand when the Mood tool is opened
 })();

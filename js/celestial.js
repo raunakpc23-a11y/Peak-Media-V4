@@ -5,7 +5,8 @@
   'use strict';
 
   function renderSkyConstellations() {
-    if (window.renderDiscoverTab) {
+    if (!window._discoverRendered && window.renderDiscoverTab) {
+      window._discoverRendered = true;
       window.renderDiscoverTab();
     }
     if (window.updateHomeVinylPlayer) {

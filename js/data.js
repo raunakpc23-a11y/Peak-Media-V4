@@ -13373,7 +13373,7 @@ Odd Taxi|2021|87
           imgEl.src = realUrl;
         }
       });
-    }, { rootMargin: '300px' });
+    }, { rootMargin: '100px' });
 
     function attachThumbObservers(container) {
       if (!container) return;
@@ -14059,11 +14059,11 @@ Odd Taxi|2021|87
     }
 
     function renderDiscoverTab() {
+      window._discoverRendered = true;
       renderHeroSpotlight(0);
       renderMoodPills();
-      selectMood(activeMood || '🧠 Mind-Bending');
 
-      // Row 1: Pantheon (8.5+ when filtered by Hindi, 9.0+ otherwise) — capped at 12 cards
+      // Row 1: Pantheon (8.5+ when filtered by Hindi, 9.0+ otherwise) — Immediate Above-the-Fold Render
       const minPantheon = window.globalLangFilter === 'hi' ? 8.3 : 9.0;
       const pantheon = [...movies, ...tvShows].filter(i => matchesGlobalLang(i) && parseFloat(i.rating) >= minPantheon).sort((a, b) => b.rating - a.rating).slice(0, 12);
       const pEl = document.getElementById('discoverPantheonRow');
@@ -14072,53 +14072,58 @@ Odd Taxi|2021|87
         attachThumbObservers(pEl);
       }
 
-      // Row 2: Popular Hits — capped at 12 cards
-      const blockbusterKeywords = ["Avengers", "Spider-Man", "Dune", "Batman", "Dark Knight", "Avatar", "Star Wars", "Fast & Furious", "Fast Five", "Furious 7", "Transformers", "Harry Potter", "Top Gun", "John Wick", "Deadpool", "Hunger Games", "Mission: Impossible", "Guardians of the Galaxy", "Inception", "Interstellar", "Oppenheimer", "RRR", "Baahubali", "K.G.F", "Jawan", "Pathaan", "Dangal", "3 Idiots", "Sholay", "Kalki", "Stree"];
-      const blockbusters = movies.filter(m => matchesGlobalLang(m) && blockbusterKeywords.some(kw => m.title.includes(kw))).sort((a, b) => b.rating - a.rating).slice(0, 12);
-      const bEl = document.getElementById('discoverBlockbustersRow');
-      if (bEl) {
-        bEl.innerHTML = blockbusters.map(i => createCardHTML(i, true)).join('');
-        attachThumbObservers(bEl);
-      }
-
-      // Row 3: Box Office All-Time Champions — capped at 12 cards
-      const boxOfficeKeywords = ["Avatar", "Avengers: Endgame", "Titanic", "Star Wars: The Force Awakens", "Avengers: Infinity War", "Spider-Man: No Way Home", "Jurassic World", "The Lion King", "The Avengers", "Furious 7", "Top Gun: Maverick", "Frozen II", "Barbie", "Oppenheimer", "The Dark Knight", "Dangal", "Baahubali 2", "RRR", "K.G.F: Chapter 2", "Jawan"];
-      const boxOfficeFilms = movies.filter(m => matchesGlobalLang(m) && boxOfficeKeywords.some(kw => m.title.includes(kw) || kw.includes(m.title))).sort((a, b) => b.rating - a.rating).slice(0, 12);
-      const boEl = document.getElementById('discoverBoxOfficeRow');
-      if (boEl) {
-        boEl.innerHTML = boxOfficeFilms.map(i => createCardHTML(i, true)).join('');
-        attachThumbObservers(boEl);
-      }
-
-      // Row 4: Mind-Benders & Thrillers — capped at 12 cards
-      const mindBenders = movies.filter(i => matchesGlobalLang(i) && (i.genre === 'Sci-Fi' || i.genre === 'Thriller')).slice(0, 12);
-      const mEl = document.getElementById('discoverMindRow');
-      if (mEl) {
-        mEl.innerHTML = mindBenders.map(i => createCardHTML(i, true)).join('');
-        attachThumbObservers(mEl);
-      }
-
-      // Row 5: TV Shows — capped at 12 cards
-      const tvEl = document.getElementById('discoverTvRow');
-      if (tvEl) {
-        tvEl.innerHTML = tvShows.filter(i => matchesGlobalLang(i)).slice(0, 12).map(i => createCardHTML(i, true)).join('');
-        attachThumbObservers(tvEl);
-      }
-
-      // Row 6: Hindi & Indian Cinema Spotlight — capped at 12 cards
-      const indEl = document.getElementById('discoverIndianRow');
-      if (indEl) {
-        const indPool = [...movies, ...tvShows].filter(i => i.lang === 'hi').sort((a, b) => b.rating - a.rating).slice(0, 12);
-        indEl.innerHTML = indPool.map(i => createCardHTML(i, true)).join('');
-        attachThumbObservers(indEl);
-      }
-
-      document.querySelectorAll('#discoverPantheonRow, #discoverBlockbustersRow, #discoverBoxOfficeRow, #discoverMindRow, #discoverTvRow, #discoverIndianRow, #moodRow, #wishlistContainer').forEach(addHorizontalArrows);
-
       // Sync the Broad Interactive Vinyl Turntable on Home
       if (window.updateHomeVinylPlayer) {
         window.updateHomeVinylPlayer();
       }
+
+      // Defer Below-the-Fold rows to the next frame for instantaneous initial paint & zero opening lag
+      requestAnimationFrame(() => {
+        selectMood(activeMood || '🧠 Mind-Bending');
+
+        // Row 2: Popular Hits — capped at 12 cards
+        const blockbusterKeywords = ["Avengers", "Spider-Man", "Dune", "Batman", "Dark Knight", "Avatar", "Star Wars", "Fast & Furious", "Fast Five", "Furious 7", "Transformers", "Harry Potter", "Top Gun", "John Wick", "Deadpool", "Hunger Games", "Mission: Impossible", "Guardians of the Galaxy", "Inception", "Interstellar", "Oppenheimer", "RRR", "Baahubali", "K.G.F", "Jawan", "Pathaan", "Dangal", "3 Idiots", "Sholay", "Kalki", "Stree"];
+        const blockbusters = movies.filter(m => matchesGlobalLang(m) && blockbusterKeywords.some(kw => m.title.includes(kw))).sort((a, b) => b.rating - a.rating).slice(0, 12);
+        const bEl = document.getElementById('discoverBlockbustersRow');
+        if (bEl) {
+          bEl.innerHTML = blockbusters.map(i => createCardHTML(i, true)).join('');
+          attachThumbObservers(bEl);
+        }
+
+        // Row 3: Box Office All-Time Champions — capped at 12 cards
+        const boxOfficeKeywords = ["Avatar", "Avengers: Endgame", "Titanic", "Star Wars: The Force Awakens", "Avengers: Infinity War", "Spider-Man: No Way Home", "Jurassic World", "The Lion King", "The Avengers", "Furious 7", "Top Gun: Maverick", "Frozen II", "Barbie", "Oppenheimer", "The Dark Knight", "Dangal", "Baahubali 2", "RRR", "K.G.F: Chapter 2", "Jawan"];
+        const boxOfficeFilms = movies.filter(m => matchesGlobalLang(m) && boxOfficeKeywords.some(kw => m.title.includes(kw) || kw.includes(m.title))).sort((a, b) => b.rating - a.rating).slice(0, 12);
+        const boEl = document.getElementById('discoverBoxOfficeRow');
+        if (boEl) {
+          boEl.innerHTML = boxOfficeFilms.map(i => createCardHTML(i, true)).join('');
+          attachThumbObservers(boEl);
+        }
+
+        // Row 4: Mind-Benders & Thrillers — capped at 12 cards
+        const mindBenders = movies.filter(i => matchesGlobalLang(i) && (i.genre === 'Sci-Fi' || i.genre === 'Thriller')).slice(0, 12);
+        const mEl = document.getElementById('discoverMindRow');
+        if (mEl) {
+          mEl.innerHTML = mindBenders.map(i => createCardHTML(i, true)).join('');
+          attachThumbObservers(mEl);
+        }
+
+        // Row 5: TV Shows — capped at 12 cards
+        const tvEl = document.getElementById('discoverTvRow');
+        if (tvEl) {
+          tvEl.innerHTML = tvShows.filter(i => matchesGlobalLang(i)).slice(0, 12).map(i => createCardHTML(i, true)).join('');
+          attachThumbObservers(tvEl);
+        }
+
+        // Row 6: Hindi & Indian Cinema Spotlight — capped at 12 cards
+        const indEl = document.getElementById('discoverIndianRow');
+        if (indEl) {
+          const indPool = [...movies, ...tvShows].filter(i => i.lang === 'hi').sort((a, b) => b.rating - a.rating).slice(0, 12);
+          indEl.innerHTML = indPool.map(i => createCardHTML(i, true)).join('');
+          attachThumbObservers(indEl);
+        }
+
+        document.querySelectorAll('#discoverPantheonRow, #discoverBlockbustersRow, #discoverBoxOfficeRow, #discoverMindRow, #discoverTvRow, #discoverIndianRow, #moodRow, #wishlistContainer').forEach(addHorizontalArrows);
+      });
     }
 
     function addHorizontalArrows(scrollEl) {
