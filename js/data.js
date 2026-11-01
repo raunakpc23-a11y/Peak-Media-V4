@@ -13151,17 +13151,30 @@ Odd Taxi|2021|87
           <line x1="28" y1="572" x2="372" y2="572"/>
           <rect x="20" y="20" width="360" height="560" rx="16" fill="none"/>
         </g>
-        <rect x="32" y="40" width="86" height="30" rx="8" fill="#000000" fill-opacity="0.65"/>
-        <text x="75" y="60" text-anchor="middle" fill="#F5C518" font-family="Inter, sans-serif" font-weight="800" font-size="13">★ ${ratingStr}</text>
-        ${rankStr ? `<text x="364" y="60" text-anchor="end" fill="${accent}" font-family="Inter, sans-serif" font-weight="700" font-size="13" opacity="0.9">#${rankStr}</text>` : ''}
-        <text x="32" y="348" fill="${accent}" font-family="Inter, sans-serif" font-weight="700" font-size="13" letter-spacing="2">${genreStr.toUpperCase()}${yearStr ? ' · ' + yearStr : ''}</text>
+        <rect x="28" y="28" width="82" height="26" rx="6" fill="${accent}" fill-opacity="0.18" stroke="${accent}" stroke-opacity="0.45"/>
+        <text x="69" y="45" fill="${accent}" font-family="Inter, sans-serif" font-weight="700" font-size="11" text-anchor="middle" letter-spacing="1">${genreStr.toUpperCase().slice(0, 9)}</text>
+        <g transform="translate(310, 28)">
+          <rect x="0" y="0" width="62" height="26" rx="6" fill="rgba(0,0,0,0.5)" stroke="rgba(245,197,24,0.4)" stroke-width="1"/>
+          <text x="31" y="17" fill="#F5C518" font-family="Inter, sans-serif" font-weight="800" font-size="12" text-anchor="middle">★ ${ratingStr}</text>
+        </g>
+        ${(item.type === 'show') ? `<g transform="translate(176, 175)" fill="none" stroke="${accent}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+             <rect x="0" y="0" width="48" height="34" rx="4" fill="rgba(0,0,0,0.3)"/>
+             <line x1="16" y1="42" x2="32" y2="42"/>
+             <line x1="24" y1="34" x2="24" y2="42"/>
+             <path d="M12 -8 L24 0 L36 -8"/>
+           </g>` : `<g transform="translate(176, 175)" fill="none" stroke="${accent}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+             <circle cx="24" cy="24" r="22" fill="rgba(0,0,0,0.3)"/>
+             <circle cx="24" cy="24" r="7"/>
+             <circle cx="24" cy="9" r="3" fill="${accent}"/>
+             <circle cx="24" cy="39" r="3" fill="${accent}"/>
+             <circle cx="9" cy="24" r="3" fill="${accent}"/>
+             <circle cx="39" cy="24" r="3" fill="${accent}"/>
+           </g>`}
         ${textSvg}
-        <g transform="translate(32, 520)">
-          <text x="16" y="7" text-anchor="middle" fill="#F5C518" font-family="Inter, sans-serif" font-weight="800" font-size="6.5" letter-spacing="1.8">MEDIA</text>
-          <path d="M4 28 L16 10 L28 28" stroke="#ffffff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M11 17.5 L16 10 L21 17.5" stroke="#F5C518" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <line x1="4" y1="28" x2="28" y2="28" stroke="#F5C518" stroke-width="1.8" stroke-linecap="round"/>
-          <path d="M40 24 L48 12 L56 24 M44 18 H64" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round"/>
+        <g transform="translate(32, 532)">
+          ${yearStr ? `<rect x="0" y="0" width="54" height="22" rx="4" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)"/>
+          <text x="27" y="15" fill="#e2e8f0" font-family="Inter, sans-serif" font-weight="700" font-size="11" text-anchor="middle">${yearStr}</text>
+          <text x="64" y="15" fill="#94A3B8" font-family="Inter, sans-serif" font-weight="600" font-size="11" letter-spacing="1.5">· PEAK MEDIA</text>` : `<text x="0" y="15" fill="#94A3B8" font-family="Inter, sans-serif" font-weight="600" font-size="11" letter-spacing="1.5">PEAK MEDIA</text>`}
         </g>
       </svg>`;
 
@@ -13190,7 +13203,37 @@ Odd Taxi|2021|87
       'show:Taarak Mehta Ka Ooltah Chashmah': 'https://upload.wikimedia.org/wikipedia/en/2/23/Taarak_Mehta_Ka_Ooltah_Chashmah_logo.jpg',
       'show:Koffee with Karan': 'https://upload.wikimedia.org/wikipedia/en/5/52/Koffee_With_Karan_logo.jpg',
       'show:The Kapil Sharma Show': 'https://upload.wikimedia.org/wikipedia/en/2/24/The_Kapil_Sharma_Show_poster.jpg',
-      'show:Kaun Banega Crorepati': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Kaun_Banega_Crorepati_Title.jpg'
+      'show:Kaun Banega Crorepati': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Kaun_Banega_Crorepati_Title.jpg',
+      // High-resolution verified posters for core masterpieces & Deciders recommendations
+      'movie:The Shawshank Redemption': 'https://upload.wikimedia.org/wikipedia/en/8/81/ShawshankRedemptionMoviePoster.jpg',
+      'movie:12 Angry Men': 'https://upload.wikimedia.org/wikipedia/commons/b/b5/12_Angry_Men_%281957_film_poster%29.jpg',
+      "movie:Schindler's List": 'https://upload.wikimedia.org/wikipedia/en/3/38/Schindler%27s_List_movie.jpg',
+      'movie:12th Fail': 'https://upload.wikimedia.org/wikipedia/en/f/f2/12th_Fail_poster.jpeg',
+      'movie:Kireedam': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Kireedam_1989.jpg',
+      'movie:Forrest Gump': 'https://upload.wikimedia.org/wikipedia/en/6/67/Forrest_Gump_poster.jpg',
+      'movie:Fight Club': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Fight_Club_poster.jpg',
+      'movie:Jai Bhim': 'https://upload.wikimedia.org/wikipedia/en/a/ad/Jai_Bhim_film_poster.jpg',
+      'movie:Natsamrat': 'https://upload.wikimedia.org/wikipedia/en/e/e0/Natsamrat_2016_Marathi_film_poster.jpg',
+      'movie:The Godfather': 'https://upload.wikimedia.org/wikipedia/en/1/1c/Godfather_ver1.jpg',
+      'movie:The Godfather: Part II': 'https://upload.wikimedia.org/wikipedia/en/0/03/Godfather_part_ii.jpg',
+      'movie:The Godfather Part II': 'https://upload.wikimedia.org/wikipedia/en/0/03/Godfather_part_ii.jpg',
+      'movie:Pulp Fiction': 'https://upload.wikimedia.org/wikipedia/en/3/3b/Pulp_Fiction_%281994%29_poster.jpg',
+      'movie:The Lord of the Rings: The Return of the King': 'https://upload.wikimedia.org/wikipedia/en/4/48/Lord_Rings_Return_King.jpg',
+      'movie:The Return of the King': 'https://upload.wikimedia.org/wikipedia/en/4/48/Lord_Rings_Return_King.jpg',
+      'movie:The Lord of the Rings: The Fellowship of the Ring': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Lord_Rings_Fellowship_Ring.jpg',
+      'movie:The Fellowship of the Ring': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Lord_Rings_Fellowship_Ring.jpg',
+      'movie:The Good, the Bad and the Ugly': 'https://upload.wikimedia.org/wikipedia/en/4/45/Good_the_bad_and_the_ugly_poster.jpg',
+      'show:Avatar: The Last Airbender': 'https://static.tvmaze.com/uploads/images/original_untouched/633/1582667.jpg',
+      'show:The Sopranos': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11341.jpg',
+      'show:Cosmos': 'https://upload.wikimedia.org/wikipedia/en/e/ec/Cosmos_-_A_Personal_Voyage_%28title_screen%29.jpg',
+      'show:Cosmos: A Spacetime Odyssey': 'https://upload.wikimedia.org/wikipedia/en/8/8e/Cosmos_spacetime_odyssey_titlecard.jpg',
+      'show:Our Planet': 'https://upload.wikimedia.org/wikipedia/en/f/f8/Our_Planet_%28Netflix%29_-_Series_Poster.jpg',
+      'movie:Arrival': 'https://upload.wikimedia.org/wikipedia/en/d/df/Arrival%2C_Movie_Poster.jpg',
+      'movie:Yavanika': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Yavanika_poster.jpg',
+      'movie:2001: A Space Odyssey': 'https://upload.wikimedia.org/wikipedia/en/1/11/2001_A_Space_Odyssey_%281968%29.png',
+      'movie:Sonar Kella': 'https://upload.wikimedia.org/wikipedia/en/5/56/Sonar_Kella_book_front_cover.jpg',
+      'movie:Anveshana': 'https://upload.wikimedia.org/wikipedia/en/9/98/Anveshana.jpg',
+      'movie:Kshanam': 'https://upload.wikimedia.org/wikipedia/en/0/0d/Kshanam_poster.jpg'
     };
 
     // Quality enhancer for poster image sources (TVMaze, iTunes, Wikipedia, TMDB)
@@ -13657,7 +13700,7 @@ Odd Taxi|2021|87
       const escTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
       const attrTitle = item.title.replace(/"/g, "&quot;");
       const cacheKey = item.type + ':' + item.title;
-      const cachedPoster = posterCache[cacheKey] || generateStylizedPosterDataURI(item);
+      const cachedPoster = posterCache[cacheKey] || KNOWN_POSTER_OVERRIDES[cacheKey] || KNOWN_POSTER_OVERRIDES[item.title] || generateStylizedPosterDataURI(item);
       const fallbackSvg = posterSvgCache[item.cleanName || item.title || 'Cinema'] || generateStylizedPosterDataURI(item);
       const widthClass = isCompactScroll ? "w-[124px] sm:w-48 shrink-0 snap-start" : "w-full";
       const isMovie = item.type === 'movie';
@@ -13672,9 +13715,10 @@ Odd Taxi|2021|87
           <img
             src="${cachedPoster}"
             data-title="${attrTitle}"
-            ${item.thumb ? `onerror="this.onerror=null; this.src='${fallbackSvg}';"` : ''}
+            onerror="this.onerror=null; this.src='${fallbackSvg}'; this.classList.remove('poster-shimmer');"
+            onload="this.classList.remove('poster-shimmer');"
             alt="${attrTitle}"
-            class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            class="lazy-poster poster-shimmer w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
             decoding="async"
           />
@@ -15647,3 +15691,8 @@ Odd Taxi|2021|87
       renderTags('myTags');
       renderTags('friendTags');
     };
+    window.generateStylizedPosterDataURI = generateStylizedPosterDataURI;
+    window.posterCache = posterCache;
+    window.posterSvgCache = posterSvgCache;
+    window.genreThemes = genreThemes;
+    window.KNOWN_POSTER_OVERRIDES = KNOWN_POSTER_OVERRIDES;

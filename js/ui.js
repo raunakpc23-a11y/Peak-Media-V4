@@ -147,6 +147,13 @@
     if (key === 'hub') {
       if (window.renderShelves) window.renderShelves();
       if (window.refreshDNA) window.refreshDNA();
+      if (window.cxOpen) setTimeout(window.cxOpen, 40);
+      const hasData = (window.watchedTitles && window.watchedTitles.length > 0) || (window.wishlistTitles && window.wishlistTitles.length > 0) || (window.favTitles && window.favTitles.length > 0);
+      const emptyEl = document.getElementById('hubDnaEmptyState');
+      if (emptyEl) {
+        if (!hasData) emptyEl.classList.remove('hidden');
+        else emptyEl.classList.add('hidden');
+      }
       if (window.renderCustomListsTab) window.renderCustomListsTab();
       if (window.renderCinePassLedger) window.renderCinePassLedger();
     }

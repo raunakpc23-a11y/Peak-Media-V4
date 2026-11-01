@@ -132,12 +132,16 @@
       favoriteGenre: 'Sci-Fi',
       secondaryGenres: ['Thriller', 'Drama'],
       language: 'All',
+      languages: ['English', 'Hindi'],
       favMoviesSeed: [],
       favShowsSeed: [],
       musicMoods: ['Romantic & Melody', 'Pop & Hits'],
       favArtists: ['Arijit Singh', 'The Weeknd']
     };
     let obProfile = Object.assign({}, defaultProfile, getLS('cs_profile_v1', {}));
+    if (!Array.isArray(obProfile.languages) || !obProfile.languages.length) {
+      obProfile.languages = obProfile.language === 'English' ? ['English'] : obProfile.language === 'Hindi' ? ['Hindi'] : ['English', 'Hindi'];
+    }
     if (LEGACY_EMOJI_MAP[obProfile.avatar]) obProfile.avatar = LEGACY_EMOJI_MAP[obProfile.avatar];
     if (!AVATAR_META[obProfile.avatar]) obProfile.avatar = 'cinephile';
 
@@ -160,16 +164,19 @@
     function updateObLiveTray() {
       const tray = $('obLiveTray');
       if (!tray) return;
+      const langCount = (obProfile.languages || (obProfile.language ? [obProfile.language] : ['English'])).length;
       const gCount = 1 + (obProfile.secondaryGenres || []).length;
       const mCount = (obProfile.favMoviesSeed || []).length;
       const sCount = (obProfile.favShowsSeed || []).length;
       const muCount = (obProfile.musicMoods || []).length + (obProfile.favArtists || []).length;
       const shortName = (obProfile.username || 'Cinephile').slice(0, 12);
       tray.innerHTML = `
-        <span class="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] sm:text-[11px] font-semibold text-gray-200 whitespace-nowrap shrink-0">${esc(shortName)}</span>
-        <span class="px-2 py-0.5 rounded-full bg-brand-gold/15 border border-brand-gold/30 text-[10px] sm:text-[11px] font-semibold text-brand-gold whitespace-nowrap shrink-0">${gCount}G</span>
-        <span class="px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-[10px] sm:text-[11px] font-semibold text-cyan-200 whitespace-nowrap shrink-0">${mCount} Films · ${sCount} Shows</span>
-        <span class="px-2 py-0.5 rounded-full bg-purple-500/15 border border-purple-500/30 text-[10px] sm:text-[11px] font-semibold text-purple-200 whitespace-nowrap shrink-0">${muCount} Songs</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-slate-700/60 text-[10px] sm:text-[11px] font-bold text-slate-200 whitespace-nowrap shrink-0 shadow-sm">${esc(shortName)}</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-brand-gold/40 text-[10px] sm:text-[11px] font-bold text-brand-gold whitespace-nowrap shrink-0 shadow-sm">${langCount} Langs</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-amber-500/40 text-[10px] sm:text-[11px] font-bold text-amber-300 whitespace-nowrap shrink-0 shadow-sm">${gCount} Genres</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-cyan-500/40 text-[10px] sm:text-[11px] font-bold text-cyan-400 whitespace-nowrap shrink-0 shadow-sm">${mCount} Films</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-purple-500/40 text-[10px] sm:text-[11px] font-bold text-purple-300 whitespace-nowrap shrink-0 shadow-sm">${sCount} Shows</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-emerald-500/40 text-[10px] sm:text-[11px] font-bold text-emerald-300 whitespace-nowrap shrink-0 shadow-sm">${muCount} Music</span>
       `;
     }
 
@@ -177,7 +184,6 @@
       const isAlreadyOnboarded = !!getLS('cs_onboarded_v1', null);
       const skipBtn = $('obSkipBtn');
       if (skipBtn) {
-        // Never show Skip on first-run setup; only show "Close" if user re-opened setup manually later
         if (isAlreadyOnboarded) {
           skipBtn.classList.remove('hidden');
           skipBtn.textContent = 'Close';
@@ -203,86 +209,242 @@
       updateObLiveTray();
 
       const vp = $('obStepViewport');
+
+      // Safe global data access
+      const allMovies = (window.movies && window.movies.length) ? window.movies : (typeof movies !== 'undefined' ? movies : [
+        { title: "The Shawshank Redemption", cleanName: "The Shawshank Redemption", year: 1994, rating: 9.3, genre: "Drama", lang: "en" },
+        { title: "The Godfather", cleanName: "The Godfather", year: 1972, rating: 9.2, genre: "Crime", lang: "en" },
+        { title: "The Dark Knight", cleanName: "The Dark Knight", year: 2008, rating: 9.0, genre: "Action", lang: "en" },
+        { title: "Pulp Fiction", cleanName: "Pulp Fiction", year: 1994, rating: 8.9, genre: "Crime", lang: "en" },
+        { title: "Fight Club", cleanName: "Fight Club", year: 1999, rating: 8.8, genre: "Drama", lang: "en" },
+        { title: "Forrest Gump", cleanName: "Forrest Gump", year: 1994, rating: 8.8, genre: "Drama", lang: "en" },
+        { title: "Inception", cleanName: "Inception", year: 2010, rating: 8.8, genre: "Sci-Fi", lang: "en" },
+        { title: "Interstellar", cleanName: "Interstellar", year: 2014, rating: 8.7, genre: "Sci-Fi", lang: "en" },
+        { title: "3 Idiots", cleanName: "3 Idiots", year: 2009, rating: 8.4, genre: "Comedy", lang: "hi" },
+        { title: "Dangal", cleanName: "Dangal", year: 2016, rating: 8.3, genre: "Drama", lang: "hi" },
+        { title: "12th Fail", cleanName: "12th Fail", year: 2023, rating: 8.9, genre: "Drama", lang: "hi" },
+        { title: "RRR", cleanName: "RRR", year: 2022, rating: 8.0, genre: "Action", lang: "hi" },
+        { title: "Kireedam", cleanName: "Kireedam", year: 1989, rating: 8.9, genre: "Drama", lang: "ml" },
+        { title: "Jai Bhim", cleanName: "Jai Bhim", year: 2021, rating: 8.8, genre: "Drama", lang: "ta" },
+        { title: "Spirited Away", cleanName: "Spirited Away", year: 2001, rating: 8.6, genre: "Animation", lang: "ja" },
+        { title: "Parasite", cleanName: "Parasite", year: 2019, rating: 8.5, genre: "Drama", lang: "ko" },
+        { title: "The Matrix", cleanName: "The Matrix", year: 1999, rating: 8.7, genre: "Sci-Fi", lang: "en" },
+        { title: "Gladiator", cleanName: "Gladiator", year: 2000, rating: 8.5, genre: "Action", lang: "en" }
+      ]);
+
+      const allShows = (window.tvShows && window.tvShows.length) ? window.tvShows : (typeof tvShows !== 'undefined' ? tvShows : [
+        { title: "Breaking Bad", cleanName: "Breaking Bad", year: 2008, rating: 9.5, genre: "Crime", lang: "en" },
+        { title: "Game of Thrones", cleanName: "Game of Thrones", year: 2011, rating: 9.2, genre: "Fantasy", lang: "en" },
+        { title: "The Sopranos", cleanName: "The Sopranos", year: 1999, rating: 9.2, genre: "Crime", lang: "en" },
+        { title: "Avatar: The Last Airbender", cleanName: "Avatar: The Last Airbender", year: 2005, rating: 9.3, genre: "Animation", lang: "en" },
+        { title: "Chernobyl", cleanName: "Chernobyl", year: 2019, rating: 9.4, genre: "Drama", lang: "en" },
+        { title: "Stranger Things", cleanName: "Stranger Things", year: 2016, rating: 8.7, genre: "Sci-Fi", lang: "en" },
+        { title: "Dark", cleanName: "Dark", year: 2017, rating: 8.7, genre: "Sci-Fi", lang: "de" },
+        { title: "Succession", cleanName: "Succession", year: 2018, rating: 8.9, genre: "Drama", lang: "en" },
+        { title: "Better Call Saul", cleanName: "Better Call Saul", year: 2015, rating: 9.0, genre: "Crime", lang: "en" },
+        { title: "The Last of Us", cleanName: "The Last of Us", year: 2023, rating: 8.8, genre: "Drama", lang: "en" },
+        { title: "The Boys", cleanName: "The Boys", year: 2019, rating: 8.7, genre: "Action", lang: "en" },
+        { title: "Sherlock", cleanName: "Sherlock", year: 2010, rating: 9.1, genre: "Mystery", lang: "en" },
+        { title: "Mirzapur", cleanName: "Mirzapur", year: 2018, rating: 8.5, genre: "Crime", lang: "hi" },
+        { title: "Sacred Games", cleanName: "Sacred Games", year: 2018, rating: 8.6, genre: "Crime", lang: "hi" },
+        { title: "Panchayat", cleanName: "Panchayat", year: 2020, rating: 8.9, genre: "Comedy", lang: "hi" },
+        { title: "Scam 1992", cleanName: "Scam 1992", year: 2020, rating: 9.3, genre: "Biography", lang: "hi" },
+        { title: "The Family Man", cleanName: "The Family Man", year: 2019, rating: 8.7, genre: "Action", lang: "hi" },
+        { title: "Money Heist", cleanName: "Money Heist", year: 2017, rating: 8.2, genre: "Action", lang: "es" },
+        { title: "Peaky Blinders", cleanName: "Peaky Blinders", year: 2013, rating: 8.8, genre: "Crime", lang: "en" },
+        { title: "Friends", cleanName: "Friends", year: 1994, rating: 8.9, genre: "Comedy", lang: "en" }
+      ]);
+
+      const posterGetter = (item, type) => {
+        const key = type + ':' + item.title;
+        const overrides = window.KNOWN_POSTER_OVERRIDES || {};
+        if (overrides[key]) return overrides[key];
+        const cache = window.posterCache || {};
+        if (cache[key]) return cache[key];
+        if (window.generateStylizedPosterDataURI) return window.generateStylizedPosterDataURI(item);
+        if (typeof generateStylizedPosterDataURI === 'function') return generateStylizedPosterDataURI(item);
+        return '';
+      };
+
+      const fallbackGetter = (item) => {
+        if (window.generateStylizedPosterDataURI) return window.generateStylizedPosterDataURI(item);
+        if (typeof generateStylizedPosterDataURI === 'function') return generateStylizedPosterDataURI(item);
+        return '';
+      };
+
+      // STEP 1: Avatar & Profile
       if (obStep === 1) {
         vp.innerHTML = `
           <div class="ob-step-enter my-auto max-w-2xl mx-auto w-full space-y-6 py-2">
             <div class="space-y-1.5 text-center">
-              <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Your Screening Pass</span>
-              <h2 class="text-2xl sm:text-4xl font-display font-extrabold text-white">Who's watching tonight?</h2>
-              <p class="text-xs sm:text-sm text-gray-400">Choose your cinema persona and set your display name to personalize your shelves, recommendations, and playlists.</p>
+              <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Step 1 · Identity</span>
+              <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Choose your cinephile persona</h2>
+              <p class="text-xs sm:text-sm text-slate-300 font-medium">This is how you appear across your Taste DNA, playlists, and film journal.</p>
             </div>
-            <div class="space-y-2.5">
-              <label class="text-xs font-bold uppercase tracking-wider text-gray-300">Choose Your Cinema Persona</label>
-              <div id="obAvatarRow" class="grid grid-cols-4 sm:grid-cols-8 gap-2.5">
-                ${AVATAR_PRESETS.map(k => `
-                  <button type="button" data-av="${k}" class="p-2 rounded-2xl border flex flex-col items-center justify-center gap-1 transition-all ${obProfile.avatar === k ? 'border-brand-gold bg-brand-gold/20 scale-105 shadow-lg' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
-                    <div class="w-11 h-11">${window.getAvatar3CHTML(k)}</div>
-                    <span class="text-[10px] font-bold ${obProfile.avatar === k ? 'text-brand-gold' : 'text-gray-400'}">${AVATAR_META[k].name}</span>
-                  </button>`).join('')}
-              </div>
-            </div>
-            <div class="space-y-2">
-              <label class="text-xs font-bold uppercase tracking-wider text-gray-300">Your Name or Handle</label>
-              <input id="obUsernameInput" type="text" maxlength="28" value="${esc(obProfile.username === 'Cinephile' ? '' : obProfile.username)}" placeholder="Type your name or nickname..." class="w-full px-4 py-3.5 rounded-xl bg-black/60 border border-white/15 text-base font-medium text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-            </div>
-          </div>`;
-        vp.querySelectorAll('[data-av]').forEach(b => {
-          b.onclick = () => { obProfile.avatar = b.dataset.av; renderObStep(); };
-        });
-        const inp = $('obUsernameInput');
-        if (inp) {
-          inp.oninput = e => { obProfile.username = e.target.value.trim() || 'Cinephile'; updateObLiveTray(); };
-          inp.onkeydown = e => { if (e.key === 'Enter') window.obNextStep(); };
-        }
-      } else if (obStep === 2) {
-        const hiCount = [...movies, ...tvShows].filter(i => i.lang === 'hi').length;
-        const enCount = [...movies, ...tvShows].filter(i => i.lang === 'en').length;
-        const opts = [
-          ['All', 'Both Worlds · English + Hindi & Indian Cinema', `${(movies.length + tvShows.length).toLocaleString()} Films & Series + All 3,069 Songs`, 'fa-earth-asia'],
-          ['English', 'Hollywood & International Cinema First', `${enCount.toLocaleString()} Global Films & Shows + Pop, R&B & Rock`, 'fa-film'],
-          ['Hindi', 'Hindi, Bollywood & Indian Regional First', `${hiCount.toLocaleString()} Indian Films & Web Series + Bollywood & Indie Hits`, 'fa-clapperboard']
-        ];
-        vp.innerHTML = `
-          <div class="ob-step-enter my-auto max-w-xl mx-auto w-full space-y-5 py-2">
-            <div class="space-y-1 text-center">
-              <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Cinema &amp; Audio Language</span>
-              <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Which cinema worlds do you watch?</h2>
-              <p class="text-xs sm:text-sm text-gray-400">This sets your default catalog view. You can switch between All, EN, and HI in the top bar anytime.</p>
+            <div class="space-y-2 max-w-md mx-auto">
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-300">Display Name</label>
+              <input id="obUsernameInput" type="text" value="${esc(obProfile.username || 'Cinephile')}" maxlength="24" class="w-full px-4 py-3 rounded-2xl bg-black/60 border border-white/15 text-white text-base font-bold focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all" placeholder="Enter your name">
             </div>
             <div class="space-y-3">
-              ${opts.map(([k, title, sub, ic]) => `
-                <button type="button" data-oblang="${k}" class="w-full p-4 rounded-2xl border text-left flex items-center justify-between gap-3 transition-all ${obProfile.language === k ? 'border-brand-gold bg-brand-gold/15 shadow-lg' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
-                  <div class="flex items-center gap-3.5 min-w-0">
-                    <div class="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-brand-gold text-lg shrink-0">
-                      <i class="fa-solid ${ic} cat-icon-anim"></i>
-                    </div>
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-300">Choose Profile Icon</label>
+                <span class="text-xs text-brand-gold font-bold">${AVATAR_META[obProfile.avatar]?.name || 'Cinephile'}</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                ${Object.keys(AVATAR_META).map(k => {
+                  const m = AVATAR_META[k];
+                  const sel = obProfile.avatar === k;
+                  return `<button type="button" data-obavatar="${k}" class="p-3.5 rounded-2xl border text-left flex items-center gap-3 transition-all ${sel ? 'border-brand-gold bg-brand-gold/15 shadow-lg' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
+                    <span class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">${m.svg}</span>
                     <div class="min-w-0">
-                      <div class="font-bold text-sm sm:text-base text-white">${esc(title)}</div>
-                      <div class="text-xs text-gray-400 mt-0.5">${esc(sub)}</div>
+                      <div class="text-xs font-bold text-white truncate">${esc(m.name)}</div>
+                      <div class="text-[10px] text-slate-400 truncate">${esc(m.sub)}</div>
                     </div>
-                  </div>
-                  <span class="w-6 h-6 rounded-full border flex items-center justify-center text-xs shrink-0 ${obProfile.language === k ? 'border-brand-gold bg-brand-gold text-black font-black' : 'border-white/20 text-transparent'}">✓</span>
-                </button>`).join('')}
+                  </button>`;
+                }).join('')}
+              </div>
             </div>
           </div>`;
-        vp.querySelectorAll('[data-oblang]').forEach(b => {
-          b.onclick = () => { obProfile.language = b.dataset.oblang; renderObStep(); };
+        const inp = $('obUsernameInput');
+        if (inp) inp.oninput = e => { obProfile.username = e.target.value; updateObLiveTray(); };
+        if (inp) inp.onkeydown = e => { if (e.key === 'Enter') window.obNextStep(); };
+        vp.querySelectorAll('[data-obavatar]').forEach(b => {
+          b.onclick = () => {
+            obProfile.avatar = b.dataset.obavatar;
+            renderObStep();
+          };
         });
-      } else if (obStep === 3) {
-        const genres = Object.keys(genreThemes);
+      }
+
+      // STEP 2: Cinema & Audio Languages (Multiple chips with toggle and selection count)
+      else if (obStep === 2) {
+        const availableLangs = [
+          { name: 'English', sub: 'Hollywood & Global Cinema', tag: 'EN', flag: '🇺🇸' },
+          { name: 'Hindi', sub: 'Bollywood & Hindi Web Series', tag: 'HI', flag: '🇮🇳' },
+          { name: 'Malayalam', sub: 'Kerala New-Wave Masterpieces', tag: 'ML', flag: '🇮🇳' },
+          { name: 'Tamil', sub: 'Kollywood & Prestige Epics', tag: 'TA', flag: '🇮🇳' },
+          { name: 'Telugu', sub: 'Tollywood Spectacles & Classics', tag: 'TE', flag: '🇮🇳' },
+          { name: 'Kannada', sub: 'Sandalwood Thrillers & Epics', tag: 'KN', flag: '🇮🇳' },
+          { name: 'Bengali', sub: 'Art-House, Feluda & Classics', tag: 'BN', flag: '🇮🇳' },
+          { name: 'Punjabi', sub: 'Pollywood Cinema & Folk Pop', tag: 'PA', flag: '🇮🇳' },
+          { name: 'Marathi', sub: 'Celebrated Marathi Dramas', tag: 'MR', flag: '🇮🇳' },
+          { name: 'Spanish', sub: 'Latin & European Thrillers', tag: 'ES', flag: '🇪🇸' },
+          { name: 'Korean', sub: 'K-Drama & Modern Thrillers', tag: 'KO', flag: '🇰🇷' },
+          { name: 'Japanese', sub: 'Anime, Auteur & Classic Cinema', tag: 'JA', flag: '🇯🇵' },
+          { name: 'French', sub: 'Classic & Contemporary Auteurs', tag: 'FR', flag: '🇫🇷' },
+          { name: 'German', sub: 'European Mystery & Sci-Fi', tag: 'DE', flag: '🇩🇪' }
+        ];
+
+        const userLangs = new Set(obProfile.languages || ['English', 'Hindi']);
+
+        vp.innerHTML = `
+          <div class="ob-step-enter my-auto max-w-3xl mx-auto w-full space-y-5 py-2">
+            <div class="space-y-1.5 text-center">
+              <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Cinema &amp; Audio Languages</span>
+              <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Which cinema languages do you watch? (${userLangs.size} selected)</h2>
+              <p class="text-xs sm:text-sm text-slate-300 font-medium">Select all the languages you enjoy. Peak Media tailors recommendations and audio tracks based on your selections.</p>
+            </div>
+
+            <!-- Quick Presets -->
+            <div class="flex flex-wrap items-center justify-center gap-2 pt-1 pb-1">
+              <button type="button" id="obLangPresetAll" class="px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${userLangs.size === availableLangs.length ? 'border-brand-gold bg-brand-gold text-black shadow-lg' : 'border-white/10 bg-white/5 text-slate-300 hover:text-white'}">
+                <i class="fa-solid fa-earth-americas mr-1.5"></i>Select All
+              </button>
+              <button type="button" id="obLangPresetGlobal" class="px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${userLangs.size === 1 && userLangs.has('English') ? 'border-brand-gold bg-brand-gold text-black shadow-lg' : 'border-white/10 bg-white/5 text-slate-300 hover:text-white'}">
+                <i class="fa-solid fa-film mr-1.5"></i>Global / English
+              </button>
+              <button type="button" id="obLangPresetIndian" class="px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${['Hindi', 'Malayalam', 'Tamil', 'Telugu', 'Bengali'].every(l => userLangs.has(l)) ? 'border-brand-gold bg-brand-gold text-black shadow-lg' : 'border-white/10 bg-white/5 text-slate-300 hover:text-white'}">
+                <i class="fa-solid fa-clapperboard mr-1.5"></i>Indian Cinema Hub
+              </button>
+            </div>
+
+            <!-- Language Chips Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[44vh] overflow-y-auto pr-1">
+              ${availableLangs.map(l => {
+                const isSel = userLangs.has(l.name);
+                return `<button type="button" data-oblang="${l.name}" class="p-3 rounded-2xl border text-left flex items-center justify-between gap-2.5 transition-all ${isSel ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-sm">${l.flag}</span>
+                      <span class="text-xs sm:text-sm font-bold text-white truncate">${esc(l.name)}</span>
+                    </div>
+                    <div class="text-[10px] text-slate-400 truncate mt-0.5">${esc(l.sub)}</div>
+                  </div>
+                  <div class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
+                    ${isSel ? '✓' : '+'}
+                  </div>
+                </button>`;
+              }).join('')}
+            </div>
+          </div>`;
+
+        // Toggle handler
+        vp.querySelectorAll('[data-oblang]').forEach(b => {
+          b.onclick = () => {
+            const l = b.dataset.oblang;
+            if (userLangs.has(l)) {
+              if (userLangs.size > 1) userLangs.delete(l);
+            } else {
+              userLangs.add(l);
+            }
+            obProfile.languages = Array.from(userLangs);
+            if (userLangs.size === 1) obProfile.language = obProfile.languages[0];
+            else obProfile.language = 'All';
+            renderObStep();
+          };
+        });
+
+        // Presets
+        const pAll = $('obLangPresetAll');
+        if (pAll) pAll.onclick = () => {
+          obProfile.languages = availableLangs.map(x => x.name);
+          obProfile.language = 'All';
+          renderObStep();
+        };
+        const pGlobal = $('obLangPresetGlobal');
+        if (pGlobal) pGlobal.onclick = () => {
+          obProfile.languages = ['English'];
+          obProfile.language = 'English';
+          renderObStep();
+        };
+        const pInd = $('obLangPresetIndian');
+        if (pInd) pInd.onclick = () => {
+          obProfile.languages = ['Hindi', 'Malayalam', 'Tamil', 'Telugu', 'Kannada', 'Bengali', 'Punjabi', 'Marathi', 'English'];
+          obProfile.language = 'All';
+          renderObStep();
+        };
+      }
+
+      // STEP 3: Favorite Genres & Moods
+      else if (obStep === 3) {
+        const themes = window.genreThemes || (typeof genreThemes !== 'undefined' ? genreThemes : {
+          Drama: { accent: '#f59e0b', icon: 'fa-masks-theater' },
+          Action: { accent: '#ef4444', icon: 'fa-explosion' },
+          'Sci-Fi': { accent: '#06b6d4', icon: 'fa-robot' },
+          Crime: { accent: '#a855f7', icon: 'fa-fingerprint' },
+          Comedy: { accent: '#eab308', icon: 'fa-face-laugh-beam' },
+          Thriller: { accent: '#f97316', icon: 'fa-heart-pulse' },
+          Animation: { accent: '#ec4899', icon: 'fa-wand-magic-sparkles' },
+          Fantasy: { accent: '#8b5cf6', icon: 'fa-dragon' },
+          Romance: { accent: '#f43f5e', icon: 'fa-heart' },
+          Horror: { accent: '#dc2626', icon: 'fa-ghost' },
+          Mystery: { accent: '#6366f1', icon: 'fa-magnifying-glass' },
+          Adventure: { accent: '#10b981', icon: 'fa-compass' }
+        });
+        const genres = Object.keys(themes);
         const selectedSet = new Set([obProfile.favoriteGenre, ...(obProfile.secondaryGenres || [])].filter(Boolean));
         vp.innerHTML = `
-          <div class="ob-step-enter my-auto space-y-4">
-            <div class="space-y-1 text-center">
+          <div class="ob-step-enter my-auto space-y-4 max-w-3xl mx-auto w-full">
+            <div class="space-y-1.5 text-center">
               <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Core Genres</span>
-              <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Pick up to 4 genres you gravitate toward</h2>
-              <p class="text-xs sm:text-sm text-gray-400">Your #1 pick anchors your spotlight shelf and shapes your Taste Constellation.</p>
+              <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Pick up to 4 genres you gravitate toward (${selectedSet.size} selected)</h2>
+              <p class="text-xs sm:text-sm text-slate-300 font-medium">Your primary pick anchors your spotlight shelf and shapes your Taste Constellation web.</p>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
               ${genres.map(g => {
-                const th = genreThemes[g] || genreThemes.Drama;
+                const th = themes[g] || themes.Drama;
                 const sel = selectedSet.has(g);
-                return `<button type="button" data-obgen="${esc(g)}" class="ob-genre-btn ${sel ? 'selected' : ''} p-3.5 rounded-2xl border border-white/10 bg-black/45 hover:bg-white/5 text-left flex items-center justify-between gap-2">
+                return `<button type="button" data-obgen="${esc(g)}" class="ob-genre-btn ${sel ? 'selected' : ''} p-3.5 rounded-2xl border border-white/10 bg-black/45 hover:bg-white/5 text-left flex items-center justify-between gap-2 transition-all">
                   <span class="font-bold text-xs sm:text-sm text-white truncate">${esc(g)}</span>
                   <span class="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center shrink-0"><i class="fa-solid ${th.icon} cat-icon-anim text-xs" style="color:${th.accent}"></i></span>
                 </button>`;
@@ -299,28 +461,17 @@
               list.push(g);
               if (list.length > 4) list.shift();
             }
-            obProfile.favoriteGenre = list[0] || 'Sci-Fi';
+            obProfile.favoriteGenre = list[0] || 'Drama';
             obProfile.secondaryGenres = list.slice(1);
             renderObStep();
           };
         });
-      } else if (obStep === 4) {
+      }
+
+      // STEP 4: Movies You Love
+      else if (obStep === 4) {
         const langPref = obProfile.language === 'Hindi' ? 'hi' : obProfile.language === 'English' ? 'en' : 'all';
         const gSet = new Set([obProfile.favoriteGenre, ...(obProfile.secondaryGenres || [])].filter(Boolean));
-        const allMovies = (typeof movies !== 'undefined' && movies.length) ? movies : (window.movies && window.movies.length ? window.movies : [
-          { title: "Inception", cleanName: "Inception", year: "2010", rating: 8.8, genre: "Sci-Fi", lang: "en" },
-          { title: "Interstellar", cleanName: "Interstellar", year: "2014", rating: 8.7, genre: "Sci-Fi", lang: "en" },
-          { title: "The Dark Knight", cleanName: "The Dark Knight", year: "2008", rating: 9.0, genre: "Action", lang: "en" },
-          { title: "Pulp Fiction", cleanName: "Pulp Fiction", year: "1994", rating: 8.9, genre: "Crime", lang: "en" },
-          { title: "3 Idiots", cleanName: "3 Idiots", year: "2009", rating: 8.4, genre: "Comedy", lang: "hi" },
-          { title: "Dangal", cleanName: "Dangal", year: "2016", rating: 8.3, genre: "Drama", lang: "hi" },
-          { title: "RRR", cleanName: "RRR", year: "2022", rating: 8.0, genre: "Action", lang: "hi" },
-          { title: "Spirited Away", cleanName: "Spirited Away", year: "2001", rating: 8.6, genre: "Animation", lang: "en" },
-          { title: "The Matrix", cleanName: "The Matrix", year: "1999", rating: 8.7, genre: "Sci-Fi", lang: "en" },
-          { title: "Fight Club", cleanName: "Fight Club", year: "1999", rating: 8.8, genre: "Drama", lang: "en" },
-          { title: "Parasite", cleanName: "Parasite", year: "2019", rating: 8.5, genre: "Drama", lang: "en" },
-          { title: "Gladiator", cleanName: "Gladiator", year: "2000", rating: 8.5, genre: "Action", lang: "en" }
-        ]);
         let pool = allMovies.slice().filter(m => langPref === 'all' || m.lang === langPref);
         if (!pool.length) pool = allMovies.slice();
         if (obMovieQuery.trim()) {
@@ -332,44 +483,44 @@
         const topMovies = pool.slice(0, 18);
         const picked = new Set(obProfile.favMoviesSeed || []);
         vp.innerHTML = `
-          <div class="ob-step-enter space-y-4">
+          <div class="ob-step-enter space-y-4 max-w-4xl mx-auto w-full">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
               <div>
-                <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Feature Films</span>
-                <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Tap a few movies you love (${picked.size} selected)</h2>
-                <p class="text-xs text-gray-400">Selected films are added to your Favorites &amp; Watched shelves to power instant recommendations.</p>
+                <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Favorite Cinema</span>
+                <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Pick movies you love (${picked.size} selected)</h2>
+                <p class="text-xs sm:text-sm text-slate-300 font-medium">These seeds generate your Taste Constellation and power decider recommendations.</p>
               </div>
               <div class="relative w-full sm:w-64">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                <input id="obMovieSearchInp" type="text" value="${esc(obMovieQuery)}" placeholder="Search 1,580+ movies..." class="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input id="obMovieSearchInp" type="text" value="${esc(obMovieQuery)}" placeholder="Search 2,500+ films..." class="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
               </div>
             </div>
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 max-h-[38vh] overflow-y-auto pr-1">
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 max-h-[40vh] overflow-y-auto pr-1">
               ${topMovies.map(m => {
                 const isSel = picked.has(m.title);
-                const fb = generateStylizedPosterDataURI(m);
-                const src = posterCache['movie:' + m.title] || fb;
-                return `<div data-obmov="${esc(m.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5">
+                const fb = fallbackGetter(m);
+                const src = posterGetter(m, 'movie') || fb;
+                return `<div data-obmovie="${esc(m.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer">
                   <div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
-                    <img src="${src}" data-title="${esc(m.title)}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster w-full h-full object-cover" alt="">
+                    <img src="${src}" data-title="${esc(m.title)}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster poster-shimmer w-full h-full object-cover" onload="this.classList.remove('poster-shimmer');" alt="">
                     <div class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
                   </div>
                   <div class="px-0.5">
                     <div class="text-[11px] font-bold text-white truncate">${esc(m.cleanName || m.title)}</div>
-                    <div class="text-[10px] text-gray-400">${m.year} · ★ ${m.rating}</div>
+                    <div class="text-[10px] text-slate-400">${m.year} · ★ ${m.rating}</div>
                   </div>
                 </div>`;
               }).join('')}
             </div>
           </div>`;
-        attachThumbObservers(vp);
+        if (window.attachThumbObservers) attachThumbObservers(vp);
         const sInp = $('obMovieSearchInp');
         if (sInp) {
           sInp.oninput = e => { obMovieQuery = e.target.value; renderObStep(); const el = $('obMovieSearchInp'); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } };
         }
-        vp.querySelectorAll('[data-obmov]').forEach(card => {
+        vp.querySelectorAll('[data-obmovie]').forEach(card => {
           card.onclick = () => {
-            const t = card.dataset.obmov;
+            const t = card.dataset.obmovie;
             const arr = obProfile.favMoviesSeed || [];
             const idx = arr.indexOf(t);
             if (idx > -1) arr.splice(idx, 1);
@@ -378,29 +529,12 @@
             renderObStep();
           };
         });
-      } else if (obStep === 5) {
+      }
+
+      // STEP 5: TV Shows You Binge (Restored with artwork, checkmarks, search & counter)
+      else if (obStep === 5) {
         const langPref = obProfile.language === 'Hindi' ? 'hi' : obProfile.language === 'English' ? 'en' : 'all';
         const gSet = new Set([obProfile.favoriteGenre, ...(obProfile.secondaryGenres || [])].filter(Boolean));
-        const allShows = (typeof tvShows !== 'undefined' && tvShows.length) ? tvShows : (window.tvShows && window.tvShows.length ? window.tvShows : [
-          { title: "Breaking Bad", cleanName: "Breaking Bad", year: "2008", rating: 9.5, genre: "Crime", lang: "en" },
-          { title: "Game of Thrones", cleanName: "Game of Thrones", year: "2011", rating: 9.2, genre: "Fantasy", lang: "en" },
-          { title: "Stranger Things", cleanName: "Stranger Things", year: "2016", rating: 8.7, genre: "Sci-Fi", lang: "en" },
-          { title: "Chernobyl", cleanName: "Chernobyl", year: "2019", rating: 9.4, genre: "Drama", lang: "en" },
-          { title: "Sherlock", cleanName: "Sherlock", year: "2010", rating: 9.1, genre: "Mystery", lang: "en" },
-          { title: "The Boys", cleanName: "The Boys", year: "2019", rating: 8.7, genre: "Action", lang: "en" },
-          { title: "Dark", cleanName: "Dark", year: "2017", rating: 8.7, genre: "Sci-Fi", lang: "en" },
-          { title: "Succession", cleanName: "Succession", year: "2018", rating: 8.9, genre: "Drama", lang: "en" },
-          { title: "Better Call Saul", cleanName: "Better Call Saul", year: "2015", rating: 9.0, genre: "Crime", lang: "en" },
-          { title: "The Last of Us", cleanName: "The Last of Us", year: "2023", rating: 8.8, genre: "Drama", lang: "en" },
-          { title: "Mirzapur", cleanName: "Mirzapur", year: "2018", rating: 8.5, genre: "Crime", lang: "hi" },
-          { title: "Sacred Games", cleanName: "Sacred Games", year: "2018", rating: 8.6, genre: "Crime", lang: "hi" },
-          { title: "Panchayat", cleanName: "Panchayat", year: "2020", rating: 8.9, genre: "Comedy", lang: "hi" },
-          { title: "Scam 1992", cleanName: "Scam 1992", year: "2020", rating: 9.3, genre: "Biography", lang: "hi" },
-          { title: "The Family Man", cleanName: "The Family Man", year: "2019", rating: 8.7, genre: "Action", lang: "hi" },
-          { title: "Money Heist", cleanName: "Money Heist", year: "2017", rating: 8.2, genre: "Action", lang: "en" },
-          { title: "Peaky Blinders", cleanName: "Peaky Blinders", year: "2013", rating: 8.8, genre: "Crime", lang: "en" },
-          { title: "Friends", cleanName: "Friends", year: "1994", rating: 8.9, genre: "Comedy", lang: "en" }
-        ]);
         let pool = allShows.slice().filter(s => langPref === 'all' || s.lang === langPref);
         if (!pool.length) pool = allShows.slice();
         if (obShowQuery.trim()) {
@@ -412,37 +546,37 @@
         const topShows = pool.slice(0, 18);
         const picked = new Set(obProfile.favShowsSeed || []);
         vp.innerHTML = `
-          <div class="ob-step-enter space-y-4">
+          <div class="ob-step-enter space-y-4 max-w-4xl mx-auto w-full">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
               <div>
                 <span class="text-xs font-bold uppercase tracking-widest text-purple-300">TV Series &amp; Shows</span>
-                <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Pick TV series you love or want to binge (${picked.size} selected)</h2>
-                <p class="text-xs text-gray-400">From prestige dramas and crime thrillers to anime and Indian web series.</p>
+                <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Pick TV series you binge or love (${picked.size} selected)</h2>
+                <p class="text-xs sm:text-sm text-slate-300 font-medium">From prestige HBO dramas and sci-fi mysteries to anime and acclaimed Indian web series.</p>
               </div>
               <div class="relative w-full sm:w-64">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 <input id="obShowSearchInp" type="text" value="${esc(obShowQuery)}" placeholder="Search 1,150+ TV shows..." class="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
               </div>
             </div>
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 max-h-[38vh] overflow-y-auto pr-1">
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 max-h-[40vh] overflow-y-auto pr-1">
               ${topShows.map(s => {
                 const isSel = picked.has(s.title);
-                const fb = generateStylizedPosterDataURI(s);
-                const src = posterCache['show:' + s.title] || fb;
-                return `<div data-obshow="${esc(s.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5">
+                const fb = fallbackGetter(s);
+                const src = posterGetter(s, 'show') || fb;
+                return `<div data-obshow="${esc(s.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer">
                   <div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
-                    <img src="${src}" data-title="${esc(s.title)}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster w-full h-full object-cover" alt="">
+                    <img src="${src}" data-title="${esc(s.title)}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster poster-shimmer w-full h-full object-cover" onload="this.classList.remove('poster-shimmer');" alt="">
                     <div class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
                   </div>
                   <div class="px-0.5">
                     <div class="text-[11px] font-bold text-white truncate">${esc(s.cleanName || s.title)}</div>
-                    <div class="text-[10px] text-gray-400">${s.year} · ★ ${s.rating}</div>
+                    <div class="text-[10px] text-slate-400">${s.year} · ★ ${s.rating}</div>
                   </div>
                 </div>`;
               }).join('')}
             </div>
           </div>`;
-        attachThumbObservers(vp);
+        if (window.attachThumbObservers) attachThumbObservers(vp);
         const sInp = $('obShowSearchInp');
         if (sInp) {
           sInp.oninput = e => { obShowQuery = e.target.value; renderObStep(); const el = $('obShowSearchInp'); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } };
@@ -458,53 +592,69 @@
             renderObStep();
           };
         });
-      } else {
+      }
+
+      // STEP 6: Music Moods & Singers
+      else {
         const moods = [
           ['Romantic & Melody', 'fa-heart', 'text-rose-400'],
+          ['Chill & Acoustic', 'fa-feather', 'text-emerald-400'],
           ['Pop & Hits', 'fa-bolt', 'text-brand-gold'],
           ['Party & Energy', 'fa-fire', 'text-orange-400'],
-          ['Chill & Indie', 'fa-feather', 'text-emerald-400'],
+          ['Focus & Instrumental', 'fa-brain', 'text-cyan-400'],
+          ['Melancholic & Soul', 'fa-cloud-rain', 'text-blue-400'],
+          ['Indie & Folk', 'fa-guitar', 'text-amber-400'],
+          ['Rock & Anthems', 'fa-drum', 'text-red-400'],
           ['R&B & Hip-Hop', 'fa-headphones', 'text-purple-400'],
-          ['Nostalgia & Classics', 'fa-compact-disc', 'text-cyan-400']
+          ['Nostalgia & Classics', 'fa-compact-disc', 'text-teal-400']
         ];
         const artists = [
-          'Arijit Singh', 'Atif Aslam', 'Shreya Ghoshal', 'KK', 'Pritam', 'A.R. Rahman',
-          'The Weeknd', 'Taylor Swift', 'Ed Sheeran', 'Eminem', 'Dua Lipa', 'Justin Bieber',
+          'Arijit Singh', 'The Weeknd', 'Taylor Swift', 'Shreya Ghoshal', 'Atif Aslam',
+          'KK', 'Pritam', 'A.R. Rahman', 'Ed Sheeran', 'Dua Lipa', 'Justin Bieber',
+          'Eminem', 'Billie Eilish', 'Anirudh Ravichander', 'Sid Sriram', 'Kendrick Lamar',
           'Imagine Dragons', 'One Direction', 'Charlie Puth', 'Post Malone'
         ];
-        const selMoods = new Set(obProfile.musicMoods || []);
-        const selArtists = new Set(obProfile.favArtists || []);
+        const selMoods = new Set(obProfile.musicMoods || ['Romantic & Melody', 'Pop & Hits']);
+        const selArtists = new Set(obProfile.favArtists || ['Arijit Singh', 'The Weeknd']);
+
         vp.innerHTML = `
-          <div class="ob-step-enter space-y-5 my-auto">
-            <div class="space-y-1 text-center">
+          <div class="ob-step-enter space-y-5 my-auto max-w-3xl mx-auto w-full">
+            <div class="space-y-1.5 text-center">
               <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">3,069-Song Ad-Free Music Vault</span>
               <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Tune your soundtrack &amp; favorite singers</h2>
-              <p class="text-xs sm:text-sm text-gray-400">Pick your favorite music vibes and artists so your Music tab and favorite tracks are ready from the start.</p>
+              <p class="text-xs sm:text-sm text-slate-300 font-medium">Selected: ${selMoods.size} mood${selMoods.size === 1 ? '' : 's'} · ${selArtists.size} singer${selArtists.size === 1 ? '' : 's'}. Tailors your Music tab and audio playlists.</p>
             </div>
             <div class="space-y-2">
-              <label class="text-xs font-bold uppercase tracking-wider text-gray-300">Music Vibes &amp; Moods</label>
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-200">Music Vibes &amp; Moods</label>
+                <span class="text-xs text-brand-gold font-bold">${selMoods.size} Selected</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
                 ${moods.map(([m, ic, col]) => {
                   const on = selMoods.has(m);
-                  return `<button type="button" data-obmood="${esc(m)}" class="p-3 rounded-2xl border text-left flex items-center justify-between gap-2 transition-all ${on ? 'border-brand-gold bg-brand-gold/15 shadow' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
-                    <span class="text-xs sm:text-sm font-bold text-white truncate">${esc(m)}</span>
-                    <i class="fa-solid ${ic} ${col} cat-icon-anim text-xs"></i>
+                  return `<button type="button" data-obmood="${esc(m)}" class="p-3 rounded-2xl border text-left flex items-center justify-between gap-2 transition-all ${on ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
+                    <span class="text-xs font-bold text-white truncate">${esc(m)}</span>
+                    <i class="fa-solid ${ic} ${col} text-xs shrink-0"></i>
                   </button>`;
                 }).join('')}
               </div>
             </div>
             <div class="space-y-2">
-              <label class="text-xs font-bold uppercase tracking-wider text-gray-300">Singers &amp; Artists You Listen To</label>
-              <div class="flex flex-wrap gap-2">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-200">Singers &amp; Artists You Listen To</label>
+                <span class="text-xs text-brand-gold font-bold">${selArtists.size} Selected</span>
+              </div>
+              <div class="flex flex-wrap gap-2 max-h-[22vh] overflow-y-auto pr-1">
                 ${artists.map(a => {
                   const on = selArtists.has(a);
-                  return `<button type="button" data-obart="${esc(a)}" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${on ? 'border-brand-gold bg-brand-gold text-black shadow' : 'border-white/10 bg-black/45 text-gray-300 hover:text-white'}">
-                    <i class="fa-solid fa-music mr-1 text-[10px]"></i>${esc(a)}
+                  return `<button type="button" data-obart="${esc(a)}" class="px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${on ? 'border-brand-gold bg-brand-gold text-black shadow-md shadow-amber-500/20' : 'border-white/10 bg-black/45 text-slate-300 hover:text-white hover:bg-white/5'}">
+                    <i class="fa-solid fa-music mr-1.5 text-[10px]"></i>${esc(a)}
                   </button>`;
                 }).join('')}
               </div>
             </div>
           </div>`;
+
         vp.querySelectorAll('[data-obmood]').forEach(b => {
           b.onclick = () => {
             const m = b.dataset.obmood;
@@ -516,6 +666,7 @@
             renderObStep();
           };
         });
+
         vp.querySelectorAll('[data-obart]').forEach(b => {
           b.onclick = () => {
             const a = b.dataset.obart;
@@ -530,7 +681,7 @@
       }
     }
 
-    function applyProfileAndCloseWizard() {
+        function applyProfileAndCloseWizard() {
       // Seed selected movies and shows into Favorites & Watched so the user's Library & DNA work immediately
       const seedMedia = [...(obProfile.favMoviesSeed || []), ...(obProfile.favShowsSeed || [])];
       seedMedia.forEach(t => {

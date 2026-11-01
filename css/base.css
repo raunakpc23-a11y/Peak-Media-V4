@@ -2191,3 +2191,14 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+/* Poster Shimmer Skeleton Loader (Task 2) */
+.poster-shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 100%) !important;
+  background-size: 200% 100% !important;
+  animation: posterShimmerAnim 1.6s infinite ease-in-out !important;
+}
+@keyframes posterShimmerAnim {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

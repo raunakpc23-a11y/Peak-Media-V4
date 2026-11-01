@@ -103,17 +103,28 @@
       for (let i = 0; i < N.length; i++) {
         const p = N[i];
         for (let j = i + 1; j < N.length; j++) {
-          const q = N[j]; let dx = p.x - q.x, dy = p.y - q.y, d2 = dx * dx + dy * dy + 40;
-          if (d2 > 90000) continue;
-          const f = 5200 * a / d2, d = Math.sqrt(d2); dx = dx / d * f; dy = dy / d * f;
-          p.vx += dx; p.vy += dy; q.vx -= dx; q.vy -= dy;
+          const q = N[j];
+          let dx = p.x - q.x, dy = p.y - q.y, d2 = dx * dx + dy * dy + 40;
+          if (d2 > 120000) continue;
+          const f = 7200 * a / d2, d = Math.sqrt(d2) || 1;
+          const fx = dx / d * f, fy = dy / d * f;
+          p.vx += fx; p.vy += fy; q.vx -= fx; q.vy -= fy;
+
+          // Collision separation radius: accounts for node radius + text bounding box footprint
+          const minDistance = p.r + q.r + 52;
+          if (d < minDistance) {
+            const overlap = (minDistance - d) / d * 0.45 * a;
+            const ox = dx * overlap, oy = dy * overlap;
+            p.vx += ox; p.vy += oy;
+            q.vx -= ox; q.vy -= oy;
+          }
         }
         const [ax, ay] = anchor(p.item.genre), k = p.kind === 'ghost' ? .004 : .009;
         p.vx += (ax - p.x) * k * a - p.x * .004 * a; p.vy += (ay - p.y) * k * a - p.y * .004 * a;
       }
       for (const l of S.links) {
         const dx = l.b.x - l.a.x, dy = l.b.y - l.a.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
-        const rest = (l.a.kind === 'ghost' || l.b.kind === 'ghost') ? 85 : 130, f = (d - rest) * .02 * a;
+        const rest = (l.a.kind === 'ghost' || l.b.kind === 'ghost') ? 115 : 160, f = (d - rest) * .02 * a;
         l.a.vx += dx / d * f; l.a.vy += dy / d * f; l.b.vx -= dx / d * f; l.b.vy -= dy / d * f;
       }
       for (const n of N) { if (n === S.drag) { n.vx = n.vy = 0; continue; } n.vx *= .82; n.vy *= .82; n.x += n.vx; n.y += n.vy; }
@@ -145,6 +156,7 @@
       }
       ctx.setLineDash([]);
       const top = new Set(S.nodes.filter(n => n.kind === 'ghost').sort((a, b) => b.score - a.score).slice(0, 5));
+      const placedLabels = [];
       for (const n of S.nodes) {
         const x = sx(n.x), y = sy(n.y), r = n.r * Math.min(1.4, Math.max(.7, S.k)), ac = th(n.item.genre).accent, ghost = n.kind === 'ghost';
         if (x < -40 || y < -40 || x > W + 40 || y > H + 40) continue;
@@ -155,12 +167,29 @@
         ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283);
         ctx.fillStyle = ghost ? '#0c1020' : ac; ctx.fill();
         ctx.lineWidth = n === S.sel ? 3 : 1.6; ctx.strokeStyle = n === S.sel ? '#fff' : n.kind === 'wish' ? '#fb7185' : n.kind === 'explored' ? '#F5C518' : rgba(ac, ghost ? .95 : .5); ctx.stroke();
-        const showLbl = n === focus || (!ghost && S.k > .7) || (ghost && S.k > 1.35);
+        const showLbl = n === focus || (!ghost && S.k > .65) || (ghost && S.k > 1.25);
         if (showLbl) {
-          const name = n.item.cleanName.length > 24 ? n.item.cleanName.slice(0, 23) + '…' : n.item.cleanName;
-          ctx.font = '600 11px Inter, sans-serif'; ctx.textAlign = 'center';
-          ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(6,8,13,.9)'; ctx.strokeText(name, x, y + r + 14);
-          ctx.fillStyle = ghost ? '#cbd5e1' : '#fff'; ctx.fillText(name, x, y + r + 14);
+          const name = n.item.cleanName.length > 22 ? n.item.cleanName.slice(0, 21) + '…' : n.item.cleanName;
+          ctx.font = '700 11px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          const tw = ctx.measureText(name).width;
+
+          // Dynamic alternate label placement and collision avoidance against previously placed labels
+          let lblY = y + r + 14;
+          let box = { x1: x - tw / 2 - 6, x2: x + tw / 2 + 6, y1: lblY - 11, y2: lblY + 3 };
+          const collides = placedLabels.some(b => !(box.x2 < b.x1 || box.x1 > b.x2 || box.y2 < b.y1 || box.y1 > b.y2));
+          if (collides) {
+            lblY = y - r - 8;
+            box = { x1: x - tw / 2 - 6, x2: x + tw / 2 + 6, y1: lblY - 11, y2: lblY + 3 };
+          }
+          placedLabels.push(box);
+
+          // Rich halo contrast for pristine readability
+          ctx.lineWidth = 4.5;
+          ctx.strokeStyle = 'rgba(5,7,12,0.95)';
+          ctx.strokeText(name, x, lblY);
+          ctx.fillStyle = ghost ? '#cbd5e1' : '#ffffff';
+          ctx.fillText(name, x, lblY);
         }
       }
       requestAnimationFrame(draw);
@@ -168,9 +197,13 @@
     function run() { if (!S.loop) { S.loop = true; requestAnimationFrame(draw); } }
 
     function resize() {
-      const w = document.getElementById('cxWrap'); if (!w.clientWidth) return;
-      S.dpr = Math.min(2, window.devicePixelRatio || 1); S.W = w.clientWidth; S.H = w.clientHeight;
-      cv.width = S.W * S.dpr; cv.height = S.H * S.dpr;
+      const w = document.getElementById('cxWrap') || cv.parentElement;
+      if (!w || !w.clientWidth) return;
+      S.dpr = Math.min(2, window.devicePixelRatio || 1);
+      S.W = w.clientWidth;
+      S.H = w.clientHeight || 300;
+      cv.width = S.W * S.dpr;
+      cv.height = S.H * S.dpr;
     }
     function legend() {
       const used = [...new Set(S.nodes.map(n => n.item.genre))];
