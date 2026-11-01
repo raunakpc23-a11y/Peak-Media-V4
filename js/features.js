@@ -397,5 +397,3 @@
   window.oppOn=()=>on; window.oppBlend=()=>blend; window.oppGenre=g=>on&&blend>=.5?(OPPG[g]||g):g;
   oppRender();if(on)discoverFlip();
 })();
-
-(function(){const l=document.getElementById('compatLab'),p=document.getElementById('tab-compat');if(l&&p)p.appendChild(l);})();

@@ -15444,8 +15444,14 @@ Odd Taxi|2021|87
 
     // Generates high-contrast bespoke procedural SVG posters with typography
     function generateStylizedPosterDataURI(item) {
-      const theme = genreThemes[item.genre] || genreThemes["Drama"];
-      const safeTitle = item.cleanName.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      if (!item) item = { title: 'Cinema' };
+      const titleStr = item.cleanName || item.title || 'Cinema';
+      const safeTitle = titleStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      const genreStr = item.genre || 'Cinema';
+      const ratingStr = item.rating || '8.5';
+      const rankStr = item.rank || '★';
+      const yearStr = item.year || '';
+      
       const words = safeTitle.split(' ');
       const lines = [];
       let currentLine = '';
@@ -15460,9 +15466,15 @@ Odd Taxi|2021|87
       if (currentLine) lines.push(currentLine);
       const displayLines = lines.slice(0, 4);
 
-      const h = hashString(item.title);
-      const cx = 70 + (h % 260);
-      const cy = 100 + ((h >> 4) % 220);
+      // Title-unique color block hash to guarantee every single title has its own vibrant artwork
+      const h = hashString(titleStr);
+      const cx = 70 + (Math.abs(h) % 260);
+      const cy = 100 + ((Math.abs(h) >> 4) % 220);
+      const hue1 = Math.abs(h % 360);
+      const hue2 = (hue1 + 45 + Math.abs((h >> 2) % 60)) % 360;
+      const c1 = `hsl(${hue1}, 68%, 22%)`;
+      const c2 = `hsl(${hue2}, 62%, 11%)`;
+      const accent = `hsl(${hue1}, 90%, 65%)`;
 
       const textSvg = displayLines.map((line, idx) => {
         const yPos = 390 + (idx * 34);
@@ -15472,27 +15484,27 @@ Odd Taxi|2021|87
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
         <defs>
           <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="${theme.c1}"/>
-            <stop offset="65%" stop-color="${theme.c2}"/>
+            <stop offset="0%" stop-color="${c1}"/>
+            <stop offset="65%" stop-color="${c2}"/>
             <stop offset="100%" stop-color="#080A0F"/>
           </linearGradient>
           <radialGradient id="orb" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="${theme.accent}" stop-opacity="0.45"/>
-            <stop offset="100%" stop-color="${theme.accent}" stop-opacity="0"/>
+            <stop offset="0%" stop-color="${accent}" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
           </radialGradient>
         </defs>
         <rect width="400" height="600" fill="url(#bg)"/>
         <circle cx="${cx}" cy="${cy}" r="220" fill="url(#orb)"/>
         <circle cx="${400 - cx}" cy="${520 - cy}" r="160" fill="url(#orb)"/>
-        <g stroke="${theme.accent}" stroke-opacity="0.15" stroke-width="1">
+        <g stroke="${accent}" stroke-opacity="0.2" stroke-width="1">
           <line x1="28" y1="28" x2="372" y2="28"/>
           <line x1="28" y1="572" x2="372" y2="572"/>
           <rect x="20" y="20" width="360" height="560" rx="16" fill="none"/>
         </g>
         <rect x="32" y="40" width="86" height="30" rx="8" fill="#000000" fill-opacity="0.65"/>
-        <text x="75" y="60" text-anchor="middle" fill="#F5C518" font-family="Inter, sans-serif" font-weight="800" font-size="13">★ ${item.rating}</text>
-        <text x="364" y="60" text-anchor="end" fill="${theme.accent}" font-family="Inter, sans-serif" font-weight="700" font-size="13" opacity="0.9">#${item.rank}</text>
-        <text x="32" y="348" fill="${theme.accent}" font-family="Inter, sans-serif" font-weight="700" font-size="13" letter-spacing="2">${item.genre.toUpperCase()} · ${item.year}</text>
+        <text x="75" y="60" text-anchor="middle" fill="#F5C518" font-family="Inter, sans-serif" font-weight="800" font-size="13">★ ${ratingStr}</text>
+        ${rankStr ? `<text x="364" y="60" text-anchor="end" fill="${accent}" font-family="Inter, sans-serif" font-weight="700" font-size="13" opacity="0.9">#${rankStr}</text>` : ''}
+        <text x="32" y="348" fill="${accent}" font-family="Inter, sans-serif" font-weight="700" font-size="13" letter-spacing="2">${genreStr.toUpperCase()}${yearStr ? ' · ' + yearStr : ''}</text>
         ${textSvg}
         <g transform="translate(32, 520)">
           <text x="16" y="7" text-anchor="middle" fill="#F5C518" font-family="Inter, sans-serif" font-weight="800" font-size="6.5" letter-spacing="1.8">MEDIA</text>
@@ -15747,7 +15759,15 @@ Odd Taxi|2021|87
       const exists = favTitles.includes(title);
       if (exists) {
         favTitles = favTitles.filter(t => t !== title);
-        showToast(`Removed "${title}" from Favourites`, "fa-star", "text-gray-400");
+        try { localStorage.setItem('cs_favs', JSON.stringify(favTitles)); } catch (e) {}
+        showToast(`Removed "${title}" from Favourites`, "fa-star", "text-gray-400", () => {
+          if (!favTitles.includes(title)) {
+            favTitles.push(title);
+            try { localStorage.setItem('cs_favs', JSON.stringify(favTitles)); } catch (e) {}
+            updateAllCountersAndViews();
+            showToast(`Restored "${title}" to Favourites`, "fa-rotate-left", "text-brand-gold");
+          }
+        });
       } else {
         favTitles.push(title);
         showToast(`Added "${title}" to your Favourites!`, "fa-star", "text-brand-gold");
@@ -15758,39 +15778,83 @@ Odd Taxi|2021|87
 
     function clearShelf(shelfKey) {
       if (shelfKey === 'watched') {
+        const prev = [...watchedTitles];
         watchedTitles = [];
-        showToast("Cleared your Watched shelf", "fa-trash", "text-gray-400");
+        showToast("Cleared your Watched shelf", "fa-trash", "text-gray-400", () => {
+          watchedTitles = prev;
+          updateAllCountersAndViews();
+          showToast("Restored Watched shelf", "fa-rotate-left", "text-emerald-400");
+        });
       } else if (shelfKey === 'wish') {
+        const prev = [...wishlistTitles];
         wishlistTitles = [];
-        showToast("Cleared your Watchlist shelf", "fa-trash", "text-gray-400");
+        showToast("Cleared your Watchlist shelf", "fa-trash", "text-gray-400", () => {
+          wishlistTitles = prev;
+          updateAllCountersAndViews();
+          showToast("Restored Watchlist shelf", "fa-rotate-left", "text-rose-400");
+        });
       } else if (shelfKey === 'fav') {
+        const prev = [...favTitles];
         favTitles = [];
         try { localStorage.setItem('cs_favs', JSON.stringify(favTitles)); } catch (e) {}
-        showToast("Cleared your Favourites shelf", "fa-trash", "text-gray-400");
+        showToast("Cleared your Favourites shelf", "fa-trash", "text-gray-400", () => {
+          favTitles = prev;
+          try { localStorage.setItem('cs_favs', JSON.stringify(favTitles)); } catch (e) {}
+          updateAllCountersAndViews();
+          showToast("Restored Favourites shelf", "fa-rotate-left", "text-brand-gold");
+        });
       }
       updateAllCountersAndViews();
     }
 
-    function showToast(message, icon = "fa-circle-check", color = "text-brand-gold") {
+    function showToast(message, icon = "fa-circle-check", color = "text-brand-gold", undoCb = null) {
       const container = document.getElementById('toastContainer');
+      if (!container) return;
       const toast = document.createElement('div');
       toast.className = "glass-card pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl border border-white/15 shadow-2xl fade-in text-xs sm:text-sm font-medium text-white";
-      toast.innerHTML = `<i class="fa-solid ${icon} ${color} text-base"></i><span class="flex-1">${message}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => {
+      let html = `<i class="fa-solid ${icon} ${color} text-base"></i><span class="flex-1">${message}</span>`;
+      if (undoCb && typeof undoCb === 'function') {
+        html += `<button type="button" class="undo-btn ml-2 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold text-amber-300 transition-colors cursor-pointer border border-amber-300/30">Undo</button>`;
+      }
+      toast.innerHTML = html;
+
+      let timer = null;
+      const dismiss = () => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(8px)';
         toast.style.transition = 'all 0.25s ease';
         setTimeout(() => toast.remove(), 250);
-      }, 2600);
+      };
+
+      if (undoCb && typeof undoCb === 'function') {
+        const btn = toast.querySelector('.undo-btn');
+        if (btn) {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (timer) clearTimeout(timer);
+            try { undoCb(); } catch (err) { console.error('Undo callback failed:', err); }
+            dismiss();
+          });
+        }
+      }
+
+      container.appendChild(toast);
+      timer = setTimeout(dismiss, undoCb ? 5000 : 2600);
     }
+    window.showToast = showToast;
 
     function toggleWishlist(title, event) {
       if (event) event.stopPropagation();
       const exists = wishlistTitles.includes(title);
       if (exists) {
         wishlistTitles = wishlistTitles.filter(t => t !== title);
-        showToast(`Removed "${title}" from Watchlist`, "fa-heart-crack", "text-gray-400");
+        showToast(`Removed "${title}" from Watchlist`, "fa-heart-crack", "text-gray-400", () => {
+          if (!wishlistTitles.includes(title)) {
+            wishlistTitles.push(title);
+            updateAllCountersAndViews();
+            showToast(`Restored "${title}" to Watchlist`, "fa-rotate-left", "text-rose-400");
+          }
+        });
       } else {
         wishlistTitles.push(title);
         showToast(`Added "${title}" to your Watchlist!`, "fa-heart", "text-rose-400");
@@ -15804,11 +15868,24 @@ Odd Taxi|2021|87
       if (exists) {
         watchedTitles = watchedTitles.filter(t => t !== title);
         let gt = getLocal('cs_golden_tickets', []);
-        if (gt.includes(title)) {
+        let hadGt = gt.includes(title);
+        if (hadGt) {
           setLocal('cs_golden_tickets', gt.filter(t => t !== title));
           if (window.renderCinePassLedger) window.renderCinePassLedger();
         }
-        showToast(`Unmarked "${title}" as watched`, "fa-rotate-left", "text-gray-400");
+        showToast(`Unmarked "${title}" as watched`, "fa-rotate-left", "text-gray-400", () => {
+          if (!watchedTitles.includes(title)) {
+            watchedTitles.push(title);
+            if (hadGt) {
+              let curGt = getLocal('cs_golden_tickets', []);
+              if (!curGt.includes(title)) curGt.push(title);
+              setLocal('cs_golden_tickets', curGt);
+              if (window.renderCinePassLedger) window.renderCinePassLedger();
+            }
+            updateAllCountersAndViews();
+            showToast(`Marked "${title}" as Watched!`, "fa-circle-check", "text-emerald-400");
+          }
+        });
       } else {
         watchedTitles.push(title);
         showToast(`Marked "${title}" as Watched!`, "fa-circle-check", "text-emerald-400");
@@ -15879,6 +15956,14 @@ Odd Taxi|2021|87
       const hpFav = document.getElementById('homeProfileFavCount');
       if (hpFav) hpFav.textContent = favTitles.length;
 
+      const profileRing = document.getElementById('profileRingCircle');
+      if (profileRing) {
+        const totalItems = (watchedTitles.length + wishlistTitles.length + favTitles.length);
+        const circumference = 2 * Math.PI * 18; // radius 18 -> circumference ~113.097
+        const pct = Math.min(1, Math.max(0.05, totalItems / 40));
+        profileRing.style.strokeDashoffset = (circumference * (1 - pct)).toFixed(2);
+      }
+
       const navBadge = document.getElementById('navWishlistBadge');
       if (wishlistTitles.length > 0) {
         navBadge.textContent = wishlistTitles.length;
@@ -15929,8 +16014,8 @@ Odd Taxi|2021|87
       // Celestial Starlight Card: Resting state shows Poster, Title, Year, and Magnitude Rating.
       // Quick actions & starlight platform metadata reveal smoothly on hover.
       return `
-      <div onclick="openDetailModal('${escTitle}')" class="group relative rounded-2xl overflow-hidden bg-[#0a0d16] border ${borderClass} card-hover cursor-pointer flex flex-col ${widthClass}" data-type="${item.type}">
-        <div class="relative poster-aspect w-full overflow-hidden bg-[#060911]">
+      <div onclick="openDetailModal('${escTitle}')" class="group relative rounded-2xl overflow-hidden theme-card-bg border ${borderClass} card-hover cursor-pointer flex flex-col ${widthClass}" data-type="${item.type}">
+        <div class="relative poster-aspect w-full overflow-hidden bg-black/20">
           <img
             src="${cachedPoster}"
             data-title="${attrTitle}"
@@ -15983,7 +16068,7 @@ Odd Taxi|2021|87
         </div>
 
         <!-- Resting Starlight Metadata: Title + Year + Rating -->
-        <div class="p-2.5 sm:p-3 flex-1 flex flex-col justify-between gap-1 border-t border-white/5 bg-gradient-to-b from-[#0a0d16] to-[#06080e]">
+        <div class="p-2.5 sm:p-3 flex-1 flex flex-col justify-between gap-1 border-t border-white/5 card-footer-meta">
           <h3 class="font-bold text-xs sm:text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-1" title="${attrTitle}">${item.cleanName || item.title}</h3>
           <div class="flex items-center justify-between text-xs text-gray-400 font-mono">
             <span>${item.year}</span>
@@ -16104,7 +16189,6 @@ Odd Taxi|2021|87
 
       const banner = document.getElementById('heroBanner');
       if (!banner) return;
-      banner.style.background = 'transparent';
 
       const suggestionsHTML = spotlightTitles.map((s, i) => {
         const sItem = globalDatabase[s.title] || movies.find(m => m.title === s.title) || tvShows.find(t => t.title === s.title) || { title: s.title, type: 'movie' };
@@ -16115,7 +16199,7 @@ Odd Taxi|2021|87
         const isActive = i === currentSpotlightIdx;
         return `
           <button type="button" onclick="renderHeroSpotlight(${i}, true)" title="${sEscTitle}" class="relative shrink-0 rounded-xl overflow-hidden transition-all duration-200 group ${isActive ? 'ring-2 ring-brand-gold scale-105 shadow-md shadow-brand-gold/30' : 'opacity-65 hover:opacity-100 hover:scale-105 ring-1 ring-white/10'}">
-            <img src="${sPoster}" data-title="${sAttrTitle}" data-type="${sItem.type || 'movie'}" onerror="this.onerror=null;this.src='${sFallback}';" class="w-9 h-14 sm:w-11 sm:h-16 md:w-12 md:h-18 object-cover lazy-poster" alt="${sAttrTitle}" />
+            <img src="${sPoster}" data-title="${sAttrTitle}" data-type="${sItem.type || 'movie'}" onerror="this.onerror=null;this.src='${sFallback}';" class="w-8 h-12 sm:w-9 sm:h-14 object-cover lazy-poster" alt="${sAttrTitle}" />
           </button>
         `;
       }).join('');
@@ -16123,47 +16207,47 @@ Odd Taxi|2021|87
       banner.innerHTML = `
         <!-- Optical Lens Nebular Glow -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl sm:rounded-3xl">
-          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-1/2 h-full object-cover opacity-25 blur-3xl pointer-events-none" />
+          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-1/2 h-full object-cover opacity-20 blur-3xl pointer-events-none" />
         </div>
 
-        <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-7 ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
+        <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
           
-          <!-- Left: Grand 2:3 Poster Card & Film Info -->
-          <div class="flex items-center gap-4 sm:gap-6 w-full md:w-auto min-w-0">
+          <!-- Left: Compact 2:3 Poster Card & Film Info -->
+          <div class="flex items-center gap-3.5 sm:gap-5 w-full md:w-auto min-w-0">
             <!-- Authentic 2:3 Poster with cinematic depth -->
             <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')" title="View Details">
-              <div class="relative w-28 sm:w-36 md:w-44 rounded-2xl overflow-hidden border border-white/20 shadow-2xl group-hover:border-brand-gold group-hover:scale-102 transition-all">
+              <div class="relative w-20 sm:w-24 md:w-28 rounded-xl overflow-hidden border border-white/20 shadow-xl group-hover:border-brand-gold group-hover:scale-102 transition-all">
                 <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster w-full aspect-[2/3] object-cover" />
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity backdrop-blur-[2px]">
-                  <span class="w-10 h-10 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-sm ml-0.5"></i></span>
+                  <span class="w-8 h-8 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-xs ml-0.5"></i></span>
                 </div>
               </div>
             </div>
 
-            <!-- Title & Metadata (Star rating, genre, year, 2-line synopsis) -->
-            <div class="space-y-2 min-w-0 flex-1">
+            <!-- Title & Metadata (Star rating, genre, year, 1-line synopsis) -->
+            <div class="space-y-1.5 min-w-0 flex-1">
               <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                <span class="text-brand-gold font-black px-2 py-0.5 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center gap-1.5"><i class="fa-solid fa-star text-[11px]"></i> ${item.rating}</span>
+                <span class="text-brand-gold font-black px-2 py-0.5 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center gap-1.5"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
                 <span class="text-white/30 hidden sm:inline">•</span>
-                <span class="text-gray-200 font-bold uppercase text-[11px] tracking-wider px-2 py-0.5 rounded-md bg-white/5 border border-white/10" style="color:${theme.accent}">${item.genre}</span>
+                <span class="text-gray-200 font-bold uppercase text-[10px] tracking-wider px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10" style="color:${theme.accent}">${item.genre}</span>
                 <span class="text-white/30 hidden sm:inline">•</span>
                 <span class="text-gray-300 font-semibold text-xs">${item.year}</span>
               </div>
 
-              <h1 onclick="openDetailModal('${escTitle}')" class="text-lg sm:text-2xl md:text-3xl font-display font-extrabold text-white tracking-tight leading-tight line-clamp-1 cursor-pointer hover:text-brand-gold transition-colors">
+              <h1 onclick="openDetailModal('${escTitle}')" class="text-base sm:text-xl md:text-2xl font-display font-extrabold text-white tracking-tight leading-snug line-clamp-1 cursor-pointer hover:text-brand-gold transition-colors">
                 ${item.cleanName || item.title}
               </h1>
 
-              <p class="text-xs sm:text-sm text-gray-300 line-clamp-2 max-w-xl leading-relaxed">
+              <p class="text-xs text-gray-300 line-clamp-1 max-w-lg leading-relaxed">
                 ${item.synopsis || spot.blurb || ''}
               </p>
 
               <!-- Actions: Watch Now + Watchlist -->
-              <div class="pt-1.5 flex items-center gap-3">
-                <button type="button" onclick="openDetailModal('${escTitle}')" class="px-5 py-2 sm:px-6 sm:py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
+              <div class="pt-1 flex items-center gap-2.5">
+                <button type="button" onclick="openDetailModal('${escTitle}')" class="px-4 py-1.5 sm:px-5 sm:py-2 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs sm:text-sm flex items-center gap-1.5 shadow transition-all active:scale-95">
                   <i class="fa-solid fa-play text-xs"></i> <span>Watch Now</span>
                 </button>
-                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${isW ? 'bg-rose-500 text-white shadow-rose-500/30' : 'bg-white/10 hover:bg-white/20 text-gray-300'} flex items-center justify-center border border-white/10 shadow transition-all text-xs sm:text-sm" title="Save to Watchlist">
+                <button type="button" onclick="toggleWishlist('${escTitle}', event); renderHeroSpotlight(${currentSpotlightIdx}, false);" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl ${isW ? 'bg-rose-500 text-white shadow-rose-500/30' : 'bg-white/10 hover:bg-white/20 text-gray-300'} flex items-center justify-center border border-white/10 shadow transition-all text-xs" title="Save to Watchlist">
                   <i class="fa-solid ${isW ? 'fa-check' : 'fa-bookmark'}"></i>
                 </button>
               </div>
@@ -16171,11 +16255,11 @@ Odd Taxi|2021|87
           </div>
 
           <!-- Right: Spotlight Suggestions Queue -->
-          <div class="flex flex-col items-start md:items-end gap-2 w-full md:w-auto shrink-0 pt-2.5 md:pt-0 border-t md:border-t-0 border-white/10">
-            <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-              <i class="fa-solid fa-list-check text-brand-gold text-[10px]"></i> Spotlight Queue
+          <div class="flex flex-col items-start md:items-end gap-1.5 w-full md:w-auto shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-white/10">
+            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-list-check text-brand-gold text-[9px]"></i> Queue
             </span>
-            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
               ${suggestionsHTML}
             </div>
           </div>
@@ -16334,7 +16418,7 @@ Odd Taxi|2021|87
         attachThumbObservers(pEl);
       }
 
-      // Row 2: Blockbusters & Pop Culture — capped at 12 cards
+      // Row 2: Popular Hits — capped at 12 cards
       const blockbusterKeywords = ["Avengers", "Spider-Man", "Dune", "Batman", "Dark Knight", "Avatar", "Star Wars", "Fast & Furious", "Fast Five", "Furious 7", "Transformers", "Harry Potter", "Top Gun", "John Wick", "Deadpool", "Hunger Games", "Mission: Impossible", "Guardians of the Galaxy", "Inception", "Interstellar", "Oppenheimer", "RRR", "Baahubali", "K.G.F", "Jawan", "Pathaan", "Dangal", "3 Idiots", "Sholay", "Kalki", "Stree"];
       const blockbusters = movies.filter(m => matchesGlobalLang(m) && blockbusterKeywords.some(kw => m.title.includes(kw))).sort((a, b) => b.rating - a.rating).slice(0, 12);
       const bEl = document.getElementById('discoverBlockbustersRow');
@@ -16343,7 +16427,16 @@ Odd Taxi|2021|87
         attachThumbObservers(bEl);
       }
 
-      // Row 3: Mind-Benders & Thrillers — capped at 12 cards
+      // Row 3: Box Office All-Time Champions — capped at 12 cards
+      const boxOfficeKeywords = ["Avatar", "Avengers: Endgame", "Titanic", "Star Wars: The Force Awakens", "Avengers: Infinity War", "Spider-Man: No Way Home", "Jurassic World", "The Lion King", "The Avengers", "Furious 7", "Top Gun: Maverick", "Frozen II", "Barbie", "Oppenheimer", "The Dark Knight", "Dangal", "Baahubali 2", "RRR", "K.G.F: Chapter 2", "Jawan"];
+      const boxOfficeFilms = movies.filter(m => matchesGlobalLang(m) && boxOfficeKeywords.some(kw => m.title.includes(kw) || kw.includes(m.title))).sort((a, b) => b.rating - a.rating).slice(0, 12);
+      const boEl = document.getElementById('discoverBoxOfficeRow');
+      if (boEl) {
+        boEl.innerHTML = boxOfficeFilms.map(i => createCardHTML(i, true)).join('');
+        attachThumbObservers(boEl);
+      }
+
+      // Row 4: Mind-Benders & Thrillers — capped at 12 cards
       const mindBenders = movies.filter(i => matchesGlobalLang(i) && (i.genre === 'Sci-Fi' || i.genre === 'Thriller')).slice(0, 12);
       const mEl = document.getElementById('discoverMindRow');
       if (mEl) {
@@ -16351,7 +16444,7 @@ Odd Taxi|2021|87
         attachThumbObservers(mEl);
       }
 
-      // Row 4: TV Shows — capped at 12 cards
+      // Row 5: TV Shows — capped at 12 cards
       const tvEl = document.getElementById('discoverTvRow');
       if (tvEl) {
         tvEl.innerHTML = tvShows.filter(i => matchesGlobalLang(i)).slice(0, 12).map(i => createCardHTML(i, true)).join('');
@@ -16366,7 +16459,7 @@ Odd Taxi|2021|87
         attachThumbObservers(indEl);
       }
 
-      document.querySelectorAll('#discoverPantheonRow, #discoverBlockbustersRow, #discoverMindRow, #discoverTvRow, #discoverIndianRow, #moodRow, #wishlistContainer').forEach(addHorizontalArrows);
+      document.querySelectorAll('#discoverPantheonRow, #discoverBlockbustersRow, #discoverBoxOfficeRow, #discoverMindRow, #discoverTvRow, #discoverIndianRow, #moodRow, #wishlistContainer').forEach(addHorizontalArrows);
 
       // Sync the Broad Interactive Vinyl Turntable on Home
       if (window.updateHomeVinylPlayer) {
@@ -16700,11 +16793,21 @@ Odd Taxi|2021|87
 
     function clearCurrentHubList() {
       if (activeHubList === 'wishlist') {
+        const prev = [...wishlistTitles];
         wishlistTitles = [];
-        showToast("Cleared your Watchlist", "fa-trash", "text-gray-400");
+        showToast("Cleared your Watchlist", "fa-trash", "text-gray-400", () => {
+          wishlistTitles = prev;
+          updateAllCountersAndViews();
+          showToast("Restored Watchlist", "fa-rotate-left", "text-rose-400");
+        });
       } else {
+        const prev = [...watchedTitles];
         watchedTitles = [];
-        showToast("Cleared your Watched History", "fa-trash", "text-gray-400");
+        showToast("Cleared your Watched History", "fa-trash", "text-gray-400", () => {
+          watchedTitles = prev;
+          updateAllCountersAndViews();
+          showToast("Restored Watched History", "fa-rotate-left", "text-emerald-400");
+        });
       }
       updateAllCountersAndViews();
     }
@@ -17831,3 +17934,13 @@ Odd Taxi|2021|87
       renderTags('friendTags');
       updateAllCountersAndViews();
     });
+
+    window.renderTags = renderTags;
+    window.calculateCompatibility = calculateCompatibility;
+    window.loadDemoCompatibility = loadDemoCompatibility;
+    window.surpriseFriendList = surpriseFriendList;
+    window.prefillFromWishlist = prefillFromWishlist;
+    window.initTasteCompatibility = function() {
+      renderTags('myTags');
+      renderTags('friendTags');
+    };

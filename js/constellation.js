@@ -6,7 +6,12 @@
     const S = { nodes: [], links: [], by: {}, explored: new Set(), k: 1, tx: 0, ty: 0, alpha: 1, sel: null, hover: null, drag: null, pan: null, moved: 0, W: 0, H: 0, dpr: 1, loop: false, type: 'all', wish: true, built: false };
     const GH = 26, MAXSEED = 36;
     const stars = Array.from({ length: 90 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + .3, p: Math.random() * 6 }));
-    const vis = () => !document.getElementById('tab-web').classList.contains('hidden');
+    const vis = () => {
+      const hub = document.getElementById('tab-hub');
+      if (hub && !hub.classList.contains('hidden')) return true;
+      const web = document.getElementById('tab-web');
+      return web && !web.classList.contains('hidden');
+    };
     const fkey = i => i.cleanName.split(':')[0].toLowerCase().replace(/^the /, '').trim();
     const th = g => genreThemes[g] || genreThemes.Drama;
     const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${n >> 8 & 255},${n & 255},${a})`; };
@@ -234,13 +239,37 @@
       S.k = k; S.tx = px - S.W / 2 - wx * k; S.ty = py - S.H / 2 - wy * k;
     }
     cv.addEventListener('wheel', e => { e.preventDefault(); const [px, py] = pos(e); zoom(e.deltaY < 0 ? 1.12 : .89, px, py); }, { passive: false });
-    document.getElementById('cxZin').onclick = () => zoom(1.25);
-    document.getElementById('cxZout').onclick = () => zoom(.8);
-    document.getElementById('cxFit').onclick = fit;
-    document.getElementById('cxType').onchange = e => { S.type = e.target.value; build(true); };
-    document.getElementById('cxWish').onchange = e => { S.wish = e.target.checked; build(true); };
-    document.getElementById('cxReset').onclick = () => { S.explored.clear(); S.by = {}; S.sel = null; S.built = false; build(false); };
+    const zin = document.getElementById('cxZin'); if (zin) zin.onclick = () => zoom(1.25);
+    const zout = document.getElementById('cxZout'); if (zout) zout.onclick = () => zoom(.8);
+    const fitBtn = document.getElementById('cxFit'); if (fitBtn) fitBtn.onclick = fit;
+    const typeSel = document.getElementById('cxType'); if (typeSel) typeSel.onchange = e => { S.type = e.target.value; build(true); };
+    const wishChk = document.getElementById('cxWish'); if (wishChk) wishChk.onchange = e => { S.wish = e.target.checked; build(true); };
+    const resetBtn = document.getElementById('cxReset'); if (resetBtn) resetBtn.onclick = () => { S.explored.clear(); S.by = {}; S.sel = null; S.built = false; build(false); };
     window.addEventListener('resize', () => { if (vis()) resize(); });
+
+    window.setTasteDnaFilter = function(filterMode) {
+      document.querySelectorAll('[id^="tasteDnaFilter-"]').forEach(btn => {
+        btn.className = 'px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all';
+      });
+      const activeBtn = document.getElementById('tasteDnaFilter-' + filterMode);
+      if (activeBtn) activeBtn.className = 'px-2.5 py-1 rounded-lg bg-brand-gold text-black font-bold shadow transition-all';
+
+      if (filterMode === 'all') {
+        S.type = 'all';
+        S.wish = true;
+      } else if (filterMode === 'movie') {
+        S.type = 'movie';
+        S.wish = false;
+      } else if (filterMode === 'show') {
+        S.type = 'show';
+        S.wish = false;
+      } else if (filterMode === 'wish') {
+        S.type = 'all';
+        S.wish = true;
+      }
+      build(true);
+      fit();
+    };
 
     window.cxOpen = function () { resize(); if (!S.built) build(false); else if (S.dirty) { S.dirty = false; build(true); } else fit(); run(); };
     // keep the web in sync when the watched list / watchlist / ratings change without wiping node positions

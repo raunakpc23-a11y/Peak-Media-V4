@@ -2,6 +2,20 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
+  <script>
+    (function() {
+      try {
+        var m = localStorage.getItem('cs_theme_mode') || 'system';
+        var isDark = m === 'system' ? (!window.matchMedia || window.matchMedia('(prefers-color-scheme: dark)').matches) : (m === 'dark');
+        var eff = isDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-mode', eff);
+        document.documentElement.className = eff;
+        var p = localStorage.getItem('cs_theme_v2') || 'space';
+        document.documentElement.setAttribute('data-palette', p);
+        document.documentElement.setAttribute('data-theme', p);
+      } catch (e) {}
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Summit of Film, Shows &amp; Music</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20760%20760%22%20width%3D%22512%22%20height%3D%22512%22%20fill%3D%22none%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22favSkyBg%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23071022%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23050811%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23081832%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22favSkyMain%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23F0F9FF%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2230%25%22%20stop-color%3D%22%237DD3FC%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2265%25%22%20stop-color%3D%22%2338BDF8%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230EA5E9%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22favSkySun%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%237DD3FC%22%20stop-opacity%3D%220.42%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230EA5E9%22%20stop-opacity%3D%220.06%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22732%22%20height%3D%22732%22%20rx%3D%22164%22%20fill%3D%22url%28%23favSkyBg%29%22%20stroke%3D%22%2338BDF8%22%20stroke-opacity%3D%220.55%22%20stroke-width%3D%2214%22/%3E%0A%20%20%3Ccircle%20cx%3D%22462%22%20cy%3D%22240%22%20r%3D%22220%22%20fill%3D%22%2338BDF8%22%20fill-opacity%3D%220.14%22/%3E%0A%20%20%3Cg%20transform%3D%22translate%28-25%2C%20150%29%22%3E%0A%20%20%20%20%3Cg%20stroke%3D%22%23FFFFFF%22%20stroke-width%3D%228%22%20stroke-linejoin%3D%22miter%22%20fill%3D%22%23060A14%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M135%20130%20H205%20C230%20130%20245%20144%20245%20168%20C245%20192%20230%20206%20205%20206%20H168%20V250%20H135%20Z%20M168%20156%20V180%20H200%20C210%20180%20215%20175%20215%20168%20C215%20161%20210%20156%20200%20156%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M272%20130%20H365%20V156%20H305%20V177%20H355%20V202%20H305%20V224%20H365%20V250%20H272%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M438%20130%20H468%20L520%20250%20H484%20L473%20222%20H432%20L421%20250%20H385%20Z%20M441%20196%20H464%20L452.5%20164%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M538%20130%20H572%20V182%20L626%20130%20H668%20L608%20186%20L672%20250%20H628%20L572%20194%20V250%20H538%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M135%20282%20H172%20L196.5%20344%20L221%20282%20H258%20V402%20H227%20V334%20L203%20392%20H190%20L166%20334%20V402%20H135%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M278%20282%20H368%20V308%20H311%20V329%20H358%20V354%20H311%20V376%20H368%20V402%20H278%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M388%20282%20H440%20C472%20282%20492%20304%20492%20342%20C492%20380%20472%20402%20440%20402%20H388%20Z%20M421%20308%20V376%20H438%20C453%20376%20461%20364%20461%20342%20C461%20320%20453%20308%20438%20308%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M512%20282%20H552%20V402%20H512%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M618%20282%20H648%20L698%20402%20H663%20L652%20374%20H612%20L601%20402%20H566%20Z%20M621%20348%20H643%20L632%20316%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22482%2C56%20385%2C186%20288%2C248%20195%2C304%2078%2C356%20238%2C326%20332%2C294%20424%2C268%20460%2C138%22%20fill%3D%22%23071020%22%20fill-opacity%3D%220.86%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22482%2C56%20516%2C118%20558%2C188%20610%2C256%20674%2C328%20736%2C362%20612%2C332%20518%2C286%20485%2C142%22%20fill%3D%22url%28%23favSkySun%29%22/%3E%0A%20%20%20%20%3Cg%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M78%20356%20L195%20304%20L288%20248%20L385%20186%20L435%20126%20L468%2082%20L482%2056%22%20stroke%3D%22url%28%23favSkyMain%29%22%20stroke-width%3D%2211.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L516%20118%20L558%20188%20L610%20256%20L674%20328%20L736%20362%22%20stroke%3D%22url%28%23favSkyMain%29%22%20stroke-width%3D%2211.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M468%2082%20L476%20112%20L450%20172%20L418%20214%22%20stroke%3D%22%23BAE6FD%22%20stroke-width%3D%227.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L485%20142%20L500%20188%20L522%20232%22%20stroke%3D%22%23E0F2FE%22%20stroke-width%3D%227.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L460%20138%20L428%20210%20L376%20286%20L312%20348%22%20stroke%3D%22%230EA5E9%22%20stroke-width%3D%226.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L504%20134%20L542%20216%20L588%20296%20L640%20356%22%20stroke%3D%22%230EA5E9%22%20stroke-width%3D%226.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M108%20346%20L168%20312%20L208%20318%20L246%20298%20L310%20262%22%20stroke%3D%22%2338BDF8%22%20stroke-width%3D%226.8%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M568%20206%20L608%20242%20L626%20254%20L648%20294%20L678%20330%22%20stroke%3D%22%2338BDF8%22%20stroke-width%3D%226.8%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M150%20366%20L238%20326%20L332%20294%20L424%20268%20L518%20286%20L612%20332%20L706%20368%22%20stroke%3D%22%2360A5FA%22%20stroke-width%3D%225.5%22%20opacity%3D%220.92%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E">
@@ -53,13 +67,13 @@
       
       <!-- Left: Peak Media Brand Plate & Back Button -->
       <div class="flex items-center gap-2 shrink-0">
-        <!-- Back to Main Page Button (Visible when inside any sub-page or tool) -->
-        <button type="button" id="headerBackHomeBtn" onclick="returnToOpeningPage()" title="Back to Main Page" class="hidden h-8 sm:h-9 px-2.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 items-center gap-1.5 shadow">
+        <!-- Back to Main Page Button (Uniform top-left back mark for every page) -->
+        <button type="button" id="headerBackHomeBtn" onclick="returnToOpeningPage()" title="Back to Main Page" class="back-corner-mark hidden h-8 sm:h-9 px-2.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 items-center gap-1.5 shadow" aria-label="Back to Main Page">
           <i class="fa-solid fa-arrow-left text-xs"></i>
           <span class="hidden sm:inline">Home</span>
         </button>
 
-        <div class="brass-astrolabe-plate group shrink-0 cursor-pointer" onclick="switchTab('discover')" title="Peak Media · Home">
+        <div class="brass-astrolabe-plate group shrink-0 cursor-pointer" onclick="switchTab('discover')" title="Peak Media">
           <div class="h-8 sm:h-10 px-2 py-0.5 rounded-lg bg-black/90 border border-brand-gold/40 flex items-center justify-center shadow-inner">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-6 sm:h-8 w-auto" fill="none">
               <defs>
@@ -100,7 +114,6 @@
           </div>
           <div class="flex flex-col select-none">
             <span class="text-xs sm:text-sm font-black tracking-wider uppercase text-brand-gold">PEAK MEDIA</span>
-            <span class="text-[9px] font-sans font-medium tracking-wider text-gray-400 hidden sm:inline uppercase">Cinema &amp; Sound Vault</span>
           </div>
         </div>
       </div>
@@ -124,23 +137,56 @@
         <span id="hdrReelCount"></span>
       </div>
 
-      <!-- Right: Theme Mode, Settings, Profile Badge -->
-      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+      <!-- Right: Theme Mode, Settings, Profile Avatar with Progress Ring -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 relative">
         <!-- Light / Dark / System Theme Toggle Button in Header -->
-        <button type="button" id="headerThemeBtn" onclick="toggleSystemThemeMode()" title="Toggle Theme (System / Light / Dark)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Toggle Theme Mode">
+        <button type="button" id="headerThemeBtn" onclick="toggleSystemThemeMode()" title="Theme (System / Light / Dark)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Theme Mode">
           <i id="headerThemeIcon" class="fa-solid fa-circle-half-stroke text-xs text-amber-400"></i>
         </button>
 
-        <!-- Settings & Atmosphere Controls -->
-        <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Settings &amp; Atmosphere" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Settings">
+        <!-- Style Controls -->
+        <button type="button" id="vibeBtn" onclick="openThemeEffectsModal(event)" title="Style" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black/60 hover:bg-black/80 text-gray-300 hover:text-brand-gold flex items-center justify-center border border-white/10 transition-all active:scale-95 shadow-inner" aria-label="Style">
           <i class="fa-solid fa-sliders text-xs"></i>
         </button>
 
-        <!-- User Profile Badge (Gateway to Profile from Header) -->
-        <button type="button" id="userProfileBtn" onclick="openProfileFromHome()" title="Profile &amp; Member Vault" class="h-9 sm:h-10 pl-1.5 pr-2.5 sm:pr-3 rounded-xl bg-black/60 hover:bg-black/80 border border-white/10 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95 shadow-inner">
-          <span id="headerAvatarBadge" class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center text-xs">🎬</span>
-          <span id="headerUsernameLabel" class="hidden sm:inline text-gray-300 text-[11px] font-semibold">Profile</span>
+        <!-- Profile Avatar Button with Circular SVG Progress Ring -->
+        <button type="button" id="userProfileBtn" onclick="toggleProfileStatsPopover(event)" title="Profile &amp; Collection" class="relative h-9 sm:h-10 px-2 sm:px-2.5 rounded-xl bg-black/60 hover:bg-black/80 border border-white/10 text-xs font-bold text-white flex items-center gap-2 transition-all active:scale-95 shadow-inner" aria-label="Profile">
+          <div class="relative w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center">
+            <svg class="w-full h-full -rotate-90" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-opacity="0.15" stroke-width="3.5" />
+              <circle id="profileRingCircle" cx="20" cy="20" r="18" fill="none" stroke="var(--gold-hex, #38bdf8)" stroke-width="3.5" stroke-dasharray="113.1" stroke-dashoffset="85" stroke-linecap="round" class="transition-all duration-500" />
+            </svg>
+            <i class="fa-solid fa-user absolute text-[10px] text-brand-gold"></i>
+          </div>
+          <span id="headerUsernameLabel" class="hidden sm:inline text-gray-200 text-xs font-medium">Profile</span>
+          <span id="headerAvatarBadge" class="hidden">👤</span>
         </button>
+
+        <!-- Quiet Profile Popover -->
+        <div id="profileStatsPopover" class="hidden absolute right-0 top-12 sm:top-14 z-50 glass-card rounded-2xl border border-white/15 p-3.5 shadow-2xl min-w-[210px] text-xs space-y-2.5 animate-fadeIn" role="region" aria-label="Profile Collection">
+          <div class="flex items-center justify-between pb-2 border-b border-white/10 font-bold text-white">
+            <span>Collection</span>
+            <button type="button" onclick="openProfileFromHome()" class="text-[11px] text-brand-gold hover:underline">Open Profile →</button>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-0.5">
+            <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-center">
+              <div id="popoverWatchedCount" class="text-base font-bold text-emerald-400">0</div>
+              <div class="text-[10px] text-gray-400 uppercase tracking-wider">Watched</div>
+            </div>
+            <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-center">
+              <div id="popoverWatchlistCount" class="text-base font-bold text-rose-400">0</div>
+              <div class="text-[10px] text-gray-400 uppercase tracking-wider">Watchlist</div>
+            </div>
+            <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-center">
+              <div id="popoverFavCount" class="text-base font-bold text-amber-400">0</div>
+              <div class="text-[10px] text-gray-400 uppercase tracking-wider">Favourites</div>
+            </div>
+            <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-center">
+              <div id="popoverSongsCount" class="text-base font-bold text-purple-400">0</div>
+              <div class="text-[10px] text-gray-400 uppercase tracking-wider">Songs</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -166,7 +212,7 @@
       <!-- Palettes & Accent Colors -->
       <div class="pt-1">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-bold text-gray-300">Palettes</span>
+          <span class="text-xs font-bold text-gray-300">Accents</span>
           <button type="button" id="autoBtn" class="text-[11px] font-bold px-2 py-0.5 rounded-lg border border-white/15 text-gray-300 hover:text-white">Auto</button>
         </div>
         <div id="swatchRow" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1"></div>
@@ -199,13 +245,13 @@
   </header>
 
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-    <div id="browseSearch" class="hidden mb-4 relative z-30 p-3 sm:p-4 rounded-2xl border border-white/20 shadow-2xl bg-[#0c101c]">
+    <div id="browseSearch" class="hidden mb-4 relative z-30 p-3 sm:p-4 rounded-2xl border border-white/20 shadow-2xl theme-card-bg">
       <div class="relative flex-1">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-gold text-sm"></i>
-        <input id="bsInput" type="text" autocomplete="off" placeholder="Search movies, shows, genres, universes, or songs..." class="w-full pl-10 pr-16 py-2.5 rounded-xl bg-[#07090e] border border-white/20 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold transition-colors">
+        <input id="bsInput" type="text" autocomplete="off" placeholder="Search movies, shows, genres, universes, or songs..." class="w-full pl-10 pr-16 py-2.5 rounded-xl bg-black/40 border border-white/20 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold transition-colors">
         <button type="button" onclick="const inp=document.getElementById('bsInput'); inp.value=''; inp.dispatchEvent(new window.Event('input'));" class="absolute right-2.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-gray-300 hover:text-white font-medium transition-colors">Clear</button>
       </div>
-      <div id="bsResults" class="hidden absolute left-0 right-0 top-full mt-2 z-40 bg-[#0c101c] rounded-2xl border border-brand-gold/50 divide-y divide-white/10 max-h-[26rem] overflow-y-auto shadow-2xl"></div>
+      <div id="bsResults" class="hidden absolute left-0 right-0 top-full mt-2 z-40 theme-card-bg rounded-2xl border border-brand-gold/50 divide-y divide-white/10 max-h-[26rem] overflow-y-auto shadow-2xl"></div>
     </div>
     <div id="subNav" class="hidden gap-1.5 sm:gap-2 mb-4 sm:mb-6"></div>
 
@@ -232,58 +278,85 @@
       </div>
 
       <!-- 1. FEATURED CINEMATIC SPOTLIGHT HERO (Living Projector Spotlight) -->
-      <div id="heroBanner" class="relative rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-6 md:p-7 border border-white/10 shadow-2xl bg-gradient-to-br from-[#101424] via-[#090c16] to-[#05070e] transition-all"></div>
+      <div id="heroBanner" class="theme-card-bg relative rounded-2xl sm:rounded-3xl overflow-hidden p-3.5 sm:p-4 md:p-5 border shadow-xl transition-all"></div>
 
       <!-- 2 & 3. DECIDERS & MUSIC FINALE (Responsive Dual-Module Deck) -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 sm:gap-4 items-stretch">
         
-        <!-- THE DECIDERS (Plain Icon Buttons with No Boxes and No Names) -->
-        <div id="homePlayLab" class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-black/60 border border-amber-500/25 backdrop-blur-md shadow-lg flex flex-col justify-between gap-3">
+        <!-- THE DECIDERS (Plain Glyph Buttons with No Boxes and No Names) -->
+        <div id="homePlayLab" class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl theme-card-bg border border-white/10 shadow-lg flex flex-col justify-between gap-3">
           <!-- Top Row: Title & direct click to The Deciders page -->
           <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
             <div class="flex items-center gap-2 cursor-pointer group" onclick="switchTab('play')" title="Open The Deciders">
               <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#f59e0b]"></span>
               <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-amber-400 transition-colors">The Deciders</span>
             </div>
-            <button type="button" onclick="switchTab('play')" class="text-xs text-amber-400 hover:text-white font-mono flex items-center gap-1 transition-colors">
+            <button type="button" onclick="switchTab('play')" class="text-xs text-amber-400 hover:text-white font-mono flex items-center gap-1 transition-colors" aria-label="Open The Deciders">
               <i class="fa-solid fa-arrow-right text-[11px]"></i>
             </button>
           </div>
 
-          <!-- Plain icon buttons with NO boxes and NO text names — each grows on hover and takes over the page on click -->
-          <div class="flex items-center justify-around gap-2 py-2 flex-wrap">
-            <button type="button" onclick="openCinemaGame('duel')" class="p-2 text-amber-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Duel">
-              <i class="fa-solid fa-trophy text-2xl sm:text-3xl"></i>
-            </button>
-            <button type="button" onclick="openCinemaGame('series')" class="p-2 text-sky-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Series">
-              <i class="fa-solid fa-tv text-2xl sm:text-3xl"></i>
-            </button>
-            <button type="button" onclick="openCinemaGame('mood')" class="p-2 text-purple-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Mood">
-              <i class="fa-solid fa-compass text-2xl sm:text-3xl"></i>
-            </button>
-            <button type="button" onclick="openCinemaGame('match')" class="p-2 text-rose-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Matchmaker">
-              <i class="fa-solid fa-wand-magic-sparkles text-2xl sm:text-3xl"></i>
-            </button>
-            <button type="button" onclick="openCinemaGame('marathon')" class="p-2 text-emerald-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Marathon">
-              <i class="fa-solid fa-film text-2xl sm:text-3xl"></i>
-            </button>
-            <button type="button" onclick="openCinemaGame('architect')" class="p-2 text-cyan-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Architect">
-              <i class="fa-solid fa-hourglass-half text-2xl sm:text-3xl"></i>
-            </button>
-            <button type="button" onclick="openCinemaGame('timemachine')" class="p-2 text-blue-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Decades">
-              <i class="fa-solid fa-clock-rotate-left text-2xl sm:text-3xl"></i>
-            </button>
-            <button type="button" onclick="openCinemaGame('roulette')" class="p-2 text-yellow-400 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Roulette">
-              <i class="fa-solid fa-dice text-2xl sm:text-3xl"></i>
-            </button>
-            <button type="button" onclick="openCinemaGame('opposite')" id="homeOppositeDeciderBtn" class="p-2 text-emerald-300 hover:scale-125 transition-transform active:scale-95 focus:outline-none" title="Opposite">
-              <i class="fa-solid fa-shuffle text-2xl sm:text-3xl"></i>
-            </button>
+          <!-- Plain glyph buttons: Roulette, Mood, Swipe, Duel | Marathon, Decades | Matchmaker, Compatibility | Ricochet, Opposite -->
+          <div id="decidersHomeRow" class="flex items-center justify-between gap-1 sm:gap-2 py-1 flex-wrap">
+            <!-- Group 1: Roulette, Mood, Swipe, Duel -->
+            <div class="flex items-center gap-1 sm:gap-1.5">
+              <button type="button" onclick="openDeciderTool('roulette')" class="decider-glyph-btn" title="Roulette" aria-label="Roulette">
+                <i class="fa-solid fa-dice text-xl sm:text-2xl text-yellow-400"></i>
+              </button>
+              <button type="button" onclick="openDeciderTool('mood')" class="decider-glyph-btn" title="Mood" aria-label="Mood">
+                <i class="fa-solid fa-compass text-xl sm:text-2xl text-purple-400"></i>
+              </button>
+              <button type="button" onclick="openDeciderTool('swipe')" class="decider-glyph-btn" title="Swipe" aria-label="Swipe">
+                <i class="fa-solid fa-layer-group text-xl sm:text-2xl text-sky-400"></i>
+              </button>
+              <button type="button" onclick="openDeciderTool('duel')" class="decider-glyph-btn" title="Duel" aria-label="Duel">
+                <i class="fa-solid fa-trophy text-xl sm:text-2xl text-amber-400"></i>
+              </button>
+            </div>
+
+            <!-- Divider Gap 1 -->
+            <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
+
+            <!-- Group 2: Marathon, Decades -->
+            <div class="flex items-center gap-1 sm:gap-1.5">
+              <button type="button" onclick="openDeciderTool('marathon')" class="decider-glyph-btn" title="Marathon" aria-label="Marathon">
+                <i class="fa-solid fa-film text-xl sm:text-2xl text-emerald-400"></i>
+              </button>
+              <button type="button" onclick="openDeciderTool('decades')" class="decider-glyph-btn" title="Decades" aria-label="Decades">
+                <i class="fa-solid fa-clock-rotate-left text-xl sm:text-2xl text-blue-400"></i>
+              </button>
+            </div>
+
+            <!-- Divider Gap 2 -->
+            <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
+
+            <!-- Group 3: Matchmaker, Compatibility -->
+            <div class="flex items-center gap-1 sm:gap-1.5">
+              <button type="button" onclick="openDeciderTool('matchmaker')" class="decider-glyph-btn" title="Matchmaker" aria-label="Matchmaker">
+                <i class="fa-solid fa-wand-magic-sparkles text-xl sm:text-2xl text-rose-400"></i>
+              </button>
+              <button type="button" onclick="openDeciderTool('compatibility')" class="decider-glyph-btn" title="Compatibility" aria-label="Compatibility">
+                <i class="fa-solid fa-heart text-xl sm:text-2xl text-pink-400"></i>
+              </button>
+            </div>
+
+            <!-- Divider Gap 3 -->
+            <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
+
+            <!-- Group 4: Ricochet, Opposite -->
+            <div class="flex items-center gap-1 sm:gap-1.5">
+              <button type="button" onclick="openDeciderTool('ricochet')" class="decider-glyph-btn" title="Ricochet" aria-label="Ricochet">
+                <i class="fa-solid fa-circle-nodes text-xl sm:text-2xl text-cyan-400"></i>
+              </button>
+              <button type="button" onclick="openDeciderTool('opposite')" id="homeOppositeDeciderBtn" class="decider-glyph-btn" title="Opposite" aria-label="Opposite">
+                <i class="fa-solid fa-shuffle text-xl sm:text-2xl text-emerald-300"></i>
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- MUSIC LAUNCHER (Compact box, finale/visualizer takes most space, seamless expand to Music page) -->
-        <div id="homeVinylShowcase" class="p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#140b24]/90 via-[#0a0d18]/95 to-[#05070e] border border-purple-500/25 backdrop-blur-md shadow-lg flex items-center justify-between gap-4 group">
+        <div id="homeVinylShowcase" class="theme-card-bg p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border shadow-lg flex items-center justify-between gap-4 group transition-all duration-300">
           <!-- Finale / Turntable Visualizer (Takes most of the space, grows on hover, expands to music page on click) -->
           <div class="relative shrink-0 cursor-pointer flex items-center justify-center p-1" onclick="openMusicFromVinyl()" title="Click to open Music Lounge">
             <div id="homeVinylDisc" class="vinyl-record-disc w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full relative flex items-center justify-center shadow-2xl transition-transform group-hover:scale-105">
@@ -349,7 +422,7 @@
       <div class="grid grid-cols-3 gap-3 sm:gap-6">
         
         <!-- Portal 1: Films -->
-        <div onclick="switchTab('movies')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-black/60 border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Films">
+        <div onclick="switchTab('movies')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl theme-card-bg border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Films">
           <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-amber-500/20 transition-all shadow-md">
             <i class="fa-solid fa-clapperboard text-3xl sm:text-4xl md:text-5xl text-amber-400 group-hover:text-brand-gold transition-colors"></i>
           </div>
@@ -357,7 +430,7 @@
         </div>
 
         <!-- Portal 2: TV Series -->
-        <div onclick="switchTab('shows')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-black/60 border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="TV Series">
+        <div onclick="switchTab('shows')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl theme-card-bg border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="TV Series">
           <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-sky-500/20 transition-all shadow-md">
             <i class="fa-solid fa-tv text-3xl sm:text-4xl md:text-5xl text-sky-400 group-hover:text-sky-300 transition-colors"></i>
           </div>
@@ -365,7 +438,7 @@
         </div>
 
         <!-- Portal 3: Library (Preserves #homeProfileVaultCard and all counter IDs for sync/verification) -->
-        <div id="homeProfileVaultCard" onclick="openShelvesFromHome()" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-black/60 border border-emerald-500/25 hover:border-emerald-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Library">
+        <div id="homeProfileVaultCard" onclick="openShelvesFromHome()" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl theme-card-bg border border-emerald-500/25 hover:border-emerald-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Library">
           <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all shadow-md">
             <i class="fa-solid fa-ticket text-3xl sm:text-4xl md:text-5xl text-emerald-400 group-hover:text-emerald-300 transition-colors"></i>
           </div>
@@ -390,32 +463,39 @@
           <button type="button" onclick="document.getElementById('shelfWrap-blockbusters').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 transition-all">
             Popular Hits
           </button>
-          <button type="button" onclick="document.getElementById('shelfWrap-blockbusters').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 transition-all">
+          <button type="button" onclick="document.getElementById('shelfWrap-boxoffice').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 transition-all">
             Box Office
           </button>
         </div>
 
-        <!-- Small Filter Button at Far Side -->
+        <!-- Small Filter Button at Far Side with active dot indicator and removable chip -->
         <div class="relative shrink-0 flex items-center gap-2">
-          <button type="button" id="streamFilterDropdownBtn" onclick="toggleStreamFilterMenu()" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all" title="Filter stream">
+          <div id="activeStreamFilterChip" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-gold/20 text-brand-gold border border-brand-gold/40 text-xs font-semibold">
+            <span id="activeStreamFilterLabel">Films</span>
+            <button type="button" onclick="clearStreamFilter()" class="hover:text-white" title="Remove filter" aria-label="Remove filter">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+          </div>
+          <button type="button" id="streamFilterDropdownBtn" onclick="toggleStreamFilterMenu()" class="relative px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all" title="Filter stream">
+            <span id="streamFilterActiveDot" class="hidden w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
             <i class="fa-solid fa-sliders text-[11px] text-brand-gold"></i>
             <span>Filter</span>
             <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
           </button>
-          <div id="streamFilterMenu" class="hidden absolute right-0 top-full mt-1.5 z-40 w-44 rounded-2xl bg-[#0c101c] border border-white/15 p-2 space-y-1 shadow-2xl animate-fadeIn">
-            <button type="button" onclick="filterOpeningShelves('all'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+          <div id="streamFilterMenu" class="hidden absolute right-0 top-full mt-1.5 z-40 w-44 rounded-2xl theme-card-bg border border-white/15 p-2 space-y-1 shadow-2xl animate-fadeIn">
+            <button type="button" onclick="applyStreamFilter('all'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
               <span>All Vault</span>
             </button>
-            <button type="button" onclick="filterOpeningShelves('films'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+            <button type="button" onclick="applyStreamFilter('films'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
               <span>Films Only</span>
             </button>
-            <button type="button" onclick="filterOpeningShelves('series'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+            <button type="button" onclick="applyStreamFilter('series'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
               <span>Series Only</span>
             </button>
-            <button type="button" onclick="filterOpeningShelves('indian'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+            <button type="button" onclick="applyStreamFilter('indian'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
               <span>Indian Cinema</span>
             </button>
-            <button type="button" onclick="filterOpeningShelves('pantheon'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
+            <button type="button" onclick="applyStreamFilter('pantheon'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
               <span>9.0+ Masterworks</span>
             </button>
           </div>
@@ -427,7 +507,7 @@
         </div>
       </div>
 
-      <!-- 6. THE 5 FLUID CURATED SHELVES -->
+      <!-- 6. THE 6 ORDERED CURATED SHELVES -->
       
       <!-- Shelf 1: Essential Masterworks (Pantheon 9.0+) -->
       <div id="shelfWrap-pantheon" class="curated-shelf-wrapper space-y-3">
@@ -447,12 +527,12 @@
         </div>
       </div>
 
-      <!-- Shelf 2: Popular Hits & Box Office -->
+      <!-- Shelf 2: Popular Hits -->
       <div id="shelfWrap-blockbusters" class="curated-shelf-wrapper space-y-3">
         <div class="flex items-baseline justify-between px-1">
           <div>
             <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
-              <i class="fa-solid fa-fire text-amber-400 text-base"></i> Popular Hits &amp; Box Office
+              <i class="fa-solid fa-fire text-amber-400 text-base"></i> Popular Hits
             </h2>
             <p class="text-xs text-gray-400 mt-0.5 font-medium">Spectacle, blockbusters, and pop culture favorites</p>
           </div>
@@ -462,6 +542,24 @@
         </div>
         <div class="relative group/row">
           <div id="discoverBlockbustersRow" class="shelf-scroll-row"></div>
+        </div>
+      </div>
+
+      <!-- Shelf 3: Box Office -->
+      <div id="shelfWrap-boxoffice" class="curated-shelf-wrapper space-y-3">
+        <div class="flex items-baseline justify-between px-1">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
+              <i class="fa-solid fa-ticket text-amber-300 text-base"></i> Box Office
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">All-time worldwide box office champions</p>
+          </div>
+          <button type="button" onclick="switchTab('movies')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
+            <span>Explore All</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+        <div class="relative group/row">
+          <div id="discoverBoxOfficeRow" class="shelf-scroll-row"></div>
         </div>
       </div>
 
@@ -667,13 +765,12 @@
       </div>
     </section>
 
-    <!-- TAB: PLAY HUB (Interactive Experiences Landing Page) -->
     <!-- TAB: PLAY HUB (The Deciders: One Coherent Non-Scrolling Single Screen) -->
-    <section id="tab-play" class="tab-pane hidden fade-in max-w-7xl mx-auto flex flex-col justify-start min-h-[calc(100vh-140px)] space-y-3">
-      <!-- Title & Header -->
-      <div class="flex items-center justify-between border-b border-white/10 pb-2.5 shrink-0">
+    <section id="tab-play" class="tab-pane hidden fade-in max-w-7xl mx-auto deciders-page-screen space-y-2">
+      <!-- Title & Header Bar -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-2 shrink-0">
         <div class="flex items-center gap-3">
-          <button type="button" onclick="returnToOpeningPage()" title="Back to Home" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95">
+          <button type="button" onclick="returnToOpeningPage()" title="Back to Home" class="back-corner-mark" aria-label="Back to Main Page">
             <i class="fa-solid fa-arrow-left text-xs"></i>
           </button>
           <div>
@@ -682,75 +779,339 @@
             </h1>
           </div>
         </div>
-        <button type="button" onclick="spinMoodDialRoulette()" id="moodDialSpinBtn" class="px-3.5 py-1.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-2 shadow hover:opacity-95 active:scale-95 transition-all">
+        <button type="button" onclick="selectDeciderTool('roulette')" id="moodDialSpinBtn" class="px-3.5 py-1.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs flex items-center gap-2 shadow hover:opacity-95 active:scale-95 transition-all">
           <i class="fa-solid fa-dice text-sm"></i> <span>Roulette</span>
         </button>
       </div>
 
-      <!-- 9 Tools Switcher Ribbon (One-Word Names: Decades, Roulette, Opposite, Duel, Series, Mood, Matchmaker, Marathon, Architect) -->
-      <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar shrink-0 py-1" role="tablist" aria-label="The Deciders Tools">
-        <button type="button" onclick="selectDeciderTool('mood')" id="deciderBtn-mood" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-gold text-black shadow-md transition-all">Mood</button>
-        <button type="button" onclick="selectDeciderTool('duel')" id="deciderBtn-duel" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Duel</button>
-        <button type="button" onclick="selectDeciderTool('series')" id="deciderBtn-series" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Series</button>
-        <button type="button" onclick="selectDeciderTool('marathon')" id="deciderBtn-marathon" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Marathon</button>
-        <button type="button" onclick="selectDeciderTool('architect')" id="deciderBtn-architect" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Architect</button>
-        <button type="button" onclick="selectDeciderTool('matchmaker')" id="deciderBtn-matchmaker" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Matchmaker</button>
-        <button type="button" onclick="selectDeciderTool('decades')" id="deciderBtn-decades" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Decades</button>
-        <button type="button" onclick="selectDeciderTool('roulette')" id="deciderBtn-roulette" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Roulette</button>
-        <button type="button" onclick="selectDeciderTool('opposite')" id="deciderBtn-opposite" class="decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">Opposite</button>
-      </div>
+      <!-- Main Body: Left 10-Glyph Rail + Right Stage Viewport -->
+      <div class="flex-1 min-h-0 flex flex-col md:flex-row gap-3 overflow-hidden">
+        
+        <!-- Left Glyph Rail (10 Decider Tools) -->
+        <div class="deciders-tools-rail" role="tablist" aria-label="The Deciders Tools">
+          <button type="button" onclick="selectDeciderTool('roulette')" id="deciderRailBtn-roulette" class="decider-glyph-btn" title="Roulette" aria-label="Roulette">
+            <i class="fa-solid fa-dice text-yellow-400"></i>
+          </button>
+          <button type="button" onclick="selectDeciderTool('mood')" id="deciderRailBtn-mood" class="decider-glyph-btn active" title="Mood" aria-label="Mood">
+            <i class="fa-solid fa-compass text-purple-400"></i>
+          </button>
+          <button type="button" onclick="selectDeciderTool('swipe')" id="deciderRailBtn-swipe" class="decider-glyph-btn" title="Swipe" aria-label="Swipe">
+            <i class="fa-solid fa-layer-group text-sky-400"></i>
+          </button>
+          <button type="button" onclick="selectDeciderTool('duel')" id="deciderRailBtn-duel" class="decider-glyph-btn" title="Duel" aria-label="Duel">
+            <i class="fa-solid fa-trophy text-amber-400"></i>
+          </button>
+          <button type="button" onclick="selectDeciderTool('marathon')" id="deciderRailBtn-marathon" class="decider-glyph-btn" title="Marathon" aria-label="Marathon">
+            <i class="fa-solid fa-film text-emerald-400"></i>
+          </button>
+          <button type="button" onclick="selectDeciderTool('decades')" id="deciderRailBtn-decades" class="decider-glyph-btn" title="Decades" aria-label="Decades">
+            <i class="fa-solid fa-clock-rotate-left text-blue-400"></i>
+          </button>
+          <button type="button" onclick="selectDeciderTool('matchmaker')" id="deciderRailBtn-matchmaker" class="decider-glyph-btn" title="Matchmaker" aria-label="Matchmaker">
+            <i class="fa-solid fa-wand-magic-sparkles text-rose-400"></i>
+          </button>
+          <button type="button" onclick="selectDeciderTool('compatibility')" id="deciderRailBtn-compatibility" class="decider-glyph-btn" title="Compatibility" aria-label="Compatibility">
+            <i class="fa-solid fa-heart text-pink-400"></i>
+          </button>
+          <button type="button" onclick="selectDeciderTool('ricochet')" id="deciderRailBtn-ricochet" class="decider-glyph-btn" title="Ricochet" aria-label="Ricochet">
+            <i class="fa-solid fa-circle-nodes text-cyan-400"></i>
+          </button>
+          <button type="button" onclick="selectDeciderTool('opposite')" id="deciderRailBtn-opposite" class="decider-glyph-btn" title="Opposite" aria-label="Opposite">
+            <i class="fa-solid fa-shuffle text-emerald-300"></i>
+          </button>
 
-      <!-- Active Centerpiece: Creative Mood Dial Stage -->
-      <div id="deciderMoodStage" class="flex-1 min-h-0 flex flex-col justify-between gap-3 overflow-hidden">
-        <div class="glass-card rounded-2xl p-3 sm:p-5 border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6 shadow-xl shrink-0">
-          <!-- Circular Interactive Rotary Dial -->
-          <div class="relative flex items-center justify-center shrink-0">
-            <svg id="moodDialSvg" width="230" height="230" class="select-none cursor-grab active:cursor-grabbing touch-none transition-transform"></svg>
-          </div>
-
-          <!-- Active Sector Deck & Sliders -->
-          <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-2 p-3 sm:p-4 rounded-xl bg-black/40 border border-white/10 w-full">
-            <div class="flex items-center gap-2">
-              <span id="moodDialActiveIcon" class="text-xl">🌌</span>
-              <h3 id="moodDialActiveName" class="text-base sm:text-lg font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
-            </div>
-            <p id="moodDialActiveDesc" class="text-xs text-gray-300 leading-snug line-clamp-1">Reality-bending paradoxes, space odysseys, and psychological twists</p>
-
-            <!-- Spectrum Mood Slider -->
-            <div class="space-y-1 pt-1.5 border-t border-white/10">
-              <div class="flex items-center justify-between text-[11px]">
-                <span class="text-gray-300 font-bold">Mood:</span>
-                <span id="moodDialSliderSectorLbl" class="font-extrabold text-brand-gold">Mind-Bending</span>
-              </div>
-              <input id="moodDialSectorSlider" type="range" min="0" max="7" step="1" value="0" oninput="onMoodDialSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab active:cursor-grabbing h-1.5">
-            </div>
-
-            <!-- Intensity Calibration Slider -->
-            <div class="space-y-1 pt-1 border-t border-white/10">
-              <div class="flex items-center justify-between text-[11px]">
-                <span class="text-gray-300 font-bold">Intensity:</span>
-                <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold">50% Balanced</span>
-              </div>
-              <input id="moodDialIntensitySlider" type="range" min="0" max="100" step="1" value="50" oninput="setMoodDialIntensity(this.value)" class="w-full spectrum-slider cursor-grab active:cursor-grabbing h-1.5">
-            </div>
-
-            <!-- Quick Sector Pills -->
-            <div class="pt-1 border-t border-white/10">
-              <div id="moodDialPillsBox" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
-              <div id="moodPills" class="hidden"></div>
-            </div>
+          <!-- Hidden legacy buttons for backward compatibility with existing tests/handlers -->
+          <div class="hidden" aria-hidden="true">
+            <button id="deciderBtn-mood"></button>
+            <button id="deciderBtn-duel"></button>
+            <button id="deciderBtn-series"></button>
+            <button id="deciderBtn-marathon"></button>
+            <button id="deciderBtn-architect"></button>
+            <button id="deciderBtn-matchmaker"></button>
+            <button id="deciderBtn-decades"></button>
+            <button id="deciderBtn-roulette"></button>
+            <button id="deciderBtn-opposite"></button>
           </div>
         </div>
 
-        <!-- Live Recommendations Track -->
-        <div class="shrink-0 space-y-1">
-          <div class="flex items-center justify-between px-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-gray-300">Live Recommendations</span>
-            <span class="text-[11px] text-gray-400 font-mono">Calibrated to dial</span>
+        <!-- Center Stage Viewport (Only this area may scroll) -->
+        <div id="decidersStageViewport" class="deciders-stage-viewport">
+          
+          <!-- STAGE 1: MOOD (Default Active) -->
+          <div id="stage-mood" class="decider-stage-panel space-y-3">
+            <div id="moodStageGlow" class="relative rounded-3xl p-4 sm:p-6 border border-white/10 shadow-2xl transition-all duration-700 overflow-hidden" style="background: radial-gradient(circle at 50% 35%, rgba(168, 85, 247, 0.15) 0%, rgba(9, 12, 22, 0.85) 75%);">
+              <div class="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+                <!-- Center Dial -->
+                <div class="relative flex items-center justify-center shrink-0">
+                  <svg id="moodDialSvg" width="240" height="240" class="select-none cursor-grab active:cursor-grabbing touch-none transition-transform"></svg>
+                </div>
+
+                <!-- Active Sector & Intensity Slider Deck -->
+                <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-3 p-4 rounded-2xl bg-black/40 border border-white/10 w-full backdrop-blur-md">
+                  <div class="flex items-center gap-2.5">
+                    <span id="moodDialActiveIcon" class="text-2xl">🌌</span>
+                    <div>
+                      <h3 id="moodDialActiveName" class="text-base sm:text-lg font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
+                      <p id="moodDialActiveDesc" class="text-xs text-gray-300 leading-snug">Reality-bending paradoxes, space odysseys, and psychological twists</p>
+                    </div>
+                  </div>
+
+                  <!-- Rim Mood Slider (Screen Reader Accessible) -->
+                  <div class="space-y-1.5 pt-2 border-t border-white/10">
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-gray-300 font-bold">Mood:</span>
+                      <span id="moodDialSliderSectorLbl" class="font-extrabold text-brand-gold">Mind-Bending</span>
+                    </div>
+                    <input id="moodDialSectorSlider" type="range" min="0" max="7" step="1" value="0" oninput="onMoodDialSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab active:cursor-grabbing h-2 rounded-lg" aria-label="Mood selector">
+                  </div>
+
+                  <!-- Intensity Calibration Slider -->
+                  <div class="space-y-1.5 pt-1.5 border-t border-white/10">
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-gray-300 font-bold">Intensity:</span>
+                      <span id="moodDialIntensityLbl" class="font-extrabold text-brand-gold">50% Balanced</span>
+                    </div>
+                    <input id="moodDialIntensitySlider" type="range" min="0" max="100" step="1" value="50" oninput="setMoodDialIntensity(this.value)" class="w-full spectrum-slider cursor-grab active:cursor-grabbing h-2 rounded-lg" aria-label="Mood Intensity">
+                  </div>
+
+                  <!-- Quick Sector Pills -->
+                  <div class="pt-1.5 border-t border-white/10">
+                    <div id="moodDialPillsBox" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
+                    <div id="moodPills" class="hidden"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Recommendations Track -->
+            <div class="space-y-1 pt-1">
+              <div class="flex items-center justify-between px-1">
+                <span class="text-xs font-bold uppercase tracking-wider text-gray-300">Live Recommendations</span>
+                <span class="text-[11px] text-gray-400 font-mono">Calibrated to dial</span>
+              </div>
+              <div class="has-arrows">
+                <div id="moodRow" class="hscroll flex gap-3 overflow-x-auto pb-1 pt-0.5 snap-x"></div>
+              </div>
+            </div>
           </div>
-          <div class="has-arrows">
-            <div id="moodRow" class="hscroll flex gap-3 overflow-x-auto pb-1 pt-0.5 snap-x"></div>
+
+          <!-- STAGE 2: ROULETTE -->
+          <div id="stage-roulette" class="decider-stage-panel hidden space-y-4">
+            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl text-center space-y-4">
+              <h2 class="text-lg font-bold text-white flex items-center justify-center gap-2">
+                <i class="fa-solid fa-dice text-yellow-400"></i> Cinema Roulette
+              </h2>
+              <p class="text-xs text-gray-300 max-w-md mx-auto">Let the wheels of cinema fortune choose your next masterwork.</p>
+              <div class="py-4">
+                <button type="button" onclick="if(window.spinSurpriseWheel) window.spinSurpriseWheel();" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-extrabold text-sm shadow-xl hover:scale-105 active:scale-95 transition-all">
+                  Spin the Wheel
+                </button>
+              </div>
+              <div id="rouletteInlineWinner" class="min-h-[160px] flex items-center justify-center"></div>
+            </div>
           </div>
+
+          <!-- STAGE 3: SWIPE -->
+          <div id="stage-swipe" class="decider-stage-panel hidden space-y-4">
+            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl text-center space-y-3">
+              <h2 class="text-lg font-bold text-white flex items-center justify-center gap-2">
+                <i class="fa-solid fa-layer-group text-sky-400"></i> CineSwipe
+              </h2>
+              <p class="text-xs text-gray-300">Swipe right to add to your evening watchlist, left to pass.</p>
+              <div id="swipeDeckContainer" class="relative max-w-sm mx-auto h-[380px] flex items-center justify-center"></div>
+              <div class="flex items-center justify-center gap-6 pt-2">
+                <button type="button" onclick="if(window.swipePass) window.swipePass();" class="w-12 h-12 rounded-full bg-white/10 hover:bg-rose-500/20 text-rose-400 border border-white/10 flex items-center justify-center text-lg active:scale-95 transition-all" aria-label="Pass">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+                <button type="button" onclick="if(window.swipeLike) window.swipeLike();" class="w-12 h-12 rounded-full bg-white/10 hover:bg-emerald-500/20 text-emerald-400 border border-white/10 flex items-center justify-center text-lg active:scale-95 transition-all" aria-label="Like">
+                  <i class="fa-solid fa-heart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STAGE 4: DUEL (2 Short Steps: Setup -> Result) -->
+          <div id="stage-duel" class="decider-stage-panel hidden space-y-4">
+            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-trophy text-amber-400"></i> Cinema Duel
+                </h2>
+                <div class="flex items-center gap-2 text-xs">
+                  <span id="duelStepBadge" class="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 font-bold">Step 1: Pick</span>
+                </div>
+              </div>
+              <div id="duelStageContent" class="space-y-4"></div>
+            </div>
+          </div>
+
+          <!-- STAGE 5: MARATHON (2 Short Steps: Setup -> Result) -->
+          <div id="stage-marathon" class="decider-stage-panel hidden space-y-4">
+            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-film text-emerald-400"></i> Binge Marathon
+                </h2>
+                <div class="flex items-center gap-2 text-xs">
+                  <span id="marathonStepBadge" class="px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 font-bold">Step 1: Plan</span>
+                </div>
+              </div>
+              <div id="marathonStageContent" class="space-y-4"></div>
+            </div>
+          </div>
+
+          <!-- STAGE 6: DECADES (Time Machine) -->
+          <div id="stage-decades" class="decider-stage-panel hidden space-y-4">
+            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-clock-rotate-left text-blue-400"></i> Decades &amp; Eras
+                </h2>
+                <span id="decadesYearBadge" class="text-base font-bold font-mono text-brand-gold">1994</span>
+              </div>
+              <div class="space-y-2">
+                <label class="text-xs text-gray-300 font-semibold flex items-center justify-between">
+                  <span>Travel through Cinema History</span>
+                  <span id="tmSliderYearLabel" class="font-bold text-brand-gold">1994</span>
+                </label>
+                <input type="range" id="decadesSlider" min="1930" max="2026" value="1994" oninput="onDecadesSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab h-2 rounded-lg">
+              </div>
+              <div id="decadesGlanceBox" class="p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300"></div>
+              <div class="space-y-1">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-300">Era Masterworks</h3>
+                <div id="decadesCardsRow" class="shelf-scroll-row"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STAGE 7: MATCHMAKER (Lives only here now) -->
+          <div id="stage-matchmaker" class="decider-stage-panel hidden space-y-4">
+            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-wand-magic-sparkles text-rose-400"></i> Matchmaker
+                </h2>
+                <button type="button" onclick="if(window.dealNextFourMatches) window.dealNextFourMatches();" class="text-xs text-brand-gold hover:underline font-semibold">Deal 4 Fresh Picks</button>
+              </div>
+              <div id="matchmakerContent" class="space-y-4"></div>
+            </div>
+          </div>
+
+          <!-- STAGE 8: COMPATIBILITY -->
+          <div id="stage-compatibility" class="decider-stage-panel hidden space-y-4">
+            <div id="compatLab" class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-heart text-pink-400"></i> Taste Compatibility
+                </h2>
+                <button type="button" onclick="loadDemoCompatibility()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
+                  Demo
+                </button>
+              </div>
+              <div id="compatibilityStageContent" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- User 1 Column -->
+                  <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                      <label class="text-xs font-bold text-brand-gold flex items-center gap-1.5">
+                        <i class="fa-solid fa-user"></i> Your Picks (3–10)
+                      </label>
+                      <button type="button" onclick="prefillFromWishlist('myTags')" class="text-[11px] text-gray-400 hover:text-brand-gold">From Watchlist</button>
+                    </div>
+                    <div id="myTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
+                    <div class="relative autocomplete-wrapper">
+                      <input type="text" id="myInput" placeholder="Add favorites..."
+                        oninput="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
+                        onfocus="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
+                        class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+                      <div id="mySuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
+                    </div>
+                  </div>
+
+                  <!-- User 2 Column -->
+                  <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                      <label class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-group"></i> Friend's Picks (3–10)
+                      </label>
+                      <button type="button" onclick="surpriseFriendList()" class="text-[11px] text-gray-400 hover:text-cyan-400">Randomize</button>
+                    </div>
+                    <div id="friendTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
+                    <div class="relative autocomplete-wrapper">
+                      <input type="text" id="friendInput" placeholder="Add friend's favorites..."
+                        oninput="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
+                        onfocus="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
+                        class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400">
+                      <div id="friendSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="button" onclick="calculateCompatibility()" class="w-full py-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95">
+                  Compare Compatibility
+                </button>
+
+                <!-- Compatibility Results Panel -->
+                <div id="compatScoreBox" class="hidden pt-6 border-t border-white/10 space-y-6">
+                  <div class="flex items-center justify-between gap-3">
+                    <div class="text-[11px] font-bold uppercase tracking-widest text-purple-300">Live compatibility analysis <span id="compatStatus" class="text-gray-500 normal-case tracking-normal font-medium ml-1"></span></div>
+                    <button type="button" id="compatReplay" onclick="calculateCompatibility()" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-300"><i class="fa-solid fa-rotate-right mr-1"></i>Replay</button>
+                  </div>
+                  <div id="compatStage"></div>
+                  <div id="compatResults" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                      <div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-black/40 border border-white/10 text-center">
+                        <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Overall Synergy</div>
+                        <div class="relative w-28 h-28 flex items-center justify-center my-1">
+                          <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" class="text-white/10" fill="transparent" />
+                            <circle id="compatCircleSvg" cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" class="text-brand-gold transition-all duration-1000" stroke-dasharray="264" stroke-dashoffset="264" stroke-linecap="round" fill="transparent" />
+                          </svg>
+                          <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="compatScore" class="text-3xl font-display font-extrabold text-white">0%</span>
+                          </div>
+                        </div>
+                        <div id="compatMessage" class="text-xs font-semibold text-gray-200 mt-2"></div>
+                      </div>
+                      <div class="md:col-span-2">
+                        <ul id="compatBreakdown" class="space-y-3"></ul>
+                      </div>
+                    </div>
+                    <!-- Joint Watch Night Pick -->
+                    <div id="jointMoviePick" class="p-5 rounded-2xl bg-gradient-to-r from-brand-gold/15 via-purple-500/10 to-cyan-500/15 border border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STAGE 9: RICOCHET -->
+          <div id="stage-ricochet" class="decider-stage-panel hidden space-y-4">
+            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-circle-nodes text-cyan-400"></i> Mood Ricochet
+                </h2>
+                <button type="button" onclick="if(window.rcLaunch) window.rcLaunch();" class="px-3.5 py-1.5 rounded-xl bg-cyan-400 text-black font-extrabold text-xs shadow hover:scale-105 active:scale-95 transition-all">
+                  Launch Ball
+                </button>
+              </div>
+              <div id="ricochetCanvasHolder" class="flex justify-center"></div>
+            </div>
+          </div>
+
+          <!-- STAGE 10: OPPOSITE -->
+          <div id="stage-opposite" class="decider-stage-panel hidden space-y-4">
+            <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-shuffle text-emerald-300"></i> Opposite Day
+                </h2>
+              </div>
+              <div id="oppositeStageContent" class="space-y-4"></div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -1137,95 +1498,7 @@
       </div>
     </section>
 
-    <!-- TAB: TASTE COMPATIBILITY (Play Subtab) -->
-    <section id="tab-compat" class="tab-pane hidden fade-in space-y-4">
-      <div id="compatLab" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
-        <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <div class="flex items-center gap-3">
-            <button type="button" onclick="switchTab('play')" title="Back to Play" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white flex items-center justify-center border border-white/10 transition-all active:scale-95">
-              <i class="fa-solid fa-arrow-left text-xs"></i>
-            </button>
-            <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Taste Compatibility</h2>
-          </div>
-          <button onclick="loadDemoCompatibility()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
-            Demo
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- User 1 Column -->
-          <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <label class="text-xs font-bold text-brand-gold flex items-center gap-1.5">
-                <i class="fa-solid fa-user"></i> Your Picks (3–10)
-              </label>
-              <button onclick="prefillFromWishlist('myTags')" class="text-[11px] text-gray-400 hover:text-brand-gold">From Watchlist</button>
-            </div>
-            <div id="myTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
-            <div class="relative autocomplete-wrapper">
-              <input type="text" id="myInput" placeholder="Add favorites..."
-                oninput="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
-                onfocus="handleAutocomplete(event, 'myInput', 'myTags', 'mySuggest', 10)"
-                class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-              <div id="mySuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
-            </div>
-          </div>
-
-          <!-- User 2 Column -->
-          <div class="p-4 rounded-xl bg-black/35 border border-white/10 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <label class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
-                <i class="fa-solid fa-user-group"></i> Friend's Picks (3–10)
-              </label>
-              <button onclick="surpriseFriendList()" class="text-[11px] text-gray-400 hover:text-cyan-400">Randomize</button>
-            </div>
-            <div id="friendTags" class="flex flex-wrap gap-1.5 min-h-[40px] p-2 rounded-lg bg-black/50 border border-white/5 items-center"></div>
-            <div class="relative autocomplete-wrapper">
-              <input type="text" id="friendInput" placeholder="Add friend's favorites..."
-                oninput="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
-                onfocus="handleAutocomplete(event, 'friendInput', 'friendTags', 'friendSuggest', 10)"
-                class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400">
-              <div id="friendSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-56 overflow-y-auto z-30 divide-y divide-white/5"></div>
-            </div>
-          </div>
-        </div>
-
-        <button onclick="calculateCompatibility()" class="w-full py-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95">
-          Compare Compatibility
-        </button>
-
-        <!-- Compatibility Results Panel -->
-        <div id="compatScoreBox" class="hidden pt-6 border-t border-white/10 space-y-6">
-          <div class="flex items-center justify-between gap-3">
-            <div class="text-[11px] font-bold uppercase tracking-widest text-purple-300">Live compatibility analysis <span id="compatStatus" class="text-gray-500 normal-case tracking-normal font-medium ml-1"></span></div>
-            <button id="compatReplay" onclick="calculateCompatibility()" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-300"><i class="fa-solid fa-rotate-right mr-1"></i>Replay</button>
-          </div>
-          <div id="compatStage"></div>
-          <div id="compatResults" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-              <div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-black/40 border border-white/10 text-center">
-                <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Overall Synergy</div>
-                <div class="relative w-28 h-28 flex items-center justify-center my-1">
-                  <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" class="text-white/10" fill="transparent" />
-                    <circle id="compatCircleSvg" cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" class="text-brand-gold transition-all duration-1000" stroke-dasharray="264" stroke-dashoffset="264" stroke-linecap="round" fill="transparent" />
-                  </svg>
-                  <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span id="compatScore" class="text-3xl font-display font-extrabold text-white">0%</span>
-                  </div>
-                </div>
-                <div id="compatMessage" class="text-xs font-semibold text-gray-200 mt-2"></div>
-              </div>
-              <div class="md:col-span-2">
-                <ul id="compatBreakdown" class="space-y-3"></ul>
-              </div>
-            </div>
-            <!-- Joint Watch Night Pick -->
-            <div id="jointMoviePick" class="p-5 rounded-2xl bg-gradient-to-r from-brand-gold/15 via-purple-500/10 to-cyan-500/15 border border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4"></div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- TAB: UNIVERSES (Cinematic Universes & Franchises) -->
 
     <!-- TAB: UNIVERSES (Cinematic Universes & Franchises) -->
     <section id="tab-universes" class="tab-pane hidden fade-in space-y-5">
@@ -1285,65 +1558,78 @@
     </section>
 
     <section id="tab-hub" class="tab-pane hidden fade-in space-y-6">
-      <!-- Hub Header: Title + Segmented Switcher + 3-Dot Overflow Menu -->
+      <!-- Hub Header: Title + Spine View Icon + Back up and Restore -->
       <div class="border-b border-white/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
+          <button type="button" onclick="returnToOpeningPage()" class="back-corner-mark" title="Back" aria-label="Back to Main Page">
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+          </button>
           <h1 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight flex items-center gap-2.5">
-            <i class="fa-solid fa-bookmark text-brand-gold"></i> Personal Shelves &amp; Library
+            <i class="fa-solid fa-bookmark text-brand-gold"></i> Library
           </h1>
-          <span class="text-xs text-gray-400 font-mono hidden sm:inline-block">· Watchlist, Watched, Favorites &amp; Collections</span>
         </div>
         
         <div class="flex items-center gap-2">
-          <!-- Spine View Drawer Toggle (The Collector's Archive) -->
-          <button type="button" id="toggleLibrarySpineViewBtn" onclick="toggleLibrarySpineView()" class="brass-backup-chest" title="Toggle Spine View vs Chart View">
-            <i class="fa-solid fa-bars-staggered text-brand-gold text-[11px]"></i>
-            <span id="libraryViewModeLabel" class="hidden sm:inline">Spine View</span>
+          <!-- Spine View as one small icon -->
+          <button type="button" id="toggleLibrarySpineViewBtn" onclick="toggleLibrarySpineView()" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-brand-gold transition-all" title="Spine View" aria-label="Spine View">
+            <i class="fa-solid fa-bars-staggered text-xs"></i>
           </button>
 
-          <!-- Segmented Shelf Switcher -->
-          <div class="flex items-center gap-1 p-1 rounded-xl bg-black/50 border border-white/10 overflow-x-auto no-scrollbar">
-            <button type="button" onclick="window.filterLibraryShelfView('all')" id="shelfViewBtn-all" class="px-3 py-1 rounded-lg text-xs font-bold bg-brand-gold text-black shadow transition-all">All</button>
-            <button type="button" onclick="window.filterLibraryShelfView('watched')" id="shelfViewBtn-watched" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Watched</button>
-            <button type="button" onclick="window.filterLibraryShelfView('wish')" id="shelfViewBtn-wish" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Watchlist</button>
-            <button type="button" onclick="window.filterLibraryShelfView('fav')" id="shelfViewBtn-fav" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Favorites</button>
-            <button type="button" onclick="window.filterLibraryShelfView('custom')" id="shelfViewBtn-custom" class="px-3 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-all">Custom Lists</button>
-          </div>
-
-          <!-- Brass Backup Chest (Export & Import) -->
+          <!-- Back up and Restore -->
           <div class="relative shrink-0">
-            <button type="button" id="hubOverflowMenuBtn" onclick="toggleHubOverflowMenu()" class="brass-backup-chest" title="Brass Backup Chest · Export &amp; Import" aria-label="Backup Chest">
+            <button type="button" id="hubOverflowMenuBtn" onclick="toggleHubOverflowMenu()" class="brass-backup-chest text-xs" title="Back up and Restore" aria-label="Back up and Restore">
               <i class="fa-solid fa-box-archive text-brand-gold text-sm"></i>
-              <span class="hidden sm:inline">Backup Chest</span>
+              <span class="hidden sm:inline">Back up and Restore</span>
             </button>
-            <div id="hubOverflowMenu" class="hidden absolute right-0 top-11 z-30 w-52 rounded-2xl bg-[#0d111c] border border-amber-500/35 shadow-2xl p-2 space-y-1 animate-fadeIn">
+            <div id="hubOverflowMenu" class="hidden absolute right-0 top-11 z-30 w-52 rounded-2xl theme-card-bg border border-amber-500/35 shadow-2xl p-2 space-y-1 animate-fadeIn">
               <button type="button" onclick="exportUserData(); toggleHubOverflowMenu();" class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
-                <i class="fa-solid fa-download text-brand-gold w-4"></i> <span>Seal Backup (Export)</span>
+                <i class="fa-solid fa-download text-brand-gold w-4"></i> <span>Back up</span>
               </button>
               <label class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 cursor-pointer transition-colors">
-                <i class="fa-solid fa-upload text-cyan-400 w-4"></i> <span>Open Backup (Import)</span>
+                <i class="fa-solid fa-upload text-cyan-400 w-4"></i> <span>Restore</span>
                 <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event); toggleHubOverflowMenu();">
               </label>
               <button type="button" onclick="openThemeEffectsModal(event); toggleHubOverflowMenu();" class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
-                <i class="fa-solid fa-palette text-purple-400 w-4"></i> <span>Atmosphere Studio</span>
+                <i class="fa-solid fa-palette text-purple-400 w-4"></i> <span>Style</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- THE TOP THREE STAGE: THREE BRIGHTEST STARS IN GOLD FRAMES -->
+      <!-- Taste DNA Framed Print at top of Library (Cycles through All, Movies, TV, Watchlist) -->
+      <div class="framed-print-card p-4 sm:p-5 rounded-3xl theme-card-bg border border-white/10 shadow-2xl space-y-3">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-nodes text-brand-gold text-base"></i>
+            <h2 class="text-sm sm:text-base font-display font-black text-white uppercase tracking-wider">Taste DNA</h2>
+          </div>
+          <div class="flex items-center gap-1.5 p-1 rounded-xl bg-black/50 border border-white/10 text-xs font-semibold">
+            <button type="button" onclick="setTasteDnaFilter('all')" id="tasteDnaFilter-all" class="px-2.5 py-1 rounded-lg bg-brand-gold text-black font-bold shadow transition-all">All</button>
+            <button type="button" onclick="setTasteDnaFilter('movie')" id="tasteDnaFilter-movie" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">Movies</button>
+            <button type="button" onclick="setTasteDnaFilter('show')" id="tasteDnaFilter-show" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">TV</button>
+            <button type="button" onclick="setTasteDnaFilter('wish')" id="tasteDnaFilter-wish" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">Watchlist</button>
+          </div>
+        </div>
+        <div class="relative rounded-2xl overflow-hidden border border-white/10 h-64 sm:h-72" style="background: radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%)">
+          <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
+          <div id="cxLegend" class="absolute top-2.5 left-2.5 flex flex-wrap gap-x-2 gap-y-0.5 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
+          <div id="cxPanel" class="hidden absolute bottom-2.5 left-2.5 w-[min(280px,calc(100%-1.5rem))] glass-card rounded-xl p-2.5 shadow-2xl text-xs"></div>
+        </div>
+      </div>
+
+      <!-- TOP THREE FAVOURITES (Golden Ticket Passes) -->
       <div class="gold-podium-frame p-5 sm:p-7 space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-500/30 pb-4">
           <div>
             <div class="text-[10px] font-black uppercase tracking-widest text-brand-gold font-mono flex items-center gap-2">
               <i class="fa-solid fa-crown text-brand-gold"></i>
-              <span>CHART TABLE PODIUM · TOP THREE BRIGHTEST STARS</span>
+              <span>TOP THREE FAVOURITES</span>
             </div>
             <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white mt-0.5">
               Top 3 Golden Ticket Hall of Fame
             </h3>
-            <p class="text-xs text-amber-200/70 mt-1">The three brightest stars of your life. Tap any watched star's scorecard to mint it into your gold podium frame.</p>
+            <p class="text-xs text-amber-200/70 mt-1">Tap any watched film or show's scorecard to mint it into your top three gold frame.</p>
           </div>
           <div class="flex items-center gap-2">
             <button type="button" onclick="exportCinePassLedger()" class="brass-backup-chest text-xs" title="Export Top 3 Passes Archive">
@@ -1506,9 +1792,7 @@
             </div>
             <div class="min-w-0">
               <div class="text-[9px] font-black uppercase tracking-widest text-purple-300 font-mono flex items-center gap-1.5">
-                <span>SOUNDTRACK &amp; VINYL VAULT</span>
-                <span>·</span>
-                <span>4,400+ TRACKS</span>
+                <span>Soundtracks &amp; Music</span>
               </div>
               <h1 class="text-base sm:text-lg font-display font-extrabold text-white tracking-tight flex items-center gap-2">
                 Music Lounge
@@ -1536,111 +1820,81 @@
         <span id="musicTotalPlaylistsCount" class="hidden"></span>
       </div>
 
-      <!-- ANALOG RADIO TUNING SCALE & ROTARY BASE (Compact Height) -->
-      <div class="radio-tuner-glass p-2.5 sm:p-3 rounded-2xl space-y-2">
-        <!-- Search & Filter Controls Row -->
+      <!-- COMPACT MUSIC CONTROLS (Single Row: Search + Language, Mood, Era Chips) -->
+      <div class="glass-card p-3 rounded-2xl space-y-2.5">
+        <!-- Search & 3 Small Filter Chips in One Row -->
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <div class="relative flex-1 min-w-0">
-            <i class="fa-solid fa-tower-broadcast absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-xs"></i>
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-xs"></i>
             <input type="text" id="musicSearchInput" placeholder="Search tracks, artists, OSTs..." class="w-full pl-8 pr-3 py-1.5 bg-black/70 border border-purple-500/30 rounded-xl text-xs text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 font-mono">
           </div>
 
+          <!-- 3 Compact Chips: Language, Mood, Era in one row -->
           <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
-            <button type="button" onclick="setSimpleMusicLang('all')" id="mlang-all" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-500 text-white shadow transition-all">All</button>
-            <button type="button" onclick="setSimpleMusicLang('hi')" id="mlang-hi" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">Hindi</button>
-            <button type="button" onclick="setSimpleMusicLang('en')" id="mlang-en" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">English</button>
-            <button type="button" onclick="setMusicViewMode(musicViewMode === 'favs' ? 'all' : 'favs')" id="mview-favs" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all">
-              <i class="fa-solid fa-heart text-rose-400 mr-1 text-[10px]"></i>Favs
-            </button>
-            <button type="button" onclick="document.getElementById('musicAdvancedFilters').classList.toggle('hidden')" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/5 hover:bg-white/10 text-purple-300 border border-purple-500/30 transition-all flex items-center gap-1">
-              <i class="fa-solid fa-sliders text-[10px]"></i> <span>Knobs</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 3 Knurled Rotary Knobs (Compact Horizontal Strip) -->
-        <div class="flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-xl bg-black/60 border border-purple-500/20 text-center select-none overflow-x-auto">
-          <!-- Knob 1: Language / Frequency -->
-          <div class="flex items-center gap-2 shrink-0">
-            <div class="rotary-knob-dial w-6 h-6 sm:w-7 sm:h-7 shrink-0 cursor-pointer" id="knobDialLang" onclick="cycleMusicKnob('lang')" title="Rotate Frequency Knob">
-              <div class="rotary-knob-indicator"></div>
-            </div>
-            <div class="text-left leading-none">
-              <div class="text-[8px] font-mono font-bold text-amber-200/70 uppercase">WAVE</div>
-              <div id="knobLabelLang" class="text-[11px] font-mono text-purple-200 font-bold">ALL</div>
-            </div>
-          </div>
-          <!-- Knob 2: Spectrum Mood -->
-          <div class="flex items-center gap-2 shrink-0">
-            <div class="rotary-knob-dial w-6 h-6 sm:w-7 sm:h-7 shrink-0 cursor-pointer" id="knobDialMood" onclick="cycleMusicKnob('mood')" title="Rotate Spectrum Knob">
-              <div class="rotary-knob-indicator"></div>
-            </div>
-            <div class="text-left leading-none">
-              <div class="text-[8px] font-mono font-bold text-amber-200/70 uppercase">SPECTRUM</div>
-              <div id="knobLabelMood" class="text-[11px] font-mono text-purple-200 font-bold truncate max-w-[90px]">ALL MOODS</div>
-            </div>
-          </div>
-          <!-- Knob 3: Epoch Era -->
-          <div class="flex items-center gap-2 shrink-0">
-            <div class="rotary-knob-dial w-6 h-6 sm:w-7 sm:h-7 shrink-0 cursor-pointer" id="knobDialEra" onclick="cycleMusicKnob('era')" title="Rotate Epoch Era Knob">
-              <div class="rotary-knob-indicator"></div>
-            </div>
-            <div class="text-left leading-none">
-              <div class="text-[8px] font-mono font-bold text-amber-200/70 uppercase">EPOCH</div>
-              <div id="knobLabelEra" class="text-[11px] font-mono text-purple-200 font-bold">ALL ERAS</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Backlit Horizontal Analog Radio Tuning Scale -->
-        <div class="space-y-0.5 pt-0.5">
-          <div class="radio-tuner-track relative py-0.5" id="radioTunerTrack">
-            <div id="radioNeedle" class="radio-needle" style="left: 14px;"></div>
-            <div id="musicPlaylistsRow" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 scroll-smooth w-full"></div>
-          </div>
-        </div>
-
-        <!-- Hidden Select Elements for programmatic synchronization -->
-        <div id="musicAdvancedFilters" class="hidden pt-2 border-t border-purple-500/20 space-y-2">
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <select id="musicFilterLang" class="dark-select px-2.5 py-1.5 bg-[#0d111a] border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none">
-              <option value="all">Language: All</option>
-              <option value="hi">Hindi &amp; Indian</option>
-              <option value="en">English &amp; Global</option>
+            <!-- Language Chip -->
+            <select id="musicFilterLang" onchange="if(window.filterAndRenderMusic) window.filterAndRenderMusic();" class="px-2.5 py-1 bg-black/60 border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none cursor-pointer" aria-label="Language">
+              <option value="all">Language</option>
+              <option value="hi">Hindi</option>
+              <option value="en">English</option>
             </select>
-            <select id="musicFilterPlaylist" class="dark-select px-2.5 py-1.5 bg-[#0d111a] border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none">
-              <option value="all">All Stations</option>
+
+            <!-- Mood Chip -->
+            <select id="musicFilterMood" onchange="if(window.filterAndRenderMusic) window.filterAndRenderMusic();" class="px-2.5 py-1 bg-black/60 border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none cursor-pointer" aria-label="Mood">
+              <option value="all">Mood</option>
+              <option value="Romantic & Melody">Romantic</option>
+              <option value="Party & Energy">Party</option>
+              <option value="Pop & Hits">Pop</option>
+              <option value="Chill & Indie">Chill</option>
+              <option value="R&B & Hip-Hop">R&amp;B</option>
+              <option value="Nostalgia & Classics">Classics</option>
             </select>
-            <select id="musicFilterMood" class="dark-select px-2.5 py-1.5 bg-[#0d111a] border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none">
-              <option value="all">All Moods</option>
-              <option value="Romantic & Melody">Romantic &amp; Melody</option>
-              <option value="Party & Energy">Party &amp; Energy</option>
-              <option value="Pop & Hits">Pop &amp; Hits</option>
-              <option value="Chill & Indie">Chill &amp; Indie</option>
-              <option value="R&B & Hip-Hop">R&amp;B &amp; Hip-Hop</option>
-              <option value="Nostalgia & Classics">Nostalgia &amp; Classics</option>
-            </select>
-            <select id="musicFilterEra" class="dark-select px-2.5 py-1.5 bg-[#0d111a] border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none">
-              <option value="all">All Eras</option>
+
+            <!-- Era Chip -->
+            <select id="musicFilterEra" onchange="if(window.filterAndRenderMusic) window.filterAndRenderMusic();" class="px-2.5 py-1 bg-black/60 border border-purple-500/30 rounded-lg text-xs font-semibold text-white focus:outline-none cursor-pointer" aria-label="Era">
+              <option value="all">Era</option>
               <option value="2020s">2020s</option>
               <option value="2010s">2010s</option>
               <option value="2000s">2000s</option>
               <option value="1990s">1990s</option>
               <option value="1980s">1980s</option>
             </select>
+
+            <!-- Favs Toggle -->
+            <button type="button" onclick="setMusicViewMode(musicViewMode === 'favs' ? 'all' : 'favs')" id="mview-favs" class="shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/5 text-gray-300 hover:text-white border border-white/10 transition-all flex items-center gap-1">
+              <i class="fa-solid fa-heart text-rose-400 text-[10px]"></i> Favs
+            </button>
           </div>
-          <div id="musicArtistChips" class="flex flex-wrap gap-1 items-center"></div>
         </div>
-        <button type="button" id="mview-all" class="hidden"></button>
+
+        <!-- Hidden legacy inputs for compatibility with music handlers -->
+        <div class="hidden" aria-hidden="true">
+          <button id="mlang-all"></button>
+          <button id="mlang-hi"></button>
+          <button id="mlang-en"></button>
+          <button id="mview-all"></button>
+          <div id="knobDialLang"></div>
+          <div id="knobLabelLang"></div>
+          <div id="knobDialMood"></div>
+          <div id="knobLabelMood"></div>
+          <div id="knobDialEra"></div>
+          <div id="knobLabelEra"></div>
+          <div id="radioNeedle"></div>
+          <div id="radioTunerTrack"></div>
+          <div id="musicPlaylistsRow"></div>
+          <div id="musicAdvancedFilters"></div>
+          <select id="musicFilterPlaylist"><option value="all">All</option></select>
+          <div id="musicArtistChips"></div>
+        </div>
       </div>
 
       <!-- Results Count & Queue Play Bar -->
       <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-400 px-1 pt-1">
-        <div>Showing <strong id="musicShowingCount" class="text-white">0</strong> tracks · Page <strong id="musicCurPageLbl" class="text-white">1</strong></div>
+        <div>Showing <strong id="musicShowingCount" class="text-white">0</strong> tracks<span id="musicCurPageLbl" class="hidden">1</span></div>
         <div class="flex items-center gap-3">
           <button type="button" onclick="musicPlayFilteredAll()" class="text-brand-gold hover:underline font-bold flex items-center gap-1"><i class="fa-solid fa-play text-xs"></i> Play Current List</button>
           <span>·</span>
-          <button type="button" onclick="toggleMusicQueueDrawer()" class="text-gray-200 hover:text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-list-ol text-brand-gold text-xs"></i> Queue (<span id="musicQueueCountLbl">0</span>)</button>
+          <button type="button" onclick="toggleMusicQueueDrawer()" class="text-gray-200 hover:text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-list-ol text-brand-gold text-xs"></i> Queue</button>
+          <span id="musicQueueCountLbl" class="hidden">0</span>
         </div>
       </div>
 
@@ -1666,7 +1920,7 @@
           <div class="flex items-center gap-4">
             <div id="profileBigAvatar" class="w-16 h-16 rounded-2xl bg-brand-gold/15 border-2 border-brand-gold flex items-center justify-center p-2 shadow-lg shrink-0"></div>
             <div class="min-w-0 flex-1">
-              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Member Profile &amp; Taste Passport</div>
+              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Member Profile</div>
               <h2 id="profileDisplayName" class="text-2xl font-display font-extrabold text-white truncate">Member</h2>
               <div id="profileLangSummary" class="text-xs text-gray-400 font-mono">Catalog: All Titles · Preferred Genre: Sci-Fi</div>
             </div>
@@ -1699,37 +1953,37 @@
           </div>
         </div>
 
-        <!-- User Activity & Atmosphere -->
+        <!-- User Activity & Collection Stats -->
         <div class="lg:col-span-2 glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-5 flex flex-col justify-between">
           <div class="space-y-4">
             <div class="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 class="text-lg sm:text-xl font-display font-bold text-white">Collection Activity</h3>
+              <h3 class="text-lg sm:text-xl font-display font-bold text-white">Collection</h3>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div class="telemetry-tube">
                 <div id="profStatWatched" class="text-2xl font-display font-black text-emerald-400">0</div>
-                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Stars Observed</div>
+                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watched</div>
               </div>
               <div class="telemetry-tube">
                 <div id="profStatWish" class="text-2xl font-display font-black text-rose-400">0</div>
-                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Trajectories</div>
+                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watchlist</div>
               </div>
               <div class="telemetry-tube">
                 <div id="profStatFavs" class="text-2xl font-display font-black text-brand-gold">0</div>
-                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Crown Jewels</div>
+                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Favourites</div>
               </div>
               <div class="telemetry-tube">
                 <div id="profStatSongFavs" class="text-2xl font-display font-black text-purple-400">0</div>
-                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Stellar Audio</div>
+                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Songs</div>
               </div>
             </div>
 
-            <!-- Atmosphere Palette -->
+            <!-- Style Accent Swatches -->
             <div class="p-4 rounded-xl bg-black/40 border border-white/10 space-y-3">
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-xs font-bold text-white">Atmosphere</span>
+                  <span class="text-xs font-bold text-white">Style</span>
                   <div id="profileActiveThemeLabel" class="text-[11px] text-gray-400">Deep Cosmos</div>
                 </div>
                 <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" id="profileFxToggleBtn" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-200 transition-all">
@@ -1737,22 +1991,6 @@
                 </button>
               </div>
               <div id="profileThemeSwatchGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 w-full"></div>
-            </div>
-
-            <!-- Interactive Features -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              <button type="button" onclick="tmOpen()" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
-                <div class="text-xs font-bold text-brand-gold flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left"></i> Time Machine</div>
-              </button>
-              <button type="button" onclick="oppToggle()" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
-                <div class="text-xs font-bold text-fuchsia-400 flex items-center gap-1.5"><i class="fa-solid fa-shuffle"></i> Opposite Day</div>
-              </button>
-              <button type="button" onclick="openLangCompareModal()" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
-                <div class="text-xs font-bold text-cyan-400 flex items-center gap-1.5"><i class="fa-solid fa-scale-unbalanced"></i> Compare</div>
-              </button>
-              <button type="button" onclick="toggleCinemaLightsOut()" class="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left transition-all">
-                <div class="text-xs font-bold text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-moon"></i> Lights Out</div>
-              </button>
             </div>
           </div>
         </div>
@@ -2153,9 +2391,8 @@
           </svg>
         </div>
         <span>·</span>
-        <span>The 3,400+ Film, Series &amp; 4,447-Song Discovery Vault</span>
+        <span>The Film, Series &amp; Song Vault</span>
       </div>
-      <div>Zero-Key Hybrid iTunes & TVMaze Live Artwork Engine</div>
     </div>
   </footer>
 
@@ -2210,7 +2447,7 @@
                 </g>
               </svg>
             </div>
-            <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-md bg-white/[0.06] text-brand-gold border border-white/10 shrink-0" id="obStepKicker">01 / 06</span>
+            <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-md bg-white/[0.06] text-brand-gold border border-white/10 shrink-0 hidden" id="obStepKicker"></span>
             <h3 class="text-xs sm:text-base font-medium text-gray-200 truncate" id="obStepTitleTop">Your Profile &amp; Avatar</h3>
           </div>
           <button id="obSkipBtn" onclick="skipOnboardingWizard()" class="hidden text-xs text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors shrink-0">

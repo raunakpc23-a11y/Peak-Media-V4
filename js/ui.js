@@ -217,109 +217,145 @@
     window.returnToOpeningPage('homeProfileVaultCard');
   };
 
-  // The Deciders Tool Switcher (One-word navigation across all 9 tools)
+  // The Deciders Tool Switcher (Left rail 10-glyph switcher + viewport stage panels)
   window.selectDeciderTool = function(tool) {
-    document.querySelectorAll('.decider-tool-btn').forEach(b => {
-      b.className = 'decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all';
+    if (!tool) tool = 'mood';
+    // 1. Update rail glyph buttons
+    document.querySelectorAll('.deciders-tools-rail .decider-glyph-btn').forEach(btn => {
+      btn.classList.remove('active');
     });
-    const activeBtn = document.getElementById('deciderBtn-' + tool);
-    if (activeBtn) {
-      activeBtn.className = 'decider-tool-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-gold text-black shadow-md transition-all';
+    const railBtn = document.getElementById('deciderRailBtn-' + tool);
+    if (railBtn) railBtn.classList.add('active');
+
+    // 2. Hide all stage panels and show selected stage
+    document.querySelectorAll('.decider-stage-panel').forEach(p => p.classList.add('hidden'));
+    const targetStage = document.getElementById('stage-' + tool);
+    if (targetStage) {
+      targetStage.classList.remove('hidden');
     }
+
+    // 3. Tool specific initializers
     if (tool === 'mood') {
-      window.switchTab('play');
       if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 40);
-    } else if (tool === 'duel') {
-      window.switchTab('duel');
-    } else if (tool === 'series') {
-      window.switchTab('shows');
-    } else if (tool === 'marathon') {
-      if (window.openMarathonModal) window.openMarathonModal();
-      else window.switchTab('marathon');
-    } else if (tool === 'architect') {
-      window.switchTab('hub');
-    } else if (tool === 'matchmaker') {
-      window.switchTab('match');
-    } else if (tool === 'decades') {
-      if (window.tmOpen) window.tmOpen();
     } else if (tool === 'roulette') {
       if (window.openSurpriseModal) window.openSurpriseModal();
       else if (window.spinMoodDialRoulette) window.spinMoodDialRoulette();
+    } else if (tool === 'swipe') {
+      if (window.initSwipeStage) window.initSwipeStage();
+    } else if (tool === 'duel') {
+      if (window.initDuelTournament) window.initDuelTournament();
+    } else if (tool === 'marathon') {
+      if (window.openMarathonModal) window.openMarathonModal();
+    } else if (tool === 'decades') {
+      if (window.tmOpen) window.tmOpen();
+    } else if (tool === 'matchmaker') {
+      if (window.initCineMatchmaker) window.initCineMatchmaker();
+    } else if (tool === 'compatibility') {
+      if (window.initTasteCompatibility) window.initTasteCompatibility();
+      else if (window.openCineMatchCompatModal) window.openCineMatchCompatModal();
+    } else if (tool === 'ricochet') {
+      if (window.rcLaunch) window.rcLaunch();
     } else if (tool === 'opposite') {
       if (window.oppToggle) window.oppToggle();
     }
   };
 
-  // Cinema Games launcher from cartridge cards
-  window.openCinemaGame = function(gameKey) {
-    if (gameKey === 'duel') {
-      window.switchTab('duel');
-    } else if (gameKey === 'roulette') {
-      if (window.openSurpriseModal) window.openSurpriseModal();
-    } else if (gameKey === 'timemachine' || gameKey === 'decades') {
-      if (window.tmOpen) window.tmOpen();
-    } else if (gameKey === 'match' || gameKey === 'matchmaker') {
-      window.switchTab('match');
-    } else if (gameKey === 'marathon') {
-      if (window.openMarathonModal) window.openMarathonModal();
-      else window.switchTab('marathon');
-    } else if (gameKey === 'opposite') {
-      if (window.oppToggle) window.oppToggle();
-    } else if (gameKey === 'mood') {
-      window.switchTab('play');
-      if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 40);
-    } else if (gameKey === 'series') {
-      window.switchTab('shows');
-    } else if (gameKey === 'architect') {
-      window.switchTab('hub');
-    } else {
-      window.switchTab('play');
+  window.openDeciderTool = function(toolKey) {
+    window.switchTab('play');
+    window.selectDeciderTool(toolKey);
+  };
+
+  window.onDecadesSliderChange = function(year) {
+    const lbl = document.getElementById('tmSliderYearLabel');
+    if (lbl) lbl.textContent = year;
+    const badge = document.getElementById('decadesYearBadge');
+    if (badge) badge.textContent = year;
+    const dial = document.getElementById('tmDial');
+    if (dial) {
+      dial.value = year;
+      dial.dispatchEvent(new Event('input'));
     }
   };
 
-  // Quick Format Stream Filter on Opening View
-  window.filterOpeningShelves = function(formatKey) {
-    document.querySelectorAll('.stream-filter-chip').forEach(chip => {
-      chip.classList.toggle('active', chip.dataset.filter === formatKey);
-    });
+  // Cinema Games launcher from cartridge cards
+  window.openCinemaGame = function(gameKey) {
+    window.openDeciderTool(gameKey);
+  };
 
+  // Quick Format Stream Filter on Opening View with active dot indicator and removable chip
+  window.filterOpeningShelves = function(formatKey) {
     const pWrap = document.getElementById('shelfWrap-pantheon');
     const bWrap = document.getElementById('shelfWrap-blockbusters');
+    const boWrap = document.getElementById('shelfWrap-boxoffice');
     const mWrap = document.getElementById('shelfWrap-mind');
     const sWrap = document.getElementById('shelfWrap-series');
     const iWrap = document.getElementById('shelfWrap-indian');
 
+    const chip = document.getElementById('activeStreamFilterChip');
+    const chipLabel = document.getElementById('activeStreamFilterLabel');
+    const dot = document.getElementById('streamFilterActiveDot');
+
+    const filterLabels = {
+      'all': '',
+      'films': 'Films',
+      'series': 'Series',
+      'indian': 'Indian Cinema',
+      'pantheon': 'Masterworks'
+    };
+
+    if (chip && chipLabel && dot) {
+      if (formatKey === 'all') {
+        chip.classList.add('hidden');
+        chip.classList.remove('flex');
+        dot.classList.add('hidden');
+      } else {
+        chipLabel.textContent = filterLabels[formatKey] || formatKey;
+        chip.classList.remove('hidden');
+        chip.classList.add('flex');
+        dot.classList.remove('hidden');
+      }
+    }
+
     if (formatKey === 'all') {
       if (pWrap) pWrap.classList.remove('hidden');
       if (bWrap) bWrap.classList.remove('hidden');
+      if (boWrap) boWrap.classList.remove('hidden');
       if (mWrap) mWrap.classList.remove('hidden');
       if (sWrap) sWrap.classList.remove('hidden');
       if (iWrap) iWrap.classList.remove('hidden');
     } else if (formatKey === 'films') {
       if (pWrap) pWrap.classList.remove('hidden');
       if (bWrap) bWrap.classList.remove('hidden');
+      if (boWrap) boWrap.classList.remove('hidden');
       if (mWrap) mWrap.classList.remove('hidden');
       if (sWrap) sWrap.classList.add('hidden');
       if (iWrap) iWrap.classList.remove('hidden');
     } else if (formatKey === 'series') {
       if (pWrap) pWrap.classList.add('hidden');
       if (bWrap) bWrap.classList.add('hidden');
+      if (boWrap) boWrap.classList.add('hidden');
       if (mWrap) mWrap.classList.add('hidden');
       if (sWrap) sWrap.classList.remove('hidden');
       if (iWrap) iWrap.classList.add('hidden');
     } else if (formatKey === 'indian') {
       if (pWrap) pWrap.classList.add('hidden');
       if (bWrap) bWrap.classList.add('hidden');
+      if (boWrap) boWrap.classList.add('hidden');
       if (mWrap) mWrap.classList.add('hidden');
       if (sWrap) sWrap.classList.add('hidden');
       if (iWrap) iWrap.classList.remove('hidden');
     } else if (formatKey === 'pantheon') {
       if (pWrap) pWrap.classList.remove('hidden');
       if (bWrap) bWrap.classList.add('hidden');
+      if (boWrap) boWrap.classList.add('hidden');
       if (mWrap) mWrap.classList.add('hidden');
       if (sWrap) sWrap.classList.add('hidden');
       if (iWrap) iWrap.classList.add('hidden');
     }
+  };
+  window.applyStreamFilter = window.filterOpeningShelves;
+  window.clearStreamFilter = function() {
+    window.filterOpeningShelves('all');
   };
 
   // Star-streak flight transition across stations
@@ -543,6 +579,8 @@
     document.body.classList.toggle('mode-dark', !isLight);
     
     document.documentElement.setAttribute('data-palette', id);
+    document.documentElement.setAttribute('data-theme', id);
+    document.body.setAttribute('data-palette', id);
     document.body.setAttribute('data-theme', id);
     document.body.classList.toggle('reduce-fx', !!reduce);
 
@@ -686,6 +724,10 @@
     ls.set('cs_theme_v2', pin);
     // Swatch changes palette accent, preserving current Light/Dark/Default mode
     refresh();
+    const t = THEMES[pin];
+    if (t && typeof window.showToast === 'function') {
+      window.showToast(`Accent set to ${t.n}`, 'fa-palette', 'text-brand-gold');
+    }
   };
 
   $('autoBtn').onclick = () => {
@@ -861,10 +903,77 @@
   $('bsInput').addEventListener('keydown', e => { if (e.key === 'Escape') { $('bsResults').classList.add('hidden'); e.target.blur(); } });
   document.addEventListener('click', e => { if (!e.target.closest('#browseSearch')) $('bsResults').classList.add('hidden'); });
   const _sw = window.switchTab;
-  window.switchTab = function (key) {
+  window.switchTab = function (key, pushState = true) {
     _sw.apply(this, arguments);
     const k = ({ browse: 'movies' })[key] || key;
     $('browseSearch').classList.toggle('hidden', !BROWSE.includes(k));
+    if (pushState && window.history && window.history.pushState) {
+      try {
+        window.history.pushState({ tab: key }, '', '#' + key);
+      } catch (e) {}
+    }
   };
   drawChips();
+
+  // Esc and browser Back button close any open takeover or modal, or return to Home
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const detailModal = document.getElementById('detailModal');
+      if (detailModal && !detailModal.classList.contains('hidden')) {
+        if (window.closeDetailModal) window.closeDetailModal();
+        return;
+      }
+      const surpriseModal = document.getElementById('surpriseModal');
+      if (surpriseModal && !surpriseModal.classList.contains('hidden')) {
+        surpriseModal.classList.add('hidden');
+        return;
+      }
+      const vibePanel = document.getElementById('vibePanel');
+      if (vibePanel && !vibePanel.classList.contains('hidden')) {
+        vibePanel.classList.add('hidden');
+        return;
+      }
+      const popover = document.getElementById('profileStatsPopover');
+      if (popover && !popover.classList.contains('hidden')) {
+        popover.classList.add('hidden');
+        return;
+      }
+      const discoverTab = document.getElementById('tab-discover');
+      if (discoverTab && discoverTab.classList.contains('hidden')) {
+        if (window.returnToOpeningPage) window.returnToOpeningPage();
+      }
+    }
+  });
+
+  window.addEventListener('popstate', function(e) {
+    const s = e.state;
+    if (s && s.tab && s.tab !== 'discover') {
+      if (_sw) _sw(s.tab);
+    } else {
+      if (window.returnToOpeningPage) window.returnToOpeningPage();
+    }
+  });
+
+  // Admin console is accessible only via private hash #admin
+  function checkAdminHash() {
+    if (window.location.hash === '#admin') {
+      if (_sw) _sw('admin');
+    }
+  }
+  window.addEventListener('hashchange', checkAdminHash);
+  setTimeout(checkAdminHash, 350);
+
+  // Pulse hint on first visit only
+  try {
+    if (!localStorage.getItem('cs_deciders_hint_seen')) {
+      setTimeout(() => {
+        const row = document.getElementById('decidersHomeRow');
+        if (row) {
+          row.classList.add('animate-pulse');
+          setTimeout(() => row.classList.remove('animate-pulse'), 3500);
+        }
+      }, 800);
+      localStorage.setItem('cs_deciders_hint_seen', '1');
+    }
+  } catch (e) {}
 })();

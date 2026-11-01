@@ -600,7 +600,7 @@
     // ---------------------------------------------------------
     // 3. GLOBAL LANGUAGE SWITCH (All · English · Hindi) & COMPARE MODAL
     // ---------------------------------------------------------
-    window.setGlobalLanguage = function(langCode) {
+    window.setGlobalLanguage = function(langCode, showFeedback = true) {
       window.globalLangFilter = langCode || 'all';
       saveLS('cs_lang_filter', window.globalLangFilter);
       document.querySelectorAll('.glang-btn').forEach(btn => {
@@ -616,6 +616,10 @@
       if (typeof window.renderDiscoverTab === 'function') window.renderDiscoverTab();
       if (typeof window.filterAndRenderMovies === 'function') window.filterAndRenderMovies(true);
       if (typeof window.filterAndRenderShows === 'function') window.filterAndRenderShows(true);
+      if (showFeedback && typeof window.showToast === 'function') {
+        const langNames = { all: 'All Titles', en: 'English', hi: 'Hindi & Indian Cinema' };
+        window.showToast(`Catalog language set to ${langNames[window.globalLangFilter] || window.globalLangFilter}`, 'fa-language', 'text-brand-gold');
+      }
     };
 
     window.openLangCompareModal = function() {
@@ -708,7 +712,7 @@
           }).join('');
       }
 
-      // Render Backlit Analog Radio Tuning Scale Marks
+      // Render Playlists Row
       const plRow = $('musicPlaylistsRow');
       if (plRow) {
         const activePl = ($('musicFilterPlaylist') && $('musicFilterPlaylist').value) || 'all';
@@ -1151,10 +1155,11 @@
         playText.textContent = isPlayingMusic ? 'Pause' : 'Play Track';
       }
       if (statusBadge) {
-        statusBadge.textContent = isPlayingMusic ? 'Now Playing' : 'Ready to Spin';
+        statusBadge.textContent = isPlayingMusic ? 'Now Playing' : '';
+        statusBadge.style.display = isPlayingMusic ? 'inline-block' : 'none';
         statusBadge.className = isPlayingMusic 
           ? 'px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 text-[10px] font-mono font-bold animate-pulse'
-          : 'px-2 py-0.5 rounded-md bg-white/5 text-gray-400 text-[10px] font-mono';
+          : 'hidden';
       }
     };
 
@@ -3177,7 +3182,8 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
     // Initialize on DOMContentLoaded
     window.addEventListener('DOMContentLoaded', () => {
       updateHeaderProfileUI();
-      window.setGlobalLanguage('all');
+      const savedLang = getLS('cs_lang_filter', 'all');
+      window.setGlobalLanguage(savedLang, false);
       if (window.initMusicVault) window.initMusicVault();
       if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
       initDraggableVideoDock();

@@ -1,8 +1,7 @@
 const fs = require('fs');
-const html = fs.readFileSync('index.html', 'utf8');
-const lines = html.split('\n');
-lines.forEach((line, idx) => {
-  if (line.includes('id="tab-') || line.includes("id='tab-")) {
-    console.log(`${idx + 1}: ${line.trim()}`);
+const lines = fs.readFileSync('index.html', 'utf8').split('\n');
+lines.forEach((l, i) => {
+  if (l.includes('id="tab-movies"') || l.includes('id="tab-shows"')) {
+    console.log(i + 1, l.trim());
   }
 });

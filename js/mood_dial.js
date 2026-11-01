@@ -198,6 +198,12 @@
       sectorSliderLbl.textContent = `${sector.icon} ${sector.short.replace(/^[^ ]+ /, '')}`;
     }
 
+    // Dynamically shift stage backdrop glow color with current mood
+    const stageGlow = $('moodStageGlow');
+    if (stageGlow && sector.color) {
+      stageGlow.style.background = `radial-gradient(circle at 50% 35%, ${sector.color}33 0%, rgba(9, 12, 22, 0.9) 75%)`;
+    }
+
     if (triggerUpdate) {
       renderMoodDialRecommendations(sector);
     }
