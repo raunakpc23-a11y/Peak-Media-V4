@@ -796,36 +796,7 @@
       if (!b.hasAttribute('data-pop')) b.setAttribute('data-pop', '');
     });
 
-    // 3. Library Shelves: Smooth Swap & Staggered Cards
-    var origFilterLibraryShelfView = window.filterLibraryShelfView;
-    if (typeof origFilterLibraryShelfView === 'function') {
-      window.filterLibraryShelfView = function (view) {
-        origFilterLibraryShelfView(view);
-        // Stagger cards in visible shelves
-        ['watched', 'wish', 'fav'].forEach(function (s) {
-          var shelfEl = document.getElementById('shelf-' + s);
-          if (shelfEl && shelfEl.children.length) {
-            staggerChildren(shelfEl, { count: 12, gap: 35, dy: 16 });
-          }
-        });
-      };
-    }
-
-    // Wrap renderShelves to automatically apply stagger
-    var origRenderShelves = window.renderShelves;
-    if (typeof origRenderShelves === 'function') {
-      window.renderShelves = function () {
-        origRenderShelves.apply(this, arguments);
-        ['watched', 'wish', 'fav'].forEach(function (s) {
-          var shelfEl = document.getElementById('shelf-' + s);
-          if (shelfEl && shelfEl.children.length) {
-            staggerChildren(shelfEl, { count: 10, gap: 30, dy: 16 });
-          }
-        });
-      };
-    }
-
-    // 4. Escape Key: Smoothly close open motion takeover
+    // 3. Escape Key: Smoothly close open motion takeover
     window.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isOpen()) {
         closeFullscreen();
@@ -943,25 +914,11 @@
     };
   }
 
-  // BACK: logo returns into the icon it came from
+  // BACK: Instant exit without reverse/comeback animation; keeps target page entry animation
   function back(commit) {
     if (busy) return;
-    if (!last || !last.isConnected || reduced()) { commit(); paneIn(); return; }
-    begin();
-    var vw = innerWidth, vh = innerHeight, F = Math.min(340, Math.min(vw, vh) * .42), o = overlay('#a855f7'), src = glyph(last), L = logo(src, F);
-    o.root.appendChild(L.w); document.body.appendChild(o.root);
-    setTimeout(function () { end(o.root); }, 1500);
-    o.wash.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, fill: 'forwards' });
-    L.w.animate([{ opacity: 0, transform: 'scale(1.8)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 200, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' }).onfinish = function () {
-      try { commit(); } catch (e) { console.error(e); }
-      last.scrollIntoView({ block: 'center' });
-      requestAnimationFrame(function () {
-        var g = glyph(last).getBoundingClientRect(), c = ctr(g), s = Math.max(g.width, g.height) / (src.classList.contains('vinyl-record-disc') ? F : F * .8);
-        var t = 'translate(' + (c[0] - vw / 2) + 'px,' + (c[1] - vh / 2) + 'px) scale(' + s + ')';
-        L.w.animate([{ transform: 'none', opacity: 1 }, { transform: t, opacity: 1, offset: .85 }, { transform: t, opacity: 0 }], { duration: 380, easing: 'cubic-bezier(.65,0,.15,1)', fill: 'forwards' });
-        o.wash.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 340, fill: 'forwards' }).onfinish = function () { end(o.root); };
-      });
-    };
+    try { commit(); } catch (e) { console.error(e); }
+    paneIn();
   }
 
   // WIRING (no HTML edits needed) — capture phase so it runs before inline onclick
@@ -987,7 +944,8 @@
     };
     window.returnToOpeningPage = function () {
       if (!document.getElementById('tab-discover').classList.contains('hidden')) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
-      back(function () { window.switchTab('discover'); if (window.updateHomeVinylPlayer) setTimeout(window.updateHomeVinylPlayer, 60); });
+      window.switchTab('discover');
+      if (window.updateHomeVinylPlayer) setTimeout(window.updateHomeVinylPlayer, 60);
     };
     window.closeMusicToVinyl = window.returnToOpeningPage;
   }

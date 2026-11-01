@@ -15634,6 +15634,8 @@ Odd Taxi|2021|87
     });
 
     window.renderTags = renderTags;
+    window.createCardHTML = createCardHTML;
+    window.attachThumbObservers = attachThumbObservers;
     window.calculateCompatibility = calculateCompatibility;
     window.loadDemoCompatibility = loadDemoCompatibility;
     window.surpriseFriendList = surpriseFriendList;

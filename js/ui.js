@@ -21,8 +21,7 @@
     space: { first: 'hub', subs: [
       ['hub', 'Shelves', 'fa-bookmark'],
       ['web', 'DNA', 'fa-circle-nodes'],
-      ['profile', 'Profile', 'fa-user'],
-      ['admin', 'Admin', 'fa-shield-halved']
+      ['profile', 'Profile', 'fa-user']
     ] },
     profile: { first: 'profile', subs: [] }
   };
@@ -43,8 +42,7 @@
     hub: 'space',
     lists: 'space',
     web: 'space',
-    profile: 'profile',
-    admin: 'profile'
+    profile: 'profile'
   };
   const ON = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative bg-brand-gold text-black shadow-md';
   const OFF = 'nav-pill whitespace-nowrap shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 sm:gap-2 relative text-gray-300 hover:text-white hover:bg-white/5';
@@ -68,15 +66,24 @@
       }
     }
 
-    // Toggle Header Back Home Button (Hidden on Home, Visible on sub-pages)
+    // Toggle Header Back Home Button (Show only Back/Exit on other pages, show only Home Logo on Home)
     const headerBackBtn = $('headerBackHomeBtn');
-    if (headerBackBtn) {
-      if (key === 'discover') {
+    const headerBrandPlate = $('headerBrandPlate') || document.querySelector('.brass-astrolabe-plate');
+    if (key === 'discover') {
+      if (headerBackBtn) {
         headerBackBtn.classList.add('hidden');
-        headerBackBtn.classList.remove('inline-flex');
-      } else {
+        headerBackBtn.classList.remove('flex', 'inline-flex');
+      }
+      if (headerBrandPlate) {
+        headerBrandPlate.classList.remove('hidden');
+      }
+    } else {
+      if (headerBackBtn) {
         headerBackBtn.classList.remove('hidden');
-        headerBackBtn.classList.add('inline-flex');
+        headerBackBtn.classList.add('flex');
+      }
+      if (headerBrandPlate) {
+        headerBrandPlate.classList.add('hidden');
       }
     }
 
@@ -143,7 +150,7 @@
       if (window.renderCustomListsTab) window.renderCustomListsTab();
       if (window.renderCinePassLedger) window.renderCinePassLedger();
     }
-    if ((key === 'profile' || key === 'admin') && window.renderProfileTab) window.renderProfileTab();
+    if (key === 'profile' && window.renderProfileTab) window.renderProfileTab();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -290,7 +297,7 @@
     } else if (tool === 'marathon') {
       if (window.openMarathonModal) window.openMarathonModal();
     } else if (tool === 'decades') {
-      window.onDecadesSliderChange(1994);
+      window.onDecadesSliderChange(2026);
     } else if (tool === 'matchmaker') {
       if (window.initCineMatchmaker) window.initCineMatchmaker();
     } else if (tool === 'compatibility') {
@@ -307,6 +314,19 @@
   window.openDeciderTool = function(toolKey) {
     window.switchTab('play');
     window.selectDeciderTool(toolKey);
+  };
+
+  window.selectProfileTool = function(tool) {
+    const tools = ['account', 'taste', 'collection', 'style'];
+    tools.forEach(t => {
+      const btn = document.getElementById('profileRailBtn-' + t);
+      const stage = document.getElementById('profileStage-' + t);
+      if (btn) btn.classList.toggle('active', t === tool);
+      if (stage) stage.classList.toggle('hidden', t !== tool);
+    });
+    if (tool === 'taste') {
+      if (window.refreshDNA) window.refreshDNA();
+    }
   };
 
   window.onDecadesSliderChange = function(year) {
@@ -328,20 +348,29 @@
     }
     const row = document.getElementById('decadesCardsRow');
     if (row && window.movies) {
-      const match = window.movies.filter(m => Math.abs(parseInt(m.year, 10) - y) <= 1).slice(0, 10);
-      row.innerHTML = match.map(m => {
-        const poster = (window.posterCache && window.posterCache[m.type + ':' + m.title]) || (window.generateStylizedPosterDataURI ? window.generateStylizedPosterDataURI(m) : '');
-        return `
-          <div class="shelf-card group cursor-pointer shrink-0 w-32 space-y-1.5" onclick="openDetailModal('${m.title.replace(/'/g, "\\'")}')">
-            <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 group-hover:border-brand-gold transition-all">
-              <img src="${poster}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${m.title}">
-              <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/75 text-[10px] font-bold text-brand-gold">★ ${m.rating}</span>
+      const pool = (window.movies || []).concat(window.shows || []);
+      const exact = pool.filter(m => parseInt(m.year, 10) === y);
+      const near = pool.filter(m => Math.abs(parseInt(m.year, 10) - y) <= 2 && parseInt(m.year, 10) !== y)
+        .sort((a, b) => parseInt(b.year, 10) - parseInt(a.year, 10) || parseFloat(b.rating || 0) - parseFloat(a.rating || 0));
+      const match = [...exact, ...near].slice(0, 16);
+      if (window.createCardHTML) {
+        row.innerHTML = match.map(m => window.createCardHTML(m, true)).join('');
+        if (window.attachThumbObservers) window.attachThumbObservers(row);
+      } else {
+        row.innerHTML = match.map(m => {
+          const poster = (window.posterCache && window.posterCache[m.type + ':' + m.title]) || (window.generateStylizedPosterDataURI ? window.generateStylizedPosterDataURI(m) : '');
+          return `
+            <div class="shelf-card group cursor-pointer shrink-0 w-32 space-y-1.5" onclick="openDetailModal('${m.title.replace(/'/g, "\\'")}')">
+              <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 group-hover:border-brand-gold transition-all">
+                <img src="${poster}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${m.title}">
+                <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/75 text-[10px] font-bold text-brand-gold">★ ${m.rating}</span>
+              </div>
+              <div class="text-xs font-bold text-white truncate">${m.cleanName || m.title}</div>
+              <div class="text-[11px] text-gray-400 font-mono">${m.year} · ${m.genre}</div>
             </div>
-            <div class="text-xs font-bold text-white truncate">${m.cleanName || m.title}</div>
-            <div class="text-[11px] text-gray-400 font-mono">${m.year} · ${m.genre}</div>
-          </div>
-        `;
-      }).join('');
+          `;
+        }).join('');
+      }
     }
   };
 
@@ -1071,15 +1100,6 @@
       if (window.returnToOpeningPage) window.returnToOpeningPage();
     }
   });
-
-  // Admin console is accessible only via private hash #admin
-  function checkAdminHash() {
-    if (window.location.hash === '#admin') {
-      if (_sw) _sw('admin');
-    }
-  }
-  window.addEventListener('hashchange', checkAdminHash);
-  setTimeout(checkAdminHash, 350);
 
   // Pulse hint on first visit only
   try {

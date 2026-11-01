@@ -66,15 +66,16 @@
   <header class="observatory-master-console sticky top-0 z-40 transition-all">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between gap-1.5 sm:gap-4">
       
-      <!-- Left: Peak Media Brand Plate & Back Button -->
+      <!-- Left: Peak Media Brand Icon & Back Button -->
       <div class="flex items-center gap-2 shrink-0">
         <!-- Back to Main Page Button (Uniform top-left back mark for every page) -->
-        <button type="button" id="headerBackHomeBtn" onclick="returnToOpeningPage()" title="Back to Main Page" class="back-corner-mark hidden h-8 sm:h-9 px-2.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 items-center gap-1.5 shadow" aria-label="Back to Main Page">
+        <button type="button" id="headerBackHomeBtn" onclick="returnToOpeningPage()" title="Back to Home" class="back-corner-mark hidden h-8 sm:h-9 px-3 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black text-white text-xs font-bold transition-all active:scale-95 items-center gap-1.5 shadow" aria-label="Back">
           <i class="fa-solid fa-arrow-left text-xs"></i>
-          <span class="hidden sm:inline">Home</span>
+          <span>Back</span>
         </button>
 
-        <div class="brass-astrolabe-plate group shrink-0 cursor-pointer" onclick="switchTab('discover')" title="Peak Media">
+        <!-- Peak Media Brand Icon Only (No text beside it) -->
+        <div id="headerBrandPlate" class="brass-astrolabe-plate group shrink-0 cursor-pointer" onclick="switchTab('discover')" title="Peak Media">
           <div class="header-brand-icon-box h-8 sm:h-10 px-2 py-0.5 rounded-lg border border-brand-gold/40 flex items-center justify-center shadow-inner">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-6 sm:h-8 w-auto" fill="none">
               <defs>
@@ -113,9 +114,6 @@
               </g>
             </svg>
           </div>
-          <div class="flex flex-col select-none">
-            <span class="text-xs sm:text-sm font-black tracking-wider uppercase text-brand-gold">PEAK MEDIA</span>
-          </div>
         </div>
       </div>
 
@@ -145,16 +143,11 @@
           <i class="fa-solid fa-sliders text-xs"></i>
         </button>
 
-        <!-- Profile Avatar Button with Circular SVG Progress Ring (Opens Library) -->
-        <button type="button" id="userProfileBtn" onclick="switchTab('hub')" title="Library &amp; Profile" class="header-action-btn relative h-9 sm:h-10 px-2 sm:px-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-95 shadow-inner" aria-label="Library &amp; Profile">
-          <div class="relative w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center">
-            <svg class="w-full h-full -rotate-90" viewBox="0 0 40 40">
-              <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-opacity="0.15" stroke-width="3.5" />
-              <circle id="profileRingCircle" cx="20" cy="20" r="18" fill="none" stroke="var(--gold-hex, #38bdf8)" stroke-width="3.5" stroke-dasharray="113.1" stroke-dashoffset="85" stroke-linecap="round" class="transition-all duration-500" />
-            </svg>
-            <i class="fa-solid fa-user absolute text-[10px] text-brand-gold"></i>
-          </div>
-          <span id="headerUsernameLabel" class="hidden sm:inline text-gray-200 text-xs font-medium">Profile</span>
+        <!-- Profile Button (Generic User Icon only) -->
+        <button type="button" id="userProfileBtn" onclick="switchTab('hub')" title="Library &amp; Profile" class="header-action-btn w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-brand-gold transition-all active:scale-95 shadow-sm" aria-label="Profile">
+          <i class="fa-solid fa-user text-xs sm:text-sm text-brand-gold"></i>
+          <span id="profileRingCircle" class="hidden"></span>
+          <span id="headerUsernameLabel" class="hidden"></span>
           <span id="headerAvatarBadge" class="hidden">👤</span>
         </button>
 
@@ -315,7 +308,7 @@
             <!-- Group 2: Marathon, Decades -->
             <div class="flex items-center gap-1 sm:gap-1.5">
               <button type="button" onclick="openDeciderTool('marathon')" class="decider-glyph-btn" title="Marathon" aria-label="Marathon">
-                <i class="fa-solid fa-film text-xl sm:text-2xl text-emerald-400"></i>
+                <i class="fa-solid fa-stopwatch text-xl sm:text-2xl text-emerald-400"></i>
               </button>
               <button type="button" onclick="openDeciderTool('decades')" class="decider-glyph-btn" title="Decades" aria-label="Decades">
                 <i class="fa-solid fa-clock-rotate-left text-xl sm:text-2xl text-blue-400"></i>
@@ -331,17 +324,17 @@
                 <i class="fa-solid fa-wand-magic-sparkles text-xl sm:text-2xl text-rose-400"></i>
               </button>
               <button type="button" onclick="openDeciderTool('compatibility')" class="decider-glyph-btn" title="Compatibility" aria-label="Compatibility">
-                <i class="fa-solid fa-heart text-xl sm:text-2xl text-pink-400"></i>
+                <i class="fa-solid fa-user-group text-xl sm:text-2xl text-pink-400"></i>
               </button>
             </div>
 
-            <!-- Divider Gap 3 -->
+            <!-- Divider Gap 2 -->
             <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
 
             <!-- Group 4: Ricochet, Opposite -->
             <div class="flex items-center gap-1 sm:gap-1.5">
               <button type="button" onclick="openDeciderTool('ricochet')" class="decider-glyph-btn" title="Ricochet" aria-label="Ricochet">
-                <i class="fa-solid fa-circle-nodes text-xl sm:text-2xl text-cyan-400"></i>
+                <i class="fa-solid fa-bullseye text-xl sm:text-2xl text-cyan-400"></i>
               </button>
               <button type="button" onclick="openDeciderTool('opposite')" id="homeOppositeDeciderBtn" class="decider-glyph-btn" title="Opposite" aria-label="Opposite">
                 <i class="fa-solid fa-shuffle text-xl sm:text-2xl text-emerald-300"></i>
@@ -413,31 +406,47 @@
 
       </div>
 
-      <!-- 4. FILMS / TV SERIES / LIBRARY (3 Large Icons with a Single Label Below Each) -->
-      <div class="grid grid-cols-3 gap-3 sm:gap-6">
+      <!-- 4. GATEWAY PORTALS (Films, TV Series, Genres, Universes, Library) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         
         <!-- Portal 1: Films -->
-        <div onclick="switchTab('movies')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl theme-card-bg border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Films">
-          <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-amber-500/20 transition-all shadow-md">
-            <i class="fa-solid fa-clapperboard text-3xl sm:text-4xl md:text-5xl text-amber-400 group-hover:text-brand-gold transition-colors"></i>
+        <div onclick="switchTab('movies')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer group transition-all text-center" title="Films">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-amber-500/20 transition-all shadow-md">
+            <i class="fa-solid fa-clapperboard text-xl sm:text-2xl text-amber-400 group-hover:text-brand-gold transition-colors"></i>
           </div>
-          <span class="text-sm sm:text-base font-display font-black uppercase tracking-wider text-white group-hover:text-brand-gold transition-colors">Films</span>
+          <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-brand-gold transition-colors">Films</span>
         </div>
 
         <!-- Portal 2: TV Series -->
-        <div onclick="switchTab('shows')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl theme-card-bg border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="TV Series">
-          <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-sky-500/20 transition-all shadow-md">
-            <i class="fa-solid fa-tv text-3xl sm:text-4xl md:text-5xl text-sky-400 group-hover:text-sky-300 transition-colors"></i>
+        <div onclick="switchTab('shows')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer group transition-all text-center" title="TV Series">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-sky-500/20 transition-all shadow-md">
+            <i class="fa-solid fa-tv text-xl sm:text-2xl text-sky-400 group-hover:text-sky-300 transition-colors"></i>
           </div>
-          <span class="text-sm sm:text-base font-display font-black uppercase tracking-wider text-white group-hover:text-sky-300 transition-colors">TV Series</span>
+          <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-sky-300 transition-colors">TV Series</span>
         </div>
 
-        <!-- Portal 3: Library (Preserves #homeProfileVaultCard and all counter IDs for sync/verification) -->
-        <div id="homeProfileVaultCard" onclick="openShelvesFromHome()" class="portal-gateway-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl theme-card-bg border border-emerald-500/25 hover:border-emerald-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Library">
-          <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl bg-emerald-500/10 border border-emerald-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all shadow-md">
-            <i class="fa-solid fa-ticket text-3xl sm:text-4xl md:text-5xl text-emerald-400 group-hover:text-emerald-300 transition-colors"></i>
+        <!-- Portal 3: Genres -->
+        <div onclick="switchTab('categories')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-purple-500/20 hover:border-purple-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer group transition-all text-center" title="Genres">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-purple-500/10 border border-purple-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-purple-500/20 transition-all shadow-md">
+            <i class="fa-solid fa-masks-theater text-xl sm:text-2xl text-purple-400 group-hover:text-purple-300 transition-colors"></i>
           </div>
-          <span class="text-sm sm:text-base font-display font-black uppercase tracking-wider text-white group-hover:text-emerald-400 transition-colors">Library</span>
+          <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-purple-300 transition-colors">Genres</span>
+        </div>
+
+        <!-- Portal 4: Universes -->
+        <div onclick="switchTab('universes')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-cyan-500/20 hover:border-cyan-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer group transition-all text-center" title="Universes">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all shadow-md">
+            <i class="fa-solid fa-globe text-xl sm:text-2xl text-cyan-400 group-hover:text-cyan-300 transition-colors"></i>
+          </div>
+          <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-cyan-300 transition-colors">Universes</span>
+        </div>
+
+        <!-- Portal 5: Library -->
+        <div id="homeProfileVaultCard" onclick="openShelvesFromHome()" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-emerald-500/25 hover:border-emerald-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2 cursor-pointer group transition-all text-center" title="Library">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-emerald-500/10 border border-emerald-400/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all shadow-md">
+            <i class="fa-solid fa-bookmark text-xl sm:text-2xl text-emerald-400 group-hover:text-emerald-300 transition-colors"></i>
+          </div>
+          <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-emerald-400 transition-colors">Library</span>
           <!-- Hidden background sync elements -->
           <div class="hidden" aria-hidden="true">
             <span id="homePassportAvatar">🎬</span>
@@ -449,7 +458,7 @@
 
       </div>
 
-      <!-- 5. CONTENT FILTERS (Directly starts with Masterworks, Popular Hits, Box Office + small filter button at far side) -->
+      <!-- 5. CONTENT FILTERS (Directly starts with Masterworks, Popular Hits, Indian Delight + small refine button at far side) -->
       <div id="streamFilterBar" class="flex items-center justify-between gap-3 pt-2 pb-1 border-b border-white/10">
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
           <button type="button" onclick="document.getElementById('shelfWrap-pantheon').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-brand-gold/15 border border-brand-gold/30 text-brand-gold hover:bg-brand-gold/25 transition-all">
@@ -458,12 +467,12 @@
           <button type="button" onclick="document.getElementById('shelfWrap-blockbusters').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 transition-all">
             Popular Hits
           </button>
-          <button type="button" onclick="document.getElementById('shelfWrap-boxoffice').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 transition-all">
-            Box Office
+          <button type="button" onclick="document.getElementById('shelfWrap-indian').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 transition-all">
+            Indian Delight
           </button>
         </div>
 
-        <!-- Small Filter Button at Far Side with active dot indicator and removable chip -->
+        <!-- Small Refine Button at Far Side with active dot indicator and removable chip -->
         <div class="relative shrink-0 flex items-center gap-2">
           <div id="activeStreamFilterChip" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-gold/20 text-brand-gold border border-brand-gold/40 text-xs font-semibold">
             <span id="activeStreamFilterLabel">Films</span>
@@ -471,10 +480,10 @@
               <i class="fa-solid fa-xmark text-[10px]"></i>
             </button>
           </div>
-          <button type="button" id="streamFilterDropdownBtn" onclick="toggleStreamFilterMenu()" class="relative px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all" title="Filter stream">
+          <button type="button" id="streamFilterDropdownBtn" onclick="toggleStreamFilterMenu()" class="relative px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all" title="Refine stream">
             <span id="streamFilterActiveDot" class="hidden w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
             <i class="fa-solid fa-sliders text-[11px] text-brand-gold"></i>
-            <span>Filter</span>
+            <span>Refine</span>
             <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
           </button>
           <div id="streamFilterMenu" class="hidden absolute right-0 top-full mt-1.5 z-40 w-44 rounded-2xl theme-card-bg border border-white/15 p-2 space-y-1 shadow-2xl animate-fadeIn">
@@ -490,9 +499,6 @@
             <button type="button" onclick="applyStreamFilter('indian'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
               <span>Indian Cinema</span>
             </button>
-            <button type="button" onclick="applyStreamFilter('pantheon'); toggleStreamFilterMenu();" class="w-full px-3 py-1.5 rounded-xl text-left text-xs font-bold text-gray-200 hover:text-white hover:bg-white/10 flex items-center justify-between">
-              <span>9.0+ Masterworks</span>
-            </button>
           </div>
           <!-- Hidden theme mode filter elements to preserve background synchronization -->
           <button type="button" id="themeModeFilterBtn" class="hidden" onclick="toggleSystemThemeMode()">
@@ -502,16 +508,16 @@
         </div>
       </div>
 
-      <!-- 6. THE 6 ORDERED CURATED SHELVES -->
+      <!-- 6. THE ORDERED CURATED SHELVES -->
       
-      <!-- Shelf 1: Essential Masterworks (Pantheon 9.0+) -->
+      <!-- Shelf 1: Essential Masterworks -->
       <div id="shelfWrap-pantheon" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
         <div class="flex items-baseline justify-between px-1">
           <div>
-            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
-              <i class="fa-solid fa-crown text-brand-gold text-base"></i> Essential Masterworks
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight">
+              Essential Masterworks
             </h2>
-            <p class="text-xs text-gray-400 mt-0.5 font-medium">Highest rated films and series in cinema history (9.0+)</p>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Highest rated films and series in cinema history</p>
           </div>
           <button type="button" onclick="switchTab('movies')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
             <span>Explore All</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
@@ -526,8 +532,8 @@
       <div id="shelfWrap-blockbusters" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
         <div class="flex items-baseline justify-between px-1">
           <div>
-            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
-              <i class="fa-solid fa-fire text-amber-400 text-base"></i> Popular Hits
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight">
+              Popular Hits
             </h2>
             <p class="text-xs text-gray-400 mt-0.5 font-medium">Spectacle, blockbusters, and pop culture favorites</p>
           </div>
@@ -540,32 +546,31 @@
         </div>
       </div>
 
-      <!-- Shelf 3: Box Office -->
-      <div id="shelfWrap-boxoffice" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
+      <!-- Shelf 3: Indian Delight -->
+      <div id="shelfWrap-indian" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
         <div class="flex items-baseline justify-between px-1">
           <div>
-            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
-              <i class="fa-solid fa-ticket text-amber-300 text-base"></i> Box Office
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight">
+              Indian Delight
             </h2>
-            <p class="text-xs text-gray-400 mt-0.5 font-medium">All-time worldwide box office champions</p>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Acclaimed Hindi and regional masterpieces</p>
           </div>
-          <button type="button" onclick="switchTab('movies')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
-            <span>Explore All</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          <button type="button" onclick="setGlobalLanguage('hi'); switchTab('movies');" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
+            <span>Hindi Cinema</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
         <div class="relative group/row">
-          <div id="discoverBoxOfficeRow" class="shelf-scroll-row"></div>
+          <div id="discoverIndianRow" class="shelf-scroll-row"></div>
         </div>
       </div>
 
-      <!-- Shelf 3: Mind Benders & Thrillers -->
+      <!-- Shelf 4: Mind Benders & Thrillers (Clean title, subtitle removed) -->
       <div id="shelfWrap-mind" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
         <div class="flex items-baseline justify-between px-1">
           <div>
-            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
-              <i class="fa-solid fa-brain text-cyan-400 text-base"></i> Mind Benders &amp; Thrillers
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight">
+              Mind Benders &amp; Thrillers
             </h2>
-            <p class="text-xs text-gray-400 mt-0.5 font-medium">Reality-warping mysteries, sci-fi concepts, and psychological puzzles</p>
           </div>
           <button type="button" onclick="switchTab('categories')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
             <span>Genres</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
@@ -576,12 +581,12 @@
         </div>
       </div>
 
-      <!-- Shelf 4: Prestige Series -->
+      <!-- Shelf 5: Prestige Series -->
       <div id="shelfWrap-series" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
         <div class="flex items-baseline justify-between px-1">
           <div>
-            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
-              <i class="fa-solid fa-tv text-sky-400 text-base"></i> Prestige Series
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight">
+              Prestige Series
             </h2>
             <p class="text-xs text-gray-400 mt-0.5 font-medium">Immersive multi-season drama and television epics</p>
           </div>
@@ -591,24 +596,6 @@
         </div>
         <div class="relative group/row">
           <div id="discoverTvRow" class="shelf-scroll-row"></div>
-        </div>
-      </div>
-
-      <!-- Shelf 5: Indian Cinema Classics -->
-      <div id="shelfWrap-indian" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
-        <div class="flex items-baseline justify-between px-1">
-          <div>
-            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
-              <i class="fa-solid fa-star text-rose-400 text-base"></i> Indian Cinema Classics
-            </h2>
-            <p class="text-xs text-gray-400 mt-0.5 font-medium">Acclaimed Hindi and regional masterpieces</p>
-          </div>
-          <button type="button" onclick="setGlobalLanguage('hi'); switchTab('movies');" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
-            <span>Hindi Cinema</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
-          </button>
-        </div>
-        <div class="relative group/row">
-          <div id="discoverIndianRow" class="shelf-scroll-row"></div>
         </div>
       </div>
 
@@ -797,7 +784,7 @@
             <i class="fa-solid fa-trophy text-amber-400"></i>
           </button>
           <button type="button" onclick="selectDeciderTool('marathon')" id="deciderRailBtn-marathon" class="decider-glyph-btn" data-pop title="Marathon" aria-label="Marathon">
-            <i class="fa-solid fa-film text-emerald-400"></i>
+            <i class="fa-solid fa-stopwatch text-emerald-400"></i>
           </button>
           <button type="button" onclick="selectDeciderTool('decades')" id="deciderRailBtn-decades" class="decider-glyph-btn" data-pop title="Decades" aria-label="Decades">
             <i class="fa-solid fa-clock-rotate-left text-blue-400"></i>
@@ -806,10 +793,10 @@
             <i class="fa-solid fa-wand-magic-sparkles text-rose-400"></i>
           </button>
           <button type="button" onclick="selectDeciderTool('compatibility')" id="deciderRailBtn-compatibility" class="decider-glyph-btn" data-pop title="Compatibility" aria-label="Compatibility">
-            <i class="fa-solid fa-heart text-pink-400"></i>
+            <i class="fa-solid fa-user-group text-pink-400"></i>
           </button>
           <button type="button" onclick="selectDeciderTool('ricochet')" id="deciderRailBtn-ricochet" class="decider-glyph-btn" data-pop title="Ricochet" aria-label="Ricochet">
-            <i class="fa-solid fa-circle-nodes text-cyan-400"></i>
+            <i class="fa-solid fa-bullseye text-cyan-400"></i>
           </button>
           <button type="button" onclick="selectDeciderTool('opposite')" id="deciderRailBtn-opposite" class="decider-glyph-btn" data-pop title="Opposite" aria-label="Opposite">
             <i class="fa-solid fa-shuffle text-emerald-300"></i>
@@ -1002,7 +989,7 @@
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <i class="fa-solid fa-film text-emerald-400"></i> Binge Marathon
+                  <i class="fa-solid fa-stopwatch text-emerald-400"></i> Binge Marathon
                 </h2>
                 <!-- Dual Mode Switcher -->
                 <div class="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.05] border border-white/10 shrink-0">
@@ -1186,14 +1173,14 @@
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
                   <i class="fa-solid fa-clock-rotate-left text-blue-400"></i> Decades &amp; Eras
                 </h2>
-                <span id="decadesYearBadge" class="text-base font-bold font-mono text-brand-gold">1994</span>
+                <span id="decadesYearBadge" class="text-base font-bold font-mono text-brand-gold">2026</span>
               </div>
               <div class="space-y-2">
                 <label class="text-xs text-gray-300 font-semibold flex items-center justify-between">
                   <span>Travel through Cinema History</span>
-                  <span id="tmSliderYearLabel" class="font-bold text-brand-gold">1994</span>
+                  <span id="tmSliderYearLabel" class="font-bold text-brand-gold">2026</span>
                 </label>
-                <input type="range" id="decadesSlider" min="1930" max="2026" value="1994" oninput="onDecadesSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab h-2 rounded-lg">
+                <input type="range" id="decadesSlider" min="1930" max="2026" value="2026" oninput="onDecadesSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab h-2 rounded-lg">
               </div>
               <div id="decadesGlanceBox" class="p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300"></div>
               <div class="space-y-1">
@@ -1257,7 +1244,7 @@
             <div id="compatLab" class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <i class="fa-solid fa-heart text-pink-400"></i> Taste Compatibility
+                  <i class="fa-solid fa-user-group text-pink-400"></i> Taste Compatibility
                 </h2>
                 <button type="button" onclick="loadDemoCompatibility()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
                   Demo
@@ -1345,7 +1332,7 @@
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <i class="fa-solid fa-circle-nodes text-cyan-400"></i> Mood Ricochet
+                  <i class="fa-solid fa-bullseye text-cyan-400"></i> Mood Ricochet
                 </h2>
                 <div class="flex items-center gap-2">
                   <button type="button" onclick="if(window.rcShuffle) window.rcShuffle();" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs border border-white/15">Shuffle</button>
@@ -1525,32 +1512,6 @@
         </div>
       </div>
 
-      <!-- TOP THREE FAVOURITES (Golden Ticket Passes) -->
-      <div class="gold-podium-frame p-5 sm:p-7 space-y-5">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-500/30 pb-4">
-          <div>
-            <div class="text-[10px] font-black uppercase tracking-widest text-brand-gold font-mono flex items-center gap-2">
-              <i class="fa-solid fa-crown text-brand-gold"></i>
-              <span>TOP THREE FAVOURITES</span>
-            </div>
-            <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white mt-0.5">
-              Top 3 Golden Ticket Hall of Fame
-            </h3>
-            <p class="text-xs text-amber-200/70 mt-1">Tap any watched film or show's scorecard to mint it into your top three gold frame.</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="exportCinePassLedger()" class="brass-backup-chest text-xs" title="Export Top 3 Passes Archive">
-              <i class="fa-solid fa-download text-brand-gold"></i> <span>Export Passes</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Dynamic Stamped Tickets Grid -->
-        <div id="cinePassLedgerContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          <!-- Rendered dynamically by renderCinePassLedger() -->
-        </div>
-      </div>
-
       <!-- Hidden hooks kept for legacy script compatibility -->
       <div class="hidden" aria-hidden="true">
         <div id="hubQuickThemeSwatches"></div>
@@ -1560,26 +1521,10 @@
       </div>
 
       <!-- Shelves -->
-      <div id="hubShelves" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
+      <div id="hubShelves" class="glass-card rounded-2xl p-4 sm:p-6 space-y-5 border border-white/10">
         
-        <div>
-          <div class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Timeline · by decade</div>
-          <div id="reelStrip" class="reel"></div>
-        </div>
-
         <div class="grid grid-cols-1 gap-3">
-          <!-- Watched Shelf -->
-          <div class="shelf-drop rounded-xl p-3 bg-black/30 border border-white/10" data-shelf="watched">
-            <div class="flex items-center justify-between mb-1.5">
-              <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                <i class="fa-solid fa-circle-check"></i> Watched (<span id="shelfCnt-watched">0</span>)
-              </div>
-              <button onclick="clearShelf('watched')" class="text-[11px] text-gray-500 hover:text-rose-400 transition-colors">Clear</button>
-            </div>
-            <div id="shelf-watched" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[110px] items-start"></div>
-          </div>
-
-          <!-- Watchlist Shelf -->
+          <!-- 1. Watchlist Shelf (Top) -->
           <div class="shelf-drop rounded-xl p-3 bg-black/30 border border-white/10" data-shelf="wish">
             <div class="flex items-center justify-between mb-1.5">
               <div class="text-xs font-extrabold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
@@ -1590,7 +1535,7 @@
             <div id="shelf-wish" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[110px] items-start"></div>
           </div>
 
-          <!-- Favourites Shelf -->
+          <!-- 2. Favourites Shelf -->
           <div class="shelf-drop rounded-xl p-3 bg-black/30 border border-white/10" data-shelf="fav">
             <div class="flex items-center justify-between mb-1.5">
               <div class="text-xs font-extrabold uppercase tracking-wider text-brand-gold flex items-center gap-1.5">
@@ -1601,7 +1546,18 @@
             <div id="shelf-fav" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[110px] items-start"></div>
           </div>
 
-          <!-- Custom Film/Show Lists & Song Playlists (Integrated into Shelves) -->
+          <!-- 3. Watched Shelf -->
+          <div class="shelf-drop rounded-xl p-3 bg-black/30 border border-white/10" data-shelf="watched">
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-check"></i> Watched (<span id="shelfCnt-watched">0</span>)
+              </div>
+              <button onclick="clearShelf('watched')" class="text-[11px] text-gray-500 hover:text-rose-400 transition-colors">Clear</button>
+            </div>
+            <div id="shelf-watched" class="flex gap-2.5 overflow-x-auto pb-1.5 min-h-[110px] items-start"></div>
+          </div>
+
+          <!-- 4. Custom Film/Show Lists & Song Playlists -->
           <div id="shelf-custom" class="pt-4 border-t border-white/10 space-y-4">
             <div class="flex items-center justify-between">
               <h3 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
@@ -1619,47 +1575,37 @@
             <div id="customMediaListsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
             <div id="customSongListsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-2"></div>
           </div>
-        </div>
-      </div>
 
-      <!-- 1. TASTE DNA & ANALYTICS CARD -->
-      <div id="hubAnalytics" class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-white/10">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <span class="text-[11px] font-bold uppercase tracking-widest text-brand-gold">Viewer DNA Analytics</span>
-            <h2 class="text-2xl font-display font-bold text-white mt-0.5">Your Cinema Taste Profile</h2>
+          <!-- 5. Timeline · by decade (Lower) -->
+          <div class="pt-4 border-t border-white/10 space-y-2">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Timeline · by decade</div>
+            <div id="reelStrip" class="reel"></div>
           </div>
-          <span class="text-xs text-gray-400">Updates live as you mark watched and rated titles</span>
         </div>
-        <div id="hubStats"></div>
-      </div>
 
-      <!-- NEW: TASTE DNA CARD -->
-      <div id="dnaSection" class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div class="mx-auto w-full max-w-[420px]">
-            <canvas id="dnaCv" class="w-full rounded-2xl border border-white/10 shadow-2xl" style="aspect-ratio:600/760"></canvas>
-          </div>
-          <div class="space-y-5">
+        <!-- 6. TOP THREE FAVOURITES (Golden Ticket Passes - Lower on page) -->
+        <div class="gold-podium-frame p-5 sm:p-7 space-y-5 rounded-2xl border border-amber-500/30 bg-black/40">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-500/30 pb-4">
             <div>
-              <span class="text-[11px] font-bold uppercase tracking-widest text-brand-gold">Shareable Identity</span>
-              <h2 class="text-2xl font-display font-bold text-white mt-0.5">Taste DNA Card</h2>
-              <p class="text-sm text-gray-400">A live genre radar, era ring and popular-vs-obscure meter that morph as you mark titles watched.</p>
-            </div>
-            <div id="dnaIdentity" class="text-xl font-display font-extrabold text-brand-gold"></div>
-            <div class="flex flex-wrap gap-2">
-              <button id="dnaExport" class="px-4 py-2.5 rounded-xl bg-brand-gold text-black text-sm font-extrabold"><i class="fa-solid fa-image mr-1.5"></i>Export PNG</button>
-              <button id="dnaCopy" class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-semibold text-gray-200"><i class="fa-solid fa-copy mr-1.5"></i>Copy my compare code</button>
-            </div>
-            <div class="p-4 rounded-2xl bg-black/35 border border-white/10 space-y-3">
-              <label class="text-xs font-extrabold uppercase tracking-wider text-cyan-400">Overlay a friend's card</label>
-              <textarea id="dnaFriendCode" rows="2" placeholder="Paste a friend's compare code (starts with CS1-)…" class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 font-mono"></textarea>
-              <div class="flex gap-2">
-                <button id="dnaOverlay" class="px-4 py-2 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-200 text-xs font-bold">Overlay &amp; compare</button>
-                <button id="dnaClear" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-xs font-semibold">Clear overlay</button>
+              <div class="text-[10px] font-black uppercase tracking-widest text-brand-gold font-mono flex items-center gap-2">
+                <i class="fa-solid fa-crown text-brand-gold"></i>
+                <span>TOP THREE FAVOURITES</span>
               </div>
-              <div id="dnaCompat" class="text-sm text-gray-300 hidden"></div>
+              <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white mt-0.5">
+                Top 3 Golden Ticket Hall of Fame
+              </h3>
+              <p class="text-xs text-amber-200/70 mt-1">Tap any watched film or show's scorecard to mint it into your top three gold frame.</p>
             </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="exportCinePassLedger()" class="brass-backup-chest text-xs" title="Export Top 3 Passes Archive">
+                <i class="fa-solid fa-download text-brand-gold"></i> <span>Export Passes</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Stamped Tickets Grid -->
+          <div id="cinePassLedgerContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <!-- Rendered dynamically by renderCinePassLedger() -->
           </div>
         </div>
       </div>
@@ -1835,86 +1781,153 @@
         </button>
       </div>
 
-      <!-- BLOCK 1: PERSONAL PROFILE & SETTINGS -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Personal Profile Card -->
-        <div class="glass-card rounded-3xl p-6 border border-white/10 space-y-5">
-          <div class="flex items-center gap-4">
-            <div id="profileBigAvatar" class="w-16 h-16 rounded-2xl bg-brand-gold/15 border-2 border-brand-gold flex items-center justify-center p-2 shadow-lg shrink-0"></div>
-            <div class="min-w-0 flex-1">
-              <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Member Profile</div>
-              <h2 id="profileDisplayName" class="text-2xl font-display font-extrabold text-white truncate">Member</h2>
-              <div id="profileLangSummary" class="text-xs text-gray-400 font-mono">Catalog: All Titles · Preferred Genre: Sci-Fi</div>
-            </div>
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Choose Avatar</label>
-            <div id="profileAvatarGrid" class="grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-4 gap-2"></div>
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Display Name</label>
-            <div class="flex gap-2">
-              <input id="profileNameInput" type="text" maxlength="28" placeholder="Your name..." class="flex-1 min-w-0 px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
-              <button type="button" onclick="saveProfileFromTab()" class="px-4 py-2 rounded-xl bg-brand-gold text-black font-bold text-xs shrink-0">Save</button>
-            </div>
-          </div>
-
-          <div class="pt-3 border-t border-white/10 flex flex-wrap gap-2">
-            <button type="button" onclick="openOnboardingWizard(true)" class="w-full py-2.5 px-3 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/40 text-xs font-bold text-brand-gold flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Customize Taste Setup</span>
-            </button>
-            <button type="button" onclick="exportUserData()" class="flex-1 py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-download text-brand-gold"></i> <span>Export Data</span>
-            </button>
-            <label class="flex-1 py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white cursor-pointer flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-upload text-cyan-300"></i> <span>Import Data</span>
-              <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event)">
-            </label>
-          </div>
+      <!-- Profile Deck Layout (Like Deciders: Left Glyph Rail + Right Stage Viewport) -->
+      <div class="deciders-deck-layout">
+        <!-- Left Glyph Rail -->
+        <div class="deciders-tools-rail" id="profileToolsRail">
+          <button type="button" onclick="selectProfileTool('account')" id="profileRailBtn-account" class="decider-glyph-btn active" title="Profile" aria-label="Profile">
+            <i class="fa-solid fa-user text-brand-gold"></i>
+          </button>
+          <button type="button" onclick="selectProfileTool('taste')" id="profileRailBtn-taste" class="decider-glyph-btn" title="Taste Profile" aria-label="Taste Profile">
+            <i class="fa-solid fa-circle-nodes text-purple-400"></i>
+          </button>
+          <button type="button" onclick="selectProfileTool('collection')" id="profileRailBtn-collection" class="decider-glyph-btn" title="Collection" aria-label="Collection">
+            <i class="fa-solid fa-layer-group text-sky-400"></i>
+          </button>
+          <button type="button" onclick="selectProfileTool('style')" id="profileRailBtn-style" class="decider-glyph-btn" title="Style" aria-label="Style">
+            <i class="fa-solid fa-palette text-amber-400"></i>
+          </button>
         </div>
 
-        <!-- User Activity & Collection Stats -->
-        <div class="lg:col-span-2 glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-5 flex flex-col justify-between">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 class="text-lg sm:text-xl font-display font-bold text-white">Collection</h3>
+        <!-- Center Stage Viewport (Only this area may scroll) -->
+        <div class="deciders-stage-viewport flex-1 min-w-0" id="profileStageViewport">
+          
+          <!-- STAGE 1: ACCOUNT (Default Active) -->
+          <div id="profileStage-account" class="decider-stage-panel space-y-4">
+            <div class="glass-card rounded-3xl p-6 border border-white/10 space-y-5">
+              <div class="flex items-center gap-4">
+                <div id="profileBigAvatar" class="w-16 h-16 rounded-2xl bg-brand-gold/15 border-2 border-brand-gold flex items-center justify-center p-2 shadow-lg shrink-0"></div>
+                <div class="min-w-0 flex-1">
+                  <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Member Profile</div>
+                  <h2 id="profileDisplayName" class="text-2xl font-display font-extrabold text-white truncate">Member</h2>
+                  <div id="profileLangSummary" class="text-xs text-gray-400 font-mono">Catalog: All Titles · Preferred Genre: Sci-Fi</div>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Choose Avatar</label>
+                <div id="profileAvatarGrid" class="grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-4 gap-2"></div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Display Name</label>
+                <div class="flex gap-2">
+                  <input id="profileNameInput" type="text" maxlength="28" placeholder="Your name..." class="flex-1 min-w-0 px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
+                  <button type="button" onclick="saveProfileFromTab()" class="px-4 py-2 rounded-xl bg-brand-gold text-black font-bold text-xs shrink-0">Save</button>
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-white/10 flex flex-wrap gap-2">
+                <button type="button" onclick="openOnboardingWizard(true)" class="w-full py-2.5 px-3 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/40 text-xs font-bold text-brand-gold flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Customize Taste Setup</span>
+                </button>
+                <button type="button" onclick="exportUserData()" class="flex-1 py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-download text-brand-gold"></i> <span>Export Data</span>
+                </button>
+                <label class="flex-1 py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white cursor-pointer flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-upload text-cyan-300"></i> <span>Import Data</span>
+                  <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event)">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- STAGE 2: TASTE PROFILE (Separate Option) -->
+          <div id="profileStage-taste" class="decider-stage-panel hidden space-y-6">
+            <!-- Taste DNA Card -->
+            <div id="dnaSection" class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="mx-auto w-full max-w-[420px]">
+                  <canvas id="dnaCv" class="w-full rounded-2xl border border-white/10 shadow-2xl" style="aspect-ratio:600/760"></canvas>
+                </div>
+                <div class="space-y-5">
+                  <div>
+                    <span class="text-[11px] font-bold uppercase tracking-widest text-brand-gold">Shareable Identity</span>
+                    <h2 class="text-2xl font-display font-bold text-white mt-0.5">Taste DNA Card</h2>
+                    <p class="text-sm text-gray-400">A live genre radar, era ring and popular-vs-obscure meter that morph as you mark titles watched.</p>
+                  </div>
+                  <div id="dnaIdentity" class="text-xl font-display font-extrabold text-brand-gold"></div>
+                  <div class="flex flex-wrap gap-2">
+                    <button id="dnaExport" class="px-4 py-2.5 rounded-xl bg-brand-gold text-black text-sm font-extrabold"><i class="fa-solid fa-image mr-1.5"></i>Export PNG</button>
+                    <button id="dnaCopy" class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-semibold text-gray-200"><i class="fa-solid fa-copy mr-1.5"></i>Copy my compare code</button>
+                  </div>
+                  <div class="p-4 rounded-2xl bg-black/35 border border-white/10 space-y-3">
+                    <label class="text-xs font-extrabold uppercase tracking-wider text-cyan-400">Overlay a friend's card</label>
+                    <textarea id="dnaFriendCode" rows="2" placeholder="Paste a friend's compare code (starts with CS1-)…" class="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 font-mono"></textarea>
+                    <div class="flex gap-2">
+                      <button id="dnaOverlay" class="px-4 py-2 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-200 text-xs font-bold">Overlay &amp; compare</button>
+                      <button id="dnaClear" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-xs font-semibold">Clear overlay</button>
+                    </div>
+                    <div id="dnaCompat" class="text-sm text-gray-300 hidden"></div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div class="telemetry-tube">
-                <div id="profStatWatched" class="text-2xl font-display font-black text-emerald-400">0</div>
-                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watched</div>
+            <!-- Viewer DNA Analytics -->
+            <div id="hubAnalytics" class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-white/10">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span class="text-[11px] font-bold uppercase tracking-widest text-brand-gold">Viewer DNA Analytics</span>
+                  <h2 class="text-2xl font-display font-bold text-white mt-0.5">Your Cinema Taste Profile</h2>
+                </div>
+                <span class="text-xs text-gray-400">Updates live as you mark watched and rated titles</span>
               </div>
-              <div class="telemetry-tube">
-                <div id="profStatWish" class="text-2xl font-display font-black text-rose-400">0</div>
-                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watchlist</div>
-              </div>
-              <div class="telemetry-tube">
-                <div id="profStatFavs" class="text-2xl font-display font-black text-brand-gold">0</div>
-                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Favourites</div>
-              </div>
-              <div class="telemetry-tube">
-                <div id="profStatSongFavs" class="text-2xl font-display font-black text-purple-400">0</div>
-                <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Songs</div>
+              <div id="hubStats"></div>
+            </div>
+          </div>
+
+          <!-- STAGE 3: COLLECTION -->
+          <div id="profileStage-collection" class="decider-stage-panel hidden space-y-4">
+            <div class="glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-5">
+              <h3 class="text-lg sm:text-xl font-display font-bold text-white">Collection Telemetry</h3>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="telemetry-tube">
+                  <div id="profStatWatched" class="text-2xl font-display font-black text-emerald-400">0</div>
+                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watched</div>
+                </div>
+                <div class="telemetry-tube">
+                  <div id="profStatWish" class="text-2xl font-display font-black text-rose-400">0</div>
+                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watchlist</div>
+                </div>
+                <div class="telemetry-tube">
+                  <div id="profStatFavs" class="text-2xl font-display font-black text-brand-gold">0</div>
+                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Favourites</div>
+                </div>
+                <div class="telemetry-tube">
+                  <div id="profStatSongFavs" class="text-2xl font-display font-black text-purple-400">0</div>
+                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Songs</div>
+                </div>
               </div>
             </div>
+          </div>
 
-            <!-- Style Accent Swatches -->
-            <div class="p-4 rounded-xl bg-black/40 border border-white/10 space-y-3">
+          <!-- STAGE 4: STYLE -->
+          <div id="profileStage-style" class="decider-stage-panel hidden space-y-4">
+            <div class="glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-xs font-bold text-white">Style</span>
-                  <div id="profileActiveThemeLabel" class="text-[11px] text-gray-400">Deep Cosmos</div>
+                  <span class="text-sm font-bold text-white">Atmosphere &amp; Color Palette</span>
+                  <div id="profileActiveThemeLabel" class="text-xs text-gray-400">Deep Cosmos</div>
                 </div>
-                <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" id="profileFxToggleBtn" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-200 transition-all">
+                <button type="button" onclick="toggleReduce(); syncProfileThemeStudio();" id="profileFxToggleBtn" class="px-3.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-200 transition-all">
                   <span id="profileFxStateText">Calm Mode</span>
                 </button>
               </div>
               <div id="profileThemeSwatchGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 w-full"></div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -1922,104 +1935,6 @@
       <div class="pt-4 flex items-center justify-between border-t border-amber-500/20 text-xs text-amber-200/50 font-mono select-none">
         <span class="flex items-center gap-2"><i class="fa-solid fa-clapperboard text-brand-gold"></i> PEAK MEDIA · CINEMA ARCHIVE &amp; SOUNDTRACK LOUNGE</span>
         <span>EST. 2026 · ALL RIGHTS RESERVED</span>
-      </div>
-    </section>
-
-    <!-- TAB: ADMIN (Passkey-Gated + Live Supabase Cloud Sync) -->
-    <section id="tab-admin" class="tab-pane hidden fade-in space-y-6">
-      <div class="flex items-center justify-between border-b border-white/10 pb-4">
-        <button type="button" onclick="switchTab('profile')" class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300 hover:text-white flex items-center gap-2 transition-all">
-          <i class="fa-solid fa-arrow-left text-xs"></i> <span>Back to Profile</span>
-        </button>
-        <span class="text-xs text-gray-400 font-mono">Owner Security Zone</span>
-      </div>
-
-      <!-- Owner Passkey Gate (Locks Admin View from General Visitors) -->
-      <div id="adminLockScreen" class="glass-card rounded-3xl p-6 sm:p-10 border border-cyan-500/35 max-w-lg mx-auto text-center space-y-5 my-4">
-        <div class="w-14 h-14 rounded-2xl bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center text-cyan-300 text-2xl mx-auto">
-          <i class="fa-solid fa-user-shield"></i>
-        </div>
-        <div class="space-y-1.5">
-          <span class="text-[11px] font-extrabold uppercase tracking-widest text-cyan-400">Private Owner Console</span>
-          <h2 class="text-2xl font-display font-extrabold text-white">Unlock Admin &amp; Supabase Center</h2>
-          <p class="text-xs text-gray-400">Enter your private Admin Passkey to access live Supabase cloud telemetry, visitor logs, and storage diagnostics.</p>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-2 max-w-sm mx-auto">
-          <input id="adminPasskeyInput" type="password" placeholder="Enter Admin Passkey..." class="flex-1 px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-400" onkeydown="if(event.key==='Enter')unlockAdminVault()">
-          <button type="button" onclick="unlockAdminVault()" class="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold text-xs sm:text-sm transition-all">Unlock Admin</button>
-        </div>
-      </div>
-
-      <!-- Unlocked Admin Console -->
-      <div id="adminControlBlock" class="hidden glass-card rounded-3xl p-5 sm:p-8 border border-cyan-500/30 bg-gradient-to-br from-[#0a1322]/90 via-[#0b0f19]/95 to-[#111524]/90 space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-          <div class="flex items-center gap-3 min-w-0">
-            <div class="w-11 h-11 rounded-2xl bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center text-cyan-300 text-lg shrink-0">
-              <i class="fa-solid fa-shield-halved"></i>
-            </div>
-            <div class="min-w-0">
-              <div class="text-[10px] font-extrabold uppercase tracking-widest text-cyan-400">Owner-Only Administrator Console</div>
-              <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white truncate">Admin &amp; Supabase Cloud Center</h3>
-            </div>
-          </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <span id="idbCacheStatusBadge" class="px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-bold">IndexedDB Active</span>
-            <button type="button" onclick="lockAdminVault()" class="px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500 hover:text-white text-xs font-bold transition-all"><i class="fa-solid fa-lock mr-1"></i>Lock Admin</button>
-          </div>
-        </div>
-
-        <!-- Admin Diagnostics Grid -->
-        <div>
-          <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400 mb-2.5"><i class="fa-solid fa-gauge-high text-cyan-400 mr-1.5"></i>Vault Health &amp; Asset Telemetry</div>
-          <div id="adminDiagnosticsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs"></div>
-        </div>
-
-        <!-- Live Supabase Configuration & Visitor Telemetry Sync -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-          <!-- Column 1: Supabase Credentials & SQL Setup -->
-          <div class="p-4 sm:p-5 rounded-2xl bg-black/50 border border-cyan-500/25 space-y-3.5">
-            <div class="flex items-center justify-between gap-2">
-              <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-300"><i class="fa-solid fa-database mr-1.5"></i>Supabase Cloud Connection (GitHub / Vercel Ready)</div>
-              <span id="adminCloudStatusPill" class="px-2 py-0.5 rounded bg-white/10 text-[10px] text-gray-300 font-semibold">Local Mode</span>
-            </div>
-            <p class="text-xs text-gray-300 leading-relaxed">
-              Paste your <strong>Supabase Project URL</strong> and public <strong>Anon Key</strong> below. Once saved, the site automatically syncs visitor check-ins to your <code class="text-cyan-300">visitor_logs</code> table and lets you fetch all visitor rows right here.
-            </p>
-            <div class="space-y-2">
-              <input id="supaUrlInput" type="url" placeholder="https://your-project-id.supabase.co" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/15 text-xs text-white font-mono focus:outline-none focus:border-cyan-400">
-              <input id="supaKeyInput" type="password" placeholder="Supabase public anon key (eyJhbGci...)" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/15 text-xs text-white font-mono focus:outline-none focus:border-cyan-400">
-              <div class="flex gap-2">
-                <input id="supaNewPassInput" type="password" placeholder="Change Admin Passkey (optional)" class="flex-1 px-3 py-2 rounded-xl bg-black/70 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
-                <button type="button" onclick="saveSupabaseAdminConfig()" class="px-4 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs shrink-0">Save Config</button>
-              </div>
-            </div>
-            <div class="flex flex-wrap gap-2 pt-1">
-              <button type="button" onclick="runSupabaseDoctor()" class="px-3 py-2 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs shadow"><i class="fa-solid fa-stethoscope mr-1"></i>1-Click Connection Doctor</button>
-              <button type="button" onclick="simulateAdminVisitorPing()" class="px-3 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold text-xs"><i class="fa-solid fa-satellite-dish mr-1"></i>Sync / Ping Supabase</button>
-              <button type="button" onclick="fetchSupabaseVisitorLogs()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-bold text-xs"><i class="fa-solid fa-cloud-arrow-down mr-1 text-cyan-300"></i>Fetch All Visitors</button>
-              <button type="button" onclick="copySupabaseSetupSQL()" class="px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 text-emerald-300 font-bold text-xs"><i class="fa-solid fa-database mr-1"></i>Copy Fix SQL (RLS + Columns)</button>
-              <button type="button" onclick="copySupabaseGitHubSnippet()" class="px-3 py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/35 text-purple-200 font-bold text-xs"><i class="fa-brands fa-github mr-1"></i>Copy GitHub Config</button>
-            </div>
-            <div id="supaDoctorOutput" class="hidden p-3 rounded-xl bg-black/80 border border-cyan-400/35 text-[11px] font-mono text-gray-200 space-y-1"></div>
-          </div>
-
-          <!-- Column 2: Live Visitor Logs & Storage Maintenance -->
-          <div class="p-4 sm:p-5 rounded-2xl bg-black/50 border border-white/10 space-y-3.5 flex flex-col justify-between">
-            <div class="space-y-2.5">
-              <div class="flex items-center justify-between">
-                <div class="text-xs font-extrabold uppercase tracking-wider text-brand-gold"><i class="fa-solid fa-users-viewfinder mr-1.5"></i>Visitor Telemetry &amp; Cloud Feed</div>
-                <button type="button" onclick="exportAdminTelemetryJSON()" class="text-[11px] text-cyan-300 hover:underline font-bold"><i class="fa-solid fa-file-code mr-1"></i>Export JSON</button>
-              </div>
-              <div id="adminVisitorLogPreview" class="p-3 rounded-xl bg-black/70 border border-white/5 text-[11px] font-mono text-gray-300 space-y-1 max-h-44 overflow-y-auto break-words">
-                <!-- Populated live by JS -->
-              </div>
-            </div>
-            <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-white/10">
-              <span class="text-[11px] text-gray-400">IndexedDB offloads poster cache from 5 MB localStorage.</span>
-              <button type="button" onclick="clearIndexedDBPosterCache()" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 font-bold text-xs"><i class="fa-solid fa-broom mr-1"></i>Reset Poster Cache</button>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 
