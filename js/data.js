@@ -16508,7 +16508,7 @@ Odd Taxi|2021|87
     // ==========================================
     let moviesPage = 1;
     let showsPage = 1;
-    const PAGE_SIZE = 36;
+    const PAGE_SIZE = 24;
 
     function populateGenreSelects() {
       const movieGenres = [...new Set(movies.map(m => m.genre))].sort();
