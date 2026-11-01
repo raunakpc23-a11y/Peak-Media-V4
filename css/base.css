@@ -90,7 +90,7 @@
     }
 
     /* Universal Card & Surface Elements That Bind To Theme Variables */
-    #heroBanner, #homeVinylShowcase, #homePlayLab, .portal-gateway-card, .theme-card-bg, .theme-box-card, .card-footer-meta, .decider-stage-panel > div {
+    #heroBanner, #homeVinylShowcase, #homePlayLab, .portal-gateway-card, .theme-card-bg, .theme-box-card, .card-footer-meta, .decider-stage-panel > div, .curated-shelf-wrapper {
       background: var(--card-gradient) !important;
       border-color: var(--card-border) !important;
       transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
@@ -1121,28 +1121,109 @@
     }
 
     /* ==========================================================================
-       OBSERVATORY MASTER CONSOLE (HEADER)
+       OBSERVATORY MASTER CONSOLE (HEADER) - DYNAMIC THEME & PALETTE ADAPTIVE
        ========================================================================== */
     .observatory-master-console {
-      background: linear-gradient(180deg, rgba(14, 18, 28, 0.98) 0%, rgba(6, 8, 14, 0.95) 100%);
-      border-bottom: 1px solid rgba(226, 168, 75, 0.3);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(245, 197, 24, 0.2);
+      background: var(--card-gradient) !important;
+      border-bottom: 1px solid var(--card-border) !important;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 4px 25px -4px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
+
+    /* Light Mode Header */
+    [data-mode="light"] .observatory-master-console, 
+    .mode-light .observatory-master-console {
+      background: rgba(255, 255, 255, 0.94) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    }
+
+    /* Header Brand Plate */
     .brass-astrolabe-plate {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 5px 12px;
+      padding: 4px 10px;
       border-radius: 14px;
-      background: linear-gradient(135deg, rgba(30, 20, 10, 0.85) 0%, rgba(10, 8, 6, 0.95) 100%);
-      border: 1px solid rgba(226, 168, 75, 0.45);
-      box-shadow: inset 0 1px 0 rgba(245, 197, 24, 0.35), 0 4px 12px rgba(0, 0, 0, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12));
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       cursor: pointer;
       transition: all 0.25s ease;
     }
     .brass-astrolabe-plate:hover {
-      border-color: rgba(245, 197, 24, 0.8);
-      box-shadow: inset 0 1px 0 rgba(245, 197, 24, 0.5), 0 0 16px rgba(245, 197, 24, 0.3);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: var(--gold-hex, #38bdf8);
+      box-shadow: 0 0 14px rgba(var(--gold, 56 189 248), 0.25);
+    }
+    [data-mode="light"] .brass-astrolabe-plate, 
+    .mode-light .brass-astrolabe-plate {
+      background: #ffffff !important;
+      border-color: rgba(0, 0, 0, 0.1) !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    /* Brand Logo Box inside Brand Plate */
+    .header-brand-icon-box {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12));
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    [data-mode="light"] .header-brand-icon-box,
+    .mode-light .header-brand-icon-box {
+      background: rgba(0, 0, 0, 0.04) !important;
+      border-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Omni-Search Box (Filter / Search Trigger in Top Bar) */
+    .header-search-bar {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12)) !important;
+      color: var(--text-main, #f3f4f6) !important;
+      transition: all 0.25s ease;
+    }
+    .header-search-bar:hover, .header-search-bar:focus {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: var(--gold-hex, #38bdf8) !important;
+    }
+    [data-mode="light"] .header-search-bar,
+    .mode-light .header-search-bar {
+      background: #ffffff !important;
+      border-color: rgba(0, 0, 0, 0.12) !important;
+      color: #0f172a !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    }
+    [data-mode="light"] .header-search-bar::placeholder,
+    .mode-light .header-search-bar::placeholder {
+      color: #94a3b8 !important;
+    }
+
+    /* Top Bar Action Buttons (Style/Filter Option & Profile) */
+    .header-action-btn {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12)) !important;
+      color: var(--text-main, #e2e8f0) !important;
+      transition: all 0.2s ease;
+    }
+    .header-action-btn:hover {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border-color: var(--gold-hex, #38bdf8) !important;
+      color: var(--gold-hex, #38bdf8) !important;
+    }
+    [data-mode="light"] .header-action-btn,
+    .mode-light .header-action-btn {
+      background: #ffffff !important;
+      border-color: rgba(0, 0, 0, 0.1) !important;
+      color: #1e293b !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+    }
+    [data-mode="light"] .header-action-btn:hover,
+    .mode-light .header-action-btn:hover {
+      background: rgba(0, 0, 0, 0.04) !important;
+      border-color: var(--gold-hex, #b45309) !important;
+      color: var(--gold-hex, #b45309) !important;
     }
     .console-station-plate {
       padding: 6px 14px;
@@ -1318,13 +1399,12 @@
       --brass-metal: #B88A4A;
     }
 
-    /* Full-screen Deep Night Sky Canvas */
+    /* Full-screen Sky Canvas (Transparent to allow theme background) */
     .painted-sky-field {
       position: relative;
-      background: linear-gradient(180deg, #0b0f1d 0%, #0d1224 35%, #120e26 70%, #080a12 100%);
-      min-height: 100vh;
+      background: transparent !important;
+      min-height: auto !important;
       width: 100%;
-      overflow-x: hidden;
     }
 
     /* Header Navigation Pills */

@@ -25,11 +25,9 @@
 
   if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(initObservatorySky, 100);
-      });
+      document.addEventListener('DOMContentLoaded', initObservatorySky);
     } else {
-      setTimeout(initObservatorySky, 100);
+      initObservatorySky();
     }
   }
 })();
