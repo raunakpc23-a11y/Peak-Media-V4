@@ -83,75 +83,100 @@
 
   <!-- Custom Decider mark family: one bespoke glyph per tool -->
   <svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
-    <!-- Mood: bold filled compass rose disc -->
+    <!-- Mood: bold, simple, solid-fill compass star in disc -->
     <symbol id="decMood" viewBox="0 0 32 32">
-      <circle cx="16" cy="16" r="14" fill="#A855F7" fill-opacity="0.22" stroke="#A855F7" stroke-width="2.6"/>
-      <circle cx="16" cy="16" r="13" fill="none" stroke="#A855F7" stroke-width="2"/>
-      <path d="M16 4.5 20.5 16 16 13.5 11.5 16Z" fill="#FDE68A" stroke="#FDE68A" stroke-width="0.8" stroke-linejoin="round"/>
-      <path d="M16 27.5 11.5 16 16 18.5 20.5 16Z" fill="#C084FC" stroke="#C084FC" stroke-width="0.8" stroke-linejoin="round"/>
-      <circle cx="16" cy="16" r="2.4" fill="#FFFFFF"/>
+      <circle cx="16" cy="16" r="14.5" fill="#A855F7"/>
+      <!-- Compass 4-point star in center -->
+      <path d="M16 3.5 19.5 16 16 13.5 12.5 16Z" fill="#FFFFFF"/>
+      <path d="M16 28.5 12.5 16 16 18.5 19.5 16Z" fill="#FDE68A"/>
+      <path d="M28.5 16 16 19.5 18.5 16 16 12.5Z" fill="#FDE68A"/>
+      <path d="M3.5 16 16 12.5 13.5 16 16 19.5Z" fill="#FFFFFF"/>
+      <circle cx="16" cy="16" r="2.8" fill="#581C87"/>
     </symbol>
 
-    <!-- Swipe: bold filled card with motion trail -->
+    <!-- Swipe: bold, simple solid card with rightward swipe arrow -->
     <symbol id="decSwipe" viewBox="0 0 32 32">
-      <rect x="2.5" y="4.5" width="16" height="23" rx="3.5" fill="#38BDF8" fill-opacity="0.25" stroke="#38BDF8" stroke-width="2.6"/>
-      <path d="M6.5 9h8M6.5 13.5h5" stroke="#BAE6FD" stroke-width="2" stroke-linecap="round"/>
-      <path d="M19 16h10.5M25 11.5 29.5 16 25 20.5" fill="none" stroke="#FDE68A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Shadow card behind -->
+      <rect x="2" y="6" width="16" height="22" rx="3.5" fill="#0284C7" fill-opacity="0.45"/>
+      <!-- Front solid card -->
+      <rect x="4.5" y="4" width="17" height="23" rx="3.5" fill="#38BDF8"/>
+      <!-- Bold solid arrow cutting across right -->
+      <path d="M15 16h14m0 0-5.5-5.5m5.5 5.5-5.5 5.5" fill="none" stroke="#FDE68A" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
 
-    <!-- Duel: bold crossed sabers with glowing crossguards -->
+    <!-- Duel: bold solid crossed sword blades with pommels -->
     <symbol id="decDuel" viewBox="0 0 32 32">
-      <path d="M4 28 28 4M28 28 4 4" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round"/>
-      <path d="M2.5 20.5 11.5 29.5M29.5 20.5 20.5 29.5" stroke="#FDE68A" stroke-width="3.2" stroke-linecap="round"/>
-      <circle cx="16" cy="16" r="3.2" fill="#FBBF24"/>
+      <!-- Sword 1 -->
+      <path d="M4 28 27 5l2 2L6 30Z" fill="#F59E0B"/>
+      <!-- Sword 2 -->
+      <path d="M28 28 5 5l-2 2 23 23Z" fill="#FBBF24"/>
+      <!-- Center clash emblem -->
+      <circle cx="16" cy="16" r="4.2" fill="#FFFFFF" stroke="#D97706" stroke-width="1.8"/>
+      <!-- Hilts -->
+      <path d="M2.5 24 8 29.5M29.5 24 24 29.5" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
     </symbol>
 
-    <!-- Marathon: bold filled stopwatch with progress tick -->
+    <!-- Marathon: bold solid stopwatch with high-visibility countdown dial -->
     <symbol id="decMarathon" viewBox="0 0 32 32">
-      <circle cx="16" cy="18" r="11.5" fill="#10B981" fill-opacity="0.22" stroke="#10B981" stroke-width="2.8"/>
-      <path d="M16 6.5V2.5M11 2.5h10" stroke="#10B981" stroke-width="2.8" stroke-linecap="round"/>
-      <path d="M24.5 9.5 27 7" stroke="#10B981" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M16 18V11.5" stroke="#FDE68A" stroke-width="3" stroke-linecap="round"/>
-      <path d="M16 18l4.5 4.5" stroke="#34D399" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="16" cy="18" r="13" fill="#10B981"/>
+      <!-- Top buttons -->
+      <rect x="13.5" y="1.5" width="5" height="4" rx="1.5" fill="#047857"/>
+      <rect x="23.5" y="5" width="3.5" height="3" rx="1" transform="rotate(40 25 6.5)" fill="#047857"/>
+      <!-- Inner clock face -->
+      <circle cx="16" cy="18" r="9" fill="#064E3B"/>
+      <!-- Clock hands pointing at rapid sprint -->
+      <path d="M16 18V11.5M16 18l5 3" stroke="#FDE68A" stroke-width="2.8" stroke-linecap="round"/>
       <circle cx="16" cy="18" r="2.2" fill="#FFFFFF"/>
     </symbol>
 
-    <!-- Decades: bold filled hourglass -->
+    <!-- Decades: bold solid hourglass with gold sands -->
     <symbol id="decDecades" viewBox="0 0 32 32">
-      <path d="M5 3.5h22M5 28.5h22" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/>
-      <path d="M7.5 5c0 6.5 6 9 8.5 11-2.5 2-8.5 4.5-8.5 11M24.5 5c0 6.5-6 9-8.5 11 2.5 2 8.5 4.5 8.5 11" fill="#3B82F6" fill-opacity="0.18" stroke="#3B82F6" stroke-width="2.8" stroke-linejoin="round"/>
-      <path d="M10 25.5h12L16 18.5Z" fill="#FDE68A"/>
-      <circle cx="16" cy="16" r="1.5" fill="#FDE68A"/>
+      <!-- Top and bottom solid bars -->
+      <rect x="3.5" y="2.5" width="25" height="4.5" rx="2" fill="#1D4ED8"/>
+      <rect x="3.5" y="25" width="25" height="4.5" rx="2" fill="#1D4ED8"/>
+      <!-- Glass chamber filled with glass blue -->
+      <path d="M6 7h20L18 16l8 9H6l8-9Z" fill="#3B82F6"/>
+      <!-- Golden sands accumulated -->
+      <path d="M8.5 25h15l-4-4.5h-7Z" fill="#FDE68A"/>
+      <path d="M10 7h12l-2.5 3h-7Z" fill="#FDE68A"/>
+      <!-- Sand stream -->
+      <circle cx="16" cy="16" r="1.6" fill="#FFFFFF"/>
     </symbol>
 
-    <!-- Matchmaker: bold solid heart with brilliant sparkles -->
+    <!-- Matchmaker: bold solid heart with radiant star -->
     <symbol id="decMatchmaker" viewBox="0 0 32 32">
-      <path d="M16 29C15.2 28.5 3 20.8 3 12.2 3 7 7 3.5 11.5 3.5c2.7 0 4.5 1.4 5 3.2.5-1.8 2.3-3.2 5-3.2C26 3.5 30 7 30 12.2c0 8.6-12.2 16.3-13 16.8z" fill="#F43F5E" stroke="#FB7185" stroke-width="1.2"/>
-      <path d="M23 4.5 24 7l2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z" fill="#FDE68A"/>
-      <path d="M9 10a4 4 0 0 1 4-4" stroke="#FFE4E6" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M16 29.5C15 28.8 2 20.5 2 11.5 2 5.8 6.5 2 11.5 2c3.2 0 5 1.8 5.7 3.5.7-1.7 2.5-3.5 5.7-3.5 5 0 9.5 3.8 9.5 9.5 0 9-13 17.3-14 18z" fill="#F43F5E"/>
+      <!-- Highlight gleam on shoulder -->
+      <ellipse cx="9.5" cy="8.5" rx="3.5" ry="2" transform="rotate(-30 9.5 8.5)" fill="#FFFFFF" fill-opacity="0.55"/>
+      <!-- Match spark -->
+      <path d="M23 4.5l1.2 2.8 2.8 1.2-2.8 1.2L23 12.5l-1.2-2.8-2.8-1.2 2.8-1.2Z" fill="#FDE68A"/>
     </symbol>
 
-    <!-- Compatibility: bold interlocking colored discs -->
+    <!-- Compatibility: bold, clean overlapping twin discs -->
     <symbol id="decComp" viewBox="0 0 32 32">
-      <circle cx="11.5" cy="16" r="9" fill="#EC4899" fill-opacity="0.3" stroke="#EC4899" stroke-width="2.8"/>
-      <circle cx="20.5" cy="16" r="9" fill="#F472B6" fill-opacity="0.3" stroke="#F472B6" stroke-width="2.8"/>
-      <path d="M16 10l1.4 4 4 1.4-4 1.4L16 22l-1.4-4-4-1.4 4-1.4z" fill="#FDE68A"/>
+      <circle cx="11" cy="16" r="10" fill="#DB2777"/>
+      <circle cx="21" cy="16" r="10" fill="#F472B6" fill-opacity="0.88"/>
+      <!-- Intersection golden emblem -->
+      <path d="M16 8.5 17.5 14 23 15.5 17.5 17 16 22.5 14.5 17 9 15.5 14.5 14Z" fill="#FDE68A"/>
+      <circle cx="16" cy="15.5" r="2" fill="#FFFFFF"/>
     </symbol>
 
-    <!-- Ricochet: bold dynamic ping-pong lightning vector -->
+    <!-- Ricochet: bold solid billiard angled bounce vector with target rings -->
     <symbol id="decRicochet" viewBox="0 0 32 32">
-      <path d="M3 27 12.5 14l8 6.5L28.5 6" fill="none" stroke="#06B6D4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M21 6h7.5v7.5" fill="none" stroke="#06B6D4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="12.5" cy="14" r="3" fill="#67E8F9"/>
-      <circle cx="20.5" cy="20.5" r="3" fill="#67E8F9"/>
+      <circle cx="16" cy="16" r="14.5" fill="#0891B2"/>
+      <path d="M5 26 13 13.5l7 6.5 7-13" fill="none" stroke="#FFFFFF" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M19 7h8v8" fill="none" stroke="#FDE68A" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="13" cy="13.5" r="2.8" fill="#FDE68A"/>
+      <circle cx="20" cy="20" r="2.8" fill="#FDE68A"/>
     </symbol>
 
-    <!-- Opposite: bold opposing dual arrows with filled badge points -->
+    <!-- Opposite: bold contrasting dual chevron arrows in disc -->
     <symbol id="decOpposite" viewBox="0 0 32 32">
-      <path d="M3 9.5h22.5M19 4 27 9.5 19 15" fill="none" stroke="#34D399" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M29 22.5H6.5M13 17 5 22.5 13 28" fill="none" stroke="#10B981" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="27" cy="9.5" r="1.5" fill="#A7F3D0"/>
-      <circle cx="5" cy="22.5" r="1.5" fill="#A7F3D0"/>
+      <circle cx="16" cy="16" r="14.5" fill="#059669"/>
+      <!-- Top arrow pointing right -->
+      <path d="M5 10.5h17m0 0-5-5m5 5-5 5" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Bottom arrow pointing left -->
+      <path d="M27 21.5H10m0 0 5-5m-5 5 5 5" fill="none" stroke="#FDE68A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
   </svg>
 
