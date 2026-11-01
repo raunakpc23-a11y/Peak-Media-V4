@@ -487,9 +487,15 @@
 
       <!-- 6. THE ORDERED CURATED SHELVES -->
       
-      <!-- Shelf 1: Essential Masterworks -->
+      <!-- Shelf 1: Essential Cinema (Pantheon 9.0+) -->
       <div id="shelfWrap-pantheon" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
-        <div class="flex items-baseline justify-end px-1">
+        <div class="flex items-baseline justify-between px-1">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
+              Essential Cinema
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Highest rated films and series in cinema history (9.0+)</p>
+          </div>
           <button type="button" onclick="switchTab('movies')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
             <span>Explore All</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
@@ -499,9 +505,15 @@
         </div>
       </div>
 
-      <!-- Shelf 2: Popular Hits -->
+      <!-- Shelf 2: Popular Hits & Box Office -->
       <div id="shelfWrap-blockbusters" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
-        <div class="flex items-baseline justify-end px-1">
+        <div class="flex items-baseline justify-between px-1">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
+              Popular Hits
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Spectacle, blockbusters, and pop culture favorites</p>
+          </div>
           <button type="button" onclick="switchTab('universes')" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
             <span>Universes</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
@@ -513,15 +525,17 @@
 
       <!-- Shelf 3: Indian Delight -->
       <div id="shelfWrap-indian" class="curated-shelf-wrapper theme-card-bg p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-white/10 shadow-lg space-y-3 transition-all">
-        <div class="flex items-baseline justify-end px-1">
+        <div class="flex items-baseline justify-between px-1">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white tracking-tight flex items-center gap-2">
+              Indian Delight
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5 font-medium">Acclaimed Hindi and regional masterpieces</p>
+          </div>
           <button type="button" onclick="setGlobalLanguage('hi'); switchTab('movies');" class="text-xs text-brand-gold hover:text-white transition-colors flex items-center gap-1 font-semibold">
             <span>Hindi Cinema</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
-        <div class="relative group/row">
-          <div id="discoverIndianRow" class="shelf-scroll-row"></div>
-        </div>
-      </div>
         <div class="relative group/row">
           <div id="discoverIndianRow" class="shelf-scroll-row"></div>
         </div>
