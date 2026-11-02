@@ -36,6 +36,9 @@
     if (!svg) return;
 
     const size = 280;
+    svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+    svg.setAttribute('width', `${size}`);
+    svg.setAttribute('height', `${size}`);
     const center = size / 2;
     const rOuter = 130;
     const rInner = 52;

@@ -228,7 +228,11 @@
     const gw={};state.genres.forEach(g=>gw[g]=(gw[g]||0)+1);
     const yrs=state.years.length?state.years.reduce((a,b)=>a+b,0)/state.years.length:null;
     const dark=state.rate.includes('dark'),hi=state.rate.includes('high');
-    let pool=all().filter(i=>i.thumb&&!watchedTitles.includes(i.title));
+    const watched = (typeof watchedTitles !== 'undefined' ? watchedTitles : (window.watchedTitles || []));
+    let pool = (window.globalDatabase && Object.values(window.globalDatabase).length > 0)
+      ? Object.values(window.globalDatabase).filter(i => i && i.thumb && !watched.includes(i.title))
+      : all().filter(i => i && i.thumb && !watched.includes(i.title));
+    if (!pool.length) pool = all().filter(Boolean);
     const scored=pool.map(i=>{
       let sc=Math.random()*1.2+(gw[i.genre]||0)*2.4;
       if(yrs!=null)sc+=Math.max(0,3-Math.abs(i.year-yrs)/8);
@@ -252,7 +256,14 @@
         <div class="text-xs text-gray-300"><b class="text-white">Pinball path:</b> ${esc(trail)}</div>
         <div class="flex flex-wrap gap-2 pt-1"><button id="rcWish" class="px-3 py-1.5 rounded-lg bg-rose-500 text-white text-xs font-bold"><i class="fa-solid fa-heart mr-1"></i>Add to Watchlist</button><button id="rcOpen" class="px-3 py-1.5 rounded-lg border border-white/15 text-xs font-bold text-gray-200">Inspect Title</button></div></div></div>`;
       attachThumbObservers($('rcResult'));
-      $('rcWish').onclick=()=>{if(!wishlistTitles.includes(it.title)){wishlistTitles.push(it.title);showToast(`Added "${it.cleanName||it.title}" to Watchlist!`,'fa-heart','text-rose-400');updateAllCountersAndViews();}};
+      $('rcWish').onclick=()=>{
+        const wl = typeof wishlistTitles !== 'undefined' ? wishlistTitles : (window.wishlistTitles || []);
+        if(!wl.includes(it.title)){
+          wl.push(it.title);
+          if (typeof showToast === 'function') showToast(`Added "${it.cleanName||it.title}" to Watchlist!`,'fa-heart','text-rose-400');
+          if (typeof updateAllCountersAndViews === 'function') updateAllCountersAndViews();
+        }
+      };
       $('rcOpen').onclick=()=>openDetailModal(it.title);
     } else {
       $('rcResult').innerHTML=`<div class="space-y-3">
@@ -417,13 +428,15 @@
     };
   });
 
-  $('rcLaunch').onclick=()=>launch();
+  if($('rcLaunch')) $('rcLaunch').onclick=()=>launch();
   if($('rcShuffle'))$('rcShuffle').onclick=shuffleBumpers;
   window.rcLaunch = () => launch();
   window.rcShuffle = shuffleBumpers;
-  cv.addEventListener('pointermove',e=>{if(balls.length)return;const r=cv.getBoundingClientRect();aim=[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H];draw();});
-  cv.addEventListener('pointerleave',()=>{aim=null;if(!balls.length)draw();});
-  cv.addEventListener('pointerdown',e=>{if(balls.length)return;const r=cv.getBoundingClientRect();launch((e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H);});
+  if (cv) {
+    cv.addEventListener('pointermove',e=>{if(balls.length)return;const r=cv.getBoundingClientRect();aim=[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H];draw();});
+    cv.addEventListener('pointerleave',()=>{aim=null;if(!balls.length)draw();});
+    cv.addEventListener('pointerdown',e=>{if(balls.length)return;const r=cv.getBoundingClientRect();launch((e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H);});
+  }
   draw();drawBest();
 })();
 
@@ -435,8 +448,8 @@
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const jget=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
   const jset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-  const db=t=>globalDatabase[t];
-  const img=i=>posterCache[i.type+':'+i.title]||generateStylizedPosterDataURI(i);
+  const db = t => (window.globalDatabase && window.globalDatabase[t]) || (typeof globalDatabase !== 'undefined' && globalDatabase[t]);
+  const img = i => (window.posterCache && window.posterCache[i.type + ':' + i.title]) || generateStylizedPosterDataURI(i);
   // ---------- OPPOSITE DAY ----------
   const OPPG={'Sci-Fi':'Romance',Drama:'Comedy',Crime:'Animation',Thriller:'Comedy',Horror:'Romance',Fantasy:'Crime',Comedy:'Drama',Romance:'Horror',Action:'Drama',Animation:'Thriller'};
   const ADJ={Romance:'Hopeless Romantic',Comedy:'Cheerful Skeptic',Animation:'Wide-Eyed Dreamer',Drama:'Brooding Poet',Thriller:'Edge-of-Seat Rebel',Crime:'Back-Alley Sleuth',Horror:'Fearless Night Owl'};
@@ -444,10 +457,12 @@
   let on=jget('cs_opp_on',false), blend=jget('cs_opp_blend',100)/100;
   const NOWY=new Date().getFullYear();
   function profile(){
-    const w=watchedTitles.map(db).filter(Boolean), g={};
+    const watched = (typeof watchedTitles !== 'undefined' ? watchedTitles : (window.watchedTitles || []));
+    const w = watched.map(db).filter(Boolean), g = {};
     w.forEach(i=>g[i.genre]=(g[i.genre]||0)+1);
     const yr=w.length?w.reduce((a,i)=>a+i.year,0)/w.length:2000;
-    const rs=(typeof myRatings!=='undefined'&&myRatings)?Object.values(myRatings):[];const ar=rs.length?rs.reduce((a,b)=>a+b,0)/rs.length:4;
+    const rs=(typeof myRatings!=='undefined'&&myRatings)?Object.values(myRatings):(window.myRatings ? Object.values(window.myRatings) : []);
+    const ar=rs.length?rs.reduce((a,b)=>a+b,0)/rs.length:4;
     return{g,yr,ar,n:w.length};
   }
   function opposite(){
@@ -463,8 +478,9 @@
     const o=opposite(),p=o.p,tot=Math.max(1,p.n);
     const pool = (window.globalDatabase && Object.values(window.globalDatabase).length > 0)
       ? Object.values(window.globalDatabase)
-      : [...(window.movies || []), ...(window.tvShows || [])];
-    const filtered = pool.filter(i=>!watchedTitles.includes(i.title));
+      : [...(window.movies || (typeof movies !== 'undefined' ? movies : [])), ...(window.tvShows || (typeof tvShows !== 'undefined' ? tvShows : []))];
+    const watched = (typeof watchedTitles !== 'undefined' ? watchedTitles : (window.watchedTitles || []));
+    const filtered = pool.filter(i=>!watched.includes(i.title));
     const list = filtered.length ? filtered : pool;
     return list.map(i=>{
       const r = parseFloat(i.rating || 7.5);
@@ -494,10 +510,12 @@
     const stagePicks = $('oppStagePicks');
     if (stagePicks) {
       const oppItems = picks(blend, 12);
+      const isSavedFn = t => (typeof wishlistTitles !== 'undefined' ? wishlistTitles.includes(t) : ((window.wishlistTitles || []).includes(t)));
       stagePicks.innerHTML = oppItems.map(i => {
-        const fb = generateStylizedPosterDataURI(i);
-        const poster = (posterCache && posterCache[i.type + ':' + i.title]) || i.thumb || fb;
-        const isSaved = wishlistTitles.includes(i.title);
+        const fb = (typeof generateStylizedPosterDataURI === 'function' ? generateStylizedPosterDataURI(i) : '');
+        const pCache = window.posterCache || (typeof posterCache !== 'undefined' ? posterCache : null);
+        const poster = (pCache && pCache[i.type + ':' + i.title]) || i.thumb || fb;
+        const isSaved = isSavedFn(i.title);
         const escTitle = (i.title || '').replace(/'/g, "\\'");
         return `
           <div class="shrink-0 w-32 space-y-1.5">
@@ -512,7 +530,7 @@
           </div>
         `;
       }).join('');
-      attachThumbObservers(stagePicks);
+      if (typeof attachThumbObservers === 'function') attachThumbObservers(stagePicks);
     }
 
     if(!on)return;
@@ -526,12 +544,15 @@
     const b = e.target.closest('#oppStagePicks .steal');
     if (!b) return;
     const t = b.dataset.t;
-    if (!wishlistTitles.includes(t)) {
-      wishlistTitles.push(t);
-      showToast(`Saved "${t}" to Watchlist!`, 'fa-heart', 'text-fuchsia-300');
-      updateAllCountersAndViews();
+    const wl = typeof wishlistTitles !== 'undefined' ? wishlistTitles : (window.wishlistTitles || []);
+    if (!wl.includes(t)) {
+      wl.push(t);
+      if (typeof showToast === 'function') showToast(`Saved "${t}" to Watchlist!`, 'fa-heart', 'text-fuchsia-300');
+      if (typeof updateAllCountersAndViews === 'function') updateAllCountersAndViews();
     }
     b.textContent = 'Saved ✓';
+    b.classList.remove('bg-emerald-400/20', 'text-emerald-300', 'border-emerald-400/40');
+    b.classList.add('bg-emerald-500', 'text-black', 'font-extrabold');
   });
   window.setOppBlend = function(val) {
     blend = val / 100;
@@ -543,7 +564,7 @@
   if($('oppPicks')) $('oppPicks').onclick=e=>{const b=e.target.closest('.steal');if(!b)return;const t=b.dataset.t;if(!wishlistTitles.includes(t)){wishlistTitles.push(t);showToast(`Stole "${t}" into your Watchlist!`,'fa-heart','text-fuchsia-300');updateAllCountersAndViews();}b.textContent='Stolen ✓';};
   let oppRaf=0;
   if($('oppSlider')) $('oppSlider').oninput=e=>{blend=e.target.value/100;jset('cs_opp_blend',e.target.value);if(!oppRaf){oppRaf=requestAnimationFrame(()=>{oppRaf=0;oppRender();discoverFlip();});}};
-  function discoverFlip(){ if(typeof activeMood!=='undefined'&&activeMood)selectMood(activeMood); if(window.cxOpen&&!$('tab-web').classList.contains('hidden'))setTimeout(window.cxOpen,30); }
+  function discoverFlip(){ if(typeof activeMood!=='undefined'&&activeMood)selectMood(activeMood); if(window.cxOpen&&$('tab-web')&&!$('tab-web').classList.contains('hidden'))setTimeout(window.cxOpen,30); }
   window.oppToggle=()=>{on=!on;jset('cs_opp_on',on);if($('vibePanel')) $('vibePanel').classList.add('hidden');oppRender();discoverFlip();};
   if($('oppOff')) $('oppOff').onclick=()=>window.oppToggle();
   // mood picks follow the blend
