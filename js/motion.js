@@ -946,12 +946,13 @@
       var disc = document.getElementById('homeVinylDisc') || document.getElementById('homeVinylShowcase');
       bloom(disc, function () { if (window.initMusicVault) { try { window.initMusicVault(); } catch (_) {} } window.switchTab('music'); });
     };
-    window.returnToOpeningPage = function () {
-      if (!document.getElementById('tab-discover').classList.contains('hidden')) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
-      window.switchTab('discover');
-      if (window.updateHomeVinylPlayer) setTimeout(window.updateHomeVinylPlayer, 60);
+    window.closeMusicToVinyl = function () {
+      if (typeof closeFullscreen === 'function' && isOpen()) {
+        try { closeFullscreen(); } catch (_) {}
+      } else {
+        window.returnToOpeningPage();
+      }
     };
-    window.closeMusicToVinyl = window.returnToOpeningPage;
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install); else install();
 })();

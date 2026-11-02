@@ -256,8 +256,27 @@
     }, 120);
   };
 
-  // Return to Opening View from any sub-view
+  // Return to Opening View from any sub-view or modal
   window.returnToOpeningPage = function(targetId) {
+    if (typeof window.closeFullscreen === 'function' && window.Motion && typeof window.Motion.isOpen === 'function' && window.Motion.isOpen()) {
+      try { window.closeFullscreen(); } catch (_) {}
+    }
+    const modal = document.getElementById('detailModal');
+    if (modal && !modal.classList.contains('hidden') && typeof window.closeDetailModal === 'function') {
+      try { window.closeDetailModal(); } catch (_) {}
+    }
+    const pal = document.getElementById('palette');
+    if (pal && !pal.classList.contains('hidden') && typeof window.closePalette === 'function') {
+      try { window.closePalette(); } catch (_) {}
+    }
+    const vibe = document.getElementById('vibePanel');
+    if (vibe && !vibe.classList.contains('hidden')) {
+      vibe.classList.add('hidden');
+    }
+    const pop = document.getElementById('profileStatsPopover');
+    if (pop && !pop.classList.contains('hidden')) {
+      pop.classList.add('hidden');
+    }
     window.switchTab('discover');
     if (targetId) {
       setTimeout(() => {
