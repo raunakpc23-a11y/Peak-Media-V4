@@ -491,6 +491,8 @@
       $('duelRound').textContent = `${roundName(cur.length)} · Face-Off`;
       const card = (it, s) => `<div class="duel-card ${s}" data-t="${esc(it.title)}"><img class="lazy-poster" data-title="${esc(it.title)}" src="${poster(it)}" alt=""><div class="p-3 text-left"><div class="text-[10px] font-bold uppercase" style="color:${th(it.genre).accent}">${it.genre} · ${it.year}</div><div class="font-bold text-sm text-white leading-tight line-clamp-2">${esc(it.cleanName)}</div><div class="text-xs text-gray-400 mt-0.5"><i class="fa-solid fa-star text-brand-gold text-[9px]"></i> ${it.rating}${myRatings[it.title] ? ' · you: ' + myRatings[it.title] + '★' : ''}</div></div></div>`;
       $('duelStage').innerHTML = card(a, 'l') + '<div class="vs-flash">VS</div>' + card(b, 'r');
+      // Trigger reflow to ensure slide-in animations play cleanly on entry
+      $('duelStage').querySelectorAll('.duel-card').forEach(c => { void c.offsetWidth; });
       attachThumbObservers($('duelStage'));
       $('duelStage').querySelectorAll('.duel-card').forEach(c => c.onclick = () => choose(globalDatabase[c.dataset.t], false));
       D.busy = false; renderBracket();

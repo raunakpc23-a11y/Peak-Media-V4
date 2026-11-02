@@ -791,6 +791,8 @@
       } else if (tool === 'decades') {
         if (window.onDecadesSliderChange) window.onDecadesSliderChange(2026);
         else if (window.initDecadesGlance) window.initDecadesGlance();
+      } else if (tool === 'ricochet') {
+        if (window.rcInit) window.rcInit();
       } else if (tool === 'series') {
         if (window.renderSeriesPacer) window.renderSeriesPacer();
       }

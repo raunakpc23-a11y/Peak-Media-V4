@@ -14388,7 +14388,12 @@ Odd Taxi|2021|87
     window.filterAndRenderMovies = filterAndRenderMovies;
     window.filterAndRenderShows = filterAndRenderShows;
     window.renderDiscoverTab = renderDiscoverTab;
-    window.selectMood = selectMood;
+    window.moods = moods;
+    window.activeMood = activeMood;
+    window.selectMood = function(m) {
+      window.activeMood = m;
+      return selectMood(m);
+    };
 
     function renderPagination(elId, current, total, onPage) {
       const el = document.getElementById(elId);

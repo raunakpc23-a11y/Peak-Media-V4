@@ -375,6 +375,12 @@
 
   window.rcInit = function() {
     if (cv) draw();
+    const resEl = $('rcResult');
+    if (resEl && (!resEl.innerHTML || resEl.innerHTML.includes('Launch to reveal selection'))) {
+      if (typeof window.openVaultGroup === 'function') {
+        window.openVaultGroup('younger');
+      }
+    }
   };
 
   // Bind Multi-Ball & Physics Lab Controls
@@ -541,14 +547,21 @@
   window.oppToggle=()=>{on=!on;jset('cs_opp_on',on);if($('vibePanel')) $('vibePanel').classList.add('hidden');oppRender();discoverFlip();};
   if($('oppOff')) $('oppOff').onclick=()=>window.oppToggle();
   // mood picks follow the blend
-  const _sm=window.selectMood;
-  window.selectMood=function(m){
-    _sm.apply(this,arguments);
-    if(!on)return;
-    const gs=moods[m]||[],o=opposite(),flip=[...new Set(gs.map(g=>OPPG[g]||g))];
-    const pool=Object.values(globalDatabase).filter(i=>i.thumb&&parseFloat(i.rating)>=7.4);
-    const sc=i=>(1-blend)*(gs.includes(i.genre)?1:0)+blend*(flip.includes(i.genre)?1:0)+(Math.random()*.5);
-    const row=$('moodRow');row.innerHTML=pool.sort((a,b)=>sc(b)-sc(a)).slice(0,16).map(i=>createCardHTML(i,true)).join('');attachThumbObservers(row);
+  const _sm = window.selectMood;
+  window.selectMood = function(m) {
+    if (_sm) _sm.apply(this, arguments);
+    if (!on) return;
+    const moodMap = window.moods || {};
+    const gs = moodMap[m] || [], o = opposite(), flip = [...new Set(gs.map(g => OPPG[g] || g))];
+    const db = window.globalDatabase || {};
+    const pool = Object.values(db).filter(i => i && i.thumb && parseFloat(i.rating) >= 7.4);
+    if (!pool.length) return;
+    const sc = i => (1 - blend) * (gs.includes(i.genre) ? 1 : 0) + blend * (flip.includes(i.genre) ? 1 : 0) + (Math.random() * .5);
+    const row = $('moodRow');
+    if (row) {
+      row.innerHTML = pool.sort((a, b) => sc(b) - sc(a)).slice(0, 16).map(i => createCardHTML(i, true)).join('');
+      attachThumbObservers(row);
+    }
   };
   // constellation: flip suggested branches by re-opening it with banner visible
   window.oppOn=()=>on; window.oppBlend=()=>blend; window.oppGenre=g=>on&&blend>=.5?(OPPG[g]||g):g;
