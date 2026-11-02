@@ -369,7 +369,7 @@
               return `
                 <div onclick="openDetailModal('${escT}')" class="group p-2 rounded-xl bg-black/50 border border-white/10 hover:border-brand-gold/60 cursor-pointer transition-all space-y-1.5 flex flex-col justify-between">
                   <div class="relative w-full aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
-                    <img src="${poster}" loading="eager" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="${esc(it.title)}">
+                    <img src="${poster}" data-title="${esc(it.title)}" loading="eager" decoding="async" class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform" alt="${esc(it.title)}">
                     <span class="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-brand-gold">★ ${it.rating}</span>
                   </div>
                   <div class="text-xs font-bold text-white truncate" title="${esc(it.cleanName || it.title)}">${esc(it.cleanName || it.title)}</div>
@@ -520,7 +520,7 @@
         return `
           <div class="shrink-0 w-32 space-y-1.5">
             <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 hover:border-emerald-400 transition-all cursor-pointer bg-black/40" onclick="openDetailModal('${escTitle}')">
-              <img src="${poster}" loading="eager" decoding="async" class="w-full h-full object-cover" alt="${esc(i.title)}">
+              <img src="${poster}" data-title="${esc(i.title)}" loading="eager" decoding="async" class="lazy-poster w-full h-full object-cover" alt="${esc(i.title)}">
               <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-brand-gold border border-brand-gold/30">★ ${i.rating}</span>
             </div>
             <div class="text-[11px] text-white font-bold truncate" title="${esc(i.cleanName || i.title)}">${esc(i.cleanName || i.title)}</div>

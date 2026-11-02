@@ -698,6 +698,7 @@
               </button>
             </div>
           `;
+      if (typeof attachThumbObservers === "function") attachThumbObservers(stage);
           if (counter) counter.textContent = `${csDeck.length} / ${csDeck.length}`;
         }
         return;
@@ -721,7 +722,7 @@
         ${bgCardHtml}
         <div id="csActiveCard" class="absolute inset-0 rounded-3xl bg-[#0c101c] border border-white/20 shadow-2xl overflow-hidden flex flex-col cursor-grab active:cursor-grabbing select-none transition-transform duration-200">
           <div class="relative w-full h-full overflow-hidden">
-            <img src="${posterSrc}" class="w-full h-full object-cover" alt="${escT}">
+            <img src="${posterSrc}" data-title="${esc(it.title)}" class="lazy-poster w-full h-full object-cover" alt="${escT}">
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
             
             <!-- Dynamic Swipe Stamps -->

@@ -412,7 +412,7 @@
         return `
           <div class="shelf-card group cursor-pointer shrink-0 w-32 space-y-1.5" onclick="openDetailModal('${escTitle}')">
             <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 group-hover:border-brand-gold transition-all bg-black/40">
-              <img src="${cached}" loading="eager" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${m.title}">
+              <img src="${cached}" data-title="${(m.title||'').replace(/"/g, '&quot;')}" loading="eager" decoding="async" class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${m.title}">
               <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[10px] font-bold text-brand-gold border border-brand-gold/30">★ ${m.rating}</span>
             </div>
             <div class="text-xs font-bold text-white truncate" title="${m.cleanName || m.title}">${m.cleanName || m.title}</div>
@@ -420,6 +420,7 @@
           </div>
         `;
       }).join('');
+      if (window.attachThumbObservers) window.attachThumbObservers(row);
       if (window.attachThumbObservers) window.attachThumbObservers(row);
     }
   };

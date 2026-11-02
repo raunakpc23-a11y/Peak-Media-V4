@@ -2232,8 +2232,7 @@
 
     window.syncProfileThemeStudio = function() {
       const curTheme = document.body.getAttribute('data-theme') || 'space';
-      const isCalm = document.body.classList.contains('reduce-fx');
-
+      
       const buildThemeCard = ([id, name, col]) => {
         const active = curTheme === id;
         return `<button type="button" onclick="selectThemeDirect('${id}')" class="p-2 rounded-xl border text-left flex items-center justify-between gap-1.5 transition-all w-full ${active ? 'border-brand-gold bg-brand-gold/15' : 'border-white/10 bg-black/40 hover:bg-white/10'}">
@@ -2254,13 +2253,7 @@
       const lbl = $('profileActiveThemeLabel');
       const found = PROFILE_THEMES_LIST.find(x => x[0] === curTheme);
       if (lbl && found) lbl.textContent = found[1];
-      const fxTxt = $('profileFxStateText');
-      if (fxTxt) fxTxt.textContent = isCalm ? 'Calm Mode: On' : 'Calm Mode: Off';
-      const profTgl = $('profileReduceTgl');
-      if (profTgl) profTgl.classList.toggle('on', isCalm);
-      const hubFx = $('hubFxQuickText');
-      if (hubFx) hubFx.textContent = isCalm ? 'Calm Mode: On' : 'Calm Mode: Off';
-    };
+                };
     setTimeout(() => { if (window.syncProfileThemeStudio) window.syncProfileThemeStudio(); }, 200);
 
     window.renderProfileTab = function() {
