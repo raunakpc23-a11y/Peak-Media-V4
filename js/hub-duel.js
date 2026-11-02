@@ -5,7 +5,7 @@
     const $ = id => document.getElementById(id);
     const th = g => genreThemes[g] || genreThemes.Drama;
     const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    const poster = it => posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it);
+    const poster = it => (posterCache[it.type + ':' + it.title] && typeof posterCache[it.type + ':' + it.title] === 'string') ? posterCache[it.type + ':' + it.title] : ((typeof it.thumb === 'string') ? it.thumb : generateStylizedPosterDataURI(it));
     const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${n >> 8 & 255},${n & 255},${a})`; };
     const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
     const pop = it => (it.thumb ? .35 : 0) + .65 * (1 - Math.min(it.rank, 1500) / 1500);
@@ -66,7 +66,7 @@
       renderShelves();
     };
 
-    const shelfList = s => s === 'watched' ? watchedTitles : s === 'wish' ? wishlistTitles : favTitles;
+    const shelfList = s => s === 'watched' ? (window.watchedTitles || (typeof watchedTitles !== 'undefined' ? watchedTitles : [])) : s === 'wish' ? (window.wishlistTitles || (typeof wishlistTitles !== 'undefined' ? wishlistTitles : [])) : (window.favTitles || (typeof favTitles !== 'undefined' ? favTitles : []));
 
     function shelfCard(t, shelf) {
       const it = globalDatabase[t]; if (!it) return '';
@@ -76,7 +76,7 @@
         return `<div class="spine-card${cls}" data-t="${esc(t)}" data-shelf="${shelf}" title="${esc(it.cleanName || t)} (${it.year}) ★ ${it.rating}" onclick="openDetailModal('${esc(t)}')"><div class="spine-title">${esc(it.cleanName || it.title)}</div><div class="spine-rating">★${it.rating}</div></div>`;
       }
       const shelfVisualClass = shelf === 'wish' ? 'hub-card-wish' : (shelf === 'fav' ? 'hub-card-fav' : 'hub-card-watched');
-      return `<div class="hub-card ${shelfVisualClass}${cls}" data-t="${esc(t)}" data-shelf="${shelf}" title="${esc(t)}"><img class="lazy-poster" data-title="${esc(t)}" src="${poster(it)}" draggable="false" alt=""><span class="hc-r">★ ${it.rating}</span><button class="hc-x" title="Remove"><i class="fa-solid fa-xmark"></i></button><div class="hc-n">${esc(it.cleanName)}</div></div>`;
+      return `<div class="hub-card ${shelfVisualClass}${cls}" data-t="${esc(t)}" data-shelf="${shelf}" title="${esc(t)}"><img class="lazy-poster" data-title="${esc(t)}" src="${poster(it)}" onerror="window.handlePosterFallback(this);" draggable="false" alt=""><span class="hc-r">★ ${it.rating}</span><button class="hc-x" title="Remove"><i class="fa-solid fa-xmark"></i></button><div class="hc-n">${esc(it.cleanName)}</div></div>`;
     }
     function renderShelves() {
       const isSpine = window.libraryViewMode === 'spine';
@@ -206,7 +206,7 @@
       strip.innerHTML = REEL.map(d => {
         const l = by[d], grew = l.length > (reelPrev[d] || 0) && reelPrev[d] !== undefined;
         const label = d === 1980 ? '&le;1980s' : d + 's';
-        return `<div class="reel-frame" style="flex:1 1 92px;min-width:82px"><div class="reel-box ${l.length ? 'filled' : ''} ${grew ? 'pop' : ''}">${l.slice(0, 3).map(i => `<img class="lazy-poster" data-title="${esc(i.title)}" src="${poster(i)}" alt="">`).join('')}</div><div class="text-[10px] font-bold mt-1 ${l.length ? 'text-brand-gold' : 'text-gray-500'}">${label}${l.length ? ' · ' + l.length : ''}</div></div>`;
+        return `<div class="reel-frame" style="flex:1 1 92px;min-width:82px"><div class="reel-box ${l.length ? 'filled' : ''} ${grew ? 'pop' : ''}">${l.slice(0, 3).map(i => `<img class="lazy-poster" data-title="${esc(i.title)}" src="${poster(i)}" onerror="window.handlePosterFallback(this);" alt="">`).join('')}</div><div class="text-[10px] font-bold mt-1 ${l.length ? 'text-brand-gold' : 'text-gray-500'}">${label}${l.length ? ' · ' + l.length : ''}</div></div>`;
       }).join('');
       attachThumbObservers(strip);
       REEL.forEach(d => reelPrev[d] = by[d].length);
@@ -243,7 +243,7 @@
       // positions: your picks on the left arc, friend's on the right arc
       const arc = (i, n, start) => { const a = start + (i + .5) / n * Math.PI; return [50 + 38 * Math.cos(a), 50 + 38 * Math.sin(a)]; };
       const pm = mine.map((_, i) => arc(i, mine.length, Math.PI / 2)), pt = theirs.map((_, j) => arc(j, theirs.length, -Math.PI / 2));
-      const card = (it, cls, id) => `<div class="cmp-p ${cls}" id="${id}" style="left:50%;top:50%;width:${cardW}"><img class="lazy-poster" data-title="${esc(it.title)}" src="${poster(it)}" alt=""></div>`;
+      const card = (it, cls, id) => `<div class="cmp-p ${cls}" id="${id}" style="left:50%;top:50%;width:${cardW}"><img class="lazy-poster" data-title="${esc(it.title)}" src="${poster(it)}" onerror="window.handlePosterFallback(this);" alt=""></div>`;
       stage.innerHTML = '<svg viewBox="0 0 100 100" preserveAspectRatio="none"></svg>'
         + '<div class="cmp-side text-brand-gold" style="left:30%">YOU</div><div class="cmp-side text-cyan-300" style="left:70%">FRIEND</div>'
         + mine.map((it, i) => card(it, 'mine', 'cpM' + i)).join('') + theirs.map((it, j) => card(it, 'theirs', 'cpT' + j)).join('');
@@ -489,7 +489,7 @@
     function showMatch() {
       const cur = D.rounds[D.r], a = cur[D.m * 2], b = cur[D.m * 2 + 1];
       $('duelRound').textContent = `${roundName(cur.length)} · Face-Off`;
-      const card = (it, s) => `<div class="duel-card ${s}" data-t="${esc(it.title)}"><img class="lazy-poster" data-title="${esc(it.title)}" src="${poster(it)}" alt=""><div class="p-3 text-left"><div class="text-[10px] font-bold uppercase" style="color:${th(it.genre).accent}">${it.genre} · ${it.year}</div><div class="font-bold text-sm text-white leading-tight line-clamp-2">${esc(it.cleanName)}</div><div class="text-xs text-gray-400 mt-0.5"><i class="fa-solid fa-star text-brand-gold text-[9px]"></i> ${it.rating}${myRatings[it.title] ? ' · you: ' + myRatings[it.title] + '★' : ''}</div></div></div>`;
+      const card = (it, s) => `<div class="duel-card ${s}" data-t="${esc(it.title)}"><img class="lazy-poster" data-title="${esc(it.title)}" src="${poster(it)}" onerror="window.handlePosterFallback(this);" alt=""><div class="p-3 text-left"><div class="text-[10px] font-bold uppercase" style="color:${th(it.genre).accent}">${it.genre} · ${it.year}</div><div class="font-bold text-sm text-white leading-tight line-clamp-2">${esc(it.cleanName)}</div><div class="text-xs text-gray-400 mt-0.5"><i class="fa-solid fa-star text-brand-gold text-[9px]"></i> ${it.rating}${myRatings[it.title] ? ' · you: ' + myRatings[it.title] + '★' : ''}</div></div></div>`;
       $('duelStage').innerHTML = card(a, 'l') + '<div class="vs-flash">VS</div>' + card(b, 'r');
       // Trigger reflow to ensure slide-in animations play cleanly on entry
       $('duelStage').querySelectorAll('.duel-card').forEach(c => { void c.offsetWidth; });
@@ -593,7 +593,7 @@
 
       el.innerHTML = `<div class="crown-drop text-6xl text-brand-gold"><i class="fa-solid fa-crown"></i></div>
         <div class="text-[11px] font-bold uppercase tracking-widest text-brand-gold">Champion</div>
-        <div class="flex justify-center"><div class="duel-card win cursor-pointer" onclick="window.openDetailModal('${escChamp}')"><img class="lazy-poster" data-title="${esc(champ.title)}" src="${poster(champ)}" alt=""></div></div>
+        <div class="flex justify-center"><div class="duel-card win cursor-pointer" onclick="window.openDetailModal('${escChamp}')"><img class="lazy-poster" data-title="${esc(champ.title)}" src="${poster(champ)}" onerror="window.handlePosterFallback(this);" alt=""></div></div>
         <h2 class="text-3xl font-display font-extrabold text-white">${esc(champ.cleanName || champ.title)}</h2>
         <div class="max-w-xl mx-auto text-sm text-gray-300 p-4 rounded-2xl bg-black/40 border border-white/10"><b class="text-brand-gold">Why it won:</b> ${esc(champ.cleanName || champ.title)} took the crown because ${esc(fin ? fin.reason : 'it outshone all contenders')}.${beaten ? ' It beat ' + esc(beaten) + ' along the way.' : ''}</div>
         <div class="flex flex-wrap justify-center gap-2.5 pt-2">
@@ -714,7 +714,7 @@
       const nextIt = csDeck[csIndex + 1];
       const bgCardHtml = nextIt ? `
         <div class="absolute inset-0 rounded-3xl bg-[#080b14] border border-white/10 scale-95 translate-y-3 opacity-50 pointer-events-none overflow-hidden transition-all">
-          <img src="${poster(nextIt)}" class="w-full h-full object-cover opacity-25 blur-xs" alt="">
+          <img src="${poster(nextIt)}" data-title="${esc(nextIt ? nextIt.title : '')}" onerror="window.handlePosterFallback(this);" class="w-full h-full object-cover opacity-25 blur-xs" alt="">
         </div>
       ` : '';
 
@@ -722,7 +722,7 @@
         ${bgCardHtml}
         <div id="csActiveCard" class="absolute inset-0 rounded-3xl bg-[#0c101c] border border-white/20 shadow-2xl overflow-hidden flex flex-col cursor-grab active:cursor-grabbing select-none transition-transform duration-200">
           <div class="relative w-full h-full overflow-hidden">
-            <img src="${posterSrc}" data-title="${esc(it.title)}" class="lazy-poster w-full h-full object-cover" alt="${escT}">
+            <img src="${posterSrc}" data-title="${esc(it.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-full h-full object-cover" alt="${escT}">
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
             
             <!-- Dynamic Swipe Stamps -->

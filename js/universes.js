@@ -434,16 +434,22 @@
 
   let seen=[];try{seen=JSON.parse(localStorage.getItem('cs_univ_seen')||'[]')}catch(e){}
   const key=(u,i)=>u.k+':'+i;
-  const isSeen=(u,i)=>{const d=dbFind(u.N[i][0],u.N[i][5]);return seen.includes(key(u,i))||(d&&watchedTitles.includes(d.title));};
+  const isSeen=(u,i)=>{
+    const d=dbFind(u.N[i][0],u.N[i][5]);
+    const wt = window.watchedTitles || (typeof watchedTitles !== 'undefined' ? watchedTitles : []);
+    return seen.includes(key(u,i))||(d&&wt.includes(d.title));
+  };
 
   function toggleSeen(u,i){
     const k=key(u,i),d=dbFind(u.N[i][0],u.N[i][5]),on=!isSeen(u,i);
     seen=seen.filter(x=>x!==k);if(on)seen.push(k);
     if(d){
-      const has=watchedTitles.includes(d.title);
-      if(on&&!has)watchedTitles.push(d.title);
-      if(!on&&has)watchedTitles=watchedTitles.filter(t=>t!==d.title);
-      updateAllCountersAndViews();
+      let wt = window.watchedTitles || (typeof watchedTitles !== 'undefined' ? watchedTitles : []);
+      const has=wt.includes(d.title);
+      if(on&&!has){ wt.push(d.title); window.watchedTitles = wt; }
+      if(!on&&has){ wt = wt.filter(t=>t!==d.title); window.watchedTitles = wt; if (typeof watchedTitles !== 'undefined') watchedTitles = wt; }
+      try{localStorage.setItem('cs_watched',JSON.stringify(wt));}catch(e){}
+      if(typeof updateAllCountersAndViews === 'function') updateAllCountersAndViews();
     }
     try{localStorage.setItem('cs_univ_seen',JSON.stringify(seen));}catch(e){}
   }
@@ -499,7 +505,7 @@
       return `
         <div class="uni-node group relative w-full rounded-2xl overflow-hidden bg-brand-card border transition-all cursor-pointer flex flex-col ${isSel?'border-brand-gold shadow-lg shadow-brand-gold/10':sn?'border-emerald-500/40':'border-white/10 hover:border-white/30'}" data-i="${i}">
           <div class="relative poster-aspect w-full overflow-hidden bg-[#0c0f16]" onclick="${d?`openDetailModal('${escT}')`:''}">
-            ${d?`<img src="${posterUrl}" data-title="${attrT}" onerror="this.onerror=null;this.src='${fb}';" alt="${attrT}" class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"/>`:''}
+            ${d?`<img src="${posterUrl}" data-title="${attrT}" onerror="window.handlePosterFallback(this);" alt="${attrT}" class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"/>`:''}
             <div class="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-transparent to-black/30 opacity-80"></div>
             <div class="absolute top-2 left-2 flex items-center gap-1.5">
               <span class="px-2 py-0.5 rounded-md bg-black/80 text-white font-mono font-bold text-[10px] border border-white/15">#${stepIdx+1}</span>
@@ -610,8 +616,19 @@
     if(e.target.closest('#uniBack')){$('uniView').classList.add('hidden');$('uniGrid').classList.remove('hidden');grid();return;}
     if(e.target.closest('#uniWishAll')){
       const S=seq(cur);let added=0;
-      S.forEach(i=>{const d=dbFind(cur.N[i][0],cur.N[i][5]);if(d&&!watchedTitles.includes(d.title)&&!wishlistTitles.includes(d.title)){wishlistTitles.push(d.title);added++;}});
-      updateAllCountersAndViews();view();
+      const wt = window.watchedTitles || (typeof watchedTitles !== 'undefined' ? watchedTitles : []);
+      const wl = window.wishlistTitles || (typeof wishlistTitles !== 'undefined' ? wishlistTitles : []);
+      S.forEach(i=>{
+        const d=dbFind(cur.N[i][0],cur.N[i][5]);
+        if(d&&!wt.includes(d.title)&&!wl.includes(d.title)){
+          wl.push(d.title);
+          added++;
+        }
+      });
+      window.wishlistTitles = wl;
+      try{localStorage.setItem('cs_wishlist',JSON.stringify(wl));}catch(_){}
+      if(typeof updateAllCountersAndViews === 'function') updateAllCountersAndViews();
+      view();
       showToast(added?`Added ${added} unwatched ${cur.n} titles to your Watchlist!`:'All unwatched titles in this path are already on your Watchlist!','fa-heart','text-rose-400');
       return;
     }

@@ -33,7 +33,8 @@
     const total=Math.max(2,+$('mhHours').value||8)*60,mood=$('mhMood') ? $('mhMood').value : 'epic',no=$('mhNo') ? $('mhNo').value : '',mg=MOODG[mood]||MOODG.epic;
     const shape=($('mhArcShape')&&$('mhArcShape').value)||'wave';
     const brk=getBreakMins();
-    let pool=Object.values(globalDatabase).filter(i=>i.thumb&&!watchedTitles.includes(i.title)&&parseFloat(i.rating)>=7.3&&i.genre!==no);
+    const watched = window.watchedTitles || (typeof watchedTitles !== 'undefined' ? watchedTitles : []);
+    let pool=Object.values(window.globalDatabase || globalDatabase || {}).filter(i=>i.thumb&&!watched.includes(i.title)&&parseFloat(i.rating)>=7.3&&i.genre!==no);
     const sc=i=>(mg.includes(i.genre)?2:0)+parseFloat(i.rating)*.3+Math.random()*1.5;
     pool=pool.sort((a,b)=>sc(b)-sc(a)).slice(0,140);
     const picked=[];let used=0;
@@ -113,7 +114,7 @@
           <div>#${b.idx+1}</div>
           <div class="text-[10px] text-white">${fmt(b.start)}</div>
         </div>
-        <img src="${posterCache[b.i.type+':'+b.i.title]||generateStylizedPosterDataURI(b.i)}" data-title="${esc(b.i.title)}" class="lazy-poster w-12 h-[4.5rem] object-cover rounded-lg cursor-pointer shrink-0" onclick="openDetailModal('${b.i.title.replace(/'/g,"\'")}')" alt="">
+        <img src="${(window.posterCache && window.posterCache[b.i.type+':'+b.i.title] && typeof window.posterCache[b.i.type+':'+b.i.title] === 'string') ? window.posterCache[b.i.type+':'+b.i.title] : ((typeof b.i.thumb === 'string') ? b.i.thumb : (window.generateStylizedPosterDataURI ? window.generateStylizedPosterDataURI(b.i) : ''))}" data-title="${esc(b.i.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-12 h-[4.5rem] object-cover rounded-lg cursor-pointer shrink-0" onclick="openDetailModal('${b.i.title.replace(/'/g,"\'")}')" alt="${esc(b.i.title)}">
         <div class="min-w-0 flex-1 cursor-pointer" onclick="openDetailModal('${b.i.title.replace(/'/g,"\'")}')">
           <div class="text-sm font-bold text-white hover:text-brand-gold transition-colors truncate">${esc(b.i.cleanName||b.i.title)} <span class="text-gray-500 font-normal">(${b.i.year})</span></div>
           <div class="text-[11px] text-gray-400">${esc(b.i.genre)} · ★ ${b.i.rating} · ~${b.len} min · ${esc(b.i.platformName)}</div>

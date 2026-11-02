@@ -506,7 +506,7 @@
                 const src = posterGetter(m, 'movie') || fb;
                 return `<div data-obmovie="${esc(m.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer">
                   <div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
-                    <img src="${src}" data-title="${esc(m.title)}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster poster-shimmer w-full h-full object-cover" onload="this.classList.remove('poster-shimmer');" alt="">
+                    <img src="${src}" data-title="${esc(m.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster poster-shimmer w-full h-full object-cover" onload="this.classList.remove('poster-shimmer');" alt="">
                     <div class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
                   </div>
                   <div class="px-0.5">
@@ -569,7 +569,7 @@
                 const src = posterGetter(s, 'show') || fb;
                 return `<div data-obshow="${esc(s.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer">
                   <div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
-                    <img src="${src}" data-title="${esc(s.title)}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster poster-shimmer w-full h-full object-cover" onload="this.classList.remove('poster-shimmer');" alt="">
+                    <img src="${src}" data-title="${esc(s.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster poster-shimmer w-full h-full object-cover" onload="this.classList.remove('poster-shimmer');" alt="">
                     <div class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
                   </div>
                   <div class="px-0.5">
@@ -2357,7 +2357,7 @@
 
               <div class="my-3.5 flex flex-col items-center">
                 <div class="w-40 sm:w-44 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-950/40 shadow-2xl bg-black relative">
-                  <img src="${posterSrc}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="${esc(it.cleanName || it.title)}">
+                  <img src="${posterSrc}" data-title="${esc(it.title)}" onerror="window.handlePosterFallback(this);" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="${esc(it.cleanName || it.title)}">
                 </div>
                 <h3 class="font-black text-amber-950 text-lg sm:text-xl text-center mt-3 leading-snug line-clamp-1">${esc(it.cleanName || it.title)}</h3>
                 <div class="text-xs font-bold text-amber-900/80 tracking-wide mt-0.5">${it.genre} · ${it.year}</div>
@@ -2437,7 +2437,7 @@
               return `
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all">
                   <div class="flex items-center gap-3 min-w-0">
-                    <img src="${posterCache[item.type + ':' + item.title] || generateStylizedPosterDataURI(item)}" class="w-10 h-14 object-cover rounded-lg border border-white/15 shrink-0" alt="">
+                    <img src="${posterCache[item.type + ':' + item.title] || generateStylizedPosterDataURI(item)}" data-title="${esc(item.title)}" onerror="window.handlePosterFallback(this);" class="w-10 h-14 object-cover rounded-lg border border-white/15 shrink-0" alt="">
                     <div class="min-w-0">
                       <div class="text-xs font-bold truncate text-white">${esc(item.cleanName || item.title)}</div>
                       <div class="text-[10px] text-gray-400">${item.genre} · ${item.year} · ★ ${item.rating}</div>
@@ -2482,7 +2482,7 @@
 
           <div class="my-5 flex flex-col items-center">
             <div class="w-48 sm:w-56 aspect-[2/3] rounded-2xl overflow-hidden border-2 border-amber-950/50 shadow-2xl bg-black relative">
-              <img src="${posterSrc}" class="w-full h-full object-cover" alt="${esc(it.cleanName || it.title)}">
+              <img src="${posterSrc}" data-title="${esc(it.title)}" onerror="window.handlePosterFallback(this);" class="w-full h-full object-cover" alt="${esc(it.cleanName || it.title)}">
             </div>
             <h3 class="font-black text-amber-950 text-xl sm:text-2xl text-center mt-4 leading-tight">${esc(it.cleanName || it.title)}</h3>
             <div class="text-xs font-bold text-amber-900/85 tracking-wide mt-1">${it.genre} · ${it.year}</div>

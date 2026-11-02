@@ -13178,7 +13178,7 @@ Odd Taxi|2021|87
         </g>
       </svg>`;
 
-      const res = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+      const res = `data:image/svg+xml;utf8,${encodeURIComponent(svg).replace(/'/g, '%27')}`;
       posterSvgCache[titleStr] = res;
       return res;
     }
@@ -13411,12 +13411,37 @@ Odd Taxi|2021|87
 
         const realUrl = await fetchPoster(item, true);
         if (realUrl && imgEl.getAttribute('src') !== realUrl) {
-          imgEl.style.opacity = '0';
+          imgEl.style.transition = 'opacity 0.3s ease';
+          imgEl.style.opacity = '0.3';
           imgEl.onload = () => { imgEl.style.opacity = '1'; };
+          imgEl.onerror = () => {
+            if (window.handlePosterFallback) {
+              window.handlePosterFallback(imgEl);
+            } else {
+              imgEl.style.opacity = '1';
+              const fallback = generateStylizedPosterDataURI(item);
+              if (imgEl.src !== fallback) imgEl.src = fallback;
+            }
+          };
           imgEl.src = realUrl;
         }
       });
     }, { rootMargin: '100px' });
+
+    function handlePosterFallback(img) {
+      if (!img) return;
+      img.onerror = null;
+      if (img.classList && img.classList.remove) img.classList.remove('poster-shimmer');
+      if (img.style) img.style.opacity = '1';
+      const title = (img.getAttribute && img.getAttribute('data-title')) || (img.dataset && img.dataset.title) || img.alt || '';
+      const item = (window.globalDatabase && window.globalDatabase[title]) || (typeof globalDatabase !== 'undefined' && globalDatabase[title]) || { title: title || 'Cinema' };
+      const fallback = (typeof generateStylizedPosterDataURI === 'function') ? generateStylizedPosterDataURI(item) : (window.generateStylizedPosterDataURI ? window.generateStylizedPosterDataURI(item) : '');
+      if (fallback) {
+        img.src = fallback;
+        if (img.setAttribute) img.setAttribute('src', fallback);
+      }
+    }
+    window.handlePosterFallback = handlePosterFallback;
 
     function attachThumbObservers(container) {
       if (!container) return;
@@ -13443,11 +13468,16 @@ Odd Taxi|2021|87
     };
     window.setLocal = setLocal;
 
-    let wishlistTitles = getLocal('cs_wishlist', ["Inception", "The Dark Knight", "Breaking Bad", "Spirited Away", "Dune: Part Two"]).filter(t => globalDatabase[t]);
-    let watchedTitles = getLocal('cs_watched', ["The Shawshank Redemption", "Pulp Fiction", "Interstellar", "Stranger Things"]).filter(t => globalDatabase[t]);
-    let favTitles = getLocal('cs_favs', ["Inception", "The Dark Knight"]).filter(t => globalDatabase[t]);
-    let myRatings = getLocal('cs_ratings', { "Inception": 5, "The Dark Knight": 5 });
-    let activeHubList = 'wishlist';
+    window.wishlistTitles = getLocal('cs_wishlist', ["Inception", "The Dark Knight", "Breaking Bad", "Spirited Away", "Dune: Part Two"]).filter(t => globalDatabase[t]);
+    window.watchedTitles = getLocal('cs_watched', ["The Shawshank Redemption", "Pulp Fiction", "Interstellar", "Stranger Things"]).filter(t => globalDatabase[t]);
+    window.favTitles = getLocal('cs_favs', ["Inception", "The Dark Knight"]).filter(t => globalDatabase[t]);
+    window.myRatings = getLocal('cs_ratings', { "Inception": 5, "The Dark Knight": 5 });
+
+    var wishlistTitles = window.wishlistTitles;
+    var watchedTitles = window.watchedTitles;
+    var favTitles = window.favTitles;
+    var myRatings = window.myRatings;
+    var activeHubList = 'wishlist';
 
     function toggleFav(title, event) {
       if (event) event.stopPropagation();
@@ -13700,7 +13730,7 @@ Odd Taxi|2021|87
       const escTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
       const attrTitle = item.title.replace(/"/g, "&quot;");
       const cacheKey = item.type + ':' + item.title;
-      const cachedPoster = posterCache[cacheKey] || KNOWN_POSTER_OVERRIDES[cacheKey] || KNOWN_POSTER_OVERRIDES[item.title] || generateStylizedPosterDataURI(item);
+      const cachedPoster = (posterCache[cacheKey] && typeof posterCache[cacheKey] === 'string') ? posterCache[cacheKey] : (KNOWN_POSTER_OVERRIDES[cacheKey] || KNOWN_POSTER_OVERRIDES[item.title] || (typeof item.thumb === 'string' ? item.thumb : generateStylizedPosterDataURI(item)));
       const fallbackSvg = posterSvgCache[item.cleanName || item.title || 'Cinema'] || generateStylizedPosterDataURI(item);
       const widthClass = isCompactScroll ? "w-[124px] sm:w-48 shrink-0 snap-start" : "w-full";
       const isMovie = item.type === 'movie';
@@ -13715,7 +13745,7 @@ Odd Taxi|2021|87
           <img
             src="${cachedPoster}"
             data-title="${attrTitle}"
-            onerror="this.onerror=null; this.src='${fallbackSvg}'; this.classList.remove('poster-shimmer');"
+            onerror="window.handlePosterFallback(this);"
             onload="this.classList.remove('poster-shimmer');"
             alt="${attrTitle}"
             class="lazy-poster poster-shimmer w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -13897,7 +13927,7 @@ Odd Taxi|2021|87
         const isActive = i === currentSpotlightIdx;
         return `
           <button type="button" onclick="renderHeroSpotlight(${i}, true)" title="${sEscTitle}" class="relative shrink-0 rounded-xl overflow-hidden transition-all duration-200 group ${isActive ? 'ring-2 ring-brand-gold scale-105 shadow-md shadow-brand-gold/30' : 'opacity-65 hover:opacity-100 hover:scale-105 ring-1 ring-white/10'}">
-            <img src="${sPoster}" data-title="${sAttrTitle}" data-type="${sItem.type || 'movie'}" onerror="this.onerror=null;this.src='${sFallback}';" class="w-8 h-12 sm:w-9 sm:h-14 object-cover lazy-poster" alt="${sAttrTitle}" />
+            <img src="${sPoster}" data-title="${sAttrTitle}" data-type="${sItem.type || 'movie'}" onerror="window.handlePosterFallback(this);" class="w-8 h-12 sm:w-9 sm:h-14 object-cover lazy-poster" alt="${sAttrTitle}" />
           </button>
         `;
       }).join('');
@@ -13905,7 +13935,7 @@ Odd Taxi|2021|87
       banner.innerHTML = `
         <!-- Optical Lens Nebular Glow -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl sm:rounded-3xl">
-          <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-1/2 h-full object-cover opacity-20 blur-3xl pointer-events-none" />
+          <img src="${posterUrl}" data-title="${attrTitle}" onerror="window.handlePosterFallback(this);" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-1/2 h-full object-cover opacity-20 blur-3xl pointer-events-none" />
         </div>
 
         <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
@@ -13915,7 +13945,7 @@ Odd Taxi|2021|87
             <!-- Authentic 2:3 Poster with cinematic depth -->
             <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')" title="View Details">
               <div class="relative w-20 sm:w-24 md:w-28 rounded-xl overflow-hidden border border-white/20 shadow-xl group-hover:border-brand-gold group-hover:scale-102 transition-all">
-                <img src="${posterUrl}" data-title="${attrTitle}" onerror="this.onerror=null;this.src='${fallbackSvg}';" alt="${attrTitle}" class="lazy-poster w-full aspect-[2/3] object-cover" />
+                <img src="${posterUrl}" data-title="${attrTitle}" onerror="window.handlePosterFallback(this);" alt="${attrTitle}" class="lazy-poster w-full aspect-[2/3] object-cover" />
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity backdrop-blur-[2px]">
                   <span class="w-8 h-8 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-xs ml-0.5"></i></span>
                 </div>
@@ -14107,7 +14137,7 @@ Odd Taxi|2021|87
       renderHeroSpotlight(0);
       renderMoodPills();
 
-      // Row 1: Pantheon (8.5+ when filtered by Hindi, 9.0+ otherwise) — Immediate Above-the-Fold Render
+      // Row 1: Pantheon (8.5+ when filtered by Hindi, 9.0+ otherwise)
       const minPantheon = window.globalLangFilter === 'hi' ? 8.3 : 9.0;
       const pantheon = [...movies, ...tvShows].filter(i => matchesGlobalLang(i) && parseFloat(i.rating) >= minPantheon).sort((a, b) => b.rating - a.rating).slice(0, 12);
       const pEl = document.getElementById('discoverPantheonRow');
@@ -14121,53 +14151,52 @@ Odd Taxi|2021|87
         window.updateHomeVinylPlayer();
       }
 
-      // Defer Below-the-Fold rows to the next frame for instantaneous initial paint & zero opening lag
-      requestAnimationFrame(() => {
+      // Row 2: Popular Hits — capped at 12 cards
+      const blockbusterKeywords = ["Avengers", "Spider-Man", "Dune", "Batman", "Dark Knight", "Avatar", "Star Wars", "Fast & Furious", "Fast Five", "Furious 7", "Transformers", "Harry Potter", "Top Gun", "John Wick", "Deadpool", "Hunger Games", "Mission: Impossible", "Guardians of the Galaxy", "Inception", "Interstellar", "Oppenheimer", "RRR", "Baahubali", "K.G.F", "Jawan", "Pathaan", "Dangal", "3 Idiots", "Sholay", "Kalki", "Stree"];
+      const blockbusters = movies.filter(m => matchesGlobalLang(m) && blockbusterKeywords.some(kw => m.title.includes(kw))).sort((a, b) => b.rating - a.rating).slice(0, 12);
+      const bEl = document.getElementById('discoverBlockbustersRow');
+      if (bEl) {
+        bEl.innerHTML = blockbusters.map(i => createCardHTML(i, true)).join('');
+        attachThumbObservers(bEl);
+      }
+
+      // Row 3: Box Office All-Time Champions (if present in markup)
+      const boxOfficeKeywords = ["Avatar", "Avengers: Endgame", "Titanic", "Star Wars: The Force Awakens", "Avengers: Infinity War", "Spider-Man: No Way Home", "Jurassic World", "The Lion King", "The Avengers", "Furious 7", "Top Gun: Maverick", "Frozen II", "Barbie", "Oppenheimer", "The Dark Knight", "Dangal", "Baahubali 2", "RRR", "K.G.F: Chapter 2", "Jawan"];
+      const boxOfficeFilms = movies.filter(m => matchesGlobalLang(m) && boxOfficeKeywords.some(kw => m.title.includes(kw) || kw.includes(m.title))).sort((a, b) => b.rating - a.rating).slice(0, 12);
+      const boEl = document.getElementById('discoverBoxOfficeRow');
+      if (boEl) {
+        boEl.innerHTML = boxOfficeFilms.map(i => createCardHTML(i, true)).join('');
+        attachThumbObservers(boEl);
+      }
+
+      // Row 4: Mind-Benders & Thrillers — capped at 12 cards
+      const mindBenders = movies.filter(i => matchesGlobalLang(i) && (i.genre === 'Sci-Fi' || i.genre === 'Thriller')).slice(0, 12);
+      const mEl = document.getElementById('discoverMindRow');
+      if (mEl) {
+        mEl.innerHTML = mindBenders.map(i => createCardHTML(i, true)).join('');
+        attachThumbObservers(mEl);
+      }
+
+      // Row 5: TV Shows — capped at 12 cards
+      const tvEl = document.getElementById('discoverTvRow');
+      if (tvEl) {
+        tvEl.innerHTML = tvShows.filter(i => matchesGlobalLang(i)).slice(0, 12).map(i => createCardHTML(i, true)).join('');
+        attachThumbObservers(tvEl);
+      }
+
+      // Row 6: Hindi & Indian Cinema Spotlight — capped at 12 cards
+      const indEl = document.getElementById('discoverIndianRow');
+      if (indEl) {
+        const indPool = [...movies, ...tvShows].filter(i => i.lang === 'hi').sort((a, b) => b.rating - a.rating).slice(0, 12);
+        indEl.innerHTML = indPool.map(i => createCardHTML(i, true)).join('');
+        attachThumbObservers(indEl);
+      }
+
+      try {
         selectMood(activeMood || '🧠 Mind-Bending');
+      } catch (_) {}
 
-        // Row 2: Popular Hits — capped at 12 cards
-        const blockbusterKeywords = ["Avengers", "Spider-Man", "Dune", "Batman", "Dark Knight", "Avatar", "Star Wars", "Fast & Furious", "Fast Five", "Furious 7", "Transformers", "Harry Potter", "Top Gun", "John Wick", "Deadpool", "Hunger Games", "Mission: Impossible", "Guardians of the Galaxy", "Inception", "Interstellar", "Oppenheimer", "RRR", "Baahubali", "K.G.F", "Jawan", "Pathaan", "Dangal", "3 Idiots", "Sholay", "Kalki", "Stree"];
-        const blockbusters = movies.filter(m => matchesGlobalLang(m) && blockbusterKeywords.some(kw => m.title.includes(kw))).sort((a, b) => b.rating - a.rating).slice(0, 12);
-        const bEl = document.getElementById('discoverBlockbustersRow');
-        if (bEl) {
-          bEl.innerHTML = blockbusters.map(i => createCardHTML(i, true)).join('');
-          attachThumbObservers(bEl);
-        }
-
-        // Row 3: Box Office All-Time Champions — capped at 12 cards
-        const boxOfficeKeywords = ["Avatar", "Avengers: Endgame", "Titanic", "Star Wars: The Force Awakens", "Avengers: Infinity War", "Spider-Man: No Way Home", "Jurassic World", "The Lion King", "The Avengers", "Furious 7", "Top Gun: Maverick", "Frozen II", "Barbie", "Oppenheimer", "The Dark Knight", "Dangal", "Baahubali 2", "RRR", "K.G.F: Chapter 2", "Jawan"];
-        const boxOfficeFilms = movies.filter(m => matchesGlobalLang(m) && boxOfficeKeywords.some(kw => m.title.includes(kw) || kw.includes(m.title))).sort((a, b) => b.rating - a.rating).slice(0, 12);
-        const boEl = document.getElementById('discoverBoxOfficeRow');
-        if (boEl) {
-          boEl.innerHTML = boxOfficeFilms.map(i => createCardHTML(i, true)).join('');
-          attachThumbObservers(boEl);
-        }
-
-        // Row 4: Mind-Benders & Thrillers — capped at 12 cards
-        const mindBenders = movies.filter(i => matchesGlobalLang(i) && (i.genre === 'Sci-Fi' || i.genre === 'Thriller')).slice(0, 12);
-        const mEl = document.getElementById('discoverMindRow');
-        if (mEl) {
-          mEl.innerHTML = mindBenders.map(i => createCardHTML(i, true)).join('');
-          attachThumbObservers(mEl);
-        }
-
-        // Row 5: TV Shows — capped at 12 cards
-        const tvEl = document.getElementById('discoverTvRow');
-        if (tvEl) {
-          tvEl.innerHTML = tvShows.filter(i => matchesGlobalLang(i)).slice(0, 12).map(i => createCardHTML(i, true)).join('');
-          attachThumbObservers(tvEl);
-        }
-
-        // Row 6: Hindi & Indian Cinema Spotlight — capped at 12 cards
-        const indEl = document.getElementById('discoverIndianRow');
-        if (indEl) {
-          const indPool = [...movies, ...tvShows].filter(i => i.lang === 'hi').sort((a, b) => b.rating - a.rating).slice(0, 12);
-          indEl.innerHTML = indPool.map(i => createCardHTML(i, true)).join('');
-          attachThumbObservers(indEl);
-        }
-
-        document.querySelectorAll('#discoverPantheonRow, #discoverBlockbustersRow, #discoverBoxOfficeRow, #discoverMindRow, #discoverTvRow, #discoverIndianRow, #moodRow, #wishlistContainer').forEach(addHorizontalArrows);
-      });
+      document.querySelectorAll('#discoverPantheonRow, #discoverBlockbustersRow, #discoverBoxOfficeRow, #discoverMindRow, #discoverTvRow, #discoverIndianRow, #moodRow, #wishlistContainer').forEach(addHorizontalArrows);
     }
 
     function addHorizontalArrows(scrollEl) {
@@ -14918,7 +14947,7 @@ Odd Taxi|2021|87
         <div class="flex flex-col sm:flex-row gap-5 sm:gap-6">
           <!-- Poster Column (Locked 2:3 Aspect, Elegant Border & Soft Shadow) -->
           <div class="w-44 sm:w-52 md:w-56 shrink-0 mx-auto sm:mx-0 rounded-2xl overflow-hidden border border-white/20 shadow-2xl aspect-[2/3] bg-[#0c101c] relative group/poster">
-            <img id="modalPosterImg" src="${initialPoster}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover/poster:scale-105" alt="${item.title}">
+            <img id="modalPosterImg" src="${initialPoster}" data-title="${item.title.replace(/"/g, '&quot;')}" onerror="window.handlePosterFallback(this);" class="w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover/poster:scale-105" alt="${item.title}">
             <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 pointer-events-none"></div>
           </div>
 
@@ -15215,11 +15244,11 @@ Odd Taxi|2021|87
       const display = document.getElementById('rouletteDisplay');
       const inlineDisplay = document.getElementById('rouletteInlineWinner');
       const fallback = generateStylizedPosterDataURI(item);
-      const poster = posterCache[item.type + ':' + item.title] || fallback;
+      const poster = (posterCache[item.type + ':' + item.title] && typeof posterCache[item.type + ':' + item.title] === 'string') ? posterCache[item.type + ':' + item.title] : (typeof item.thumb === 'string' ? item.thumb : fallback);
 
       if (display) {
         display.innerHTML = `
-          <img src="${poster}" data-title="${item.title.replace(/"/g, '&quot;')}" onerror="this.onerror=null;this.src='${fallback}';" class="lazy-poster w-20 h-28 object-cover rounded-xl shrink-0 border border-brand-gold/40 shadow-lg shadow-brand-gold/15 fade-in" />
+          <img src="${poster}" data-title="${item.title.replace(/"/g, '&quot;')}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-20 h-28 object-cover rounded-xl shrink-0 border border-brand-gold/40 shadow-lg shadow-brand-gold/15 fade-in" />
           <div class="flex-1 min-w-0 space-y-1 fade-in">
             <div class="flex items-center gap-2">
               <span class="px-2 py-0.5 rounded-full bg-brand-gold text-black text-[10px] font-black uppercase">Selected Pick</span>
@@ -15479,11 +15508,11 @@ Odd Taxi|2021|87
       container.innerHTML = slice.map(({ item, score, reason }, idx) => {
         const esc = item.title.replace(/'/g, "\\'");
         const fallback = generateStylizedPosterDataURI(item);
-        const poster = posterCache[item.type + ':' + item.title] || fallback;
+        const poster = (posterCache[item.type + ':' + item.title] && typeof posterCache[item.type + ':' + item.title] === 'string') ? posterCache[item.type + ':' + item.title] : (typeof item.thumb === 'string' ? item.thumb : fallback);
         return `
           <div onclick="openDetailModal('${esc}')" class="glass-card p-3.5 rounded-2xl border border-white/10 hover:border-brand-gold/50 cursor-pointer flex flex-col justify-between gap-3 transition-all group">
             <div class="flex gap-3.5 items-center">
-              <img src="${poster}" data-title="${item.title.replace(/"/g, '&quot;')}" onerror="this.onerror=null;this.src='${fallback}';" class="lazy-poster w-16 h-24 sm:w-20 sm:h-28 object-cover rounded-xl shrink-0 border border-white/10" />
+              <img src="${poster}" data-title="${item.title.replace(/"/g, '&quot;')}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-16 h-24 sm:w-20 sm:h-28 object-cover rounded-xl shrink-0 border border-white/10" />
               <div class="min-w-0 flex-1 space-y-1">
                 <div class="flex items-center justify-between gap-1">
                   <span class="px-2 py-0.5 rounded-md bg-brand-gold/20 text-brand-gold text-[10px] font-extrabold border border-brand-gold/30">Pick #${idx + 1} · ${score}%</span>
@@ -15746,3 +15775,8 @@ Odd Taxi|2021|87
     window.posterSvgCache = posterSvgCache;
     window.genreThemes = genreThemes;
     window.KNOWN_POSTER_OVERRIDES = KNOWN_POSTER_OVERRIDES;
+    window.activeTags = activeTags;
+    window.fetchPoster = fetchPoster;
+    window.updateAllCountersAndViews = updateAllCountersAndViews;
+    window.fyShuffle = fyShuffle;
+    window.handlePosterFallback = handlePosterFallback;

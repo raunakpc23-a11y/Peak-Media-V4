@@ -249,7 +249,7 @@
 
     if(pickCount === 1){
       const fb=generateStylizedPosterDataURI(it),attrT=esc(it.title);
-      $('rcResult').innerHTML=`<div class="flex gap-4 items-center"><img src="${posterCache[it.type+':'+it.title]||fb}" data-title="${attrT}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster w-24 h-36 object-cover rounded-xl border border-white/10 shrink-0" alt="">
+      $('rcResult').innerHTML=`<div class="flex gap-4 items-center"><img src="${posterCache[it.type+':'+it.title]||fb}" data-title="${attrT}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-24 h-36 object-cover rounded-xl border border-white/10 shrink-0" alt="${attrT}">
         <div class="space-y-2 min-w-0 flex-1"><div class="text-[11px] font-extrabold uppercase tracking-widest text-brand-gold">Single-Ball Ricochet Winner</div>
         <div class="text-xl font-display font-bold text-white truncate">${esc(it.cleanName||it.title)} <span class="text-gray-500 text-sm font-normal">(${it.year})</span></div>
         <div class="text-xs text-gray-400">${esc(it.genre)} · ★ ${it.rating} · ${esc(it.platformName)}</div>
@@ -275,7 +275,7 @@
           ${winners.map((w, idx) => {
             const fb=generateStylizedPosterDataURI(w),attrT=esc(w.title),escJs=w.title.replace(/'/g,"\'");
             return `<div onclick="openDetailModal('${escJs}')" class="p-3 rounded-2xl bg-black/50 border border-white/10 hover:border-brand-gold/50 flex items-center gap-3 cursor-pointer transition-all">
-              <img src="${posterCache[w.type+':'+w.title]||fb}" data-title="${attrT}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster w-14 h-20 object-cover rounded-lg border border-white/10 shrink-0" alt="">
+              <img src="${posterCache[w.type+':'+w.title]||fb}" data-title="${attrT}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-14 h-20 object-cover rounded-lg border border-white/10 shrink-0" alt="${attrT}">
               <div class="min-w-0 flex-1">
                 <div class="text-[10px] font-bold text-brand-gold">Ball #${idx+1} Pick</div>
                 <div class="text-xs font-bold text-white truncate">${esc(w.cleanName||w.title)}</div>
@@ -364,12 +364,12 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
             ${selection.map(it => {
               const fb = generateStylizedPosterDataURI(it);
-              const poster = (posterCache && posterCache[it.type + ':' + it.title]) || it.thumb || fb;
+              const pCache = window.posterCache || (typeof posterCache !== 'undefined' ? posterCache : null); const poster = (pCache && pCache[it.type + ':' + it.title] && typeof pCache[it.type + ':' + it.title] === 'string') ? pCache[it.type + ':' + it.title] : (typeof it.thumb === 'string' ? it.thumb : fb);
               const escT = (it.title || '').replace(/'/g, "\\'");
               return `
                 <div onclick="openDetailModal('${escT}')" class="group p-2 rounded-xl bg-black/50 border border-white/10 hover:border-brand-gold/60 cursor-pointer transition-all space-y-1.5 flex flex-col justify-between">
                   <div class="relative w-full aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
-                    <img src="${poster}" data-title="${esc(it.title)}" loading="eager" decoding="async" class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform" alt="${esc(it.title)}">
+                    <img src="${poster}" data-title="${esc(it.title)}" onerror="window.handlePosterFallback(this);" loading="eager" decoding="async" class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform" alt="${esc(it.title)}">
                     <span class="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-brand-gold">★ ${it.rating}</span>
                   </div>
                   <div class="text-xs font-bold text-white truncate" title="${esc(it.cleanName || it.title)}">${esc(it.cleanName || it.title)}</div>
@@ -514,13 +514,13 @@
       stagePicks.innerHTML = oppItems.map(i => {
         const fb = (typeof generateStylizedPosterDataURI === 'function' ? generateStylizedPosterDataURI(i) : '');
         const pCache = window.posterCache || (typeof posterCache !== 'undefined' ? posterCache : null);
-        const poster = (pCache && pCache[i.type + ':' + i.title]) || i.thumb || fb;
+        const poster = (pCache && pCache[i.type + ':' + i.title] && typeof pCache[i.type + ':' + i.title] === 'string') ? pCache[i.type + ':' + i.title] : (typeof i.thumb === 'string' ? i.thumb : fb);
         const isSaved = isSavedFn(i.title);
         const escTitle = (i.title || '').replace(/'/g, "\\'");
         return `
           <div class="shrink-0 w-32 space-y-1.5">
             <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 hover:border-emerald-400 transition-all cursor-pointer bg-black/40" onclick="openDetailModal('${escTitle}')">
-              <img src="${poster}" data-title="${esc(i.title)}" loading="eager" decoding="async" class="lazy-poster w-full h-full object-cover" alt="${esc(i.title)}">
+              <img src="${poster}" data-title="${esc(i.title)}" onerror="window.handlePosterFallback(this);" loading="eager" decoding="async" class="lazy-poster w-full h-full object-cover" alt="${esc(i.title)}">
               <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-brand-gold border border-brand-gold/30">★ ${i.rating}</span>
             </div>
             <div class="text-[11px] text-white font-bold truncate" title="${esc(i.cleanName || i.title)}">${esc(i.cleanName || i.title)}</div>
@@ -536,7 +536,7 @@
     if(!on)return;
     const opEl=$('oppPicks');
     if(opEl) {
-      opEl.innerHTML=picks(blend).map(i=>`<div class="shrink-0 w-28 space-y-1.5"><img src="${img(i)}" data-title="${esc(i.title)}" class="lazy-poster w-28 h-40 object-cover rounded-xl border border-white/10 cursor-pointer" onclick="openDetailModal('${i.title.replace(/'/g,"\\'")}')" alt=""><div class="text-[11px] text-white font-bold truncate">${esc(i.cleanName||i.title)}</div><button data-t="${esc(i.title)}" class="steal w-full py-1 rounded-lg ${wishlistTitles.includes(i.title)?'bg-rose-500 text-white':'bg-fuchsia-500/80 text-white'} text-[11px] font-bold">${wishlistTitles.includes(i.title)?'Stolen ✓':'Steal it'}</button></div>`).join('');
+      opEl.innerHTML=picks(blend).map(i=>`<div class="shrink-0 w-28 space-y-1.5"><img src="${img(i)}" data-title="${esc(i.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-28 h-40 object-cover rounded-xl border border-white/10 cursor-pointer" onclick="openDetailModal('${i.title.replace(/'/g,"\\'")}')" alt="${esc(i.title)}"><div class="text-[11px] text-white font-bold truncate">${esc(i.cleanName||i.title)}</div><button data-t="${esc(i.title)}" class="steal w-full py-1 rounded-lg ${wishlistTitles.includes(i.title)?'bg-rose-500 text-white':'bg-fuchsia-500/80 text-white'} text-[11px] font-bold">${wishlistTitles.includes(i.title)?'Stolen ✓':'Steal it'}</button></div>`).join('');
       attachThumbObservers(opEl);
     }
   }

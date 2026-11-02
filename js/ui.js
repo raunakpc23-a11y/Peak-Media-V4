@@ -407,12 +407,12 @@
       const match = [...exact, ...near].slice(0, 20);
       row.innerHTML = match.map(m => {
         const fallback = window.generateStylizedPosterDataURI ? window.generateStylizedPosterDataURI(m) : '';
-        const cached = (window.posterCache && window.posterCache[m.type + ':' + m.title]) || m.thumb || fallback;
+        const pCache = window.posterCache || {}; const cached = (pCache[m.type + ':' + m.title] && typeof pCache[m.type + ':' + m.title] === 'string') ? pCache[m.type + ':' + m.title] : (typeof m.thumb === 'string' ? m.thumb : fallback);
         const escTitle = (m.title || '').replace(/'/g, "\\'");
         return `
           <div class="shelf-card group cursor-pointer shrink-0 w-32 space-y-1.5" onclick="openDetailModal('${escTitle}')">
             <div class="relative w-32 h-44 rounded-xl overflow-hidden border border-white/10 group-hover:border-brand-gold transition-all bg-black/40">
-              <img src="${cached}" data-title="${(m.title||'').replace(/"/g, '&quot;')}" loading="eager" decoding="async" class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${m.title}">
+              <img src="${cached}" data-title="${(m.title||'').replace(/"/g, '&quot;')}" onerror="window.handlePosterFallback(this);" loading="eager" decoding="async" class="lazy-poster w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${m.title}">
               <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[10px] font-bold text-brand-gold border border-brand-gold/30">★ ${m.rating}</span>
             </div>
             <div class="text-xs font-bold text-white truncate" title="${m.cleanName || m.title}">${m.cleanName || m.title}</div>
@@ -937,7 +937,7 @@
             <i class="fa-solid fa-quote-left text-amber-400"></i> Iconic Dialogue Match
           </div>
           <button type="button" data-t="${qAttrT}" class="w-full text-left p-2.5 rounded-xl bg-[#080b14] hover:bg-[#151c2e] flex items-center gap-3 transition-colors group border border-amber-400/30">
-            <img src="${posterCache[quoteItem.type + ':' + quoteItem.title] || qFb}" data-title="${qAttrT}" onerror="this.onerror=null;this.src='${qFb}';" class="lazy-poster w-10 h-14 object-cover rounded-md border border-white/10 shrink-0" alt="">
+            <img src="${posterCache[quoteItem.type + ':' + quoteItem.title] || qFb}" data-title="${qAttrT}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-10 h-14 object-cover rounded-md border border-white/10 shrink-0" alt="${qAttrT}">
             <div class="min-w-0 flex-1">
               <div class="text-xs italic font-bold text-amber-200">"${quoteMatch.quote}"</div>
               <div class="text-sm font-extrabold text-white truncate group-hover:text-brand-gold">${quoteItem.cleanName || quoteItem.title} (${quoteItem.year})</div>
@@ -954,7 +954,7 @@
         const attrT = i.title.replace(/"/g, '&quot;');
         const fb = generateStylizedPosterDataURI(i);
         return `<button type="button" data-t="${attrT}" class="w-full text-left px-4 py-2.5 bg-[#0c101c] hover:bg-[#161c2c] flex items-center gap-3 transition-colors group">
-          <img src="${posterCache[i.type + ':' + i.title] || fb}" data-title="${attrT}" onerror="this.onerror=null;this.src='${fb}';" class="lazy-poster w-10 h-14 object-cover rounded-md border border-white/10 shrink-0" alt="">
+          <img src="${posterCache[i.type + ':' + i.title] || fb}" data-title="${attrT}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-10 h-14 object-cover rounded-md border border-white/10 shrink-0" alt="${attrT}">
           <span class="min-w-0 flex-1"><span class="block text-sm font-bold text-white truncate group-hover:text-brand-gold">${i.cleanName || i.title} <span class="text-gray-400 font-normal">(${i.year} · ${i.lang === 'hi' ? 'Hindi' : 'English'})</span></span><span class="block text-[11px] text-gray-400">${i.genre} · ${i.type === 'show' ? 'TV Series' : 'Film'} · <span class="text-emerald-400">${i.platformName}</span></span></span>
           <span class="text-brand-gold font-bold text-xs shrink-0">★ ${i.rating}</span></button>`;
       }).join('');
