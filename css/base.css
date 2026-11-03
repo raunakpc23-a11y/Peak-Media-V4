@@ -1938,16 +1938,16 @@
       box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.65), 0 0 24px 2px rgba(245, 197, 24, 0.16) !important;
     }
     .portal-icon {
-      width: 3.5rem !important;
-      height: 3.5rem !important;
+      width: 4rem !important;
+      height: 4rem !important;
       filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45));
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
       transform-origin: center center;
     }
     @media (min-width: 640px) {
       .portal-icon {
-        width: 4.25rem !important;
-        height: 4.25rem !important;
+        width: 4.75rem !important;
+        height: 4.75rem !important;
       }
     }
     .portal-gateway-card:hover .portal-icon {

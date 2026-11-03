@@ -11645,6 +11645,7 @@ Odd Taxi|2021|87
 
     processDataset(combinedMovies, movies, 'movie');
     processDataset(combinedShows, tvShows, 'show');
+    delete categoryData['Documentary'];
     Object.values(categoryData).forEach(list => list.sort((a, b) => (a.thumb === b.thumb ? 0 : a.thumb ? -1 : 1) || b.rating - a.rating));
 
     // Expose primary datasets globally for cross-script access (marathon, universes, mood_dial, hub-duel)
@@ -14464,7 +14465,7 @@ Odd Taxi|2021|87
     }
 
     function renderCategoriesTab() {
-      const genres = Object.keys(categoryData).sort();
+      const genres = Object.keys(categoryData).filter(g => g !== 'Documentary').sort();
       const pillsEl = document.getElementById('genreQuickPills');
       if (!pillsEl) return;
       pillsEl.innerHTML = genres.map((g, idx) => {
@@ -14490,7 +14491,6 @@ Odd Taxi|2021|87
         <div class="space-y-4">
           <div class="flex items-center justify-between border-b border-white/10 pb-2">
             <h2 class="text-base sm:text-lg font-display font-bold text-white">${genre}</h2>
-            <span class="text-xs text-gray-400 font-semibold">${items.length} titles</span>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 sm:gap-4">
             ${items.map(m => createCardHTML(m, true)).join('')}

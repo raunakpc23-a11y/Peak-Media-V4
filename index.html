@@ -466,7 +466,22 @@
       </div>
       <div id="bsResults" class="hidden absolute left-0 right-0 top-full mt-2 z-40 theme-card-bg rounded-2xl border border-brand-gold/50 divide-y divide-white/10 max-h-[26rem] overflow-y-auto shadow-2xl"></div>
     </div>
-    <div id="subNav" class="hidden gap-1.5 sm:gap-2 mb-4 sm:mb-6"></div>
+    <!-- Browse Navigation Row (Movies, Shows, Universes, Genre) + Catalog Filter Option -->
+    <div id="browseNavRow" class="hidden items-center justify-between gap-3 mb-4 sm:mb-6 border-b border-white/10 pb-3">
+      <div id="subNav" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar"></div>
+      <div id="browseFilterOptionWrap" class="hidden items-center gap-2 shrink-0">
+        <button type="button" id="moviesFilterToggleBtn" onclick="toggleCatalogFilterPanel('movies')" class="hidden px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 items-center gap-1.5 transition-all cursor-pointer">
+          <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i>
+          <span>Filter</span>
+          <i id="moviesFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+        </button>
+        <button type="button" id="showsFilterToggleBtn" onclick="toggleCatalogFilterPanel('shows')" class="hidden px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 items-center gap-1.5 transition-all cursor-pointer">
+          <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i>
+          <span>Filter</span>
+          <i id="showsFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+        </button>
+      </div>
+    </div>
 
 
     <!-- TAB 0: HOME & DISCOVER VAULT -->
@@ -604,35 +619,31 @@
       <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
         
         <!-- Portal 1: Films -->
-        <div onclick="switchTab('movies')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Films">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
-            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalFilms"></use></svg>
+        <div onclick="switchTab('movies')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex items-center justify-center cursor-pointer group transition-all text-center" title="Films">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+            <svg class="portal-icon w-16 h-16 sm:w-20 sm:h-20 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalFilms"></use></svg>
           </div>
-          <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-brand-gold transition-colors">Films</span>
         </div>
 
         <!-- Portal 2: TV Series -->
-        <div onclick="switchTab('shows')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="TV Series">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
-            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalShows"></use></svg>
+        <div onclick="switchTab('shows')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex items-center justify-center cursor-pointer group transition-all text-center" title="TV Series">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+            <svg class="portal-icon w-16 h-16 sm:w-20 sm:h-20 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalShows"></use></svg>
           </div>
-          <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-sky-300 transition-colors">TV Series</span>
         </div>
 
         <!-- Portal 3: Genres -->
-        <div onclick="switchTab('categories')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-purple-500/20 hover:border-purple-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Genres">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
-            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalGenres"></use></svg>
+        <div onclick="switchTab('categories')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-purple-500/20 hover:border-purple-400/50 backdrop-blur-md shadow-lg flex items-center justify-center cursor-pointer group transition-all text-center" title="Genres">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+            <svg class="portal-icon w-16 h-16 sm:w-20 sm:h-20 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalGenres"></use></svg>
           </div>
-          <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-purple-300 transition-colors">Genres</span>
         </div>
 
         <!-- Portal 4: Universes -->
-        <div onclick="switchTab('universes')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-cyan-500/20 hover:border-cyan-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Universes">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
-            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalUniverses"></use></svg>
+        <div onclick="switchTab('universes')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-cyan-500/20 hover:border-cyan-400/50 backdrop-blur-md shadow-lg flex items-center justify-center cursor-pointer group transition-all text-center" title="Universes">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+            <svg class="portal-icon w-16 h-16 sm:w-20 sm:h-20 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalUniverses"></use></svg>
           </div>
-          <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-cyan-300 transition-colors">Universes</span>
         </div>
 
       </div>
@@ -774,23 +785,11 @@
 
     <!-- TAB 1: MOVIES -->
     <section id="tab-movies" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
-        <div class="flex items-center gap-2 flex-1 max-w-md">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn shrink-0" aria-label="Leave this tab and return home">
-            <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
-          </button>
-          <div class="relative flex-1">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-            <input type="text" id="searchMovies" oninput="syncCatalogSearch(this.value)" placeholder="Search catalog..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-          </div>
-          <button type="button" id="moviesFilterToggleBtn" onclick="toggleCatalogFilterPanel('movies')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
-            <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i>
-            <span>Filter</span>
-            <i id="moviesFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
-          </button>
-        </div>
-        <span id="moviesCountBadge" class="hidden">0</span>
-        <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()" class="hidden"><span id="cinejoySyncStateBadge">Off</span></button>
+      <!-- Hidden search/count inputs for background script compatibility -->
+      <div class="hidden" aria-hidden="true">
+        <input type="hidden" id="searchMovies" value="">
+        <span id="moviesCountBadge">0</span>
+        <button type="button" id="cinejoySyncToggleBtn" onclick="toggleCinejoyTop100()"><span id="cinejoySyncStateBadge">Off</span></button>
       </div>
 
       <div id="moviesFilterGrid" class="hidden grid p-3 rounded-2xl bg-black/40 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 border border-white/10 animate-fadeIn">
@@ -829,22 +828,10 @@
 
     <!-- TAB 2: TV SHOWS -->
     <section id="tab-shows" class="tab-pane hidden fade-in space-y-4">
-      <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
-        <div class="flex items-center gap-2 flex-1 max-w-md">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn shrink-0" aria-label="Leave this tab and return home">
-            <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
-          </button>
-          <div class="relative flex-1">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-            <input type="text" id="searchShows" oninput="syncCatalogSearch(this.value)" placeholder="Search catalog..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-          </div>
-          <button type="button" id="showsFilterToggleBtn" onclick="toggleCatalogFilterPanel('shows')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition-all">
-            <i class="fa-solid fa-sliders text-brand-gold text-[11px]"></i>
-            <span>Filter</span>
-            <i id="showsFilterChevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
-          </button>
-        </div>
-        <span id="showsCountBadge" class="hidden">0</span>
+      <!-- Hidden search/count inputs for background script compatibility -->
+      <div class="hidden" aria-hidden="true">
+        <input type="hidden" id="searchShows" value="">
+        <span id="showsCountBadge">0</span>
       </div>
 
       <div id="showsFilterGrid" class="hidden grid p-3 rounded-2xl bg-black/40 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 border border-white/10 animate-fadeIn">
@@ -884,9 +871,6 @@
     <!-- TAB 3: CATEGORIES -->
     <section id="tab-categories" class="tab-pane hidden fade-in space-y-4">
       <div class="border-b border-white/10 pb-3 flex items-center gap-3">
-        <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn shrink-0" aria-label="Leave this tab and return home">
-          <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
-        </button>
         <div id="genreQuickPills" class="flex flex-wrap gap-1.5 max-h-[76px] overflow-y-auto no-scrollbar py-1 flex-1"></div>
       </div>
       <div id="categoriesList" class="space-y-6"></div>
@@ -1579,12 +1563,7 @@
     <!-- TAB: UNIVERSES (Cinematic Universes & Franchises) -->
     <section id="tab-universes" class="tab-pane hidden fade-in space-y-5">
       <div class="border-b border-white/10 pb-3 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn" aria-label="Leave this tab and return home">
-            <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
-          </button>
-          <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">Universes</h1>
-        </div>
+        <h1 class="text-2xl sm:text-3xl font-display font-bold text-white">Universes</h1>
       </div>
       <div id="uniGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
       <div id="uniView" class="hidden space-y-4"></div>

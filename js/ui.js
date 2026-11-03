@@ -15,7 +15,7 @@
   // ---------- navigation ----------
   const GROUPS = {
     discover: { first: 'discover', subs: [] },
-    browse: { first: 'movies', subs: [['movies', 'Movies', 'fa-clapperboard'], ['shows', 'Shows', 'fa-tv'], ['categories', 'Genres', 'fa-layer-group'], ['universes', 'Universes', 'fa-globe']] },
+    browse: { first: 'movies', subs: [['movies', 'Movies', 'fa-clapperboard'], ['shows', 'Shows', 'fa-tv'], ['universes', 'Universes', 'fa-globe'], ['categories', 'Genres', 'fa-layer-group']] },
     music: { first: 'music', subs: [] },
     decide: { first: 'play', subs: [] },
     space: { first: 'hub', subs: [
@@ -134,8 +134,31 @@
       }
     });
     const sn = $('subNav'), subs = GROUPS[g].subs;
-    sn.innerHTML = subs.map(([k, l, ic]) => `<button class="sub-pill ${k === key ? 'on' : ''}" onclick="switchTab('${k}')"><i class="fa-solid ${ic}"></i>${l}</button>`).join('');
-    sn.classList.toggle('hidden', !subs.length); sn.classList.toggle('flex', !!subs.length);
+    if (sn) {
+      sn.innerHTML = subs.map(([k, l, ic]) => `<button class="sub-pill ${k === key ? 'on' : ''}" onclick="switchTab('${k}')"><i class="fa-solid ${ic}"></i>${l}</button>`).join('');
+      sn.classList.toggle('hidden', !subs.length); sn.classList.toggle('flex', !!subs.length);
+    }
+    const bRow = $('browseNavRow');
+    const bFilter = $('browseFilterOptionWrap');
+    const mFilterBtn = $('moviesFilterToggleBtn');
+    const sFilterBtn = $('showsFilterToggleBtn');
+    if (bRow) {
+      bRow.classList.toggle('hidden', g !== 'browse');
+      bRow.classList.toggle('flex', g === 'browse');
+    }
+    if (bFilter) {
+      const isFilterable = (key === 'movies' || key === 'shows');
+      bFilter.classList.toggle('hidden', !isFilterable);
+      bFilter.classList.toggle('flex', isFilterable);
+      if (mFilterBtn) {
+        mFilterBtn.classList.toggle('hidden', key !== 'movies');
+        mFilterBtn.classList.toggle('flex', key === 'movies');
+      }
+      if (sFilterBtn) {
+        sFilterBtn.classList.toggle('hidden', key !== 'shows');
+        sFilterBtn.classList.toggle('flex', key === 'shows');
+      }
+    }
     document.querySelectorAll('.mnav-btn').forEach(btn => {
       const active = btn.dataset.mnav === g;
       btn.className = 'mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] transition-colors ' + (active ? 'text-brand-gold font-bold bg-brand-gold/10' : 'text-gray-400 font-semibold');
@@ -1079,7 +1102,7 @@
   window.switchTab = function (key, pushState = true) {
     _sw.apply(this, arguments);
     const k = ({ browse: 'movies' })[key] || key;
-    $('browseSearch').classList.toggle('hidden', !BROWSE.includes(k));
+    if ($('browseSearch')) $('browseSearch').classList.add('hidden');
   };
   drawChips();
 
