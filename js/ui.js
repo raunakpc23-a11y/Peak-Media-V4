@@ -1102,7 +1102,10 @@
   window.switchTab = function (key, pushState = true) {
     _sw.apply(this, arguments);
     const k = ({ browse: 'movies' })[key] || key;
-    if ($('browseSearch')) $('browseSearch').classList.add('hidden');
+    if ($('browseSearch')) {
+      const isBrowse = BROWSE.includes(k);
+      $('browseSearch').classList.toggle('hidden', !isBrowse);
+    }
   };
   drawChips();
 

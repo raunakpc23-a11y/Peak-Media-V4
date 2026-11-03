@@ -65,19 +65,25 @@
 </head>
 <body data-theme="space" data-mode="dark" class="mode-dark min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased bg-[#03050a] text-slate-100" style="background-color: #03050a; color: #f3f4f6;">
 
-  <!-- Custom Leave-Tab glyph: coherent clean person striding out of doorway with hands -->
-  <svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
-    <symbol id="leaveTabGlyph" viewBox="0 0 32 32">
-      <!-- Open doorway architectural threshold -->
-      <path d="M14 4H5a1.5 1.5 0 0 0-1.5 1.5v21A1.5 1.5 0 0 0 5 28h9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-      <!-- Person head leaning forward into motion -->
-      <circle cx="21" cy="7" r="3.2" fill="#FDE68A"/>
-      <!-- Dynamic body & legs in confident walking stride -->
-      <path d="M20.5 10.5 19 17l-4 7M19 17l5 7.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-      <!-- Articulated arms swinging in motion with hands -->
-      <path d="M19.5 12.5l-4 3.5-2-.5M19.5 12.5l4.5 2 2-.5" fill="none" stroke="#FDE68A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-      <!-- Clean forward directional speed dash -->
-      <path d="M10 16H2M6 12.5 2 16l4 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Reconstructed Leave Button Gradients & Vector Glyph -->
+  <svg width="0" height="0" class="absolute" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <!-- Brand Cyan to Electric Violet gradient for the door/frame -->
+      <linearGradient id="pm-cyan-violet" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#00D2FE"/>
+        <stop offset="100%" stop-color="#8B5CF6"/>
+      </linearGradient>
+      <!-- Solid Electric Cyan accent for the exit arrow -->
+      <linearGradient id="pm-cyan-accent" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#38BDF8"/>
+        <stop offset="100%" stop-color="#00D2FE"/>
+      </linearGradient>
+    </defs>
+    <symbol id="leaveTabGlyph" viewBox="0 0 24 24">
+      <!-- Clean geometric door frame -->
+      <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Exit arrow with intentional 2px vector stroke -->
+      <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
   </svg>
 
@@ -315,9 +321,12 @@
       
       <!-- Left: Peak Media Brand Icon & Back Button -->
       <div class="flex items-center gap-2 shrink-0">
-        <!-- Custom Leave-Tab Button (returns to the opening view from any tab) -->
-        <button type="button" id="headerBackHomeBtn" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn hidden items-center justify-center" aria-label="Leave this tab and return home">
-          <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
+        <!-- Reconstructed Leave Button (returns to the opening view from any tab) -->
+        <button type="button" id="headerBackHomeBtn" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round leave-tab-btn hidden" aria-label="Leave this tab and return home">
+          <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
 
         <!-- Peak Media Brand Icon (Original Mountain Logo) -->
@@ -883,8 +892,12 @@
       <!-- Title & Header Bar -->
       <div class="flex items-center justify-between border-b border-white/10 pb-2 shrink-0">
         <div class="flex items-center gap-3">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn" aria-label="Leave this tab and return home">
-            <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
+          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave" aria-label="Leave this tab and return home">
+            <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Leave</span>
           </button>
           <div>
             <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white">
@@ -1596,8 +1609,11 @@
 
           <!-- Quick Controls: Back to Home, Shuffle, Resume, Stop -->
           <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <button type="button" onclick="closeMusicToVinyl()" title="Leave tab · Return to Home" class="leave-tab-btn" aria-label="Leave this tab and return home">
-              <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
+            <button type="button" onclick="closeMusicToVinyl()" title="Leave tab · Return to Home" class="leave round" aria-label="Leave this tab and return home">
+              <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </button>
             <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
               <i class="fa-solid fa-shuffle text-purple-300 text-xs"></i> <span>Shuffle</span>
@@ -1710,8 +1726,12 @@
       <!-- Library Header: Title + Spine View Icon + Back up and Restore -->
       <div class="border-b border-white/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn" aria-label="Leave this tab and return home">
-            <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
+          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave" aria-label="Leave this tab and return home">
+            <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Leave</span>
           </button>
           <h1 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight flex items-center gap-2.5">
             <span id="hubAvatarBadge" class="w-8 h-8 rounded-xl bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center text-sm shadow-inner shrink-0"></span>

@@ -13237,6 +13237,9 @@ Odd Taxi|2021|87
       'movie:Kshanam': 'https://upload.wikimedia.org/wikipedia/en/0/0d/Kshanam_poster.jpg'
     };
 
+    // Pre-populate posterCache immediately for instantaneous synchronous card rendering
+    Object.assign(posterCache, KNOWN_POSTER_OVERRIDES);
+
     // Quality enhancer for poster image sources (TVMaze, iTunes, Wikipedia, TMDB)
     function upgradePosterQuality(url) {
       if (!url || typeof url !== 'string' || url.startsWith('data:image/svg')) return url;
@@ -13257,6 +13260,16 @@ Odd Taxi|2021|87
     }
     window.upgradePosterQuality = upgradePosterQuality;
 
+    // Ultra-fast fetch wrapper with AbortSignal timeout to prevent hung API calls
+    const fetchFast = (url, opts = {}, timeoutMs = 3200) => {
+      try {
+        if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
+          opts.signal = AbortSignal.timeout(timeoutMs);
+        }
+      } catch (_) {}
+      return fetch(url, opts);
+    };
+
     async function fetchPoster(item, forceSynopsis = false, isPriority = false) {
       if (!item) return null;
       const cacheKey = item.type + ':' + item.title;
@@ -13271,8 +13284,8 @@ Odd Taxi|2021|87
       if (inFlightFetches[cacheKey]) return inFlightFetches[cacheKey];
 
       inFlightFetches[cacheKey] = (async () => {
-        // Concurrency governor (max 6 active requests, bypassed for priority modal clicks)
-        if (!isPriority && activeFetches >= 6) {
+        // High-performance concurrency governor (up to 24 parallel requests for rapid thumbnail hydration)
+        if (!isPriority && activeFetches >= 24) {
           await new Promise(resolve => fetchQueue.push(resolve));
         }
         activeFetches++;
@@ -13284,7 +13297,7 @@ Odd Taxi|2021|87
           // Pipeline 1: Movies -> Free iTunes Movie Search API (Ultra-crisp official posters 600x900)
           if (item.type === 'movie') {
             try {
-              const res = await fetch(`https://itunes.apple.com/search?media=movie&entity=movie&limit=6&term=${encodeURIComponent(queryName)}`);
+              const res = await fetchFast(`https://itunes.apple.com/search?media=movie&entity=movie&limit=6&term=${encodeURIComponent(queryName)}`);
               if (res.ok) {
                 const data = await res.json();
                 const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -13312,7 +13325,7 @@ Odd Taxi|2021|87
         // Pipeline 2: TV Shows -> Free TVMaze Single Search API + iTunes Fallback
         if (item.type === 'show') {
           try {
-            const res = await fetch(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(queryName)}`);
+            const res = await fetchFast(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(queryName)}`);
             if (res.ok) {
               const data = await res.json();
               if (data.summary && !summaryCache[cacheKey]) {
@@ -13329,7 +13342,7 @@ Odd Taxi|2021|87
 
           // Sub-pipeline 2b: iTunes TV Shows
           try {
-            const res = await fetch(`https://itunes.apple.com/search?media=tvShow&entity=tvSeason&limit=4&term=${encodeURIComponent(queryName)}`);
+            const res = await fetchFast(`https://itunes.apple.com/search?media=tvShow&entity=tvSeason&limit=4&term=${encodeURIComponent(queryName)}`);
             if (res.ok) {
               const data = await res.json();
               const match = (data.results || [])[0];
@@ -13358,7 +13371,7 @@ Odd Taxi|2021|87
           ];
           for (const cand of wikiCandidates) {
             const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cand.replace(/ /g, '_'))}`;
-            const res = await fetch(url, { headers: { 'Api-User-Agent': 'PeakMedia/2.8 (contact@peakmedia.app)' } });
+            const res = await fetchFast(url, { headers: { 'Api-User-Agent': 'PeakMedia/2.8 (contact@peakmedia.app)' } }, 2500);
             if (res.ok) {
               const data = await res.json();
               if (data.type === 'standard') {
@@ -13384,8 +13397,10 @@ Odd Taxi|2021|87
       } finally {
         activeFetches--;
         delete inFlightFetches[cacheKey];
-        const next = fetchQueue.shift();
-        if (next) next();
+        while (fetchQueue.length && activeFetches < 24) {
+          const next = fetchQueue.shift();
+          if (next) next();
+        }
       }
       })();
       return inFlightFetches[cacheKey];
@@ -13401,6 +13416,7 @@ Odd Taxi|2021|87
       }, 1000);
     }
 
+    // High-responsiveness IntersectionObserver with 1200px anticipatory prefetch margin
     const thumbObserver = new IntersectionObserver((entries) => {
       entries.forEach(async (entry) => {
         if (!entry.isIntersecting) return;
@@ -13410,15 +13426,17 @@ Odd Taxi|2021|87
         const item = globalDatabase[title];
         if (!item) return;
 
-        const realUrl = await fetchPoster(item, true);
+        const realUrl = await fetchPoster(item, false);
         if (realUrl && imgEl.getAttribute('src') !== realUrl) {
-          imgEl.style.transition = 'opacity 0.3s ease';
-          imgEl.style.opacity = '0.3';
-          imgEl.onload = () => { imgEl.style.opacity = '1'; };
+          imgEl.onload = () => {
+            imgEl.classList.remove('poster-shimmer');
+            imgEl.style.opacity = '1';
+          };
           imgEl.onerror = () => {
             if (window.handlePosterFallback) {
               window.handlePosterFallback(imgEl);
             } else {
+              imgEl.classList.remove('poster-shimmer');
               imgEl.style.opacity = '1';
               const fallback = generateStylizedPosterDataURI(item);
               if (imgEl.src !== fallback) imgEl.src = fallback;
@@ -13427,7 +13445,7 @@ Odd Taxi|2021|87
           imgEl.src = realUrl;
         }
       });
-    }, { rootMargin: '100px' });
+    }, { rootMargin: '1200px 0px 1200px 0px' });
 
     function handlePosterFallback(img) {
       if (!img) return;
@@ -13444,9 +13462,23 @@ Odd Taxi|2021|87
     }
     window.handlePosterFallback = handlePosterFallback;
 
+    // Fast-path thumbnail attachment: instantly resolves already-cached posters without observer overhead
     function attachThumbObservers(container) {
       if (!container) return;
-      container.querySelectorAll('img.lazy-poster[data-title]').forEach(img => thumbObserver.observe(img));
+      container.querySelectorAll('img.lazy-poster[data-title]').forEach(img => {
+        const title = (img.dataset && img.dataset.title) || img.getAttribute('data-title');
+        const item = title && globalDatabase ? globalDatabase[title] : null;
+        if (item) {
+          const cacheKey = item.type + ':' + item.title;
+          const cached = posterCache[cacheKey] || KNOWN_POSTER_OVERRIDES[cacheKey];
+          if (cached && typeof cached === 'string' && !cached.startsWith('data:image/svg')) {
+            if (img.src !== cached) img.src = cached;
+            img.classList.remove('poster-shimmer');
+            return;
+          }
+        }
+        thumbObserver.observe(img);
+      });
     }
 
     // ==========================================
@@ -13737,6 +13769,9 @@ Odd Taxi|2021|87
       const isMovie = item.type === 'movie';
       const starPipClass = isMovie ? 'bg-amber-400 shadow-[0_0_8px_#f5c518]' : 'bg-cyan-400 shadow-[0_0_8px_#38bdf8]';
       const borderClass = isMovie ? 'border-amber-500/25 hover:border-amber-400/80 hover:shadow-[0_18px_45px_-10px_rgba(0,0,0,0.95),0_0_24px_rgba(245,197,24,0.3)]' : 'border-cyan-500/25 hover:border-cyan-400/80 hover:shadow-[0_18px_45px_-10px_rgba(0,0,0,0.95),0_0_24px_rgba(56,189,248,0.3)]';
+      const isHttp = typeof cachedPoster === 'string' && cachedPoster.startsWith('http');
+      const shimmerClass = isHttp ? '' : 'poster-shimmer';
+      const loadAttr = isHttp ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
 
       // Celestial Starlight Card: Resting state shows Poster, Title, Year, and Magnitude Rating.
       // Quick actions & starlight platform metadata reveal smoothly on hover.
@@ -13749,8 +13784,8 @@ Odd Taxi|2021|87
             onerror="window.handlePosterFallback(this);"
             onload="this.classList.remove('poster-shimmer');"
             alt="${attrTitle}"
-            class="lazy-poster poster-shimmer w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
+            class="lazy-poster ${shimmerClass} w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            ${loadAttr}
             decoding="async"
           />
           <div class="absolute inset-0 poster-fade pointer-events-none"></div>
