@@ -1865,7 +1865,7 @@
       display: block;
       flex: 0 0 auto;
       overflow: visible;
-      filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.35));
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
     }
     .deciders-tools-rail .decider-glyph-btn {
       width: 50px;
@@ -1875,11 +1875,56 @@
     .deciders-tools-rail .decider-mark {
       width: 46px;
       height: 46px;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
     }
     h1 .decider-mark,
     h2 .decider-mark {
       width: 1.5em;
       height: 1.5em;
+    }
+
+    /* Deciders Home Row: Evenly Distributed across entire area */
+    #decidersHomeRow {
+      display: grid !important;
+      grid-template-columns: repeat(8, minmax(0, 1fr)) !important;
+      width: 100% !important;
+      align-items: center;
+      justify-items: center;
+      gap: 0.35rem;
+    }
+    #decidersHomeRow .decider-glyph-btn {
+      width: 100%;
+      max-width: 54px;
+      aspect-ratio: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background: transparent !important;
+      border: none !important;
+    }
+    #decidersHomeRow .decider-glyph-btn:hover {
+      transform: scale(1.14);
+    }
+    #decidersHomeRow .decider-mark {
+      width: 100%;
+      height: 100%;
+      max-width: 50px;
+      max-height: 50px;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+    }
+    @media (min-width: 640px) {
+      #decidersHomeRow {
+        gap: 0.75rem;
+      }
+      #decidersHomeRow .decider-glyph-btn {
+        max-width: 62px;
+      }
+      #decidersHomeRow .decider-mark {
+        max-width: 58px;
+        max-height: 58px;
+      }
     }
 
     /* Gateway Portal Icons: Bigger, Fuller, Punchier */
@@ -1926,10 +1971,10 @@
       .deciders-tools-rail {
         width: 100%;
         flex-direction: row;
+        justify-content: space-between;
         border-right: none;
         border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
-        padding-right: 0;
-        padding-bottom: 0.5rem;
+        padding: 0.35rem 0.5rem;
         overflow-x: auto;
       }
     }

@@ -81,76 +81,128 @@
     </symbol>
   </svg>
 
-  <!-- Custom Decider mark family: one bespoke glyph per tool - Standardized 1.75px strokes + spindle core circle -->
+  <!-- Custom Decider mark family: 64x64 bespoke vector badges with chromatic sheens and cinematic hardware DNA -->
   <svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
-    <!-- Mood: clean, elegant compass needle with soft ring fill -->
-    <symbol id="decMood" viewBox="0 0 32 32">
-      <circle cx="16" cy="16" r="13.5" fill="#A855F7" fill-opacity="0.2" stroke="#A855F7" stroke-width="1.75"/>
-      <path d="M16 4.8 20.2 16 16 13.6 11.8 16Z" fill="#FDE68A" stroke="#FDE68A" stroke-width="1" stroke-linejoin="round"/>
-      <path d="M16 27.2 11.8 16 16 18.4 20.2 16Z" fill="#C084FC" stroke="#C084FC" stroke-width="1" stroke-linejoin="round"/>
-      <circle cx="16" cy="16" r="1.5" fill="#060A14" stroke="#FFFFFF" stroke-width="0.75"/>
+    <defs>
+      <linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset=".5" stop-color="#f5c451"/><stop offset="1" stop-color="#a8741a"/></linearGradient>
+      <linearGradient id="vi" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9a8ff"/><stop offset="1" stop-color="#5b2bb8"/></linearGradient>
+      <linearGradient id="em" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9dffd0"/><stop offset="1" stop-color="#0a9b63"/></linearGradient>
+      <linearGradient id="cy" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a5f3ff"/><stop offset="1" stop-color="#0a8fb5"/></linearGradient>
+      <radialGradient id="gl"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#ffe9a0" stop-opacity=".8"/><stop offset="1" stop-color="#ffe9a0" stop-opacity="0"/></radialGradient>
+      <filter id="hd" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter>
+      <clipPath id="lc"><circle cx="25" cy="32" r="17"/></clipPath>
+    </defs>
+
+    <!-- 1. Mood: Chromatic astrolabe needle -->
+    <symbol id="decMood" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="29" fill="#14141c" stroke="url(#gd)" stroke-width="1.5"/>
+      <circle cx="32" cy="32" r="25" fill="none" stroke="#e8c670" stroke-width="4" stroke-dasharray="1 3.4" opacity=".75"/>
+      <g transform="rotate(40 32 32)">
+        <polygon points="32,7 36.5,32 27.5,32" fill="url(#gd)"/>
+        <polygon points="32,57 27.5,32 36.5,32" fill="url(#vi)"/>
+      </g>
+      <circle cx="32" cy="32" r="4" fill="url(#gd)" stroke="#5a3a08"/>
     </symbol>
 
-    <!-- Swipe: clean card with smooth rightward swipe motion arrow -->
-    <symbol id="decSwipe" viewBox="0 0 32 32">
-      <rect x="4" y="5" width="15" height="22" rx="3" fill="#38BDF8" fill-opacity="0.25" stroke="#38BDF8" stroke-width="1.75"/>
-      <path d="M17 16h11m0 0-3.5-3.5m3.5 3.5-3.5 3.5" fill="none" stroke="#FDE68A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="16" cy="16" r="1.5" fill="#060A14" stroke="#FFFFFF" stroke-width="0.75"/>
+    <!-- 2. CineSwipe: Isometric card fan & flick -->
+    <symbol id="decSwipe" viewBox="0 0 64 64">
+      <rect x="12" y="14" width="25" height="36" rx="4" fill="#2b1a55" stroke="url(#vi)" transform="rotate(-16 24 32)"/>
+      <g transform="rotate(14 40 30)">
+        <rect x="25" y="11" width="25" height="36" rx="4" fill="url(#gd)"/>
+        <rect x="29" y="15" width="17" height="19" rx="2" fill="#4a2f06" opacity=".55"/>
+        <rect x="29" y="38" width="17" height="2.5" rx="1" fill="#4a2f06" opacity=".6"/>
+      </g>
+      <path d="M30 57Q52 56 57 36" fill="none" stroke="url(#em)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M50 38l7-8 5 9z" fill="#5cf2b0"/>
     </symbol>
 
-    <!-- Duel: clean crossed swords -->
-    <symbol id="decDuel" viewBox="0 0 32 32">
-      <path d="M6 26 26 6M26 26 6 6" stroke="#F59E0B" stroke-width="1.75" stroke-linecap="round"/>
-      <path d="M4.5 20.5 11.5 27.5M27.5 20.5 20.5 27.5" stroke="#FDE68A" stroke-width="1.75" stroke-linecap="round"/>
-      <circle cx="16" cy="16" r="1.5" fill="#060A14" stroke="#FFFFFF" stroke-width="0.75"/>
+    <!-- 3. Film Duel: Crossed 35mm celluloid blades with star spark -->
+    <symbol id="decDuel" viewBox="0 0 64 64">
+      <g transform="rotate(45 32 32)">
+        <rect x="1" y="25" width="62" height="14" rx="1.5" fill="#1b1b25" stroke="url(#gd)"/>
+        <path d="M3 27.5H61M3 36.5H61" stroke="#ffd36b" stroke-width="2.4" stroke-dasharray="2.2 2.4"/>
+      </g>
+      <g transform="rotate(-45 32 32)">
+        <rect x="1" y="25" width="62" height="14" rx="1.5" fill="#22222e" stroke="url(#cy)"/>
+        <path d="M3 27.5H61M3 36.5H61" stroke="#9aeaff" stroke-width="2.4" stroke-dasharray="2.2 2.4"/>
+      </g>
+      <circle cx="32" cy="32" r="9" fill="#14141c" stroke="url(#gd)" stroke-width="2.5"/>
+      <path d="M32 25l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/>
     </symbol>
 
-    <!-- Marathon: clean stopwatch with subtle fill -->
-    <symbol id="decMarathon" viewBox="0 0 32 32">
-      <circle cx="16" cy="17" r="12" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1.75"/>
-      <path d="M16 5V2M12 2h8" stroke="#10B981" stroke-width="1.75" stroke-linecap="round"/>
-      <path d="M16 17V11" stroke="#FDE68A" stroke-width="1.75" stroke-linecap="round"/>
-      <path d="M16 17l4 3.5" stroke="#34D399" stroke-width="1.75" stroke-linecap="round"/>
-      <circle cx="16" cy="17" r="1.5" fill="#060A14" stroke="#FFFFFF" stroke-width="0.75"/>
+    <!-- 4. Marathon Builder: Chronometer film spool -->
+    <symbol id="decMarathon" viewBox="0 0 64 64">
+      <rect x="28" y="4" width="8" height="6" rx="1.5" fill="url(#gd)"/>
+      <rect x="29" y="9" width="6" height="5" fill="#a8741a"/>
+      <rect x="48" y="12" width="7" height="4" rx="1.5" fill="url(#gd)" transform="rotate(45 51 14)"/>
+      <rect x="9" y="12" width="7" height="4" rx="1.5" fill="url(#gd)" transform="rotate(-45 13 14)"/>
+      <circle cx="32" cy="36" r="23" fill="#15151d" stroke="url(#gd)" stroke-width="2.5"/>
+      <path d="M32 19.5A16.5 16.5 0 0 1 46.3 44.3" fill="none" stroke="url(#em)" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="32" cy="36" r="12" fill="#2a2a38" stroke="#aaa" stroke-width="1"/>
+      <g fill="#0b0b10">
+        <circle cx="32" cy="29.5" r="3.2"/>
+        <circle cx="37.6" cy="39.2" r="3.2"/>
+        <circle cx="26.4" cy="39.2" r="3.2"/>
+      </g>
+      <circle cx="32" cy="36" r="1.8" fill="url(#gd)"/>
     </symbol>
 
-    <!-- Decades: clean balanced hourglass -->
-    <symbol id="decDecades" viewBox="0 0 32 32">
-      <path d="M6 4h20M6 28h20" stroke="#3B82F6" stroke-width="1.75" stroke-linecap="round"/>
-      <path d="M9 5.5c0 5.5 5 8 7 10.5-2 2.5-7 5-7 10.5M23 5.5c0 5.5-5 8-7 10.5 2 2.5 7 5 7 10.5" fill="#3B82F6" fill-opacity="0.2" stroke="#3B82F6" stroke-width="1.75" stroke-linejoin="round"/>
-      <path d="M10 25.5h12L16 19Z" fill="#FDE68A"/>
-      <circle cx="16" cy="16" r="1.5" fill="#060A14" stroke="#FFFFFF" stroke-width="0.75"/>
+    <!-- 5. Decades Time Machine: Celluloid hourglass -->
+    <symbol id="decDecades" viewBox="0 0 64 64">
+      <path d="M18 8H46M18 56H46" stroke="url(#gd)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M20 8C20 26 32 28 32 32S20 38 20 56M44 8C44 26 32 28 32 32S44 38 44 56" fill="none" stroke="url(#gd)" stroke-width="3"/>
+      <path d="M24 12H40C38 20 34 24 32 26 30 24 26 20 24 12Z" fill="url(#gd)"/>
+      <path d="M32 40L42 54H22Z" fill="url(#cy)"/>
+      <path d="M32 28V40" stroke="#9aeaff" stroke-width="1.5" stroke-linecap="round"/>
     </symbol>
 
-    <!-- Matchmaker: bold solid heart with gentle spark -->
-    <symbol id="decMatchmaker" viewBox="0 0 32 32">
-      <path d="M16 28C15.2 27.5 4 20 4 12.5 4 7.5 7.5 4.5 11.5 4.5c2.4 0 4 1.3 4.5 2.8.5-1.5 2.1-2.8 4.5-2.8 4 0 7.5 3 7.5 8 0 7.5-11.2 15-12 15.5z" fill="#F43F5E" fill-opacity="0.25" stroke="#FB7185" stroke-width="1.75"/>
-      <path d="M23 4.5l1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1Z" fill="#FDE68A"/>
-      <circle cx="16" cy="16" r="1.5" fill="#060A14" stroke="#FFFFFF" stroke-width="0.75"/>
+    <!-- 6. Compatibility: Overlapping projector apertures -->
+    <symbol id="decComp" viewBox="0 0 64 64">
+      <circle cx="25" cy="32" r="17" fill="#0a8fb522" stroke="url(#cy)" stroke-width="2.5"/>
+      <circle cx="39" cy="32" r="17" fill="#f5c45122" stroke="url(#gd)" stroke-width="2.5"/>
+      <circle cx="39" cy="32" r="17" fill="#fff6d0" clip-path="url(#lc)" opacity=".85"/>
+      <ellipse cx="32" cy="32" rx="14" ry="9" fill="url(#gl)"/>
+      <path d="M32 22v20M26 32h12" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
     </symbol>
 
-    <!-- Compatibility: balanced overlapping twin rings with center gleam -->
-    <symbol id="decComp" viewBox="0 0 32 32">
-      <circle cx="11.5" cy="16" r="8.5" fill="#EC4899" fill-opacity="0.25" stroke="#EC4899" stroke-width="1.75"/>
-      <circle cx="20.5" cy="16" r="8.5" fill="#F472B6" fill-opacity="0.25" stroke="#F472B6" stroke-width="1.75"/>
-      <path d="M16 11l1 3.2 3.2 1-3.2 1-1 3.2-1-3.2-3.2-1 3.2-1Z" fill="#FDE68A"/>
-      <circle cx="16" cy="16" r="1.5" fill="#060A14" stroke="#FFFFFF" stroke-width="0.75"/>
+    <!-- 7. Ricochet: Impulse path & neon bumpers -->
+    <symbol id="decRicochet" viewBox="0 0 64 64">
+      <path d="M16 46L30 18L44 44L53 23" fill="none" stroke="url(#em)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M55 19L55.7 25.9L49.3 23.1Z" fill="#5cf2b0"/>
+      <circle cx="30" cy="18" r="3.5" fill="url(#gd)"/>
+      <circle cx="44" cy="44" r="3.5" fill="url(#gd)"/>
+      <circle cx="13" cy="49" r="7" fill="#f4f1ea" stroke="#999" stroke-width="1.5"/>
     </symbol>
 
-    <!-- Ricochet: dynamic lightning bounce vector -->
-    <symbol id="decRicochet" viewBox="0 0 32 32">
-      <path d="M4 25 12.5 14l8 6L28 7" fill="none" stroke="#06B6D4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M21 7H28V14" fill="none" stroke="#06B6D4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="12.5" cy="14" r="2" fill="#67E8F9"/>
-      <circle cx="20.5" cy="20" r="2" fill="#67E8F9"/>
-      <circle cx="16" cy="16" r="1.5" fill="#060A14" stroke="#FFFFFF" stroke-width="0.75"/>
+    <!-- 8. Opposite Day: Inverted dual arrows on dark disc -->
+    <symbol id="decOpposite" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="25" fill="#14141c" stroke="url(#gd)" stroke-width="2.5"/>
+      <path d="M23 44V21M16 28l7-8 7 8" stroke="url(#em)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M41 20V43M34 36l7 8 7-8" stroke="url(#vi)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
 
-    <!-- Opposite: crisp dual opposing arrows -->
-    <symbol id="decOpposite" viewBox="0 0 32 32">
-      <path d="M4 10h23M21 5.5l5.5 4.5-5.5 4.5" fill="none" stroke="#34D399" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M28 22H5M11 17.5 5.5 22l5.5 4.5" fill="none" stroke="#10B981" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="16" cy="16" r="1.5" fill="#060A14" stroke="#FFFFFF" stroke-width="0.75"/>
+    <!-- 9. Cinema Roulette: 8-facet turbine & spring ticker -->
+    <symbol id="decRoulette" viewBox="0 0 64 64">
+      <path d="M32 34L32.0 10.0A24 24 0 0 1 49.0 17.0Z" fill="#b3261e" stroke="#d9a21b" stroke-width=".8"/>
+      <path d="M32 34L49.0 17.0A24 24 0 0 1 56.0 34.0Z" fill="#1d1d26" stroke="#d9a21b" stroke-width=".8"/>
+      <path d="M32 34L56.0 34.0A24 24 0 0 1 49.0 51.0Z" fill="#b3261e" stroke="#d9a21b" stroke-width=".8"/>
+      <path d="M32 34L49.0 51.0A24 24 0 0 1 32.0 58.0Z" fill="#1d1d26" stroke="#d9a21b" stroke-width=".8"/>
+      <path d="M32 34L32.0 58.0A24 24 0 0 1 15.0 51.0Z" fill="#b3261e" stroke="#d9a21b" stroke-width=".8"/>
+      <path d="M32 34L15.0 51.0A24 24 0 0 1 8.0 34.0Z" fill="#1d1d26" stroke="#d9a21b" stroke-width=".8"/>
+      <path d="M32 34L8.0 34.0A24 24 0 0 1 15.0 17.0Z" fill="#b3261e" stroke="#d9a21b" stroke-width=".8"/>
+      <path d="M32 34L15.0 17.0A24 24 0 0 1 32.0 10.0Z" fill="#1d1d26" stroke="#d9a21b" stroke-width=".8"/>
+      <circle cx="32" cy="34" r="24" fill="none" stroke="url(#gd)" stroke-width="3"/>
+      <circle cx="32" cy="34" r="7" fill="url(#gd)" stroke="#5a3a08"/>
+      <circle cx="32" cy="34" r="2" fill="#14141c"/>
+      <circle cx="46" cy="22" r="2.8" fill="#f4f1ea"/>
+      <path d="M27 3h10l-5 10z" fill="url(#gd)"/>
+    </symbol>
+
+    <!-- Legacy compatibility placeholder for Matchmaker -->
+    <symbol id="decMatchmaker" viewBox="0 0 64 64">
+      <circle cx="25" cy="32" r="17" fill="#0a8fb522" stroke="url(#cy)" stroke-width="2.5"/>
+      <circle cx="39" cy="32" r="17" fill="#f5c45122" stroke="url(#gd)" stroke-width="2.5"/>
+      <ellipse cx="32" cy="32" rx="14" ry="9" fill="url(#gl)"/>
     </symbol>
   </svg>
 
@@ -415,88 +467,32 @@
             </button>
           </div>
 
-          <!-- Plain glyph buttons: Mood, Swipe | Duel, Marathon | Decades, Compatibility | Ricochet, Opposite (Tactile Vinyl Dial Tokens - Full Space) -->
-          <div id="decidersHomeRow" class="flex items-center justify-between gap-1 sm:gap-2 py-1 flex-wrap">
-            <!-- Group 1: Mood, Swipe -->
-            <div class="flex items-center gap-1 sm:gap-1.5">
-              <button type="button" onclick="openDeciderTool('mood')" class="decider-glyph-btn group" title="Mood" aria-label="Mood">
-                <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-                  <div class="vinyl-micro-grooves"></div>
-                  <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMood"></use></svg>
-                </div>
-              </button>
-              <button type="button" onclick="openDeciderTool('swipe')" class="decider-glyph-btn group" title="Swipe" aria-label="Swipe">
-                <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-                  <div class="vinyl-micro-grooves"></div>
-                  <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decSwipe"></use></svg>
-                </div>
-              </button>
-            </div>
-
-            <!-- Divider Gap 1 -->
-            <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
-
-            <!-- Group 2: Duel, Marathon -->
-            <div class="flex items-center gap-1 sm:gap-1.5">
-              <button type="button" onclick="openDeciderTool('duel')" class="decider-glyph-btn group" title="Duel" aria-label="Duel">
-                <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-                  <div class="vinyl-micro-grooves"></div>
-                  <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDuel"></use></svg>
-                </div>
-              </button>
-              <button type="button" onclick="openDeciderTool('marathon')" class="decider-glyph-btn group" title="Marathon" aria-label="Marathon">
-                <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-                  <div class="vinyl-micro-grooves"></div>
-                  <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMarathon"></use></svg>
-                </div>
-              </button>
-            </div>
-
-            <!-- Divider Gap 2 -->
-            <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
-
-            <!-- Group 3: Decades, Compatibility -->
-            <div class="flex items-center gap-1 sm:gap-1.5">
-              <button type="button" onclick="openDeciderTool('decades')" class="decider-glyph-btn group" title="Decades" aria-label="Decades">
-                <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-                  <div class="vinyl-micro-grooves"></div>
-                  <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDecades"></use></svg>
-                </div>
-              </button>
-              <button type="button" onclick="openDeciderTool('compatibility')" class="decider-glyph-btn group" title="Compatibility" aria-label="Compatibility">
-                <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-                  <div class="vinyl-micro-grooves"></div>
-                  <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decComp"></use></svg>
-                </div>
-              </button>
-            </div>
-
-            <!-- Divider Gap 3 -->
-            <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
-
-            <!-- Group 4: Ricochet, Opposite -->
-            <div class="flex items-center gap-1 sm:gap-1.5">
-              <button type="button" onclick="openDeciderTool('ricochet')" class="decider-glyph-btn group" title="Ricochet" aria-label="Ricochet">
-                <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-                  <div class="vinyl-micro-grooves"></div>
-                  <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decRicochet"></use></svg>
-                </div>
-              </button>
-              <button type="button" onclick="openDeciderTool('opposite')" id="homeOppositeDeciderBtn" class="decider-glyph-btn group" title="Opposite" aria-label="Opposite">
-                <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-                  <div class="vinyl-micro-grooves"></div>
-                  <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decOpposite"></use></svg>
-                </div>
-              </button>
-            </div>
+          <!-- The 8 Decider Tool Badges: Evenly Distributed across the Entire Area -->
+          <div id="decidersHomeRow" class="grid grid-cols-8 gap-1.5 sm:gap-3 py-1.5 w-full items-center justify-items-center">
+            <button type="button" onclick="openDeciderTool('mood')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Cinema Mood Dial" aria-label="Cinema Mood Dial">
+              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMood"></use></svg>
+            </button>
+            <button type="button" onclick="openDeciderTool('swipe')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="CineSwipe" aria-label="CineSwipe">
+              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decSwipe"></use></svg>
+            </button>
+            <button type="button" onclick="openDeciderTool('duel')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Cinema Duel" aria-label="Cinema Duel">
+              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decDuel"></use></svg>
+            </button>
+            <button type="button" onclick="openDeciderTool('marathon')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Binge Marathon" aria-label="Binge Marathon">
+              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMarathon"></use></svg>
+            </button>
+            <button type="button" onclick="openDeciderTool('decades')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Decades Time Machine" aria-label="Decades Time Machine">
+              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decDecades"></use></svg>
+            </button>
+            <button type="button" onclick="openDeciderTool('compatibility')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Taste Compatibility" aria-label="Taste Compatibility">
+              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decComp"></use></svg>
+            </button>
+            <button type="button" onclick="openDeciderTool('ricochet')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Mood Ricochet" aria-label="Mood Ricochet">
+              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decRicochet"></use></svg>
+            </button>
+            <button type="button" onclick="openDeciderTool('opposite')" id="homeOppositeDeciderBtn" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Opposite Day" aria-label="Opposite Day">
+              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decOpposite"></use></svg>
+            </button>
           </div>
         </div>
 
@@ -872,7 +868,7 @@
           </button>
           <div>
             <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2">
-              <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMood"></use></svg> The Deciders
+              <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMood"></use></svg> The Deciders
             </h1>
           </div>
         </div>
@@ -884,28 +880,28 @@
         <!-- Left Glyph Rail -->
         <div class="deciders-tools-rail" role="tablist" aria-label="The Deciders Tools">
           <button type="button" onclick="selectDeciderTool('mood')" id="deciderRailBtn-mood" class="decider-glyph-btn active" data-pop title="Mood" aria-label="Mood">
-            <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMood"></use></svg>
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMood"></use></svg>
           </button>
           <button type="button" onclick="selectDeciderTool('swipe')" id="deciderRailBtn-swipe" class="decider-glyph-btn" data-pop title="Swipe" aria-label="Swipe">
-            <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decSwipe"></use></svg>
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decSwipe"></use></svg>
           </button>
           <button type="button" onclick="selectDeciderTool('duel')" id="deciderRailBtn-duel" class="decider-glyph-btn" data-pop title="Duel" aria-label="Duel">
-            <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDuel"></use></svg>
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decDuel"></use></svg>
           </button>
           <button type="button" onclick="selectDeciderTool('marathon')" id="deciderRailBtn-marathon" class="decider-glyph-btn" data-pop title="Marathon" aria-label="Marathon">
-            <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMarathon"></use></svg>
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMarathon"></use></svg>
           </button>
           <button type="button" onclick="selectDeciderTool('decades')" id="deciderRailBtn-decades" class="decider-glyph-btn" data-pop title="Decades" aria-label="Decades">
-            <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDecades"></use></svg>
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decDecades"></use></svg>
           </button>
           <button type="button" onclick="selectDeciderTool('compatibility')" id="deciderRailBtn-compatibility" class="decider-glyph-btn" data-pop title="Compatibility" aria-label="Compatibility">
-            <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decComp"></use></svg>
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decComp"></use></svg>
           </button>
           <button type="button" onclick="selectDeciderTool('ricochet')" id="deciderRailBtn-ricochet" class="decider-glyph-btn" data-pop title="Ricochet" aria-label="Ricochet">
-            <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decRicochet"></use></svg>
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decRicochet"></use></svg>
           </button>
           <button type="button" onclick="selectDeciderTool('opposite')" id="deciderRailBtn-opposite" class="decider-glyph-btn" data-pop title="Opposite" aria-label="Opposite">
-            <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decOpposite"></use></svg>
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decOpposite"></use></svg>
           </button>
 
           <!-- Hidden legacy buttons for backward compatibility with existing tests/handlers -->
@@ -1005,7 +1001,7 @@
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl text-center space-y-3">
               <div class="flex items-center justify-between border-b border-white/10 pb-2">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decSwipe"></use></svg> CineSwipe
+                  <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decSwipe"></use></svg> CineSwipe
                 </h2>
                 <span id="csDeckCounter" class="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-mono text-xs font-semibold">1 / 16</span>
               </div>
@@ -1031,7 +1027,7 @@
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDuel"></use></svg> Cinema Duel
+                  <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decDuel"></use></svg> Cinema Duel
                 </h2>
                 <!-- Themed Curations Pills -->
                 <div class="flex flex-wrap gap-1.5 items-center" id="duelPresetGrid">
@@ -1096,7 +1092,7 @@
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMarathon"></use></svg> Binge Marathon
+                  <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMarathon"></use></svg> Binge Marathon
                 </h2>
                 <!-- Dual Mode Switcher -->
                 <div class="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.05] border border-white/10 shrink-0">
@@ -1278,7 +1274,7 @@
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDecades"></use></svg> Decades &amp; Eras
+                  <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decDecades"></use></svg> Decades &amp; Eras
                 </h2>
                 <span id="decadesYearBadge" class="text-base font-bold font-mono text-brand-gold">2026</span>
               </div>
@@ -1313,7 +1309,7 @@
             <div id="compatLab" class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decComp"></use></svg> Taste Compatibility
+                  <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decComp"></use></svg> Taste Compatibility
                 </h2>
                 <button type="button" onclick="loadDemoCompatibility()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
                   Demo
@@ -1401,7 +1397,7 @@
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decRicochet"></use></svg> Mood Ricochet
+                  <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decRicochet"></use></svg> Mood Ricochet
                 </h2>
                 <div class="flex items-center gap-2 flex-wrap">
                   <button type="button" onclick="if(window.openVaultGroup) window.openVaultGroup('older');" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-500/40 transition-all" title="Older Group Vault">Older Vault</button>
@@ -1475,7 +1471,7 @@
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <div>
                   <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                    <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decOpposite"></use></svg> Opposite Day
+                    <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decOpposite"></use></svg> Opposite Day
                   </h2>
                   <div id="oppStageLine" class="text-xs text-gray-400 mt-0.5">Explore movies beyond your normal habits</div>
                 </div>
