@@ -227,54 +227,44 @@
           <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
         </button>
 
-        <!-- Peak Media Brand Icon & Title (Apex Orbit Mark + Golden Ratio Vector + Observatory Subtitle) -->
-        <div id="headerBrandPlate" class="cursor-pointer shrink-0 flex items-center gap-3 group transition-transform duration-300 hover:scale-105 active:scale-95" onclick="switchTab('discover')" title="Peak Media">
-          <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-            <!-- Micro-groove overlay -->
-            <div class="vinyl-micro-grooves"></div>
-            
-            <!-- Dynamic Sheen Reflection -->
-            <div class="vinyl-sheen-sweep group-hover:rotate-180 transition-transform duration-1000 ease-out"></div>
-            
-            <!-- Precision Vector Apex Mark -->
-            <svg viewBox="0 0 48 48" class="w-6 h-6 sm:w-7 sm:h-7 relative z-10" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="apexLeftFacet" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#38bdf8"/>
-                  <stop offset="60%" stop-color="#0284c7"/>
-                  <stop offset="100%" stop-color="#0369a1"/>
-                </linearGradient>
-                <linearGradient id="apexRightFacet" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#fbbf24"/>
-                  <stop offset="60%" stop-color="#f59e0b"/>
-                  <stop offset="100%" stop-color="#d97706"/>
-                </linearGradient>
-              </defs>
-
-              <!-- Vinyl Groove Tracks -->
-              <circle cx="24" cy="24" r="21" stroke="rgba(255,255,255,0.14)" stroke-width="0.75" stroke-dasharray="2 2" />
-              <circle cx="24" cy="24" r="17.5" stroke="rgba(56, 189, 248, 0.25)" stroke-width="0.75" />
-              
-              <!-- Mountain Facets -->
-              <path d="M24 7L11 33H24V7Z" fill="url(#apexLeftFacet)" />
-              <path d="M24 7L37 33H24V7Z" fill="url(#apexRightFacet)" />
-              
-              <!-- Center Ridge Razor Highlight -->
-              <line x1="24" y1="7" x2="24" y2="33" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
-              
-              <!-- Center Spindle Aperture -->
-              <circle cx="24" cy="33" r="3.5" fill="#060A14" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-              <circle cx="24" cy="33" r="1.2" fill="#38bdf8"/>
-            </svg>
-          </div>
-
-          <!-- Branding Typography -->
-          <div class="flex flex-col select-none">
-            <span class="font-black text-base sm:text-lg tracking-wider text-white leading-none group-hover:text-cyan-400 transition-colors">
-              PEAK<span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-amber-400">MEDIA</span>
-            </span>
-            <span class="text-[9px] uppercase tracking-[0.28em] text-slate-400 font-medium">Observatory</span>
-          </div>
+        <!-- Peak Media Brand Icon (Original Mountain Logo) -->
+        <div id="headerBrandPlate" class="cursor-pointer shrink-0 flex items-center transition-transform hover:scale-105 active:scale-95" onclick="switchTab('discover')" title="Peak Media">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-7 sm:h-9 w-auto" fill="none">
+            <defs>
+              <linearGradient id="hdrGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#F0F9FF"/>
+                <stop offset="30%" stop-color="#7DD3FC"/>
+                <stop offset="65%" stop-color="#38BDF8"/>
+                <stop offset="100%" stop-color="#0EA5E9"/>
+              </linearGradient>
+              <linearGradient id="hdrDeepSky" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#BAE6FD"/>
+                <stop offset="50%" stop-color="#38BDF8"/>
+                <stop offset="100%" stop-color="#0284C7"/>
+              </linearGradient>
+              <linearGradient id="hdrSunFacet" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.38"/>
+                <stop offset="100%" stop-color="#0EA5E9" stop-opacity="0.05"/>
+              </linearGradient>
+            </defs>
+            <g stroke="#FFFFFF" stroke-width="7.2" stroke-linejoin="miter" fill="#060A14">
+              <path d="M135 130 H205 C230 130 245 144 245 168 C245 192 230 206 205 206 H168 V250 H135 Z M168 156 V180 H200 C210 180 215 175 215 168 C215 161 210 156 200 156 Z" fill-rule="evenodd"/>
+              <path d="M272 130 H365 V156 H305 V177 H355 V202 H305 V224 H365 V250 H272 Z"/>
+              <path d="M438 130 H468 L520 250 H484 L473 222 H432 L421 250 H385 Z M441 196 H464 L452.5 164 Z" fill-rule="evenodd"/>
+              <path d="M538 130 H572 V182 L626 130 H668 L608 186 L672 250 H628 L572 194 V250 H538 Z"/>
+              <path d="M135 282 H172 L196.5 344 L221 282 H258 V402 H227 V334 L203 392 H190 L166 334 V402 H135 Z"/>
+              <path d="M278 282 H368 V308 H311 V329 H358 V354 H311 V376 H368 V402 H278 Z"/>
+              <path d="M388 282 H440 C472 282 492 304 492 342 C492 380 472 402 440 402 H388 Z M421 308 V376 H438 C453 376 461 364 461 342 C461 320 453 308 438 308 Z" fill-rule="evenodd"/>
+              <path d="M512 282 H552 V402 H512 Z"/>
+              <path d="M618 282 H648 L698 402 H663 L652 374 H612 L601 402 H566 Z M621 348 H643 L632 316 Z" fill-rule="evenodd"/>
+            </g>
+            <polygon points="482,56 385,186 288,248 195,304 78,356 238,326 332,294 424,268 460,138" fill="#071020" fill-opacity="0.82"/>
+            <polygon points="482,56 516,118 558,188 610,256 674,328 736,362 612,332 518,286 485,142" fill="url(#hdrSunFacet)"/>
+            <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+              <path d="M78 356 L195 304 L288 248 L385 186 L435 126 L468 82 L482 56" stroke="url(#hdrGoldGrad)" stroke-width="10"/>
+              <path d="M482 56 L516 118 L558 188 L610 256 L674 328 L736 362" stroke="url(#hdrGoldGrad)" stroke-width="10"/>
+            </g>
+          </svg>
         </div>
       </div>
 
