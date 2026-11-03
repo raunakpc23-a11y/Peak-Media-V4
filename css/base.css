@@ -1927,18 +1927,24 @@
       }
     }
 
-    /* Gateway Portal Icons: Bigger, Fuller, Punchier */
+    /* Gateway Portal Icons: Bespoke 150x150 Vector Tile Badges */
     .portal-icon {
-      width: 1.9rem !important;
-      height: 1.9rem !important;
-      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+      width: 3.5rem !important;
+      height: 3.5rem !important;
+      filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45));
     }
     @media (min-width: 640px) {
       .portal-icon {
-        width: 2.25rem !important;
-        height: 2.25rem !important;
+        width: 4rem !important;
+        height: 4rem !important;
       }
     }
+    .portal-tile { fill: var(--d); stroke: var(--c); stroke-width: 2; }
+    .portal-inset { fill: none; stroke: var(--c); stroke-opacity: 0.25; }
+    .portal-stroke { fill: none; stroke: var(--c); stroke-width: 3; }
+    .portal-mid { fill: var(--m); stroke: var(--c); stroke-width: 3; }
+    .portal-fill { fill: var(--c); }
+    .portal-wedge { stroke: #130d1f; stroke-width: 3; }
 
 
     /* Single Screen Deciders Page Container */
