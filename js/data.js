@@ -13982,11 +13982,8 @@ Odd Taxi|2021|87
             </div>
           </div>
 
-          <!-- Right: Spotlight Suggestions Queue -->
+          <!-- Right: Spotlight Suggestions -->
           <div class="flex flex-col items-start md:items-end gap-1.5 w-full md:w-auto shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-white/10">
-            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-              <i class="fa-solid fa-list-check text-brand-gold text-[9px]"></i> Queue
-            </span>
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
               ${suggestionsHTML}
             </div>

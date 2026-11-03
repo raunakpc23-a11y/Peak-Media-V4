@@ -51,7 +51,7 @@
     if (key === 'roulette') { openSurpriseModal(); return; }
     if (key === 'space' || key === 'hub' || key === 'lists') {
       key = 'profile';
-      if (window.selectProfileTool) window.selectProfileTool('shelves');
+      if (window.selectProfileTool) window.selectProfileTool('account');
     }
     if (key === 'browse') key = 'movies';
     if (key === 'decide') key = 'play';
@@ -443,8 +443,8 @@
   };
 
   window.selectProfileTool = function(tool) {
-    if (!tool) tool = 'shelves';
-    const tools = ['shelves', 'top3', 'account', 'taste', 'collection'];
+    if (!tool) tool = 'account';
+    const tools = ['account', 'shelves', 'top3', 'taste', 'collection'];
     tools.forEach(t => {
       const btn = document.getElementById('profileRailBtn-' + t);
       const stage = document.getElementById('profileStage-' + t);

@@ -214,85 +214,80 @@
   <svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
     <!-- Films: 150x150 Clapperboard with angled striped arm & play button -->
     <symbol id="portalFilms" viewBox="0 0 150 150">
-      <g style="--c:#F5C518;--d:#17120a;--m:#2b2110">
-        <rect class="portal-tile" width="150" height="150" rx="30"/>
-        <rect class="portal-inset" x="7" y="7" width="136" height="136" rx="24"/>
-        <g transform="translate(75 78) scale(1.22) translate(-75 -78)">
-          <rect class="portal-mid" x="26" y="66" width="98" height="62" rx="5"/>
-          <g class="portal-fill">
-            <use href="#portalP" x="28" y="66"/>
-            <use href="#portalP" x="48" y="66"/>
-            <use href="#portalP" x="68" y="66"/>
-            <use href="#portalP" x="88" y="66"/>
-            <use href="#portalP" x="108" y="66"/>
-          </g>
-          <g transform="rotate(-16 28 64)">
-            <rect class="portal-mid" x="26" y="48" width="98" height="14" rx="3"/>
-            <g class="portal-fill">
-              <use href="#portalP" x="38" y="48"/>
-              <use href="#portalP" x="58" y="48"/>
-              <use href="#portalP" x="78" y="48"/>
-              <use href="#portalP" x="98" y="48"/>
-            </g>
-          </g>
-          <path class="portal-fill" d="M42 92v26l26-13z"/>
-          <path class="portal-stroke" d="M78 100h34M78 111h24M78 122h30" style="stroke-width:5;stroke-linecap:round;opacity:.6"/>
+      <rect fill="#17120a" stroke="#F5C518" stroke-width="2.5" width="150" height="150" rx="30"/>
+      <rect fill="none" stroke="#F5C518" stroke-opacity="0.25" x="7" y="7" width="136" height="136" rx="24"/>
+      <g transform="translate(75 78) scale(1.22) translate(-75 -78)">
+        <rect fill="#2b2110" stroke="#F5C518" stroke-width="3" x="26" y="66" width="98" height="62" rx="5"/>
+        <g fill="#F5C518">
+          <polygon points="32,66 42,66 38,80 28,80"/>
+          <polygon points="52,66 62,66 58,80 48,80"/>
+          <polygon points="72,66 82,66 78,80 68,80"/>
+          <polygon points="92,66 102,66 98,80 88,80"/>
+          <polygon points="112,66 122,66 118,80 108,80"/>
         </g>
+        <g transform="rotate(-16 28 64)">
+          <rect fill="#2b2110" stroke="#F5C518" stroke-width="3" x="26" y="48" width="98" height="14" rx="3"/>
+          <g fill="#F5C518">
+            <polygon points="42,48 52,48 48,62 38,62"/>
+            <polygon points="62,48 72,48 68,62 58,62"/>
+            <polygon points="82,48 92,48 88,62 78,62"/>
+            <polygon points="102,48 112,48 108,62 98,62"/>
+          </g>
+        </g>
+        <path fill="#F5C518" d="M42 92v26l26-13z"/>
+        <path fill="none" stroke="#F5C518" stroke-width="5" stroke-linecap="round" stroke-opacity="0.6" d="M78 100h34M78 111h24M78 122h30"/>
       </g>
     </symbol>
 
     <!-- TV Series: 150x150 Stacked Widescreen Displays with Play Node & Progress Track -->
     <symbol id="portalShows" viewBox="0 0 150 150">
-      <g style="--c:#38bdf8;--d:#08141c;--m:#0f3347">
-        <rect class="portal-tile" width="150" height="150" rx="30"/>
-        <rect class="portal-inset" x="7" y="7" width="136" height="136" rx="24"/>
-        <g transform="translate(75 70) scale(1.2) translate(-75 -70)">
-          <rect class="portal-mid" x="44" y="26" width="84" height="48" rx="6" style="stroke-opacity:.4"/>
-          <rect class="portal-mid" x="33" y="40" width="88" height="50" rx="6" style="stroke-opacity:.7"/>
-          <rect class="portal-mid" x="22" y="56" width="96" height="58" rx="7" style="stroke-width:4"/>
-          <circle class="portal-fill" cx="70" cy="80" r="14"/>
-          <path d="M66 73v14l12-7z" fill="#08141c"/>
-          <path class="portal-stroke" d="M32 103h76" style="stroke-width:5;stroke-linecap:round;opacity:.3"/>
-          <path class="portal-stroke" d="M32 103h30" style="stroke-width:5;stroke-linecap:round"/>
-        </g>
+      <rect fill="#08141c" stroke="#38bdf8" stroke-width="2.5" width="150" height="150" rx="30"/>
+      <rect fill="none" stroke="#38bdf8" stroke-opacity="0.25" x="7" y="7" width="136" height="136" rx="24"/>
+      <g transform="translate(75 70) scale(1.2) translate(-75 -70)">
+        <rect fill="#0f3347" stroke="#38bdf8" stroke-width="3" stroke-opacity="0.4" x="44" y="26" width="84" height="48" rx="6"/>
+        <rect fill="#0f3347" stroke="#38bdf8" stroke-width="3" stroke-opacity="0.7" x="33" y="40" width="88" height="50" rx="6"/>
+        <rect fill="#0f3347" stroke="#38bdf8" stroke-width="3.5" x="22" y="56" width="96" height="58" rx="7"/>
+        <circle fill="#38bdf8" cx="70" cy="80" r="14"/>
+        <path fill="#08141c" d="M66 73v14l12-7z"/>
+        <path fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" stroke-opacity="0.3" d="M32 103h76"/>
+        <path fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" d="M32 103h30"/>
       </g>
     </symbol>
 
     <!-- Genres: 150x150 Chromatic Prism Kaleidoscope with 4-Point Star Core -->
     <symbol id="portalGenres" viewBox="0 0 150 150">
-      <g style="--c:#c084fc;--d:#130d1f">
-        <rect class="portal-tile" width="150" height="150" rx="30"/>
-        <rect class="portal-inset" x="7" y="7" width="136" height="136" rx="24"/>
-        <circle cx="75" cy="75" r="66" fill="#1d1233" stroke="#5b3a9e"/>
-        <use class="portal-wedge" href="#portalW" fill="#7e4fd1"/>
-        <use class="portal-wedge" href="#portalW" fill="#2c1850" transform="rotate(60 75 75)"/>
-        <use class="portal-wedge" href="#portalW" fill="#4c2d85" transform="rotate(120 75 75)"/>
-        <use class="portal-wedge" href="#portalW" fill="#2c1850" transform="rotate(180 75 75)"/>
-        <use class="portal-wedge" href="#portalW" fill="#4c2d85" transform="rotate(240 75 75)"/>
-        <use class="portal-wedge" href="#portalW" fill="#2c1850" transform="rotate(300 75 75)"/>
-        <circle class="portal-stroke" cx="75" cy="75" r="60" style="stroke-width:4"/>
-        <circle class="portal-stroke" cx="75" cy="75" r="44" style="stroke-width:1.5;opacity:.35"/>
-        <circle cx="75" cy="75" r="28" fill="#130d1f" stroke="#c084fc" stroke-width="4"/>
-        <path d="M75 54l5 15 16 6-16 6-5 15-5-15-16-6 16-6z" fill="#e9d5ff"/>
+      <rect fill="#130d1f" stroke="#c084fc" stroke-width="2.5" width="150" height="150" rx="30"/>
+      <rect fill="none" stroke="#c084fc" stroke-opacity="0.25" x="7" y="7" width="136" height="136" rx="24"/>
+      <circle cx="75" cy="75" r="64" fill="#1d1233" stroke="#5b3a9e" stroke-width="2"/>
+      <g stroke="#130d1f" stroke-width="3">
+        <path d="M75 75V15A60 60 0 0 1 127 45z" fill="#a855f7"/>
+        <path d="M75 75V15A60 60 0 0 1 127 45z" fill="#6b21a8" transform="rotate(60 75 75)"/>
+        <path d="M75 75V15A60 60 0 0 1 127 45z" fill="#9333ea" transform="rotate(120 75 75)"/>
+        <path d="M75 75V15A60 60 0 0 1 127 45z" fill="#581c87" transform="rotate(180 75 75)"/>
+        <path d="M75 75V15A60 60 0 0 1 127 45z" fill="#7e22ce" transform="rotate(240 75 75)"/>
+        <path d="M75 75V15A60 60 0 0 1 127 45z" fill="#3b0764" transform="rotate(300 75 75)"/>
       </g>
+      <circle cx="75" cy="75" r="60" fill="none" stroke="#c084fc" stroke-width="3.5"/>
+      <circle cx="75" cy="75" r="44" fill="none" stroke="#e9d5ff" stroke-width="1.5" stroke-opacity="0.5"/>
+      <circle cx="75" cy="75" r="28" fill="#130d1f" stroke="#c084fc" stroke-width="3.5"/>
+      <path fill="#f3e8ff" d="M75 54l5 15 16 6-16 6-5 15-5-15-16-6 16-6z"/>
     </symbol>
 
     <!-- Universes: 150x150 Ringed Gas Planet with Orbit Pass & Sparkle Stars -->
     <symbol id="portalUniverses" viewBox="0 0 150 150">
-      <g style="--c:#34d399;--d:#04170f;--m:#0b3b2e">
-        <rect class="portal-tile" width="150" height="150" rx="30"/>
-        <rect class="portal-inset" x="7" y="7" width="136" height="136" rx="24"/>
-        <g transform="rotate(-20 75 75)">
-          <ellipse class="portal-stroke" cx="75" cy="75" rx="64" ry="19" style="stroke:#10805c;stroke-width:6"/>
-        </g>
-        <circle class="portal-mid" cx="75" cy="75" r="34" style="stroke-width:4"/>
-        <path class="portal-stroke" d="M50 64h50M44 76h62M50 88h50" style="opacity:.7;stroke-linecap:round"/>
-        <g transform="rotate(-20 75 75)">
-          <path class="portal-stroke" d="M11 75a64 19 0 0 0 128 0" style="stroke:#6ee7b7;stroke-width:6;stroke-linecap:round"/>
-        </g>
-        <use href="#portalSp" x="28" y="30" fill="#a7f3d0"/>
-        <use href="#portalSp" x="0" y="0" fill="#a7f3d0" transform="translate(123 121) scale(.6)"/>
+      <rect fill="#04170f" stroke="#34d399" stroke-width="2.5" width="150" height="150" rx="30"/>
+      <rect fill="none" stroke="#34d399" stroke-opacity="0.25" x="7" y="7" width="136" height="136" rx="24"/>
+      <g transform="rotate(-20 75 75)">
+        <ellipse cx="75" cy="75" rx="64" ry="19" fill="none" stroke="#065f46" stroke-width="6"/>
       </g>
+      <circle cx="75" cy="75" r="34" fill="#064e3b" stroke="#34d399" stroke-width="3.5"/>
+      <path fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-opacity="0.75" d="M50 64h50M44 76h62M50 88h50"/>
+      <g transform="rotate(-20 75 75)">
+        <path fill="none" stroke="#6ee7b7" stroke-width="6" stroke-linecap="round" d="M11 75a64 19 0 0 0 128 0"/>
+      </g>
+      <path fill="#a7f3d0" d="M28 19l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/>
+      <path fill="#6ee7b7" transform="translate(122 118) scale(0.65)" d="M0-11 3-3 11 0 3 3 0 11-3 3-11 0-3-3z"/>
+      <path fill="#a7f3d0" transform="translate(120 36) scale(0.5)" d="M0-11 3-3 11 0 3 3 0 11-3 3-11 0-3-3z"/>
     </symbol>
 
     <!-- Library: rich bookshelf collection with thick book spines -->
@@ -609,32 +604,32 @@
         
         <!-- Portal 1: Films -->
         <div onclick="switchTab('movies')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Films">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center group-hover:scale-108 transition-transform duration-300">
-            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0 transition-transform duration-300 group-hover:-rotate-2" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalFilms"></use></svg>
+          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
+            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalFilms"></use></svg>
           </div>
           <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-brand-gold transition-colors">Films</span>
         </div>
 
         <!-- Portal 2: TV Series -->
         <div onclick="switchTab('shows')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="TV Series">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center group-hover:scale-108 transition-transform duration-300">
-            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0 transition-transform duration-300 group-hover:rotate-2" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalShows"></use></svg>
+          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
+            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalShows"></use></svg>
           </div>
           <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-sky-300 transition-colors">TV Series</span>
         </div>
 
         <!-- Portal 3: Genres -->
         <div onclick="switchTab('categories')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-purple-500/20 hover:border-purple-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Genres">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center group-hover:scale-108 transition-transform duration-300">
-            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0 transition-transform duration-300 group-hover:scale-105" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalGenres"></use></svg>
+          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
+            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalGenres"></use></svg>
           </div>
           <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-purple-300 transition-colors">Genres</span>
         </div>
 
         <!-- Portal 4: Universes -->
         <div onclick="switchTab('universes')" class="portal-gateway-card p-3.5 sm:p-5 rounded-2xl theme-card-bg border border-cyan-500/20 hover:border-cyan-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center gap-2.5 cursor-pointer group transition-all text-center" title="Universes">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center group-hover:scale-108 transition-transform duration-300">
-            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0 transition-transform duration-300 group-hover:rotate-3" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalUniverses"></use></svg>
+          <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
+            <svg class="portal-icon w-14 h-14 sm:w-16 sm:h-16 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalUniverses"></use></svg>
           </div>
           <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-cyan-300 transition-colors">Universes</span>
         </div>
@@ -651,8 +646,8 @@
 
       </div>
 
-      <!-- 5. CONTENT FILTERS (Small filter button at far side with no "Refine" text) -->
-      <div id="streamFilterBar" class="flex items-center justify-end gap-3 pt-2 pb-1 border-b border-white/10">
+      <!-- 5. CONTENT FILTERS (Hidden per user request, background functions preserved) -->
+      <div id="streamFilterBar" class="hidden" aria-hidden="true">
         <!-- Small Refine Button at Far Side with active dot indicator and removable chip -->
         <div class="relative shrink-0 flex items-center gap-2">
           <div id="activeStreamFilterChip" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-gold/20 text-brand-gold border border-brand-gold/40 text-xs font-semibold">
@@ -907,8 +902,8 @@
             <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
           </button>
           <div>
-            <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2">
-              <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMood"></use></svg> The Deciders
+            <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white">
+              The Deciders
             </h1>
           </div>
         </div>
@@ -1749,17 +1744,17 @@
       <div class="flex-1 min-h-0 flex flex-col md:flex-row gap-4">
         <!-- Left Side Navigation Column -->
         <div class="w-full md:w-56 shrink-0 flex flex-row md:flex-col gap-2 p-1.5 bg-black/40 border border-white/10 rounded-2xl md:self-start overflow-x-auto no-scrollbar" id="profileToolsRail" role="tablist" aria-label="Library Sections">
-          <button type="button" onclick="selectProfileTool('shelves')" id="profileRailBtn-shelves" class="profile-nav-btn active flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-2.5 px-3.5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Shelves" aria-label="Shelves">
+          <button type="button" onclick="selectProfileTool('account')" id="profileRailBtn-account" class="profile-nav-btn active flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-2.5 px-3.5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Profile" aria-label="Profile">
+            <i class="fa-solid fa-user text-cyan-400"></i>
+            <span>Profile</span>
+          </button>
+          <button type="button" onclick="selectProfileTool('shelves')" id="profileRailBtn-shelves" class="profile-nav-btn flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-2.5 px-3.5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Shelves" aria-label="Shelves">
             <i class="fa-solid fa-layer-group text-brand-gold"></i>
             <span>Shelves</span>
           </button>
           <button type="button" onclick="selectProfileTool('top3')" id="profileRailBtn-top3" class="profile-nav-btn flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-2.5 px-3.5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Top 3 Passes" aria-label="Top 3 Passes">
             <i class="fa-solid fa-crown text-amber-400"></i>
             <span>Top 3 Passes</span>
-          </button>
-          <button type="button" onclick="selectProfileTool('account')" id="profileRailBtn-account" class="profile-nav-btn flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-2.5 px-3.5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Profile" aria-label="Profile">
-            <i class="fa-solid fa-user text-cyan-400"></i>
-            <span>Profile</span>
           </button>
           <button type="button" onclick="selectProfileTool('taste')" id="profileRailBtn-taste" class="profile-nav-btn flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-2.5 px-3.5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Taste DNA" aria-label="Taste DNA">
             <i class="fa-solid fa-circle-nodes text-purple-400"></i>
@@ -1774,8 +1769,48 @@
         <!-- Center Stage Viewport (Only this area may scroll) -->
         <div class="deciders-stage-viewport flex-1 min-w-0" id="profileStageViewport">
 
-          <!-- STAGE 1: SHELVES (Default Active) -->
-          <div id="profileStage-shelves" class="decider-stage-panel space-y-4">
+          <!-- STAGE 1: PROFILE (MEMBER PROFILE - Default Active) -->
+          <div id="profileStage-account" class="decider-stage-panel space-y-4">
+            <div class="glass-card rounded-3xl p-6 border border-white/10 space-y-5">
+              <div class="flex items-center gap-4">
+                <div id="profileBigAvatar" class="w-16 h-16 rounded-2xl bg-brand-gold/15 border-2 border-brand-gold flex items-center justify-center p-2 shadow-lg shrink-0"></div>
+                <div class="min-w-0 flex-1">
+                  <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Member Profile</div>
+                  <h2 id="profileDisplayName" class="text-2xl font-display font-extrabold text-white truncate">Member</h2>
+                  <div id="profileLangSummary" class="text-xs text-gray-400 font-mono">Catalog: All Titles · Preferred Genre: Sci-Fi</div>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Choose Avatar</label>
+                <div id="profileAvatarGrid" class="grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-4 gap-2"></div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Display Name</label>
+                <div class="flex gap-2">
+                  <input id="profileNameInput" type="text" maxlength="28" placeholder="Your name..." class="flex-1 min-w-0 px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
+                  <button type="button" onclick="saveProfileFromTab()" class="px-4 py-2 rounded-xl bg-brand-gold text-black font-bold text-xs shrink-0">Save</button>
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-white/10 flex flex-wrap gap-2">
+                <button type="button" onclick="openOnboardingWizard(true)" class="w-full py-2.5 px-3 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/40 text-xs font-bold text-brand-gold flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Customize Taste Setup</span>
+                </button>
+                <button type="button" onclick="exportUserData()" class="flex-1 py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-download text-brand-gold"></i> <span>Export Data</span>
+                </button>
+                <label class="flex-1 py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white cursor-pointer flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-upload text-cyan-300"></i> <span>Import Data</span>
+                  <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event)">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- STAGE 2: SHELVES (Watchlist, Watched, Custom Lists, Timeline) -->
+          <div id="profileStage-shelves" class="decider-stage-panel hidden space-y-4">
             <!-- Shelves -->
             <div id="hubShelves" class="glass-card rounded-2xl p-4 sm:p-6 space-y-5 border border-white/10">
               
@@ -1869,45 +1904,7 @@
             </div>
           </div>
 
-          <!-- STAGE 3: ACCOUNT (MEMBER PROFILE) -->
-          <div id="profileStage-account" class="decider-stage-panel hidden space-y-4">
-            <div class="glass-card rounded-3xl p-6 border border-white/10 space-y-5">
-              <div class="flex items-center gap-4">
-                <div id="profileBigAvatar" class="w-16 h-16 rounded-2xl bg-brand-gold/15 border-2 border-brand-gold flex items-center justify-center p-2 shadow-lg shrink-0"></div>
-                <div class="min-w-0 flex-1">
-                  <div class="text-[10px] font-extrabold uppercase tracking-widest text-brand-gold">Member Profile</div>
-                  <h2 id="profileDisplayName" class="text-2xl font-display font-extrabold text-white truncate">Member</h2>
-                  <div id="profileLangSummary" class="text-xs text-gray-400 font-mono">Catalog: All Titles · Preferred Genre: Sci-Fi</div>
-                </div>
-              </div>
 
-              <div class="space-y-2">
-                <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Choose Avatar</label>
-                <div id="profileAvatarGrid" class="grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-4 gap-2"></div>
-              </div>
-
-              <div class="space-y-2">
-                <label class="text-xs font-bold uppercase tracking-wider text-gray-400">Display Name</label>
-                <div class="flex gap-2">
-                  <input id="profileNameInput" type="text" maxlength="28" placeholder="Your name..." class="flex-1 min-w-0 px-3.5 py-2 rounded-xl bg-black/50 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
-                  <button type="button" onclick="saveProfileFromTab()" class="px-4 py-2 rounded-xl bg-brand-gold text-black font-bold text-xs shrink-0">Save</button>
-                </div>
-              </div>
-
-              <div class="pt-3 border-t border-white/10 flex flex-wrap gap-2">
-                <button type="button" onclick="openOnboardingWizard(true)" class="w-full py-2.5 px-3 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/40 text-xs font-bold text-brand-gold flex items-center justify-center gap-1.5">
-                  <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Customize Taste Setup</span>
-                </button>
-                <button type="button" onclick="exportUserData()" class="flex-1 py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white flex items-center justify-center gap-1.5">
-                  <i class="fa-solid fa-download text-brand-gold"></i> <span>Export Data</span>
-                </button>
-                <label class="flex-1 py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white cursor-pointer flex items-center justify-center gap-1.5">
-                  <i class="fa-solid fa-upload text-cyan-300"></i> <span>Import Data</span>
-                  <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event)">
-                </label>
-              </div>
-            </div>
-          </div>
 
           <!-- STAGE 2: TASTE PROFILE (Separate Option) -->
           <div id="profileStage-taste" class="decider-stage-panel hidden space-y-6">
