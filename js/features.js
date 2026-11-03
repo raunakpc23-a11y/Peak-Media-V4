@@ -504,8 +504,7 @@
     if($('oppStageLine')) $('oppStageLine').textContent = o.line;
     if($('oppStageSlider')) $('oppStageSlider').value = Math.round(blend*100);
     if($('oppStageToggleBtn')) {
-      $('oppStageToggleBtn').textContent = on ? 'Turn Off' : 'Turn On';
-      $('oppStageToggleBtn').className = on ? 'px-3.5 py-1.5 rounded-xl bg-rose-500 text-white font-extrabold text-xs shadow' : 'px-3.5 py-1.5 rounded-xl bg-emerald-400 text-black font-extrabold text-xs shadow';
+      $('oppStageToggleBtn').classList.add('hidden');
     }
     const stagePicks = $('oppStagePicks');
     if (stagePicks) {

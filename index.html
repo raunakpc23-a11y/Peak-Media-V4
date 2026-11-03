@@ -202,10 +202,11 @@
       <path d="M27 3h10l-5 10z" fill="url(#gd)"/>
     </symbol>
 
-    <!-- Legacy compatibility placeholder for Matchmaker -->
+    <!-- 6. Matchmaker: Overlapping projector apertures & luminous intersection -->
     <symbol id="decMatchmaker" viewBox="0 0 64 64">
       <circle cx="25" cy="32" r="17" fill="#0a8fb522" stroke="url(#cy)" stroke-width="2.5"/>
       <circle cx="39" cy="32" r="17" fill="#f5c45122" stroke="url(#gd)" stroke-width="2.5"/>
+      <circle cx="39" cy="32" r="17" fill="#fff6d0" clip-path="url(#lc)" opacity=".85"/>
       <ellipse cx="32" cy="32" rx="14" ry="9" fill="url(#gl)"/>
     </symbol>
   </svg>
@@ -524,8 +525,8 @@
             <button type="button" onclick="openDeciderTool('decades')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Decades Time Machine" aria-label="Decades Time Machine">
               <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decDecades"></use></svg>
             </button>
-            <button type="button" onclick="openDeciderTool('compatibility')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Taste Compatibility" aria-label="Taste Compatibility">
-              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decComp"></use></svg>
+            <button type="button" onclick="openDeciderTool('matchmaker')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="CineMatchmaker" aria-label="CineMatchmaker">
+              <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMatchmaker"></use></svg>
             </button>
             <button type="button" onclick="openDeciderTool('ricochet')" class="decider-glyph-btn group w-full max-w-[54px] aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-95" title="Mood Ricochet" aria-label="Mood Ricochet">
               <svg class="decider-mark w-full h-full p-0.5 transition-transform duration-500 ease-out group-hover:rotate-12" viewBox="0 0 64 64" aria-hidden="true"><use href="#decRicochet"></use></svg>
@@ -929,8 +930,8 @@
           <button type="button" onclick="selectDeciderTool('decades')" id="deciderRailBtn-decades" class="decider-glyph-btn" data-pop title="Decades" aria-label="Decades">
             <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decDecades"></use></svg>
           </button>
-          <button type="button" onclick="selectDeciderTool('compatibility')" id="deciderRailBtn-compatibility" class="decider-glyph-btn" data-pop title="Compatibility" aria-label="Compatibility">
-            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decComp"></use></svg>
+          <button type="button" onclick="selectDeciderTool('matchmaker')" id="deciderRailBtn-matchmaker" class="decider-glyph-btn" data-pop title="Matchmaker" aria-label="Matchmaker">
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMatchmaker"></use></svg>
           </button>
           <button type="button" onclick="selectDeciderTool('ricochet')" id="deciderRailBtn-ricochet" class="decider-glyph-btn" data-pop title="Ricochet" aria-label="Ricochet">
             <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decRicochet"></use></svg>
@@ -994,10 +995,10 @@
                     <input id="moodDialIntensitySlider" type="range" min="0" max="100" step="1" value="50" oninput="setMoodDialIntensity(this.value)" class="w-full spectrum-slider cursor-grab active:cursor-grabbing h-2 rounded-lg" aria-label="Mood Intensity">
                   </div>
 
-                  <!-- Quick Sector Pills -->
-                  <div class="pt-1.5 border-t border-white/10">
-                    <div id="moodDialPillsBox" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
-                    <div id="moodPills" class="hidden"></div>
+                  <!-- Quick Sector Pills (Removed per user request, background handler kept) -->
+                  <div class="hidden" aria-hidden="true">
+                    <div id="moodDialPillsBox"></div>
+                    <div id="moodPills"></div>
                   </div>
                 </div>
               </div>
@@ -1107,6 +1108,7 @@
                   <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
                     <div id="duelRound" class="text-xs font-bold tracking-wide text-gray-200">Face-Off</div>
                     <div class="flex flex-wrap gap-1.5">
+                      <button type="button" onclick="window.toggleDuelOptions()" id="duelToggleOptionsBtn" class="px-2.5 py-1 rounded-lg bg-brand-gold/20 hover:bg-brand-gold/30 border border-brand-gold/40 text-brand-gold text-xs font-bold transition-all"><i class="fa-solid fa-sliders mr-1"></i> Options</button>
                       <button id="duelAuto" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-gray-200 text-xs font-medium transition-all">Auto-judge</button>
                       <button id="duelAutoAll" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-xs font-medium transition-all">Auto-all</button>
                       <button id="duelQuit" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 text-xs font-medium transition-all">Reset</button>
@@ -1328,19 +1330,57 @@
             </div>
           </div>
 
-          <!-- Legacy Hidden Matchmaker Containers for Background Handler Compatibility -->
-          <div id="stage-matchmaker" class="hidden" aria-hidden="true">
-            <div id="matchmakerContent">
-              <div id="recTags"></div>
-              <input type="text" id="recInput">
-              <div id="recSuggest"></div>
-              <div id="recResultBox"></div>
-              <div id="recCardsContainer"></div>
+          <!-- STAGE 7: MATCHMAKER (CineMatchmaker) -->
+          <div id="stage-matchmaker" class="decider-stage-panel hidden space-y-4">
+            <div id="matchmakerContent" class="space-y-4">
+              <div id="recSection" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
+                <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+                  <div class="flex items-center gap-3">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                      <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMatchmaker"></use></svg> Matchmaker
+                    </h2>
+                  </div>
+                  <button type="button" onclick="prefillFromWishlist('recTags')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-bolt text-brand-gold"></i> <span>Watchlist</span>
+                  </button>
+                </div>
+
+                <!-- Selected Seed Chips -->
+                <div id="recTags" class="flex flex-wrap gap-2 min-h-[44px] p-2.5 rounded-xl bg-black/45 border border-white/10 items-center"></div>
+
+                <!-- Autocomplete Input -->
+                <div class="flex flex-col sm:flex-row gap-2.5">
+                  <div class="relative flex-1 autocomplete-wrapper">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input type="text" id="recInput" placeholder="Add a title you love..."
+                      oninput="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
+                      onfocus="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
+                      class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
+                    <div id="recSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-30 divide-y divide-white/5"></div>
+                  </div>
+                  <button type="button" onclick="generateRecommendation()" class="px-5 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95 whitespace-nowrap">
+                    Find Matches
+                  </button>
+                </div>
+
+                <div id="recInitialPrompt" class="hidden"></div>
+
+                <!-- Output Results -->
+                <div id="recResultBox" class="hidden pt-3 border-t border-white/10 space-y-3">
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="text-xs sm:text-sm font-bold text-white">Top Matches</h3>
+                    <button id="rejectBtn" type="button" onclick="rejectRecommendation()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 border border-white/15 transition-all flex items-center gap-1">
+                      <i class="fa-solid fa-rotate mr-1"></i> Next
+                    </button>
+                  </div>
+                  <div id="recCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- STAGE 8: COMPATIBILITY -->
-          <div id="stage-compatibility" class="decider-stage-panel hidden space-y-4">
+          <!-- Compatibility Fallback Container -->
+          <div id="stage-compatibility" class="hidden" aria-hidden="true">
             <div id="compatLab" class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
@@ -1443,12 +1483,12 @@
                   </button>
                 </div>
               </div>
-              <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-5 items-start">
-                <div class="space-y-3 mx-auto w-full max-w-[520px]">
-                  <canvas id="rcCv" width="520" height="693" class="w-full h-auto rounded-2xl border border-white/10 bg-black/40"></canvas>
-                  <div class="flex gap-2 items-center flex-wrap pt-1">
-                    <span class="text-xs text-gray-400 font-semibold">Launch Power</span>
-                    <input id="rcPower" type="range" min="40" max="100" value="80" class="accent-yellow-400 flex-1 min-w-[8rem]" aria-label="Launch power">
+              <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 items-start">
+                <div class="space-y-2 mx-auto w-full max-w-[280px] sm:max-w-[320px] flex flex-col items-center">
+                  <canvas id="rcCv" width="520" height="693" class="w-full max-h-[350px] sm:max-h-[370px] w-auto h-auto rounded-2xl border-2 border-white/20 bg-[#070b14] shadow-2xl block"></canvas>
+                  <div class="flex gap-2 items-center w-full pt-1">
+                    <span class="text-[11px] text-gray-300 font-bold shrink-0">Power</span>
+                    <input id="rcPower" type="range" min="40" max="100" value="80" class="accent-brand-gold flex-1" aria-label="Launch power">
                   </div>
                 </div>
 
@@ -1510,9 +1550,7 @@
                   </h2>
                   <div id="oppStageLine" class="text-xs text-gray-400 mt-0.5">Explore movies beyond your normal habits</div>
                 </div>
-                <button type="button" onclick="if(window.oppToggle) window.oppToggle();" id="oppStageToggleBtn" class="px-3.5 py-1.5 rounded-xl bg-emerald-400 text-black font-extrabold text-xs shadow">
-                  Toggle Opposite Day
-                </button>
+                <!-- Opposite is active live via slider -->
               </div>
               <div class="space-y-3">
                 <div class="flex items-center justify-between text-xs font-bold text-gray-300">
@@ -1934,6 +1972,59 @@
                     </div>
                     <div id="dnaCompat" class="text-sm text-gray-300 hidden"></div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Taste Constellation Web -->
+            <div id="constellationSection" class="glass-card rounded-3xl p-6 border border-white/10 space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                <div class="flex items-center gap-2.5">
+                  <i class="fa-solid fa-circle-nodes text-brand-gold text-lg"></i>
+                  <div>
+                    <h3 class="text-base sm:text-lg font-display font-extrabold text-white">Taste Constellation Web</h3>
+                    <p class="text-xs text-gray-400">Interactive stellar graph connecting your rated titles with undiscovered cinema stars.</p>
+                  </div>
+                </div>
+                <!-- Filters & Zoom -->
+                <div class="flex items-center gap-2 flex-wrap">
+                  <div class="flex items-center gap-1 p-1 rounded-xl bg-black/50 border border-white/10 text-xs font-semibold">
+                    <button type="button" onclick="setTasteDnaFilter('all')" id="tasteDnaFilter-all" class="px-2.5 py-1 rounded-lg bg-brand-gold text-black font-bold shadow transition-all">All</button>
+                    <button type="button" onclick="setTasteDnaFilter('movie')" id="tasteDnaFilter-movie" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">Movies</button>
+                    <button type="button" onclick="setTasteDnaFilter('show')" id="tasteDnaFilter-show" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">TV</button>
+                    <button type="button" onclick="setTasteDnaFilter('wish')" id="tasteDnaFilter-wish" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">Watchlist</button>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button id="cxFit" title="Fit constellation to view" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 transition-all flex items-center gap-1">
+                      <i class="fa-solid fa-expand text-brand-gold"></i> <span class="hidden sm:inline">Fit</span>
+                    </button>
+                    <button id="cxReset" title="Reset node positions" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-400 hover:text-white transition-all">
+                      <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="cxSub" class="text-xs text-gray-400"></div>
+
+              <!-- Constellation Canvas Viewport -->
+              <div id="cxWrap" class="relative rounded-2xl overflow-hidden border border-white/10 h-72 sm:h-96 w-full" style="background: radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%)">
+                <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
+                <div id="cxLegend" class="absolute top-2.5 left-2.5 flex flex-wrap gap-x-2.5 gap-y-1 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
+                
+                <!-- Zoom Buttons Overlay -->
+                <div class="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
+                  <button id="cxZin" aria-label="Zoom in constellation" title="Zoom in" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus"></i></button>
+                  <button id="cxZout" aria-label="Zoom out constellation" title="Zoom out" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus"></i></button>
+                </div>
+
+                <div id="cxPanel" class="hidden absolute bottom-2.5 left-2.5 w-[min(300px,calc(100%-1.5rem))] glass-card rounded-xl p-3 shadow-2xl text-xs z-10"></div>
+
+                <div id="cxEmpty" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center bg-black/85 backdrop-blur-md">
+                  <i class="fa-solid fa-circle-nodes text-3xl text-gray-500 mb-2"></i>
+                  <p class="text-sm text-gray-300 font-bold">Your constellation is forming</p>
+                  <p class="text-xs text-gray-400 mt-1 mb-3">Mark titles watched to link stars across genres.</p>
+                  <button type="button" onclick="switchTab('movies')" class="px-3.5 py-1.5 rounded-xl bg-brand-gold text-black text-xs font-bold">Explore Films</button>
                 </div>
               </div>
             </div>

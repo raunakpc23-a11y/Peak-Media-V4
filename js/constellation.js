@@ -9,6 +9,11 @@
     const GH = 26, MAXSEED = 36;
     const stars = Array.from({ length: 90 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + .3, p: Math.random() * 6 }));
     const vis = () => {
+      const prof = document.getElementById('tab-profile');
+      if (prof && !prof.classList.contains('hidden')) {
+        const tasteStage = document.getElementById('profileStage-taste');
+        return tasteStage && !tasteStage.classList.contains('hidden');
+      }
       const hub = document.getElementById('tab-hub');
       if (hub && !hub.classList.contains('hidden')) return true;
       const web = document.getElementById('tab-web');

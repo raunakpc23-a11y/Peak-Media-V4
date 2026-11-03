@@ -480,9 +480,9 @@
       }
       D.entrants = pickEntrants(); D.path = {};
       D.rounds = [D.entrants.slice()]; D.r = 0; D.m = 0; D.matches = []; D.winners = [];
-      $('duelSetup').classList.add('hidden'); $('duelChamp').classList.add('hidden');
+      if ($('duelChamp')) $('duelChamp').classList.add('hidden');
       if ($('cineSwipeArena')) $('cineSwipeArena').classList.add('hidden');
-      $('duelArena').classList.remove('hidden');
+      if ($('duelArena')) $('duelArena').classList.remove('hidden');
       showMatch();
     }
     const roundName = n => n === 2 ? 'Grand Final' : n === 4 ? 'Semi-finals' : n === 8 ? 'Quarter-finals' : n === 16 ? 'Round of 16' : n === 32 ? 'Round of 32' : `Round of ${n}`;
@@ -908,9 +908,15 @@
       D.path = {};
       D.rounds = [D.entrants.slice()];
       D.r = 0; D.m = 0; D.matches = []; D.winners = [];
+      if ($('duelSetup')) $('duelSetup').classList.remove('hidden');
       if ($('duelChamp')) $('duelChamp').classList.add('hidden');
       if ($('duelArena')) $('duelArena').classList.remove('hidden');
       showMatch();
+    };
+
+    window.toggleDuelOptions = function() {
+      const s = $('duelSetup');
+      if (s) s.classList.toggle('hidden');
     };
 
     window.initSwipeStage = function() {
@@ -924,6 +930,7 @@
     };
     window.csPickTonight = csPickTonight;
     window.initDuelTournament = function() {
+      if ($('duelSetup')) $('duelSetup').classList.remove('hidden');
       if (D.rounds.length === 0) {
         window.launchPresetDuel('pantheon');
       } else {

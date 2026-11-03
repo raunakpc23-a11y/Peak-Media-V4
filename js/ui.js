@@ -53,6 +53,10 @@
       key = 'profile';
       if (window.selectProfileTool) window.selectProfileTool('account');
     }
+    if (key === 'web') {
+      key = 'profile';
+      if (window.selectProfileTool) window.selectProfileTool('taste');
+    }
     if (key === 'browse') key = 'movies';
     if (key === 'decide') key = 'play';
     if (!PANE_GROUP[key]) key = 'discover';
@@ -460,6 +464,7 @@
       if (window.renderProfileTab) window.renderProfileTab();
     } else if (tool === 'taste') {
       if (window.refreshDNA) window.refreshDNA();
+      if (window.cxOpen) setTimeout(window.cxOpen, 50);
     } else if (tool === 'collection') {
       if (window.syncProfileThemeStudio) window.syncProfileThemeStudio();
       if (window.renderProfileTab) window.renderProfileTab();
