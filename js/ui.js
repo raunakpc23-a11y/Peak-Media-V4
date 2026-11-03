@@ -39,8 +39,8 @@
     ricochet: 'decide',
     marathon: 'decide',
     compat: 'decide',
-    hub: 'space',
-    lists: 'space',
+    hub: 'profile',
+    lists: 'profile',
     web: 'space',
     profile: 'profile'
   };
@@ -49,10 +49,12 @@
 
   window.switchTab = function (key, pushState = true) {
     if (key === 'roulette') { openSurpriseModal(); return; }
-    if (key === 'space') key = 'hub';
+    if (key === 'space' || key === 'hub' || key === 'lists') {
+      key = 'profile';
+      if (window.selectProfileTool) window.selectProfileTool('shelves');
+    }
     if (key === 'browse') key = 'movies';
     if (key === 'decide') key = 'play';
-    if (key === 'lists') key = 'hub';
     if (!PANE_GROUP[key]) key = 'discover';
     const g = PANE_GROUP[key];
 
@@ -167,20 +169,19 @@
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
     if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
     if (key === 'music' && window.initMusicVault) window.initMusicVault();
-    if (key === 'hub') {
+    if (key === 'profile' || key === 'hub') {
       if (window.renderShelves) window.renderShelves();
       if (window.refreshDNA) window.refreshDNA();
-      if (window.cxOpen) setTimeout(window.cxOpen, 40);
+      if (window.renderCustomListsTab) window.renderCustomListsTab();
+      if (window.renderCinePassLedger) window.renderCinePassLedger();
+      if (window.renderProfileTab) window.renderProfileTab();
       const hasData = (window.watchedTitles && window.watchedTitles.length > 0) || (window.wishlistTitles && window.wishlistTitles.length > 0) || (window.favTitles && window.favTitles.length > 0);
       const emptyEl = document.getElementById('hubDnaEmptyState');
       if (emptyEl) {
         if (!hasData) emptyEl.classList.remove('hidden');
         else emptyEl.classList.add('hidden');
       }
-      if (window.renderCustomListsTab) window.renderCustomListsTab();
-      if (window.renderCinePassLedger) window.renderCinePassLedger();
     }
-    if (key === 'profile' && window.renderProfileTab) window.renderProfileTab();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -293,7 +294,7 @@
   // Direct gateway to Member Profile from Opening View
   window.openProfileFromHome = function() {
     window.switchTab('profile');
-    if (window.renderProfileTab) window.renderProfileTab();
+    window.selectProfileTool('account');
   };
 
   window.closeProfileToHome = function() {
@@ -302,9 +303,8 @@
 
   // Direct gateway to Shelves & Library from Opening View
   window.openShelvesFromHome = function() {
-    window.switchTab('hub');
-    if (window.renderShelves) window.renderShelves();
-    if (window.refreshDNA) window.refreshDNA();
+    window.switchTab('profile');
+    window.selectProfileTool('shelves');
   };
 
   window.closeShelvesToHome = function() {
@@ -367,17 +367,26 @@
   };
 
   window.selectProfileTool = function(tool) {
-    const tools = ['account', 'taste', 'collection'];
+    if (!tool) tool = 'shelves';
+    const tools = ['shelves', 'top3', 'account', 'taste', 'collection'];
     tools.forEach(t => {
       const btn = document.getElementById('profileRailBtn-' + t);
       const stage = document.getElementById('profileStage-' + t);
       if (btn) btn.classList.toggle('active', t === tool);
       if (stage) stage.classList.toggle('hidden', t !== tool);
     });
-    if (tool === 'taste') {
+    if (tool === 'shelves') {
+      if (window.renderShelves) window.renderShelves();
+      if (window.renderCustomListsTab) window.renderCustomListsTab();
+    } else if (tool === 'top3') {
+      if (window.renderCinePassLedger) window.renderCinePassLedger();
+    } else if (tool === 'account') {
+      if (window.renderProfileTab) window.renderProfileTab();
+    } else if (tool === 'taste') {
       if (window.refreshDNA) window.refreshDNA();
     } else if (tool === 'collection') {
       if (window.syncProfileThemeStudio) window.syncProfileThemeStudio();
+      if (window.renderProfileTab) window.renderProfileTab();
     }
   };
 
