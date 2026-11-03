@@ -13701,11 +13701,22 @@ Odd Taxi|2021|87
         localStorage.setItem('cs_ratings', JSON.stringify(myRatings));
       } catch (e) {}
 
-      document.getElementById('statTotalTitles').textContent = allTitles.length.toLocaleString();
-      document.getElementById('statWatchlistCount').textContent = wishlistTitles.length;
-      document.getElementById('statWatchedCount').textContent = watchedTitles.length;
-      document.getElementById('hubWishlistCount').textContent = wishlistTitles.length;
-      document.getElementById('hubWatchedCount').textContent = watchedTitles.length;
+      const updateText = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      };
+
+      updateText('statTotalTitles', allTitles.length.toLocaleString());
+      updateText('statWatchlistCount', wishlistTitles.length);
+      updateText('statWatchedCount', watchedTitles.length);
+      updateText('hubWishlistCount', wishlistTitles.length);
+      updateText('hubWatchedCount', watchedTitles.length);
+      updateText('popoverWatchlistCount', wishlistTitles.length);
+      updateText('popoverWatchedCount', watchedTitles.length);
+      updateText('profStatWish', wishlistTitles.length);
+      updateText('profStatWatched', watchedTitles.length);
+      updateText('profStatFavs', favTitles.length);
+      updateText('shelfCnt-watched', watchedTitles.length);
 
       const hpWatchlist = document.getElementById('homeProfileWatchlistCount');
       if (hpWatchlist) hpWatchlist.textContent = wishlistTitles.length;

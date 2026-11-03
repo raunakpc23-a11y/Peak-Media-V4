@@ -470,8 +470,8 @@
     <div id="browseSearch" class="hidden mb-4 relative z-30 p-3 sm:p-4 rounded-2xl border border-white/20 shadow-2xl theme-card-bg">
       <div class="relative flex-1">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-gold text-sm"></i>
-        <input id="bsInput" type="text" autocomplete="off" placeholder="Search movies, shows, genres, universes, or songs..." class="w-full pl-10 pr-16 py-2.5 rounded-xl bg-black/40 border border-white/20 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold transition-colors">
-        <button type="button" onclick="const inp=document.getElementById('bsInput'); inp.value=''; inp.dispatchEvent(new window.Event('input'));" class="absolute right-2.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-gray-300 hover:text-white font-medium transition-colors">Clear</button>
+        <input id="bsInput" type="text" autocomplete="off" placeholder="Search across movies, shows, universes, genres..." class="w-full pl-10 pr-16 py-2.5 rounded-xl bg-black/40 border border-white/20 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-gold transition-colors">
+        <button type="button" onclick="clearBrowseSearch()" class="absolute right-2.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-gray-300 hover:text-white font-medium transition-colors">Clear</button>
       </div>
       <div id="bsResults" class="hidden absolute left-0 right-0 top-full mt-2 z-40 theme-card-bg rounded-2xl border border-brand-gold/50 divide-y divide-white/10 max-h-[26rem] overflow-y-auto shadow-2xl"></div>
     </div>
@@ -945,7 +945,6 @@
             <button id="deciderBtn-marathon"></button>
             <button id="deciderBtn-architect"></button>
             <button id="deciderBtn-matchmaker"></button>
-            <button id="deciderRailBtn-matchmaker"></button>
             <button id="deciderBtn-decades"></button>
             <button id="deciderBtn-roulette"></button>
             <button id="deciderBtn-opposite"></button>
@@ -1545,7 +1544,7 @@
                   <h2 class="text-lg font-bold text-white flex items-center gap-2">
                     <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decOpposite"></use></svg> Opposite Day
                   </h2>
-                  <div id="oppStageLine" class="text-xs text-gray-400 mt-0.5">Explore movies beyond your normal habits</div>
+                  <div id="oppStageLine" class="text-xs text-gray-400 mt-0.5">Inverts your taste profile to unearth hidden gems from genres and eras you rarely watch</div>
                 </div>
                 <!-- Opposite is active live via slider -->
               </div>
@@ -2197,7 +2196,7 @@
 
   
   <!-- MUSIC SLEEP TIMER MODAL -->
-  <div id="musicSleepModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+  <div id="musicSleepModal" onclick="if(event.target === this) closeMusicSleepModal()" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
     <div class="glass-card rounded-3xl border border-white/20 p-5 w-full max-w-sm space-y-4 shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <div class="flex items-center gap-2">

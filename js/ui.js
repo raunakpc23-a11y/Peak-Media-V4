@@ -1098,6 +1098,15 @@
   };
   $('bsInput').addEventListener('keydown', e => { if (e.key === 'Escape') { $('bsResults').classList.add('hidden'); e.target.blur(); } });
   document.addEventListener('click', e => { if (!e.target.closest('#browseSearch')) $('bsResults').classList.add('hidden'); });
+  window.clearBrowseSearch = function() {
+    const inp = $('bsInput');
+    if (inp) {
+      inp.value = '';
+      inp.dispatchEvent(new window.Event('input'));
+      inp.focus();
+    }
+  };
+
   const _sw = window.switchTab;
   window.switchTab = function (key, pushState = true) {
     _sw.apply(this, arguments);

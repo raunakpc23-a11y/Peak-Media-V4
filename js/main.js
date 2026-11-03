@@ -1750,6 +1750,7 @@
     window.closeMusicSleepModal = function() {
       const m = $('musicSleepModal');
       if (m) m.classList.add('hidden');
+      updateSleepModalStatus();
     };
 
     window.setMusicSleepTimer = function(minutes) {
