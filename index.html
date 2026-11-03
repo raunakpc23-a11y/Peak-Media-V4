@@ -415,9 +415,9 @@
             </button>
           </div>
 
-          <!-- Plain glyph buttons: Mood, Swipe, Duel | Marathon, Decades | Matchmaker, Compatibility | Ricochet, Opposite (Tactile Vinyl Dial Tokens - Full Space) -->
+          <!-- Plain glyph buttons: Mood, Swipe | Duel, Marathon | Decades, Compatibility | Ricochet, Opposite (Tactile Vinyl Dial Tokens - Full Space) -->
           <div id="decidersHomeRow" class="flex items-center justify-between gap-1 sm:gap-2 py-1 flex-wrap">
-            <!-- Group 1: Mood, Swipe, Duel -->
+            <!-- Group 1: Mood, Swipe -->
             <div class="flex items-center gap-1 sm:gap-1.5">
               <button type="button" onclick="openDeciderTool('mood')" class="decider-glyph-btn group" title="Mood" aria-label="Mood">
                 <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
@@ -433,6 +433,13 @@
                   <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decSwipe"></use></svg>
                 </div>
               </button>
+            </div>
+
+            <!-- Divider Gap 1 -->
+            <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
+
+            <!-- Group 2: Duel, Marathon -->
+            <div class="flex items-center gap-1 sm:gap-1.5">
               <button type="button" onclick="openDeciderTool('duel')" class="decider-glyph-btn group" title="Duel" aria-label="Duel">
                 <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
                   <div class="vinyl-micro-grooves"></div>
@@ -440,13 +447,6 @@
                   <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDuel"></use></svg>
                 </div>
               </button>
-            </div>
-
-            <!-- Divider Gap 1 -->
-            <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
-
-            <!-- Group 2: Marathon, Decades -->
-            <div class="flex items-center gap-1 sm:gap-1.5">
               <button type="button" onclick="openDeciderTool('marathon')" class="decider-glyph-btn group" title="Marathon" aria-label="Marathon">
                 <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
                   <div class="vinyl-micro-grooves"></div>
@@ -454,25 +454,18 @@
                   <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMarathon"></use></svg>
                 </div>
               </button>
-              <button type="button" onclick="openDeciderTool('decades')" class="decider-glyph-btn group" title="Decades" aria-label="Decades">
-                <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
-                  <div class="vinyl-micro-grooves"></div>
-                  <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDecades"></use></svg>
-                </div>
-              </button>
             </div>
 
             <!-- Divider Gap 2 -->
             <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
 
-            <!-- Group 3: Matchmaker, Compatibility -->
+            <!-- Group 3: Decades, Compatibility -->
             <div class="flex items-center gap-1 sm:gap-1.5">
-              <button type="button" onclick="openDeciderTool('matchmaker')" class="decider-glyph-btn group" title="Matchmaker" aria-label="Matchmaker">
+              <button type="button" onclick="openDeciderTool('decades')" class="decider-glyph-btn group" title="Decades" aria-label="Decades">
                 <div class="vinyl-mark-container w-10 h-10 sm:w-11 sm:h-11">
                   <div class="vinyl-micro-grooves"></div>
                   <div class="vinyl-sheen-sweep group-hover:rotate-90 transition-transform duration-700 ease-out"></div>
-                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMatchmaker"></use></svg>
+                  <svg class="decider-mark w-9 h-9 sm:w-10 sm:h-10 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-45" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDecades"></use></svg>
                 </div>
               </button>
               <button type="button" onclick="openDeciderTool('compatibility')" class="decider-glyph-btn group" title="Compatibility" aria-label="Compatibility">
@@ -484,7 +477,7 @@
               </button>
             </div>
 
-            <!-- Divider Gap 2 -->
+            <!-- Divider Gap 3 -->
             <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
 
             <!-- Group 4: Ricochet, Opposite -->
@@ -751,6 +744,9 @@
     <section id="tab-movies" class="tab-pane hidden fade-in space-y-4">
       <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
         <div class="flex items-center gap-2 flex-1 max-w-md">
+          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn shrink-0" aria-label="Leave this tab and return home">
+            <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
+          </button>
           <div class="relative flex-1">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
             <input type="text" id="searchMovies" oninput="syncCatalogSearch(this.value)" placeholder="Search catalog..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
@@ -803,6 +799,9 @@
     <section id="tab-shows" class="tab-pane hidden fade-in space-y-4">
       <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
         <div class="flex items-center gap-2 flex-1 max-w-md">
+          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn shrink-0" aria-label="Leave this tab and return home">
+            <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
+          </button>
           <div class="relative flex-1">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
             <input type="text" id="searchShows" oninput="syncCatalogSearch(this.value)" placeholder="Search catalog..." class="w-full pl-8 pr-3 py-1.5 bg-black/50 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
@@ -852,8 +851,11 @@
 
     <!-- TAB 3: CATEGORIES -->
     <section id="tab-categories" class="tab-pane hidden fade-in space-y-4">
-      <div class="border-b border-white/10 pb-3">
-        <div id="genreQuickPills" class="flex flex-wrap gap-1.5 max-h-[76px] overflow-y-auto no-scrollbar py-1"></div>
+      <div class="border-b border-white/10 pb-3 flex items-center gap-3">
+        <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave-tab-btn shrink-0" aria-label="Leave this tab and return home">
+          <svg class="leave-tab-glyph" viewBox="0 0 32 32" aria-hidden="true"><use href="#leaveTabGlyph"></use></svg>
+        </button>
+        <div id="genreQuickPills" class="flex flex-wrap gap-1.5 max-h-[76px] overflow-y-auto no-scrollbar py-1 flex-1"></div>
       </div>
       <div id="categoriesList" class="space-y-6"></div>
     </section>
@@ -896,9 +898,6 @@
           <button type="button" onclick="selectDeciderTool('decades')" id="deciderRailBtn-decades" class="decider-glyph-btn" data-pop title="Decades" aria-label="Decades">
             <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decDecades"></use></svg>
           </button>
-          <button type="button" onclick="selectDeciderTool('matchmaker')" id="deciderRailBtn-matchmaker" class="decider-glyph-btn" data-pop title="Matchmaker" aria-label="Matchmaker">
-            <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMatchmaker"></use></svg>
-          </button>
           <button type="button" onclick="selectDeciderTool('compatibility')" id="deciderRailBtn-compatibility" class="decider-glyph-btn" data-pop title="Compatibility" aria-label="Compatibility">
             <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decComp"></use></svg>
           </button>
@@ -917,6 +916,7 @@
             <button id="deciderBtn-marathon"></button>
             <button id="deciderBtn-architect"></button>
             <button id="deciderBtn-matchmaker"></button>
+            <button id="deciderRailBtn-matchmaker"></button>
             <button id="deciderBtn-decades"></button>
             <button id="deciderBtn-roulette"></button>
             <button id="deciderBtn-opposite"></button>
@@ -1297,52 +1297,14 @@
             </div>
           </div>
 
-          <!-- STAGE 7: MATCHMAKER (Lives only here now) -->
-          <div id="stage-matchmaker" class="decider-stage-panel hidden space-y-4">
-            <div id="matchmakerContent" class="space-y-4">
-              <div id="recSection" class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-white/10">
-                <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
-                  <div class="flex items-center gap-3">
-                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                      <svg class="decider-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#decMatchmaker"></use></svg> Matchmaker
-                    </h2>
-                  </div>
-                  <button onclick="prefillFromWishlist('recTags')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-gray-300 transition-all">
-                    <i class="fa-solid fa-bolt text-brand-gold mr-1"></i> Watchlist
-                  </button>
-                </div>
-
-                <!-- Selected Seed Chips -->
-                <div id="recTags" class="flex flex-wrap gap-2 min-h-[44px] p-2.5 rounded-xl bg-black/45 border border-white/10 items-center"></div>
-
-                <!-- Autocomplete Input -->
-                <div class="flex flex-col sm:flex-row gap-2.5">
-                  <div class="relative flex-1 autocomplete-wrapper">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                    <input type="text" id="recInput" placeholder="Add a title you love..."
-                      oninput="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
-                      onfocus="handleAutocomplete(event, 'recInput', 'recTags', 'recSuggest', 5)"
-                      class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold">
-                    <div id="recSuggest" class="suggestions-box hidden absolute left-0 right-0 top-full mt-1 bg-[#121622] border border-white/15 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-30 divide-y divide-white/5"></div>
-                  </div>
-                  <button onclick="generateRecommendation()" class="px-5 py-2.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95 whitespace-nowrap">
-                    Find Matches
-                  </button>
-                </div>
-
-                <div id="recInitialPrompt" class="hidden"></div>
-
-                <!-- Output Results -->
-                <div id="recResultBox" class="hidden pt-3 border-t border-white/10 space-y-3">
-                  <div class="flex items-center justify-between gap-2">
-                    <h3 class="text-xs sm:text-sm font-bold text-white">Top Matches</h3>
-                    <button id="rejectBtn" onclick="rejectRecommendation()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 border border-white/15 transition-all">
-                      <i class="fa-solid fa-rotate mr-1"></i> Next
-                    </button>
-                  </div>
-                  <div id="recCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
-                </div>
-              </div>
+          <!-- Legacy Hidden Matchmaker Containers for Background Handler Compatibility -->
+          <div id="stage-matchmaker" class="hidden" aria-hidden="true">
+            <div id="matchmakerContent">
+              <div id="recTags"></div>
+              <input type="text" id="recInput">
+              <div id="recSuggest"></div>
+              <div id="recResultBox"></div>
+              <div id="recCardsContainer"></div>
             </div>
           </div>
 
@@ -2007,6 +1969,10 @@
   <!-- MODAL 1: MOVIE / SHOW DETAILS (Spacious High-Def ScoreCard & Cinema Poster) -->
   <div id="detailModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='detailModal')closeDetailModal()">
     <div class="glass-card w-full max-w-4xl rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto border border-white/20 shadow-2xl animate-fadeIn relative">
+      <button onclick="closeDetailModal()" aria-label="Back to browsing" title="Back to browsing" class="absolute top-4 left-4 z-20 px-3 py-1.5 rounded-xl bg-black/70 hover:bg-black text-white flex items-center gap-1.5 border border-white/15 text-xs font-bold transition-transform hover:scale-105 shadow-md">
+        <i class="fa-solid fa-arrow-left text-xs text-brand-gold"></i>
+        <span>Back</span>
+      </button>
       <button onclick="closeDetailModal()" aria-label="Close detail modal" title="Close" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center border border-white/15 transition-transform hover:scale-105">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -2052,8 +2018,6 @@
           Inspect
         </button>
       </div>
-    </div>
-  </div>
     </div>
   </div>
 

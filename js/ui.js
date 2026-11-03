@@ -185,8 +185,49 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Popstate Listener for Browser Back/Forward Navigation
+  // Popstate Listener for Browser Back/Forward Navigation & Modal Close
   window.addEventListener('popstate', (e) => {
+    // 1. If detail modal is open, close it without changing tab
+    const detailModal = document.getElementById('detailModal');
+    if (detailModal && !detailModal.classList.contains('hidden')) {
+      if (typeof window.closeDetailModal === 'function') {
+        window.closeDetailModal(true);
+      } else {
+        detailModal.classList.add('hidden');
+        detailModal.classList.remove('flex');
+      }
+      return;
+    }
+    // 2. If other overlays are open, close them
+    const surpriseModal = document.getElementById('surpriseModal');
+    if (surpriseModal && !surpriseModal.classList.contains('hidden')) {
+      surpriseModal.classList.add('hidden');
+      return;
+    }
+    const goldenTicketModal = document.getElementById('goldenTicketModal');
+    if (goldenTicketModal && !goldenTicketModal.classList.contains('hidden')) {
+      if (typeof window.closeGoldenTicketModal === 'function') window.closeGoldenTicketModal();
+      else goldenTicketModal.classList.add('hidden');
+      return;
+    }
+    const pal = document.getElementById('palette');
+    if (pal && !pal.classList.contains('hidden')) {
+      if (typeof window.closePalette === 'function') window.closePalette();
+      else pal.classList.add('hidden');
+      return;
+    }
+    const vibePanel = document.getElementById('vibePanel');
+    if (vibePanel && !vibePanel.classList.contains('hidden')) {
+      vibePanel.classList.add('hidden');
+      return;
+    }
+    const popover = document.getElementById('profileStatsPopover');
+    if (popover && !popover.classList.contains('hidden')) {
+      popover.classList.add('hidden');
+      return;
+    }
+
+    // 3. Switch tab according to state / hash
     const rawHash = (window.location.hash || '').replace('#', '');
     const tab = (e.state && e.state.tab) || rawHash || 'discover';
     window.switchTab(tab, false);
@@ -262,21 +303,56 @@
     if (typeof window.closeFullscreen === 'function' && window.Motion && typeof window.Motion.isOpen === 'function' && window.Motion.isOpen()) {
       try { window.closeFullscreen(); } catch (_) {}
     }
+    let closedAnyOverlay = false;
     const modal = document.getElementById('detailModal');
-    if (modal && !modal.classList.contains('hidden') && typeof window.closeDetailModal === 'function') {
-      try { window.closeDetailModal(); } catch (_) {}
+    if (modal && !modal.classList.contains('hidden')) {
+      if (typeof window.closeDetailModal === 'function') {
+        try { window.closeDetailModal(); } catch (_) {}
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      closedAnyOverlay = true;
+    }
+    const golden = document.getElementById('goldenTicketModal');
+    if (golden && !golden.classList.contains('hidden')) {
+      if (typeof window.closeGoldenTicketModal === 'function') {
+        try { window.closeGoldenTicketModal(); } catch (_) {}
+      } else {
+        golden.classList.add('hidden');
+      }
+      closedAnyOverlay = true;
+    }
+    const surprise = document.getElementById('surpriseModal');
+    if (surprise && !surprise.classList.contains('hidden')) {
+      if (typeof window.closeSurpriseModal === 'function') {
+        try { window.closeSurpriseModal(); } catch (_) {}
+      } else {
+        surprise.classList.add('hidden');
+      }
+      closedAnyOverlay = true;
     }
     const pal = document.getElementById('palette');
-    if (pal && !pal.classList.contains('hidden') && typeof window.closePalette === 'function') {
-      try { window.closePalette(); } catch (_) {}
+    if (pal && !pal.classList.contains('hidden')) {
+      if (typeof window.closePalette === 'function') {
+        try { window.closePalette(); } catch (_) {}
+      } else {
+        pal.classList.add('hidden');
+      }
+      closedAnyOverlay = true;
     }
     const vibe = document.getElementById('vibePanel');
     if (vibe && !vibe.classList.contains('hidden')) {
       vibe.classList.add('hidden');
+      closedAnyOverlay = true;
     }
     const pop = document.getElementById('profileStatsPopover');
     if (pop && !pop.classList.contains('hidden')) {
       pop.classList.add('hidden');
+      closedAnyOverlay = true;
+    }
+    if (closedAnyOverlay && !targetId) {
+      return; // Closed the open overlay/modal without losing current tab!
     }
     window.switchTab('discover');
     if (targetId) {
@@ -999,15 +1075,10 @@
     _sw.apply(this, arguments);
     const k = ({ browse: 'movies' })[key] || key;
     $('browseSearch').classList.toggle('hidden', !BROWSE.includes(k));
-    if (pushState && window.history && window.history.pushState) {
-      try {
-        window.history.pushState({ tab: key }, '', '#' + key);
-      } catch (e) {}
-    }
   };
   drawChips();
 
-  // Esc and browser Back button close any open takeover or modal, or return to Home
+  // Esc closes any open takeover or modal, or returns to Home
   window.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       const detailModal = document.getElementById('detailModal');
@@ -1034,15 +1105,6 @@
       if (discoverTab && discoverTab.classList.contains('hidden')) {
         if (window.returnToOpeningPage) window.returnToOpeningPage();
       }
-    }
-  });
-
-  window.addEventListener('popstate', function(e) {
-    const s = e.state;
-    if (s && s.tab && s.tab !== 'discover') {
-      if (_sw) _sw(s.tab);
-    } else {
-      if (window.returnToOpeningPage) window.returnToOpeningPage();
     }
   });
 

@@ -15077,6 +15077,11 @@ Odd Taxi|2021|87
 
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+      if (window.history && window.history.pushState) {
+        if (!window.history.state || window.history.state.modal !== 'detail') {
+          window.history.pushState({ modal: 'detail', title: item.title }, '', window.location.href);
+        }
+      }
 
       // Fetch poster & synopsis asynchronously with priority if not cached
       if (!posterUrl || posterUrl.startsWith('data:image/svg')) {
@@ -15095,11 +15100,14 @@ Odd Taxi|2021|87
       }
     }
 
-    function closeDetailModal() {
+    function closeDetailModal(fromPopState) {
       const modal = document.getElementById('detailModal');
       if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+      }
+      if (!fromPopState && window.history && window.history.state && window.history.state.modal === 'detail') {
+        window.history.back();
       }
     }
 
