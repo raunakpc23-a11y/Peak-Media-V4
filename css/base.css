@@ -2188,3 +2188,215 @@
   color: #000000 !important;
 }
 
+/* Mouse Click Animation for Onboarding Music Turntable */
+@keyframes mouseClickCue {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.95;
+  }
+  40% {
+    transform: translate(-14px, -14px) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-14px, -14px) scale(0.85);
+    opacity: 1;
+  }
+  65% {
+    transform: translate(-14px, -14px) scale(1);
+    opacity: 0.95;
+  }
+}
+.animate-mouse-click {
+  animation: mouseClickCue 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes vinylRippleClick {
+  0% { transform: scale(0.7); opacity: 0; }
+  45% { opacity: 0; }
+  52% { opacity: 0.8; transform: scale(0.85); }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.vinyl-click-ripple {
+  animation: vinylRippleClick 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+/* ==========================================================================
+   CONSOLIDATED ONBOARDING & SETUP STYLES
+   ========================================================================== */
+#onboardingOverlay {
+  background: radial-gradient(ellipse at 50% 0%, rgba(245, 197, 24, 0.16), rgba(8, 10, 15, 0.96) 65%), rgba(5, 7, 11, 0.95);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+.ob-step-enter {
+  animation: obStepIn 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes obStepIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.ob-poster-card {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: #0c0f16;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+}
+.ob-poster-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.ob-poster-card.selected {
+  border-color: var(--gold-hex);
+  box-shadow: 0 0 0 2px rgb(var(--gold) / 0.45), 0 12px 28px -6px rgb(var(--gold) / 0.35);
+  transform: translateY(-4px) scale(1.02);
+}
+.ob-genre-btn {
+  transition: all 0.2s ease;
+}
+.ob-genre-btn.selected {
+  border-color: var(--gold-hex) !important;
+  background: rgb(var(--gold) / 0.18) !important;
+  box-shadow: 0 0 22px rgb(var(--gold) / 0.25);
+  transform: translateY(-2px);
+}
+.ob-duel-pick {
+  width: min(40vw, 215px);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  background: #0c0f16;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+}
+.ob-duel-pick:hover {
+  transform: translateY(-6px) scale(1.03);
+  border-color: var(--gold-hex);
+  box-shadow: 0 0 32px rgb(var(--gold) / 0.35);
+}
+.ob-duel-pick.chosen {
+  border-color: var(--gold-hex);
+  transform: scale(1.07);
+  box-shadow: 0 0 42px rgb(var(--gold) / 0.65);
+}
+.ob-duel-pick.not-chosen {
+  opacity: 0.25;
+  filter: grayscale(1);
+  transform: scale(0.92);
+}
+
+/* ==========================================================================
+   CONSOLIDATED KINETIC MOTION & SCENE TRANSITIONS
+   ========================================================================== */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-open: 600ms;
+  --dur-close: 450ms;
+  --dur-content: 250ms;
+  --stagger: 50ms;
+}
+
+body.motion-scroll-locked {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+.motion-clone-overlay {
+  position: fixed;
+  margin: 0;
+  box-sizing: border-box;
+  transform-origin: top left;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.motion-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.motion-page {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.motion-search-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+}
+
+.m-hover-scale {
+  transition: transform 200ms var(--ease-out);
+}
+.m-hover-scale:hover {
+  transform: scale(var(--hover-scale, 1.06));
+}
+.m-hover-scale:hover [data-spin],
+.m-hover-scale:hover.vinyl-record-disc,
+#homeVinylDisc.m-hover-scale:hover {
+  animation: motion-spin 8s linear infinite;
+}
+@keyframes motion-spin {
+  to { transform: rotate(360deg); }
+}
+
+.motion-clone-overlay .vinyl-center-label {
+  width: 38% !important;
+  height: 38% !important;
+}
+
+.deciders-viewport-stacked {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.deciders-viewport-stacked > .decider-stage-panel {
+  grid-area: 1 / 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-open: 150ms;
+    --dur-close: 150ms;
+    --dur-content: 150ms;
+    --stagger: 0ms;
+  }
+  .m-hover-scale { transition: none; }
+  .m-hover-scale:hover { transform: none; }
+  .m-hover-scale:hover [data-spin],
+  .m-hover-scale:hover.vinyl-record-disc,
+  #homeVinylDisc.m-hover-scale:hover { animation: none; }
+}
+
+body.reduce-fx {
+  --dur-open: 150ms;
+  --dur-close: 150ms;
+  --dur-content: 150ms;
+  --stagger: 0ms;
+}
+body.reduce-fx .m-hover-scale { transition: none; }
+body.reduce-fx .m-hover-scale:hover { transform: none; }
+body.reduce-fx .m-hover-scale:hover [data-spin],
+body.reduce-fx .m-hover-scale:hover.vinyl-record-disc,
+body.reduce-fx #homeVinylDisc.m-hover-scale:hover { animation: none; }
+
+
+

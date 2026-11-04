@@ -353,7 +353,7 @@
       c.fillStyle = '#c084fc'; c.font = '700 10px Inter, sans-serif'; c.fillText('Obscure', 290, 630); c.textAlign = 'right'; c.fillStyle = '#F5C518'; c.fillText('Popular', 560, 630);
       c.textAlign = 'left'; c.fillStyle = '#e5e7eb'; c.font = '700 12px Inter, sans-serif'; c.fillText(`${tgt.n} titles watched`, 290, 672);
       if (friend) { c.fillStyle = '#22d3ee'; c.fillText('- - -  friend overlay: ' + friend.id, 290, 694); }
-      c.textAlign = 'center'; c.fillStyle = '#6b7280'; c.font = '600 10px Inter, sans-serif'; c.fillText('cinesphere · your cinema, in one glance', 300, 734);
+      c.textAlign = 'center'; c.fillStyle = '#6b7280'; c.font = '600 10px Inter, sans-serif'; c.fillText('peakmedia · your cinema, in one glance', 300, 734);
     }
     function dnaFrame() {
       let moving = false;
@@ -377,7 +377,7 @@
       return Math.round(100 * (.55 * cos + .3 * eo + .15 * (1 - Math.abs(a.p - b.p))));
     }
     $('dnaExport').onclick = () => {
-      dcv.toBlob(b => { const u = URL.createObjectURL(b), a = document.createElement('a'); a.href = u; a.download = 'cinesphere-taste-dna.png'; a.click(); setTimeout(() => URL.revokeObjectURL(u), 1000); showToast('Saved your Taste DNA card as PNG', 'fa-image', 'text-brand-gold'); });
+      dcv.toBlob(b => { const u = URL.createObjectURL(b), a = document.createElement('a'); a.href = u; a.download = 'peakmedia-taste-dna.png'; a.click(); setTimeout(() => URL.revokeObjectURL(u), 1000); showToast('Saved your Taste DNA card as PNG', 'fa-image', 'text-brand-gold'); });
     };
     $('dnaCopy').onclick = async () => {
       const code = encode();

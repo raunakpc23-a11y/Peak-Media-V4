@@ -105,7 +105,7 @@
         headerBackBtn.classList.add('flex');
       }
       if (headerBrandPlate) {
-        headerBrandPlate.classList.add('hidden');
+        headerBrandPlate.classList.remove('hidden');
       }
       if (headerSearch) {
         if (key === 'profile' || isImmersiveDeck) {
@@ -139,13 +139,13 @@
       sn.classList.toggle('hidden', !subs.length); sn.classList.toggle('flex', !!subs.length);
     }
     const bRow = $('browseNavRow');
-    const bFilter = $('browseFilterOptionWrap');
-    const mFilterBtn = $('moviesFilterToggleBtn');
-    const sFilterBtn = $('showsFilterToggleBtn');
     if (bRow) {
       bRow.classList.toggle('hidden', g !== 'browse');
       bRow.classList.toggle('flex', g === 'browse');
     }
+    const bFilter = $('browseFilterOptionWrap');
+    const mFilterBtn = $('moviesFilterToggleBtn');
+    const sFilterBtn = $('showsFilterToggleBtn');
     if (bFilter) {
       const isFilterable = (key === 'movies' || key === 'shows');
       bFilter.classList.toggle('hidden', !isFilterable);
@@ -470,8 +470,8 @@
   };
 
   window.selectProfileTool = function(tool) {
-    if (!tool) tool = 'account';
-    const tools = ['account', 'shelves', 'top3', 'taste', 'collection'];
+    if (!tool || tool === 'collection') tool = 'account';
+    const tools = ['account', 'shelves', 'top3', 'taste'];
     tools.forEach(t => {
       const btn = document.getElementById('profileRailBtn-' + t);
       const stage = document.getElementById('profileStage-' + t);
@@ -485,12 +485,10 @@
       if (window.renderCinePassLedger) window.renderCinePassLedger();
     } else if (tool === 'account') {
       if (window.renderProfileTab) window.renderProfileTab();
+      if (window.syncProfileThemeStudio) window.syncProfileThemeStudio();
     } else if (tool === 'taste') {
       if (window.refreshDNA) window.refreshDNA();
       if (window.cxOpen) setTimeout(window.cxOpen, 50);
-    } else if (tool === 'collection') {
-      if (window.syncProfileThemeStudio) window.syncProfileThemeStudio();
-      if (window.renderProfileTab) window.renderProfileTab();
     }
   };
 
@@ -1161,4 +1159,34 @@
       localStorage.setItem('cs_deciders_hint_seen', '1');
     }
   } catch (e) {}
+
+  // -------------------------------------------------------------
+  // Celestial Atmospheric Sync & Discover Helper
+  // -------------------------------------------------------------
+  function renderSkyConstellations() {
+    if (!window._discoverRendered && window.renderDiscoverTab) {
+      window._discoverRendered = true;
+      window.renderDiscoverTab();
+    }
+    if (window.updateHomeVinylPlayer) {
+      window.updateHomeVinylPlayer();
+    }
+  }
+
+  function initObservatorySky() {
+    renderSkyConstellations();
+  }
+
+  if (typeof window !== 'undefined') {
+    window.renderSkyConstellations = renderSkyConstellations;
+    window.initObservatorySky = initObservatorySky;
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initObservatorySky);
+    } else {
+      initObservatorySky();
+    }
+  }
 })();

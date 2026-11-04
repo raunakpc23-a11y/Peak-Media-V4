@@ -7,7 +7,8 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v6.9-big-decider-marks';
+const CACHE_NAME = 'peak-media-v7.0-speed-boost';
+const POSTER_CACHE = 'peak-media-posters-v1';
 
 // All local files to pre-cache the moment the SW installs
 const PRE_CACHE = [
@@ -17,15 +18,12 @@ const PRE_CACHE = [
   './icons/peak-media.svg',
   './css/base.css',
   './css/widgets.css',
-  './css/onboarding.css',
   './css/responsive.css',
-  './css/motion.css',
   './js/data.js',
   './js/songs-data.js',
   './js/constellation.js',
   './js/hub-duel.js',
   './js/ui.js',
-  './js/celestial.js',
   './js/features.js',
   './js/marathon.js',
   './js/universes.js',
@@ -49,10 +47,6 @@ const PASSTHROUGH_ORIGINS = [
   'https://youtube.com',
   'https://ytimg.com',
   'https://i.ytimg.com',
-  'https://is1-ssl.mzstatic.com',  // iTunes artwork
-  'https://is2-ssl.mzstatic.com',
-  'https://is3-ssl.mzstatic.com',
-  'https://is4-ssl.mzstatic.com',
   'https://api.supabase.co',
   'https://supabase.co',
 ];
@@ -80,7 +74,7 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => {
-        const stale = keys.filter(k => k !== CACHE_NAME);
+        const stale = keys.filter(k => k !== CACHE_NAME && k !== POSTER_CACHE);
         if (stale.length) console.log('[PeakMedia SW] Removing old caches:', stale);
         return Promise.all(stale.map(k => caches.delete(k)));
       })
@@ -102,7 +96,31 @@ self.addEventListener('fetch', event => {
     return; // let the browser handle it directly
   }
 
-  // 2. CDN assets: try network first, fall back to cache
+  // 2. Poster & Image CDNs: Cache-First for instant thumbnail delivery
+  if (
+    url.hostname.includes('mzstatic.com') ||
+    url.hostname.includes('tvmaze.com') ||
+    url.hostname.includes('wikimedia.org') ||
+    url.hostname.includes('unsplash.com') ||
+    url.hostname.includes('tmdb.org') ||
+    event.request.destination === 'image'
+  ) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+        return fetch(event.request).then(response => {
+          if (response && (response.status === 200 || response.type === 'opaque')) {
+            const clone = response.clone();
+            caches.open(POSTER_CACHE).then(c => c.put(event.request, clone));
+          }
+          return response;
+        }).catch(() => caches.match(event.request));
+      })
+    );
+    return;
+  }
+
+  // 3. CDN assets: try network first, fall back to cache
   //    (keeps fonts/icons fresh, but works offline after first load)
   if (CACHEABLE_CDN_ORIGINS.some(o => url.href.startsWith(o))) {
     event.respondWith(
@@ -119,7 +137,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // 3. All local files: Network-first so updates reflect instantly; cache fallback when offline
+  // 4. All local files: Network-first so updates reflect instantly; cache fallback when offline
   event.respondWith(
     fetch(event.request)
       .then(response => {

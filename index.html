@@ -57,11 +57,9 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="css/base.css?v=5.0">
-  <link rel="stylesheet" href="css/widgets.css?v=5.0">
-  <link rel="stylesheet" href="css/onboarding.css?v=5.0">
-  <link rel="stylesheet" href="css/responsive.css?v=5.0">
-  <link rel="stylesheet" href="css/motion.css?v=5.0">
+  <link rel="stylesheet" href="css/base.css?v=5.1">
+  <link rel="stylesheet" href="css/widgets.css?v=5.1">
+  <link rel="stylesheet" href="css/responsive.css?v=5.1">
 </head>
 <body data-theme="space" data-mode="dark" class="mode-dark min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased bg-[#03050a] text-slate-100" style="background-color: #03050a; color: #f3f4f6;">
 
@@ -521,15 +519,15 @@
         
         <!-- THE DECIDERS (Plain Glyph Buttons with No Boxes and No Names) -->
         <div id="homePlayLab" class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl theme-card-bg border border-white/10 shadow-lg flex flex-col justify-between gap-3">
-          <!-- Top Row: Title & direct click to The Deciders page -->
-          <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
-            <div class="flex items-center gap-2 cursor-pointer group" onclick="switchTab('play')" title="Open The Deciders">
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#f59e0b]"></span>
-              <span class="text-xs sm:text-sm font-display font-black uppercase tracking-wider text-white group-hover:text-amber-400 transition-colors">The Deciders</span>
+          <!-- Top Row: Title & direct click to The Deciders page (Central & Cooler) -->
+          <div class="flex items-center justify-center relative border-b border-white/10 pb-2.5 cursor-pointer group" onclick="switchTab('play')" title="Open The Deciders">
+            <div class="flex items-center justify-center gap-2.5 text-center">
+              <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 animate-pulse shadow-[0_0_12px_#f59e0b]"></span>
+              <span class="text-sm sm:text-base font-display font-black uppercase tracking-[0.22em] bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-400 bg-clip-text text-transparent group-hover:from-white group-hover:to-amber-300 transition-all drop-shadow-[0_2px_12px_rgba(245,158,11,0.35)]">
+                The Deciders
+              </span>
+              <i class="fa-solid fa-arrow-right text-xs text-amber-400/80 group-hover:text-amber-300 group-hover:translate-x-1.5 transition-all"></i>
             </div>
-            <button type="button" onclick="switchTab('play')" class="text-xs text-amber-400 hover:text-white font-mono flex items-center gap-1 transition-colors" aria-label="Open The Deciders">
-              <i class="fa-solid fa-arrow-right text-[11px]"></i>
-            </button>
           </div>
 
           <!-- The 8 Decider Tool Badges: Evenly Distributed across the Entire Area -->
@@ -564,7 +562,7 @@
         <!-- MUSIC LAUNCHER (Compact box, finale/visualizer takes most space, seamless expand to Music page) -->
         <div id="homeVinylShowcase" class="theme-card-bg p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border shadow-lg flex items-center justify-between gap-4 group transition-all duration-300">
           <!-- Finale / Turntable Visualizer (Takes most of the space, grows on hover, expands to music page on click) -->
-          <div class="relative shrink-0 cursor-pointer flex items-center justify-center p-1" onclick="openMusicFromVinyl()" title="Click to open Music Lounge">
+          <div class="relative shrink-0 cursor-pointer flex flex-col items-center justify-center p-1" onclick="openMusicFromVinyl()" title="Click to open Music Lounge">
             <div id="homeVinylDisc" class="vinyl-record-disc m-hover-scale w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full relative flex items-center justify-center shadow-2xl transition-transform" data-spin>
               <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
               <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
@@ -581,6 +579,7 @@
               <div class="tone-arm-rod"></div>
               <div class="tone-arm-head"></div>
             </div>
+            <span class="text-sm sm:text-base font-display font-black tracking-widest text-purple-300 uppercase mt-2.5 group-hover:text-purple-200 transition-colors">MUSIC</span>
           </div>
 
           <!-- Metadata & Audio Control Row (Borderless, compact, very small text, no box around play control) -->
@@ -628,31 +627,35 @@
       <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
         
         <!-- Portal 1: Films -->
-        <div onclick="switchTab('movies')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex items-center justify-center cursor-pointer group transition-all text-center" title="Films">
+        <div onclick="switchTab('movies')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-amber-500/20 hover:border-amber-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center cursor-pointer group transition-all text-center" title="Films">
           <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
             <svg class="portal-icon w-16 h-16 sm:w-20 sm:h-20 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalFilms"></use></svg>
           </div>
+          <span class="text-xs sm:text-sm font-display font-black tracking-widest text-slate-200 group-hover:text-amber-400 uppercase mt-2.5 transition-colors">FILMS</span>
         </div>
 
         <!-- Portal 2: TV Series -->
-        <div onclick="switchTab('shows')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex items-center justify-center cursor-pointer group transition-all text-center" title="TV Series">
+        <div onclick="switchTab('shows')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-sky-500/20 hover:border-sky-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center cursor-pointer group transition-all text-center" title="TV Shows">
           <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
             <svg class="portal-icon w-16 h-16 sm:w-20 sm:h-20 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalShows"></use></svg>
           </div>
+          <span class="text-xs sm:text-sm font-display font-black tracking-widest text-slate-200 group-hover:text-sky-400 uppercase mt-2.5 transition-colors">TV SHOWS</span>
         </div>
 
         <!-- Portal 3: Genres -->
-        <div onclick="switchTab('categories')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-purple-500/20 hover:border-purple-400/50 backdrop-blur-md shadow-lg flex items-center justify-center cursor-pointer group transition-all text-center" title="Genres">
+        <div onclick="switchTab('categories')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-purple-500/20 hover:border-purple-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center cursor-pointer group transition-all text-center" title="Genres">
           <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
             <svg class="portal-icon w-16 h-16 sm:w-20 sm:h-20 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalGenres"></use></svg>
           </div>
+          <span class="text-xs sm:text-sm font-display font-black tracking-widest text-slate-200 group-hover:text-purple-400 uppercase mt-2.5 transition-colors">GENRES</span>
         </div>
 
         <!-- Portal 4: Universes -->
-        <div onclick="switchTab('universes')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-cyan-500/20 hover:border-cyan-400/50 backdrop-blur-md shadow-lg flex items-center justify-center cursor-pointer group transition-all text-center" title="Universes">
+        <div onclick="switchTab('universes')" class="portal-gateway-card p-4 sm:p-6 rounded-2xl theme-card-bg border border-cyan-500/20 hover:border-cyan-400/50 backdrop-blur-md shadow-lg flex flex-col items-center justify-center cursor-pointer group transition-all text-center" title="Universes">
           <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
             <svg class="portal-icon w-16 h-16 sm:w-20 sm:h-20 shrink-0" viewBox="0 0 150 150" aria-hidden="true"><use href="#portalUniverses"></use></svg>
           </div>
+          <span class="text-xs sm:text-sm font-display font-black tracking-widest text-slate-200 group-hover:text-cyan-400 uppercase mt-2.5 transition-colors">UNIVERSES</span>
         </div>
 
       </div>
@@ -880,7 +883,7 @@
     <!-- TAB 3: CATEGORIES -->
     <section id="tab-categories" class="tab-pane hidden fade-in space-y-4">
       <div class="border-b border-white/10 pb-3 flex items-center gap-3">
-        <div id="genreQuickPills" class="flex flex-wrap gap-1.5 max-h-[76px] overflow-y-auto no-scrollbar py-1 flex-1"></div>
+        <div id="genreQuickPills" class="flex flex-wrap gap-1.5 py-1 flex-1"></div>
       </div>
       <div id="categoriesList" class="space-y-6"></div>
     </section>
@@ -889,22 +892,23 @@
 
     <!-- TAB: PLAY HUB (The Deciders: One Coherent Non-Scrolling Single Screen) -->
     <section id="tab-play" class="tab-pane hidden fade-in max-w-7xl mx-auto deciders-page-screen space-y-2">
-      <!-- Title & Header Bar -->
-      <div class="flex items-center justify-between border-b border-white/10 pb-2 shrink-0">
+      <!-- Title & Header Bar (Central & Cooler) -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-2 shrink-0 relative">
         <div class="flex items-center gap-3">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave" aria-label="Leave this tab and return home">
+          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round" aria-label="Leave this tab and return home">
             <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>Leave</span>
           </button>
-          <div>
-            <h1 class="text-xl sm:text-2xl font-display font-extrabold text-white">
-              The Deciders
-            </h1>
-          </div>
         </div>
+        <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5 text-center pointer-events-none">
+          <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 animate-pulse shadow-[0_0_12px_#f59e0b]"></span>
+          <h1 class="text-lg sm:text-2xl font-display font-black uppercase tracking-[0.22em] bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_14px_rgba(245,158,11,0.35)]">
+            The Deciders
+          </h1>
+        </div>
+        <div class="w-12"></div>
       </div>
 
       <!-- Main Body: Left 9-Glyph Rail + Right Stage Viewport -->
@@ -1725,12 +1729,11 @@
       <!-- Library Header: Title + Spine View Icon + Back up and Restore -->
       <div class="border-b border-white/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave" aria-label="Leave this tab and return home">
+          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round" aria-label="Leave this tab and return home">
             <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>Leave</span>
           </button>
           <h1 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight flex items-center gap-2.5">
             <span id="hubAvatarBadge" class="w-8 h-8 rounded-xl bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center text-sm shadow-inner shrink-0"></span>
@@ -1796,10 +1799,6 @@
             <i class="fa-solid fa-circle-nodes text-purple-400"></i>
             <span>Taste DNA</span>
           </button>
-          <button type="button" onclick="selectProfileTool('collection')" id="profileRailBtn-collection" class="profile-nav-btn flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-2.5 px-3.5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Collection &amp; Theme" aria-label="Collection &amp; Theme">
-            <i class="fa-solid fa-palette text-emerald-400"></i>
-            <span>Collection &amp; Theme</span>
-          </button>
         </div>
 
         <!-- Center Stage Viewport (Only this area may scroll) -->
@@ -1830,6 +1829,18 @@
                 </div>
               </div>
 
+              <!-- Atmosphere & Color Palette Studio (Moved to Profile per user request) -->
+              <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3 pt-3 border-t border-white/10">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-palette text-purple-400 text-xs"></i>
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-200">Atmosphere &amp; Color Palette</span>
+                  </div>
+                  <div id="profileActiveThemeLabel" class="text-xs text-gray-400 font-mono">Deep Cosmos</div>
+                </div>
+                <div id="profileThemeSwatchGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 w-full"></div>
+              </div>
+
               <div class="pt-3 border-t border-white/10 flex flex-wrap gap-2">
                 <button type="button" onclick="openOnboardingWizard(true)" class="w-full py-2.5 px-3 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/40 text-xs font-bold text-brand-gold flex items-center justify-center gap-1.5">
                   <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Customize Taste Setup</span>
@@ -1847,6 +1858,32 @@
 
           <!-- STAGE 2: SHELVES (Watchlist, Watched, Custom Lists, Timeline) -->
           <div id="profileStage-shelves" class="decider-stage-panel hidden space-y-4">
+            <!-- Collection Statistics (Moved to top of Shelves) -->
+            <div class="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3">
+              <h3 class="text-base sm:text-lg font-display font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-simple text-brand-gold text-sm"></i>
+                <span>Collection Statistics</span>
+              </h3>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+                <div class="telemetry-tube">
+                  <div id="profStatWatched" class="text-2xl font-display font-black text-emerald-400">0</div>
+                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watched</div>
+                </div>
+                <div class="telemetry-tube">
+                  <div id="profStatWish" class="text-2xl font-display font-black text-rose-400">0</div>
+                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watchlist</div>
+                </div>
+                <div class="telemetry-tube">
+                  <div id="profStatFavs" class="text-2xl font-display font-black text-brand-gold">0</div>
+                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Favourites</div>
+                </div>
+                <div class="telemetry-tube">
+                  <div id="profStatSongFavs" class="text-2xl font-display font-black text-purple-400">0</div>
+                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Songs</div>
+                </div>
+              </div>
+            </div>
+
             <!-- Shelves -->
             <div id="hubShelves" class="glass-card rounded-2xl p-4 sm:p-6 space-y-5 border border-white/10">
               
@@ -2037,42 +2074,6 @@
                 <span class="text-xs text-gray-400">Updates live as you mark watched and rated titles</span>
               </div>
               <div id="hubStats"></div>
-            </div>
-          </div>
-
-          <!-- STAGE 3: COLLECTION & THEME (Merged into one button and panel) -->
-          <div id="profileStage-collection" class="decider-stage-panel hidden space-y-4">
-            <div class="glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-5">
-              <h3 class="text-lg sm:text-xl font-display font-bold text-white">Collection Telemetry</h3>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div class="telemetry-tube">
-                  <div id="profStatWatched" class="text-2xl font-display font-black text-emerald-400">0</div>
-                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watched</div>
-                </div>
-                <div class="telemetry-tube">
-                  <div id="profStatWish" class="text-2xl font-display font-black text-rose-400">0</div>
-                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Watchlist</div>
-                </div>
-                <div class="telemetry-tube">
-                  <div id="profStatFavs" class="text-2xl font-display font-black text-brand-gold">0</div>
-                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Favourites</div>
-                </div>
-                <div class="telemetry-tube">
-                  <div id="profStatSongFavs" class="text-2xl font-display font-black text-purple-400">0</div>
-                  <div class="text-[11px] font-mono text-gray-300 mt-1 uppercase tracking-wider">Songs</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Atmosphere & Color Palette Studio -->
-            <div class="glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4">
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="text-sm font-bold text-white">Atmosphere &amp; Color Palette</span>
-                  <div id="profileActiveThemeLabel" class="text-xs text-gray-400">Deep Cosmos</div>
-                </div>
-              </div>
-              <div id="profileThemeSwatchGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 w-full"></div>
             </div>
           </div>
 
@@ -2400,8 +2401,8 @@
     <div class="relative z-10 w-full max-w-4xl rounded-3xl bg-[#0d1018]/95 border border-white/15 shadow-[0_30px_90px_rgba(0,0,0,0.85)] overflow-hidden my-auto backdrop-blur-2xl">
       <!-- Editorial Header -->
       <div class="px-6 sm:px-8 pt-5 pb-4 border-b border-white/[0.08] flex flex-col gap-3">
-        <div class="flex items-center justify-between gap-3">
-          <div class="flex items-center gap-2.5 min-w-0">
+        <div class="flex items-center justify-between gap-3 relative">
+          <div class="flex items-center gap-2.5 shrink-0">
             <div class="h-8 px-2 py-0.5 rounded-lg bg-[#050811] border border-sky-400/35 flex items-center justify-center shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="25 25 770 395" class="h-5 w-auto" fill="none">
                 <g stroke="#FFFFFF" stroke-width="8" stroke-linejoin="miter" fill="#090D16">
@@ -2422,7 +2423,9 @@
               </svg>
             </div>
             <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-md bg-white/[0.06] text-brand-gold border border-white/10 shrink-0 hidden" id="obStepKicker"></span>
-            <h3 class="text-xs sm:text-base font-medium text-gray-200 truncate" id="obStepTitleTop">Your Profile &amp; Avatar</h3>
+          </div>
+          <div class="flex-1 text-center">
+            <h3 class="text-sm sm:text-base font-display font-extrabold tracking-widest text-white uppercase text-center" id="obStepTitleTop">Profile</h3>
           </div>
           <button id="obSkipBtn" onclick="skipOnboardingWizard()" class="hidden text-xs text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors shrink-0">
             Close
@@ -2442,17 +2445,14 @@
       <!-- Live Taste Tray + Footer Navigation Controls -->
       <div class="px-6 sm:px-8 py-4 border-t border-white/[0.08] bg-black/40 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
-          <button id="obBackBtn" onclick="obPrevStep()" class="back-corner-mark" title="Back" aria-label="Back">
-            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M14 3h6a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-6" />
-              <circle cx="8" cy="6" r="2" fill="currentColor" stroke="none" />
-              <path d="M5 11l3-2.5 3.5 1.5M8 12.5v4.5l-3 4m3-4l3 4" />
-            </svg>
+          <button id="obBackBtn" onclick="obPrevStep()" class="px-5 py-2.5 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95 shadow-sm" title="Back" aria-label="Back">
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+            <span>Back</span>
           </button>
           <div id="obLiveTray" class="flex items-center gap-1 sm:gap-1.5 text-[11px] text-gray-300 overflow-hidden flex-nowrap py-0.5"></div>
         </div>
         <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
-          <div id="obStepDots" class="flex items-center gap-1.5"></div>
+          <div id="obStepDots" class="hidden"></div>
           <button id="obNextBtn" onclick="obNextStep()" class="px-6 py-2.5 rounded-xl bg-white hover:bg-brand-gold text-black font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
             <span id="obNextBtnLabel">Continue</span> <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
@@ -2461,19 +2461,59 @@
     </div>
   </div>
 
+  <!-- Cinematic Launch Transition Overlay (Triggers after Step 8 before site opens) -->
+  <div id="obLaunchOverlay" class="fixed inset-0 z-[150] hidden items-center justify-center bg-[#06080d] transition-opacity duration-700 opacity-0 pointer-events-none">
+    <div class="relative flex flex-col items-center justify-center text-center p-6 max-w-md w-full">
+      <!-- Expanding Portal Rings -->
+      <div class="relative w-36 h-36 flex items-center justify-center mb-6">
+        <div class="absolute inset-0 rounded-full border border-cyan-400/40 animate-ping"></div>
+        <div class="absolute -inset-6 rounded-full border border-purple-500/30 animate-pulse"></div>
+        <div class="absolute -inset-12 rounded-full border border-brand-gold/20 animate-pulse duration-1000"></div>
+        <!-- Center Glowing Emblem -->
+        <div class="relative w-24 h-24 rounded-3xl bg-gradient-to-tr from-[#0b101c] via-[#121829] to-[#0a0e1a] border border-white/20 shadow-[0_0_60px_rgba(0,210,254,0.4)] flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="25 25 770 395" class="h-12 w-auto" fill="none">
+            <g stroke="#FFFFFF" stroke-width="8" stroke-linejoin="miter" fill="#090D16">
+              <path d="M115 124 H195 C224 124 242 140 242 166 C242 192 224 208 195 208 H152 V254 H115 Z M152 152 V180 H190 C202 180 208 175 208 166 C208 157 202 152 190 152 Z" fill-rule="evenodd"/>
+              <path d="M266 124 H368 V152 H303 V175 H356 V202 H303 V226 H368 V254 H266 Z"/>
+              <path d="M442 124 H476 L532 254 H493 L481 223 H436 L424 254 H385 Z M446 195 H471 L458.5 160 Z" fill-rule="evenodd"/>
+              <path d="M550 124 H587 V180 L646 124 H692 L626 185 L696 254 H648 L587 193 V254 H550 Z"/>
+              <path d="M115 280 H156 L184 348 L212 280 H253 V406 H219 V334 L192 396 H176 L149 334 V406 H115 Z"/>
+              <path d="M274 280 H372 V308 H310 V331 H360 V357 H310 V378 H372 V406 H274 Z"/>
+              <path d="M392 280 H448 C484 280 506 303 506 343 C506 383 484 406 448 406 H392 Z M428 308 V378 H446 C463 378 472 365 472 343 C472 321 463 308 446 308 Z" fill-rule="evenodd"/>
+              <path d="M526 280 H568 V406 H526 Z"/>
+              <path d="M636 280 H670 L724 406 H686 L674 376 H630 L618 406 H580 Z M639 348 H664 L651.5 314 Z" fill-rule="evenodd"/>
+            </g>
+            <g stroke="url(#hdrGoldGrad)" stroke-linecap="round" stroke-linejoin="round" fill="none">
+              <path d="M34 372 L134 332 L228 286 L326 226 L402 162 L452 94 L484 38" stroke-width="11"/>
+              <path d="M484 38 L522 106 L568 182 L628 258 L698 328 L784 376" stroke-width="11"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <!-- Shimmer Progress Beam -->
+      <div class="w-48 h-1 rounded-full bg-white/10 overflow-hidden relative">
+        <div id="obLaunchBeam" class="h-full bg-gradient-to-r from-sky-400 via-amber-300 to-purple-500 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+      </div>
+      <div class="mt-4 text-center">
+        <div class="text-xs sm:text-sm font-display font-black tracking-[0.25em] text-slate-200 uppercase animate-pulse">
+          Curating your Peak
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <script src="js/data.js?v=5.0"></script>
-  <script src="js/constellation.js?v=5.0"></script>
-  <script src="js/hub-duel.js?v=5.0"></script>
-  <script src="js/ui.js?v=5.0"></script>
-  <script src="js/celestial.js?v=5.0"></script>
-  <script src="js/features.js?v=5.0"></script>
-  <script src="js/marathon.js?v=5.0"></script>
-  <script src="js/universes.js?v=5.0"></script>
-  <script src="js/mood_dial.js?v=5.0"></script>
-  <script src="js/motion.js?v=5.0"></script>
-  <script src="js/songs-data.js?v=5.0"></script>
-  <script src="js/main.js?v=5.0"></script>
-  <script src="js/pwa.js?v=5.0"></script>
+
+  <script src="js/data.js?v=5.1"></script>
+  <script src="js/constellation.js?v=5.1"></script>
+  <script src="js/hub-duel.js?v=5.1"></script>
+  <script src="js/ui.js?v=5.1"></script>
+  <script src="js/features.js?v=5.1"></script>
+  <script src="js/marathon.js?v=5.1"></script>
+  <script src="js/universes.js?v=5.1"></script>
+  <script src="js/mood_dial.js?v=5.1"></script>
+  <script src="js/motion.js?v=5.1"></script>
+  <script src="js/songs-data.js?v=5.1"></script>
+  <script src="js/main.js?v=5.1"></script>
+  <script src="js/pwa.js?v=5.1"></script>
 </body>
 </html>

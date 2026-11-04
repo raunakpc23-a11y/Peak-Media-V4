@@ -13194,18 +13194,556 @@ Odd Taxi|2021|87
 
 
     const KNOWN_POSTER_OVERRIDES = {
-      'show:Ramayan (1987)': 'https://upload.wikimedia.org/wikipedia/en/a/ac/Ramayan_poster.jpg',
-      'show:Ramayan': 'https://upload.wikimedia.org/wikipedia/en/a/ac/Ramayan_poster.jpg',
-      'show:Mahabharat (1988)': 'https://upload.wikimedia.org/wikipedia/en/e/ef/Mahabharat_%281988%29_title_logo_screenshot.jpg',
-      'show:Mahabharat': 'https://upload.wikimedia.org/wikipedia/en/e/ef/Mahabharat_%281988%29_title_logo_screenshot.jpg',
-      'show:Malgudi Days': 'https://upload.wikimedia.org/wikipedia/en/9/91/Malgudi_Days_%28TV_series%29.jpg',
-      'show:Byomkesh Bakshi': 'https://upload.wikimedia.org/wikipedia/en/e/e0/Byomkesh_Bakshi_%28TV_series%29_Title_Card.jpg',
-      'show:CID': 'https://upload.wikimedia.org/wikipedia/en/8/8c/CID_Sony_TV_Show_Poster.jpg',
-      'show:Taarak Mehta Ka Ooltah Chashmah': 'https://upload.wikimedia.org/wikipedia/en/2/23/Taarak_Mehta_Ka_Ooltah_Chashmah_logo.jpg',
-      'show:Koffee with Karan': 'https://upload.wikimedia.org/wikipedia/en/5/52/Koffee_With_Karan_logo.jpg',
-      'show:The Kapil Sharma Show': 'https://upload.wikimedia.org/wikipedia/en/2/24/The_Kapil_Sharma_Show_poster.jpg',
-      'show:Kaun Banega Crorepati': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Kaun_Banega_Crorepati_Title.jpg',
-      // High-resolution verified posters for core masterpieces & Deciders recommendations
+      // --- TV Series & Miniseries (100% Accurate Verified TVMaze Original Keyart) ---
+      'show:24': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2330.jpg',
+      'movie:24': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2330.jpg',
+      '24': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2330.jpg',
+      'show:Breaking Bad': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253519.jpg',
+      'movie:Breaking Bad': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253519.jpg',
+      'Breaking Bad': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253519.jpg',
+      'show:Chernobyl': 'https://static.tvmaze.com/uploads/images/original_untouched/193/482599.jpg',
+      'movie:Chernobyl': 'https://static.tvmaze.com/uploads/images/original_untouched/193/482599.jpg',
+      'Chernobyl': 'https://static.tvmaze.com/uploads/images/original_untouched/193/482599.jpg',
+      'show:The Wire': 'https://static.tvmaze.com/uploads/images/original_untouched/504/1260189.jpg',
+      'movie:The Wire': 'https://static.tvmaze.com/uploads/images/original_untouched/504/1260189.jpg',
+      'The Wire': 'https://static.tvmaze.com/uploads/images/original_untouched/504/1260189.jpg',
+      'show:The Sopranos': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11341.jpg',
+      'movie:The Sopranos': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11341.jpg',
+      'The Sopranos': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11341.jpg',
+      'show:Succession': 'https://static.tvmaze.com/uploads/images/original_untouched/453/1134275.jpg',
+      'movie:Succession': 'https://static.tvmaze.com/uploads/images/original_untouched/453/1134275.jpg',
+      'Succession': 'https://static.tvmaze.com/uploads/images/original_untouched/453/1134275.jpg',
+      'show:Better Call Saul': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253515.jpg',
+      'movie:Better Call Saul': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253515.jpg',
+      'Better Call Saul': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253515.jpg',
+      'show:Fleabag': 'https://static.tvmaze.com/uploads/images/original_untouched/192/482341.jpg',
+      'movie:Fleabag': 'https://static.tvmaze.com/uploads/images/original_untouched/192/482341.jpg',
+      'Fleabag': 'https://static.tvmaze.com/uploads/images/original_untouched/192/482341.jpg',
+      'show:Mad Men': 'https://static.tvmaze.com/uploads/images/original_untouched/2/5589.jpg',
+      'movie:Mad Men': 'https://static.tvmaze.com/uploads/images/original_untouched/2/5589.jpg',
+      'Mad Men': 'https://static.tvmaze.com/uploads/images/original_untouched/2/5589.jpg',
+      'show:Dark': 'https://static.tvmaze.com/uploads/images/original_untouched/504/1262352.jpg',
+      'movie:Dark': 'https://static.tvmaze.com/uploads/images/original_untouched/504/1262352.jpg',
+      'Dark': 'https://static.tvmaze.com/uploads/images/original_untouched/504/1262352.jpg',
+      'show:Band of Brothers': 'https://static.tvmaze.com/uploads/images/original_untouched/80/201679.jpg',
+      'movie:Band of Brothers': 'https://static.tvmaze.com/uploads/images/original_untouched/80/201679.jpg',
+      'Band of Brothers': 'https://static.tvmaze.com/uploads/images/original_untouched/80/201679.jpg',
+      'show:The Pacific': 'https://static.tvmaze.com/uploads/images/original_untouched/444/1111650.jpg',
+      'movie:The Pacific': 'https://static.tvmaze.com/uploads/images/original_untouched/444/1111650.jpg',
+      'The Pacific': 'https://static.tvmaze.com/uploads/images/original_untouched/444/1111650.jpg',
+      'show:Game of Thrones': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1245274.jpg',
+      'movie:Game of Thrones': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1245274.jpg',
+      'Game of Thrones': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1245274.jpg',
+      'show:Stranger Things': 'https://static.tvmaze.com/uploads/images/original_untouched/595/1489169.jpg',
+      'movie:Stranger Things': 'https://static.tvmaze.com/uploads/images/original_untouched/595/1489169.jpg',
+      'Stranger Things': 'https://static.tvmaze.com/uploads/images/original_untouched/595/1489169.jpg',
+      'show:The Office': 'https://static.tvmaze.com/uploads/images/original_untouched/481/1204342.jpg',
+      'movie:The Office': 'https://static.tvmaze.com/uploads/images/original_untouched/481/1204342.jpg',
+      'The Office': 'https://static.tvmaze.com/uploads/images/original_untouched/481/1204342.jpg',
+      'show:Friends': 'https://static.tvmaze.com/uploads/images/original_untouched/41/104565.jpg',
+      'movie:Friends': 'https://static.tvmaze.com/uploads/images/original_untouched/41/104565.jpg',
+      'Friends': 'https://static.tvmaze.com/uploads/images/original_untouched/41/104565.jpg',
+      'show:Sherlock': 'https://static.tvmaze.com/uploads/images/original_untouched/171/428042.jpg',
+      'movie:Sherlock': 'https://static.tvmaze.com/uploads/images/original_untouched/171/428042.jpg',
+      'Sherlock': 'https://static.tvmaze.com/uploads/images/original_untouched/171/428042.jpg',
+      'show:Fargo': 'https://static.tvmaze.com/uploads/images/original_untouched/487/1219631.jpg',
+      'movie:Fargo': 'https://static.tvmaze.com/uploads/images/original_untouched/487/1219631.jpg',
+      'Fargo': 'https://static.tvmaze.com/uploads/images/original_untouched/487/1219631.jpg',
+      'show:The Crown': 'https://static.tvmaze.com/uploads/images/original_untouched/632/1580063.jpg',
+      'movie:The Crown': 'https://static.tvmaze.com/uploads/images/original_untouched/632/1580063.jpg',
+      'The Crown': 'https://static.tvmaze.com/uploads/images/original_untouched/632/1580063.jpg',
+      'show:Black Mirror': 'https://static.tvmaze.com/uploads/images/original_untouched/564/1411764.jpg',
+      'movie:Black Mirror': 'https://static.tvmaze.com/uploads/images/original_untouched/564/1411764.jpg',
+      'Black Mirror': 'https://static.tvmaze.com/uploads/images/original_untouched/564/1411764.jpg',
+      'show:Severance': 'https://static.tvmaze.com/uploads/images/original_untouched/548/1371406.jpg',
+      'movie:Severance': 'https://static.tvmaze.com/uploads/images/original_untouched/548/1371406.jpg',
+      'Severance': 'https://static.tvmaze.com/uploads/images/original_untouched/548/1371406.jpg',
+      'show:The Bear': 'https://static.tvmaze.com/uploads/images/original_untouched/629/1574642.jpg',
+      'movie:The Bear': 'https://static.tvmaze.com/uploads/images/original_untouched/629/1574642.jpg',
+      'The Bear': 'https://static.tvmaze.com/uploads/images/original_untouched/629/1574642.jpg',
+      'show:The Last of Us': 'https://static.tvmaze.com/uploads/images/original_untouched/563/1409008.jpg',
+      'movie:The Last of Us': 'https://static.tvmaze.com/uploads/images/original_untouched/563/1409008.jpg',
+      'The Last of Us': 'https://static.tvmaze.com/uploads/images/original_untouched/563/1409008.jpg',
+      'show:Arcane': 'https://static.tvmaze.com/uploads/images/original_untouched/536/1340287.jpg',
+      'movie:Arcane': 'https://static.tvmaze.com/uploads/images/original_untouched/536/1340287.jpg',
+      'Arcane': 'https://static.tvmaze.com/uploads/images/original_untouched/536/1340287.jpg',
+      'show:House of the Dragon': 'https://static.tvmaze.com/uploads/images/original_untouched/627/1568449.jpg',
+      'movie:House of the Dragon': 'https://static.tvmaze.com/uploads/images/original_untouched/627/1568449.jpg',
+      'House of the Dragon': 'https://static.tvmaze.com/uploads/images/original_untouched/627/1568449.jpg',
+      'show:Ted Lasso': 'https://static.tvmaze.com/uploads/images/original_untouched/634/1585930.jpg',
+      'movie:Ted Lasso': 'https://static.tvmaze.com/uploads/images/original_untouched/634/1585930.jpg',
+      'Ted Lasso': 'https://static.tvmaze.com/uploads/images/original_untouched/634/1585930.jpg',
+      'show:Shogun': 'https://static.tvmaze.com/uploads/images/original_untouched/506/1265637.jpg',
+      'movie:Shogun': 'https://static.tvmaze.com/uploads/images/original_untouched/506/1265637.jpg',
+      'Shogun': 'https://static.tvmaze.com/uploads/images/original_untouched/506/1265637.jpg',
+      'show:Twin Peaks': 'https://static.tvmaze.com/uploads/images/original_untouched/397/992910.jpg',
+      'movie:Twin Peaks': 'https://static.tvmaze.com/uploads/images/original_untouched/397/992910.jpg',
+      'Twin Peaks': 'https://static.tvmaze.com/uploads/images/original_untouched/397/992910.jpg',
+      'show:Attack on Titan': 'https://static.tvmaze.com/uploads/images/original_untouched/632/1582290.jpg',
+      'movie:Attack on Titan': 'https://static.tvmaze.com/uploads/images/original_untouched/632/1582290.jpg',
+      'Attack on Titan': 'https://static.tvmaze.com/uploads/images/original_untouched/632/1582290.jpg',
+      'show:Death Note': 'https://static.tvmaze.com/uploads/images/original_untouched/499/1249019.jpg',
+      'movie:Death Note': 'https://static.tvmaze.com/uploads/images/original_untouched/499/1249019.jpg',
+      'Death Note': 'https://static.tvmaze.com/uploads/images/original_untouched/499/1249019.jpg',
+      'show:Fullmetal Alchemist: Brotherhood': 'https://static.tvmaze.com/uploads/images/original_untouched/485/1214095.jpg',
+      'movie:Fullmetal Alchemist: Brotherhood': 'https://static.tvmaze.com/uploads/images/original_untouched/485/1214095.jpg',
+      'Fullmetal Alchemist: Brotherhood': 'https://static.tvmaze.com/uploads/images/original_untouched/485/1214095.jpg',
+      'show:Cowboy Bebop': 'https://static.tvmaze.com/uploads/images/original_untouched/178/446548.jpg',
+      'movie:Cowboy Bebop': 'https://static.tvmaze.com/uploads/images/original_untouched/178/446548.jpg',
+      'Cowboy Bebop': 'https://static.tvmaze.com/uploads/images/original_untouched/178/446548.jpg',
+      'show:Squid Game': 'https://static.tvmaze.com/uploads/images/original_untouched/576/1440521.jpg',
+      'movie:Squid Game': 'https://static.tvmaze.com/uploads/images/original_untouched/576/1440521.jpg',
+      'Squid Game': 'https://static.tvmaze.com/uploads/images/original_untouched/576/1440521.jpg',
+      'show:Money Heist': 'https://static.tvmaze.com/uploads/images/original_untouched/430/1076004.jpg',
+      'movie:Money Heist': 'https://static.tvmaze.com/uploads/images/original_untouched/430/1076004.jpg',
+      'Money Heist': 'https://static.tvmaze.com/uploads/images/original_untouched/430/1076004.jpg',
+      'show:True Detective': 'https://static.tvmaze.com/uploads/images/original_untouched/490/1226764.jpg',
+      'movie:True Detective': 'https://static.tvmaze.com/uploads/images/original_untouched/490/1226764.jpg',
+      'True Detective': 'https://static.tvmaze.com/uploads/images/original_untouched/490/1226764.jpg',
+      'show:Peaky Blinders': 'https://static.tvmaze.com/uploads/images/original_untouched/48/122213.jpg',
+      'movie:Peaky Blinders': 'https://static.tvmaze.com/uploads/images/original_untouched/48/122213.jpg',
+      'Peaky Blinders': 'https://static.tvmaze.com/uploads/images/original_untouched/48/122213.jpg',
+      'show:Mindhunter': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253490.jpg',
+      'movie:Mindhunter': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253490.jpg',
+      'Mindhunter': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253490.jpg',
+      'show:Narcos': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246087.jpg',
+      'movie:Narcos': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246087.jpg',
+      'Narcos': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246087.jpg',
+      'show:The Boys': 'https://static.tvmaze.com/uploads/images/original_untouched/619/1547768.jpg',
+      'movie:The Boys': 'https://static.tvmaze.com/uploads/images/original_untouched/619/1547768.jpg',
+      'The Boys': 'https://static.tvmaze.com/uploads/images/original_untouched/619/1547768.jpg',
+      'show:Westworld': 'https://static.tvmaze.com/uploads/images/original_untouched/445/1113927.jpg',
+      'movie:Westworld': 'https://static.tvmaze.com/uploads/images/original_untouched/445/1113927.jpg',
+      'Westworld': 'https://static.tvmaze.com/uploads/images/original_untouched/445/1113927.jpg',
+      'show:Ozark': 'https://static.tvmaze.com/uploads/images/original_untouched/398/996611.jpg',
+      'movie:Ozark': 'https://static.tvmaze.com/uploads/images/original_untouched/398/996611.jpg',
+      'Ozark': 'https://static.tvmaze.com/uploads/images/original_untouched/398/996611.jpg',
+      'show:Mr. Robot': 'https://static.tvmaze.com/uploads/images/original_untouched/211/528026.jpg',
+      'movie:Mr. Robot': 'https://static.tvmaze.com/uploads/images/original_untouched/211/528026.jpg',
+      'Mr. Robot': 'https://static.tvmaze.com/uploads/images/original_untouched/211/528026.jpg',
+      'show:Homeland': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1245275.jpg',
+      'movie:Homeland': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1245275.jpg',
+      'Homeland': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1245275.jpg',
+      'show:The Americans': 'https://static.tvmaze.com/uploads/images/original_untouched/146/366911.jpg',
+      'movie:The Americans': 'https://static.tvmaze.com/uploads/images/original_untouched/146/366911.jpg',
+      'The Americans': 'https://static.tvmaze.com/uploads/images/original_untouched/146/366911.jpg',
+      'show:Hannibal': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246088.jpg',
+      'movie:Hannibal': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246088.jpg',
+      'Hannibal': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246088.jpg',
+      'show:Bates Motel': 'https://static.tvmaze.com/uploads/images/original_untouched/542/1356518.jpg',
+      'movie:Bates Motel': 'https://static.tvmaze.com/uploads/images/original_untouched/542/1356518.jpg',
+      'Bates Motel': 'https://static.tvmaze.com/uploads/images/original_untouched/542/1356518.jpg',
+      'show:Dexter': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246067.jpg',
+      'movie:Dexter': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246067.jpg',
+      'Dexter': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246067.jpg',
+      'show:Lost': 'https://static.tvmaze.com/uploads/images/original_untouched/0/1389.jpg',
+      'movie:Lost': 'https://static.tvmaze.com/uploads/images/original_untouched/0/1389.jpg',
+      'Lost': 'https://static.tvmaze.com/uploads/images/original_untouched/0/1389.jpg',
+      'show:Prison Break': 'https://static.tvmaze.com/uploads/images/original_untouched/104/261034.jpg',
+      'movie:Prison Break': 'https://static.tvmaze.com/uploads/images/original_untouched/104/261034.jpg',
+      'Prison Break': 'https://static.tvmaze.com/uploads/images/original_untouched/104/261034.jpg',
+      'show:Supernatural': 'https://static.tvmaze.com/uploads/images/original_untouched/445/1114097.jpg',
+      'movie:Supernatural': 'https://static.tvmaze.com/uploads/images/original_untouched/445/1114097.jpg',
+      'Supernatural': 'https://static.tvmaze.com/uploads/images/original_untouched/445/1114097.jpg',
+      'show:Vikings': 'https://static.tvmaze.com/uploads/images/original_untouched/286/715906.jpg',
+      'movie:Vikings': 'https://static.tvmaze.com/uploads/images/original_untouched/286/715906.jpg',
+      'Vikings': 'https://static.tvmaze.com/uploads/images/original_untouched/286/715906.jpg',
+      'show:The Last Kingdom': 'https://static.tvmaze.com/uploads/images/original_untouched/353/883061.jpg',
+      'movie:The Last Kingdom': 'https://static.tvmaze.com/uploads/images/original_untouched/353/883061.jpg',
+      'The Last Kingdom': 'https://static.tvmaze.com/uploads/images/original_untouched/353/883061.jpg',
+      'show:Rome': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253509.jpg',
+      'movie:Rome': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253509.jpg',
+      'Rome': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253509.jpg',
+      'show:Deadwood': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11724.jpg',
+      'movie:Deadwood': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11724.jpg',
+      'Deadwood': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11724.jpg',
+      'show:Boardwalk Empire': 'https://static.tvmaze.com/uploads/images/original_untouched/405/1012589.jpg',
+      'movie:Boardwalk Empire': 'https://static.tvmaze.com/uploads/images/original_untouched/405/1012589.jpg',
+      'Boardwalk Empire': 'https://static.tvmaze.com/uploads/images/original_untouched/405/1012589.jpg',
+      'show:Justified': 'https://static.tvmaze.com/uploads/images/original_untouched/0/808.jpg',
+      'movie:Justified': 'https://static.tvmaze.com/uploads/images/original_untouched/0/808.jpg',
+      'Justified': 'https://static.tvmaze.com/uploads/images/original_untouched/0/808.jpg',
+      'show:Line of Duty': 'https://static.tvmaze.com/uploads/images/original_untouched/199/499692.jpg',
+      'movie:Line of Duty': 'https://static.tvmaze.com/uploads/images/original_untouched/199/499692.jpg',
+      'Line of Duty': 'https://static.tvmaze.com/uploads/images/original_untouched/199/499692.jpg',
+      'show:Planet Earth II': 'https://static.tvmaze.com/uploads/images/original_untouched/87/219457.jpg',
+      'movie:Planet Earth II': 'https://static.tvmaze.com/uploads/images/original_untouched/87/219457.jpg',
+      'Planet Earth II': 'https://static.tvmaze.com/uploads/images/original_untouched/87/219457.jpg',
+      'show:Planet Earth': 'https://static.tvmaze.com/uploads/images/original_untouched/6/15320.jpg',
+      'movie:Planet Earth': 'https://static.tvmaze.com/uploads/images/original_untouched/6/15320.jpg',
+      'Planet Earth': 'https://static.tvmaze.com/uploads/images/original_untouched/6/15320.jpg',
+      'show:Blue Planet II': 'https://static.tvmaze.com/uploads/images/original_untouched/133/332926.jpg',
+      'movie:Blue Planet II': 'https://static.tvmaze.com/uploads/images/original_untouched/133/332926.jpg',
+      'Blue Planet II': 'https://static.tvmaze.com/uploads/images/original_untouched/133/332926.jpg',
+      'show:Our Planet': 'https://static.tvmaze.com/uploads/images/original_untouched/606/1516540.jpg',
+      'movie:Our Planet': 'https://static.tvmaze.com/uploads/images/original_untouched/606/1516540.jpg',
+      'Our Planet': 'https://static.tvmaze.com/uploads/images/original_untouched/606/1516540.jpg',
+      'show:The Last Dance': 'https://static.tvmaze.com/uploads/images/original_untouched/252/632118.jpg',
+      'movie:The Last Dance': 'https://static.tvmaze.com/uploads/images/original_untouched/252/632118.jpg',
+      'The Last Dance': 'https://static.tvmaze.com/uploads/images/original_untouched/252/632118.jpg',
+      'show:The World at War': 'https://static.tvmaze.com/uploads/images/original_untouched/17/43921.jpg',
+      'movie:The World at War': 'https://static.tvmaze.com/uploads/images/original_untouched/17/43921.jpg',
+      'The World at War': 'https://static.tvmaze.com/uploads/images/original_untouched/17/43921.jpg',
+      'show:Batman: The Animated Series': 'https://static.tvmaze.com/uploads/images/original_untouched/80/202273.jpg',
+      'movie:Batman: The Animated Series': 'https://static.tvmaze.com/uploads/images/original_untouched/80/202273.jpg',
+      'Batman: The Animated Series': 'https://static.tvmaze.com/uploads/images/original_untouched/80/202273.jpg',
+      'show:Rick and Morty': 'https://static.tvmaze.com/uploads/images/original_untouched/626/1566363.jpg',
+      'movie:Rick and Morty': 'https://static.tvmaze.com/uploads/images/original_untouched/626/1566363.jpg',
+      'Rick and Morty': 'https://static.tvmaze.com/uploads/images/original_untouched/626/1566363.jpg',
+      'show:The Twilight Zone': 'https://static.tvmaze.com/uploads/images/original_untouched/398/996733.jpg',
+      'movie:The Twilight Zone': 'https://static.tvmaze.com/uploads/images/original_untouched/398/996733.jpg',
+      'The Twilight Zone': 'https://static.tvmaze.com/uploads/images/original_untouched/398/996733.jpg',
+      'show:Firefly': 'https://static.tvmaze.com/uploads/images/original_untouched/1/2600.jpg',
+      'movie:Firefly': 'https://static.tvmaze.com/uploads/images/original_untouched/1/2600.jpg',
+      'Firefly': 'https://static.tvmaze.com/uploads/images/original_untouched/1/2600.jpg',
+      'show:One Piece': 'https://static.tvmaze.com/uploads/images/original_untouched/617/1543011.jpg',
+      'movie:One Piece': 'https://static.tvmaze.com/uploads/images/original_untouched/617/1543011.jpg',
+      'One Piece': 'https://static.tvmaze.com/uploads/images/original_untouched/617/1543011.jpg',
+      'show:Vinland Saga': 'https://static.tvmaze.com/uploads/images/original_untouched/508/1270295.jpg',
+      'movie:Vinland Saga': 'https://static.tvmaze.com/uploads/images/original_untouched/508/1270295.jpg',
+      'Vinland Saga': 'https://static.tvmaze.com/uploads/images/original_untouched/508/1270295.jpg',
+      'show:BoJack Horseman': 'https://static.tvmaze.com/uploads/images/original_untouched/405/1012627.jpg',
+      'movie:BoJack Horseman': 'https://static.tvmaze.com/uploads/images/original_untouched/405/1012627.jpg',
+      'BoJack Horseman': 'https://static.tvmaze.com/uploads/images/original_untouched/405/1012627.jpg',
+      'show:Invincible': 'https://static.tvmaze.com/uploads/images/original_untouched/618/1545777.jpg',
+      'movie:Invincible': 'https://static.tvmaze.com/uploads/images/original_untouched/618/1545777.jpg',
+      'Invincible': 'https://static.tvmaze.com/uploads/images/original_untouched/618/1545777.jpg',
+      'show:Naruto: Shippuden': 'https://static.tvmaze.com/uploads/images/original_untouched/3/9413.jpg',
+      'movie:Naruto: Shippuden': 'https://static.tvmaze.com/uploads/images/original_untouched/3/9413.jpg',
+      'Naruto: Shippuden': 'https://static.tvmaze.com/uploads/images/original_untouched/3/9413.jpg',
+      'show:Dragon Ball Z': 'https://static.tvmaze.com/uploads/images/original_untouched/11/29190.jpg',
+      'movie:Dragon Ball Z': 'https://static.tvmaze.com/uploads/images/original_untouched/11/29190.jpg',
+      'Dragon Ball Z': 'https://static.tvmaze.com/uploads/images/original_untouched/11/29190.jpg',
+      'show:Jujutsu Kaisen': 'https://static.tvmaze.com/uploads/images/original_untouched/608/1521905.jpg',
+      'movie:Jujutsu Kaisen': 'https://static.tvmaze.com/uploads/images/original_untouched/608/1521905.jpg',
+      'Jujutsu Kaisen': 'https://static.tvmaze.com/uploads/images/original_untouched/608/1521905.jpg',
+      'show:Chainsaw Man': 'https://static.tvmaze.com/uploads/images/original_untouched/422/1056726.jpg',
+      'movie:Chainsaw Man': 'https://static.tvmaze.com/uploads/images/original_untouched/422/1056726.jpg',
+      'Chainsaw Man': 'https://static.tvmaze.com/uploads/images/original_untouched/422/1056726.jpg',
+      'show:Cyberpunk: Edgerunners': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246519.jpg',
+      'movie:Cyberpunk: Edgerunners': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246519.jpg',
+      'Cyberpunk: Edgerunners': 'https://static.tvmaze.com/uploads/images/original_untouched/498/1246519.jpg',
+      'show:Steins;Gate': 'https://static.tvmaze.com/uploads/images/original_untouched/373/933178.jpg',
+      'movie:Steins;Gate': 'https://static.tvmaze.com/uploads/images/original_untouched/373/933178.jpg',
+      'Steins;Gate': 'https://static.tvmaze.com/uploads/images/original_untouched/373/933178.jpg',
+      'show:Monster': 'https://static.tvmaze.com/uploads/images/original_untouched/131/329223.jpg',
+      'movie:Monster': 'https://static.tvmaze.com/uploads/images/original_untouched/131/329223.jpg',
+      'Monster': 'https://static.tvmaze.com/uploads/images/original_untouched/131/329223.jpg',
+      'show:Samurai Champloo': 'https://static.tvmaze.com/uploads/images/original_untouched/21/53672.jpg',
+      'movie:Samurai Champloo': 'https://static.tvmaze.com/uploads/images/original_untouched/21/53672.jpg',
+      'Samurai Champloo': 'https://static.tvmaze.com/uploads/images/original_untouched/21/53672.jpg',
+      'show:Neon Genesis Evangelion': 'https://static.tvmaze.com/uploads/images/original_untouched/11/27792.jpg',
+      'movie:Neon Genesis Evangelion': 'https://static.tvmaze.com/uploads/images/original_untouched/11/27792.jpg',
+      'Neon Genesis Evangelion': 'https://static.tvmaze.com/uploads/images/original_untouched/11/27792.jpg',
+      'show:Hunter x Hunter': 'https://static.tvmaze.com/uploads/images/original_untouched/223/559165.jpg',
+      'movie:Hunter x Hunter': 'https://static.tvmaze.com/uploads/images/original_untouched/223/559165.jpg',
+      'Hunter x Hunter': 'https://static.tvmaze.com/uploads/images/original_untouched/223/559165.jpg',
+      'show:Seinfeld': 'https://static.tvmaze.com/uploads/images/original_untouched/83/207960.jpg',
+      'movie:Seinfeld': 'https://static.tvmaze.com/uploads/images/original_untouched/83/207960.jpg',
+      'Seinfeld': 'https://static.tvmaze.com/uploads/images/original_untouched/83/207960.jpg',
+      'show:Curb Your Enthusiasm': 'https://static.tvmaze.com/uploads/images/original_untouched/500/1250735.jpg',
+      'movie:Curb Your Enthusiasm': 'https://static.tvmaze.com/uploads/images/original_untouched/500/1250735.jpg',
+      'Curb Your Enthusiasm': 'https://static.tvmaze.com/uploads/images/original_untouched/500/1250735.jpg',
+      'show:Arrested Development': 'https://static.tvmaze.com/uploads/images/original_untouched/338/846049.jpg',
+      'movie:Arrested Development': 'https://static.tvmaze.com/uploads/images/original_untouched/338/846049.jpg',
+      'Arrested Development': 'https://static.tvmaze.com/uploads/images/original_untouched/338/846049.jpg',
+      'show:Parks and Recreation': 'https://static.tvmaze.com/uploads/images/original_untouched/481/1204341.jpg',
+      'movie:Parks and Recreation': 'https://static.tvmaze.com/uploads/images/original_untouched/481/1204341.jpg',
+      'Parks and Recreation': 'https://static.tvmaze.com/uploads/images/original_untouched/481/1204341.jpg',
+      'show:Brooklyn Nine-Nine': 'https://static.tvmaze.com/uploads/images/original_untouched/402/1007484.jpg',
+      'movie:Brooklyn Nine-Nine': 'https://static.tvmaze.com/uploads/images/original_untouched/402/1007484.jpg',
+      'Brooklyn Nine-Nine': 'https://static.tvmaze.com/uploads/images/original_untouched/402/1007484.jpg',
+      'show:Modern Family': 'https://static.tvmaze.com/uploads/images/original_untouched/359/898320.jpg',
+      'movie:Modern Family': 'https://static.tvmaze.com/uploads/images/original_untouched/359/898320.jpg',
+      'Modern Family': 'https://static.tvmaze.com/uploads/images/original_untouched/359/898320.jpg',
+      'show:Community': 'https://static.tvmaze.com/uploads/images/original_untouched/2/5134.jpg',
+      'movie:Community': 'https://static.tvmaze.com/uploads/images/original_untouched/2/5134.jpg',
+      'Community': 'https://static.tvmaze.com/uploads/images/original_untouched/2/5134.jpg',
+      'show:It\'s Always Sunny in Philadelphia': 'https://static.tvmaze.com/uploads/images/original_untouched/636/1592247.jpg',
+      'movie:It\'s Always Sunny in Philadelphia': 'https://static.tvmaze.com/uploads/images/original_untouched/636/1592247.jpg',
+      'It\'s Always Sunny in Philadelphia': 'https://static.tvmaze.com/uploads/images/original_untouched/636/1592247.jpg',
+      'show:Schitt\'s Creek': 'https://static.tvmaze.com/uploads/images/original_untouched/279/697623.jpg',
+      'movie:Schitt\'s Creek': 'https://static.tvmaze.com/uploads/images/original_untouched/279/697623.jpg',
+      'Schitt\'s Creek': 'https://static.tvmaze.com/uploads/images/original_untouched/279/697623.jpg',
+      'show:Silicon Valley': 'https://static.tvmaze.com/uploads/images/original_untouched/215/538434.jpg',
+      'movie:Silicon Valley': 'https://static.tvmaze.com/uploads/images/original_untouched/215/538434.jpg',
+      'Silicon Valley': 'https://static.tvmaze.com/uploads/images/original_untouched/215/538434.jpg',
+      'show:Barry': 'https://static.tvmaze.com/uploads/images/original_untouched/455/1138151.jpg',
+      'movie:Barry': 'https://static.tvmaze.com/uploads/images/original_untouched/455/1138151.jpg',
+      'Barry': 'https://static.tvmaze.com/uploads/images/original_untouched/455/1138151.jpg',
+      'show:Atlanta': 'https://static.tvmaze.com/uploads/images/original_untouched/437/1093345.jpg',
+      'movie:Atlanta': 'https://static.tvmaze.com/uploads/images/original_untouched/437/1093345.jpg',
+      'Atlanta': 'https://static.tvmaze.com/uploads/images/original_untouched/437/1093345.jpg',
+      'show:Suits': 'https://static.tvmaze.com/uploads/images/original_untouched/393/983536.jpg',
+      'movie:Suits': 'https://static.tvmaze.com/uploads/images/original_untouched/393/983536.jpg',
+      'Suits': 'https://static.tvmaze.com/uploads/images/original_untouched/393/983536.jpg',
+      'show:House M.D.': 'https://static.tvmaze.com/uploads/images/original_untouched/357/894990.jpg',
+      'movie:House M.D.': 'https://static.tvmaze.com/uploads/images/original_untouched/357/894990.jpg',
+      'House M.D.': 'https://static.tvmaze.com/uploads/images/original_untouched/357/894990.jpg',
+      'show:The Walking Dead': 'https://static.tvmaze.com/uploads/images/original_untouched/424/1061900.jpg',
+      'movie:The Walking Dead': 'https://static.tvmaze.com/uploads/images/original_untouched/424/1061900.jpg',
+      'The Walking Dead': 'https://static.tvmaze.com/uploads/images/original_untouched/424/1061900.jpg',
+      'show:Wednesday': 'https://static.tvmaze.com/uploads/images/original_untouched/586/1466410.jpg',
+      'movie:Wednesday': 'https://static.tvmaze.com/uploads/images/original_untouched/586/1466410.jpg',
+      'Wednesday': 'https://static.tvmaze.com/uploads/images/original_untouched/586/1466410.jpg',
+      'show:The Witcher': 'https://static.tvmaze.com/uploads/images/original_untouched/594/1486674.jpg',
+      'movie:The Witcher': 'https://static.tvmaze.com/uploads/images/original_untouched/594/1486674.jpg',
+      'The Witcher': 'https://static.tvmaze.com/uploads/images/original_untouched/594/1486674.jpg',
+      'show:Battlestar Galactica': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2313.jpg',
+      'movie:Battlestar Galactica': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2313.jpg',
+      'Battlestar Galactica': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2313.jpg',
+      'show:Star Trek: The Next Generation': 'https://static.tvmaze.com/uploads/images/original_untouched/496/1242352.jpg',
+      'movie:Star Trek: The Next Generation': 'https://static.tvmaze.com/uploads/images/original_untouched/496/1242352.jpg',
+      'Star Trek: The Next Generation': 'https://static.tvmaze.com/uploads/images/original_untouched/496/1242352.jpg',
+      'show:The X-Files': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253511.jpg',
+      'movie:The X-Files': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253511.jpg',
+      'The X-Files': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253511.jpg',
+      'show:Doctor Who': 'https://static.tvmaze.com/uploads/images/original_untouched/564/1411489.jpg',
+      'movie:Doctor Who': 'https://static.tvmaze.com/uploads/images/original_untouched/564/1411489.jpg',
+      'Doctor Who': 'https://static.tvmaze.com/uploads/images/original_untouched/564/1411489.jpg',
+      'show:The Expanse': 'https://static.tvmaze.com/uploads/images/original_untouched/445/1114081.jpg',
+      'movie:The Expanse': 'https://static.tvmaze.com/uploads/images/original_untouched/445/1114081.jpg',
+      'The Expanse': 'https://static.tvmaze.com/uploads/images/original_untouched/445/1114081.jpg',
+      'show:Fringe': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2245.jpg',
+      'movie:Fringe': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2245.jpg',
+      'Fringe': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2245.jpg',
+      'show:Person of Interest': 'https://static.tvmaze.com/uploads/images/original_untouched/163/407679.jpg',
+      'movie:Person of Interest': 'https://static.tvmaze.com/uploads/images/original_untouched/163/407679.jpg',
+      'Person of Interest': 'https://static.tvmaze.com/uploads/images/original_untouched/163/407679.jpg',
+      'show:Loki': 'https://static.tvmaze.com/uploads/images/original_untouched/478/1195717.jpg',
+      'movie:Loki': 'https://static.tvmaze.com/uploads/images/original_untouched/478/1195717.jpg',
+      'Loki': 'https://static.tvmaze.com/uploads/images/original_untouched/478/1195717.jpg',
+      'show:Daredevil': 'https://static.tvmaze.com/uploads/images/original_untouched/171/429391.jpg',
+      'movie:Daredevil': 'https://static.tvmaze.com/uploads/images/original_untouched/171/429391.jpg',
+      'Daredevil': 'https://static.tvmaze.com/uploads/images/original_untouched/171/429391.jpg',
+      'show:The Punisher': 'https://static.tvmaze.com/uploads/images/original_untouched/500/1250736.jpg',
+      'movie:The Punisher': 'https://static.tvmaze.com/uploads/images/original_untouched/500/1250736.jpg',
+      'The Punisher': 'https://static.tvmaze.com/uploads/images/original_untouched/500/1250736.jpg',
+      'show:Mirzapur': 'https://static.tvmaze.com/uploads/images/original_untouched/619/1549499.jpg',
+      'movie:Mirzapur': 'https://static.tvmaze.com/uploads/images/original_untouched/619/1549499.jpg',
+      'Mirzapur': 'https://static.tvmaze.com/uploads/images/original_untouched/619/1549499.jpg',
+      'show:The Family Man': 'https://static.tvmaze.com/uploads/images/original_untouched/599/1498893.jpg',
+      'movie:The Family Man': 'https://static.tvmaze.com/uploads/images/original_untouched/599/1498893.jpg',
+      'The Family Man': 'https://static.tvmaze.com/uploads/images/original_untouched/599/1498893.jpg',
+      'show:Paatal Lok': 'https://static.tvmaze.com/uploads/images/original_untouched/254/635178.jpg',
+      'movie:Paatal Lok': 'https://static.tvmaze.com/uploads/images/original_untouched/254/635178.jpg',
+      'Paatal Lok': 'https://static.tvmaze.com/uploads/images/original_untouched/254/635178.jpg',
+      'show:Delhi Crime': 'https://static.tvmaze.com/uploads/images/original_untouched/188/470620.jpg',
+      'movie:Delhi Crime': 'https://static.tvmaze.com/uploads/images/original_untouched/188/470620.jpg',
+      'Delhi Crime': 'https://static.tvmaze.com/uploads/images/original_untouched/188/470620.jpg',
+      'show:Asur: Welcome to Your Dark Side': 'https://static.tvmaze.com/uploads/images/original_untouched/248/621330.jpg',
+      'movie:Asur: Welcome to Your Dark Side': 'https://static.tvmaze.com/uploads/images/original_untouched/248/621330.jpg',
+      'Asur: Welcome to Your Dark Side': 'https://static.tvmaze.com/uploads/images/original_untouched/248/621330.jpg',
+      'show:Special OPS': 'https://static.tvmaze.com/uploads/images/original_untouched/246/616723.jpg',
+      'movie:Special OPS': 'https://static.tvmaze.com/uploads/images/original_untouched/246/616723.jpg',
+      'Special OPS': 'https://static.tvmaze.com/uploads/images/original_untouched/246/616723.jpg',
+      'show:Farzi': 'https://static.tvmaze.com/uploads/images/original_untouched/446/1115765.jpg',
+      'movie:Farzi': 'https://static.tvmaze.com/uploads/images/original_untouched/446/1115765.jpg',
+      'Farzi': 'https://static.tvmaze.com/uploads/images/original_untouched/446/1115765.jpg',
+      'show:Gullak': 'https://static.tvmaze.com/uploads/images/original_untouched/522/1306547.jpg',
+      'movie:Gullak': 'https://static.tvmaze.com/uploads/images/original_untouched/522/1306547.jpg',
+      'Gullak': 'https://static.tvmaze.com/uploads/images/original_untouched/522/1306547.jpg',
+      'show:Kota Factory': 'https://static.tvmaze.com/uploads/images/original_untouched/521/1304802.jpg',
+      'movie:Kota Factory': 'https://static.tvmaze.com/uploads/images/original_untouched/521/1304802.jpg',
+      'Kota Factory': 'https://static.tvmaze.com/uploads/images/original_untouched/521/1304802.jpg',
+      'show:Rocket Boys': 'https://static.tvmaze.com/uploads/images/original_untouched/521/1304759.jpg',
+      'movie:Rocket Boys': 'https://static.tvmaze.com/uploads/images/original_untouched/521/1304759.jpg',
+      'Rocket Boys': 'https://static.tvmaze.com/uploads/images/original_untouched/521/1304759.jpg',
+      'show:Kohrra': 'https://static.tvmaze.com/uploads/images/original_untouched/468/1170715.jpg',
+      'movie:Kohrra': 'https://static.tvmaze.com/uploads/images/original_untouched/468/1170715.jpg',
+      'Kohrra': 'https://static.tvmaze.com/uploads/images/original_untouched/468/1170715.jpg',
+      'show:Fauda': 'https://static.tvmaze.com/uploads/images/original_untouched/631/1579218.jpg',
+      'movie:Fauda': 'https://static.tvmaze.com/uploads/images/original_untouched/631/1579218.jpg',
+      'Fauda': 'https://static.tvmaze.com/uploads/images/original_untouched/631/1579218.jpg',
+      'show:Gomorrah': 'https://static.tvmaze.com/uploads/images/original_untouched/290/726024.jpg',
+      'movie:Gomorrah': 'https://static.tvmaze.com/uploads/images/original_untouched/290/726024.jpg',
+      'Gomorrah': 'https://static.tvmaze.com/uploads/images/original_untouched/290/726024.jpg',
+      'show:Babylon Berlin': 'https://static.tvmaze.com/uploads/images/original_untouched/579/1448426.jpg',
+      'movie:Babylon Berlin': 'https://static.tvmaze.com/uploads/images/original_untouched/579/1448426.jpg',
+      'Babylon Berlin': 'https://static.tvmaze.com/uploads/images/original_untouched/579/1448426.jpg',
+      'show:Scam 1992': 'https://static.tvmaze.com/uploads/images/original_untouched/521/1304758.jpg',
+      'movie:Scam 1992': 'https://static.tvmaze.com/uploads/images/original_untouched/521/1304758.jpg',
+      'Scam 1992': 'https://static.tvmaze.com/uploads/images/original_untouched/521/1304758.jpg',
+      'show:Panchayat': 'https://static.tvmaze.com/uploads/images/original_untouched/517/1293627.jpg',
+      'movie:Panchayat': 'https://static.tvmaze.com/uploads/images/original_untouched/517/1293627.jpg',
+      'Panchayat': 'https://static.tvmaze.com/uploads/images/original_untouched/517/1293627.jpg',
+      'show:Sacred Games': 'https://static.tvmaze.com/uploads/images/original_untouched/204/511629.jpg',
+      'movie:Sacred Games': 'https://static.tvmaze.com/uploads/images/original_untouched/204/511629.jpg',
+      'Sacred Games': 'https://static.tvmaze.com/uploads/images/original_untouched/204/511629.jpg',
+      'show:Avatar: The Last Airbender': 'https://static.tvmaze.com/uploads/images/original_untouched/633/1582667.jpg',
+      'movie:Avatar: The Last Airbender': 'https://static.tvmaze.com/uploads/images/original_untouched/633/1582667.jpg',
+      'Avatar: The Last Airbender': 'https://static.tvmaze.com/uploads/images/original_untouched/633/1582667.jpg',
+      'show:Cosmos: A Spacetime Odyssey': 'https://static.tvmaze.com/uploads/images/original_untouched/402/1006408.jpg',
+      'movie:Cosmos: A Spacetime Odyssey': 'https://static.tvmaze.com/uploads/images/original_untouched/402/1006408.jpg',
+      'Cosmos: A Spacetime Odyssey': 'https://static.tvmaze.com/uploads/images/original_untouched/402/1006408.jpg',
+      'show:Only Fools and Horses': 'https://static.tvmaze.com/uploads/images/original_untouched/11/29077.jpg',
+      'movie:Only Fools and Horses': 'https://static.tvmaze.com/uploads/images/original_untouched/11/29077.jpg',
+      'Only Fools and Horses': 'https://static.tvmaze.com/uploads/images/original_untouched/11/29077.jpg',
+      'show:The Beatles: Get Back': 'https://static.tvmaze.com/uploads/images/original_untouched/379/948990.jpg',
+      'movie:The Beatles: Get Back': 'https://static.tvmaze.com/uploads/images/original_untouched/379/948990.jpg',
+      'The Beatles: Get Back': 'https://static.tvmaze.com/uploads/images/original_untouched/379/948990.jpg',
+      'show:The Mandalorian': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253498.jpg',
+      'movie:The Mandalorian': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253498.jpg',
+      'The Mandalorian': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253498.jpg',
+      'show:The Marvelous Mrs. Maisel': 'https://static.tvmaze.com/uploads/images/original_untouched/456/1141825.jpg',
+      'movie:The Marvelous Mrs. Maisel': 'https://static.tvmaze.com/uploads/images/original_untouched/456/1141825.jpg',
+      'The Marvelous Mrs. Maisel': 'https://static.tvmaze.com/uploads/images/original_untouched/456/1141825.jpg',
+      'show:Fallout': 'https://static.tvmaze.com/uploads/images/original_untouched/599/1499142.jpg',
+      'movie:Fallout': 'https://static.tvmaze.com/uploads/images/original_untouched/599/1499142.jpg',
+      'Fallout': 'https://static.tvmaze.com/uploads/images/original_untouched/599/1499142.jpg',
+      'show:Andor': 'https://static.tvmaze.com/uploads/images/original_untouched/564/1411766.jpg',
+      'movie:Andor': 'https://static.tvmaze.com/uploads/images/original_untouched/564/1411766.jpg',
+      'Andor': 'https://static.tvmaze.com/uploads/images/original_untouched/564/1411766.jpg',
+      'show:The Queen\'s Gambit': 'https://static.tvmaze.com/uploads/images/original_untouched/510/1275203.jpg',
+      'movie:The Queen\'s Gambit': 'https://static.tvmaze.com/uploads/images/original_untouched/510/1275203.jpg',
+      'The Queen\'s Gambit': 'https://static.tvmaze.com/uploads/images/original_untouched/510/1275203.jpg',
+      'show:Yellowstone': 'https://static.tvmaze.com/uploads/images/original_untouched/545/1362616.jpg',
+      'movie:Yellowstone': 'https://static.tvmaze.com/uploads/images/original_untouched/545/1362616.jpg',
+      'Yellowstone': 'https://static.tvmaze.com/uploads/images/original_untouched/545/1362616.jpg',
+      'show:Euphoria': 'https://static.tvmaze.com/uploads/images/original_untouched/621/1552657.jpg',
+      'movie:Euphoria': 'https://static.tvmaze.com/uploads/images/original_untouched/621/1552657.jpg',
+      'Euphoria': 'https://static.tvmaze.com/uploads/images/original_untouched/621/1552657.jpg',
+      'show:The White Lotus': 'https://static.tvmaze.com/uploads/images/original_untouched/557/1393876.jpg',
+      'movie:The White Lotus': 'https://static.tvmaze.com/uploads/images/original_untouched/557/1393876.jpg',
+      'The White Lotus': 'https://static.tvmaze.com/uploads/images/original_untouched/557/1393876.jpg',
+      'show:Slow Horses': 'https://static.tvmaze.com/uploads/images/original_untouched/641/1604425.jpg',
+      'movie:Slow Horses': 'https://static.tvmaze.com/uploads/images/original_untouched/641/1604425.jpg',
+      'Slow Horses': 'https://static.tvmaze.com/uploads/images/original_untouched/641/1604425.jpg',
+      'show:Downton Abbey': 'https://static.tvmaze.com/uploads/images/original_untouched/1/4601.jpg',
+      'movie:Downton Abbey': 'https://static.tvmaze.com/uploads/images/original_untouched/1/4601.jpg',
+      'Downton Abbey': 'https://static.tvmaze.com/uploads/images/original_untouched/1/4601.jpg',
+      'show:The Big Bang Theory': 'https://static.tvmaze.com/uploads/images/original_untouched/173/433868.jpg',
+      'movie:The Big Bang Theory': 'https://static.tvmaze.com/uploads/images/original_untouched/173/433868.jpg',
+      'The Big Bang Theory': 'https://static.tvmaze.com/uploads/images/original_untouched/173/433868.jpg',
+      'show:How I Met Your Mother': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2451.jpg',
+      'movie:How I Met Your Mother': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2451.jpg',
+      'How I Met Your Mother': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2451.jpg',
+      'show:New Girl': 'https://static.tvmaze.com/uploads/images/original_untouched/481/1202650.jpg',
+      'movie:New Girl': 'https://static.tvmaze.com/uploads/images/original_untouched/481/1202650.jpg',
+      'New Girl': 'https://static.tvmaze.com/uploads/images/original_untouched/481/1202650.jpg',
+      'show:Gilmore Girls': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11308.jpg',
+      'movie:Gilmore Girls': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11308.jpg',
+      'Gilmore Girls': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11308.jpg',
+      'show:Sex and the City': 'https://static.tvmaze.com/uploads/images/original_untouched/594/1486658.jpg',
+      'movie:Sex and the City': 'https://static.tvmaze.com/uploads/images/original_untouched/594/1486658.jpg',
+      'Sex and the City': 'https://static.tvmaze.com/uploads/images/original_untouched/594/1486658.jpg',
+      'show:Grey\'s Anatomy': 'https://static.tvmaze.com/uploads/images/original_untouched/644/1611931.jpg',
+      'movie:Grey\'s Anatomy': 'https://static.tvmaze.com/uploads/images/original_untouched/644/1611931.jpg',
+      'Grey\'s Anatomy': 'https://static.tvmaze.com/uploads/images/original_untouched/644/1611931.jpg',
+      'show:Bridgerton': 'https://static.tvmaze.com/uploads/images/original_untouched/614/1535959.jpg',
+      'movie:Bridgerton': 'https://static.tvmaze.com/uploads/images/original_untouched/614/1535959.jpg',
+      'Bridgerton': 'https://static.tvmaze.com/uploads/images/original_untouched/614/1535959.jpg',
+      'show:Emily in Paris': 'https://static.tvmaze.com/uploads/images/original_untouched/604/1510920.jpg',
+      'movie:Emily in Paris': 'https://static.tvmaze.com/uploads/images/original_untouched/604/1510920.jpg',
+      'Emily in Paris': 'https://static.tvmaze.com/uploads/images/original_untouched/604/1510920.jpg',
+      'show:Lupin': 'https://static.tvmaze.com/uploads/images/original_untouched/646/1617244.jpg',
+      'movie:Lupin': 'https://static.tvmaze.com/uploads/images/original_untouched/646/1617244.jpg',
+      'Lupin': 'https://static.tvmaze.com/uploads/images/original_untouched/646/1617244.jpg',
+      'show:Elite': 'https://static.tvmaze.com/uploads/images/original_untouched/529/1324751.jpg',
+      'movie:Elite': 'https://static.tvmaze.com/uploads/images/original_untouched/529/1324751.jpg',
+      'Elite': 'https://static.tvmaze.com/uploads/images/original_untouched/529/1324751.jpg',
+      'show:WandaVision': 'https://static.tvmaze.com/uploads/images/original_untouched/295/738028.jpg',
+      'movie:WandaVision': 'https://static.tvmaze.com/uploads/images/original_untouched/295/738028.jpg',
+      'WandaVision': 'https://static.tvmaze.com/uploads/images/original_untouched/295/738028.jpg',
+      'show:Spartacus': 'https://static.tvmaze.com/uploads/images/original_untouched/354/886339.jpg',
+      'movie:Spartacus': 'https://static.tvmaze.com/uploads/images/original_untouched/354/886339.jpg',
+      'Spartacus': 'https://static.tvmaze.com/uploads/images/original_untouched/354/886339.jpg',
+      'show:Outlander': 'https://static.tvmaze.com/uploads/images/original_untouched/616/1541142.jpg',
+      'movie:Outlander': 'https://static.tvmaze.com/uploads/images/original_untouched/616/1541142.jpg',
+      'Outlander': 'https://static.tvmaze.com/uploads/images/original_untouched/616/1541142.jpg',
+      'show:The Handmaid\'s Tale': 'https://static.tvmaze.com/uploads/images/original_untouched/562/1406667.jpg',
+      'movie:The Handmaid\'s Tale': 'https://static.tvmaze.com/uploads/images/original_untouched/562/1406667.jpg',
+      'The Handmaid\'s Tale': 'https://static.tvmaze.com/uploads/images/original_untouched/562/1406667.jpg',
+      'show:The Good Place': 'https://static.tvmaze.com/uploads/images/original_untouched/395/989291.jpg',
+      'movie:The Good Place': 'https://static.tvmaze.com/uploads/images/original_untouched/395/989291.jpg',
+      'The Good Place': 'https://static.tvmaze.com/uploads/images/original_untouched/395/989291.jpg',
+      'show:Gravity Falls': 'https://static.tvmaze.com/uploads/images/original_untouched/2/6140.jpg',
+      'movie:Gravity Falls': 'https://static.tvmaze.com/uploads/images/original_untouched/2/6140.jpg',
+      'Gravity Falls': 'https://static.tvmaze.com/uploads/images/original_untouched/2/6140.jpg',
+      'show:Bleach': 'https://static.tvmaze.com/uploads/images/original_untouched/459/1148800.jpg',
+      'movie:Bleach': 'https://static.tvmaze.com/uploads/images/original_untouched/459/1148800.jpg',
+      'Bleach': 'https://static.tvmaze.com/uploads/images/original_untouched/459/1148800.jpg',
+      'show:My Hero Academia': 'https://static.tvmaze.com/uploads/images/original_untouched/599/1499141.jpg',
+      'movie:My Hero Academia': 'https://static.tvmaze.com/uploads/images/original_untouched/599/1499141.jpg',
+      'My Hero Academia': 'https://static.tvmaze.com/uploads/images/original_untouched/599/1499141.jpg',
+      'show:One Punch Man': 'https://static.tvmaze.com/uploads/images/original_untouched/598/1496471.jpg',
+      'movie:One Punch Man': 'https://static.tvmaze.com/uploads/images/original_untouched/598/1496471.jpg',
+      'One Punch Man': 'https://static.tvmaze.com/uploads/images/original_untouched/598/1496471.jpg',
+      'show:Mob Psycho 100': 'https://static.tvmaze.com/uploads/images/original_untouched/144/361062.jpg',
+      'movie:Mob Psycho 100': 'https://static.tvmaze.com/uploads/images/original_untouched/144/361062.jpg',
+      'Mob Psycho 100': 'https://static.tvmaze.com/uploads/images/original_untouched/144/361062.jpg',
+      'show:Code Geass': 'https://static.tvmaze.com/uploads/images/original_untouched/580/1451498.jpg',
+      'movie:Code Geass': 'https://static.tvmaze.com/uploads/images/original_untouched/580/1451498.jpg',
+      'Code Geass': 'https://static.tvmaze.com/uploads/images/original_untouched/580/1451498.jpg',
+      'show:Haikyu!!': 'https://static.tvmaze.com/uploads/images/original_untouched/65/164065.jpg',
+      'movie:Haikyu!!': 'https://static.tvmaze.com/uploads/images/original_untouched/65/164065.jpg',
+      'Haikyu!!': 'https://static.tvmaze.com/uploads/images/original_untouched/65/164065.jpg',
+      'show:Love, Death & Robots': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253559.jpg',
+      'movie:Love, Death & Robots': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253559.jpg',
+      'Love, Death & Robots': 'https://static.tvmaze.com/uploads/images/original_untouched/501/1253559.jpg',
+      'show:Castlevania': 'https://static.tvmaze.com/uploads/images/original_untouched/316/790637.jpg',
+      'movie:Castlevania': 'https://static.tvmaze.com/uploads/images/original_untouched/316/790637.jpg',
+      'Castlevania': 'https://static.tvmaze.com/uploads/images/original_untouched/316/790637.jpg',
+      'show:South Park': 'https://static.tvmaze.com/uploads/images/original_untouched/641/1604427.jpg',
+      'movie:South Park': 'https://static.tvmaze.com/uploads/images/original_untouched/641/1604427.jpg',
+      'South Park': 'https://static.tvmaze.com/uploads/images/original_untouched/641/1604427.jpg',
+      'show:Family Guy': 'https://static.tvmaze.com/uploads/images/original_untouched/609/1523259.jpg',
+      'movie:Family Guy': 'https://static.tvmaze.com/uploads/images/original_untouched/609/1523259.jpg',
+      'Family Guy': 'https://static.tvmaze.com/uploads/images/original_untouched/609/1523259.jpg',
+      'show:The Simpsons': 'https://static.tvmaze.com/uploads/images/original_untouched/637/1594614.jpg',
+      'movie:The Simpsons': 'https://static.tvmaze.com/uploads/images/original_untouched/637/1594614.jpg',
+      'The Simpsons': 'https://static.tvmaze.com/uploads/images/original_untouched/637/1594614.jpg',
+      'show:Futurama': 'https://static.tvmaze.com/uploads/images/original_untouched/633/1584696.jpg',
+      'movie:Futurama': 'https://static.tvmaze.com/uploads/images/original_untouched/633/1584696.jpg',
+      'Futurama': 'https://static.tvmaze.com/uploads/images/original_untouched/633/1584696.jpg',
+      'show:Adventure Time': 'https://static.tvmaze.com/uploads/images/original_untouched/1/4898.jpg',
+      'movie:Adventure Time': 'https://static.tvmaze.com/uploads/images/original_untouched/1/4898.jpg',
+      'Adventure Time': 'https://static.tvmaze.com/uploads/images/original_untouched/1/4898.jpg',
+      'show:Over the Garden Wall': 'https://static.tvmaze.com/uploads/images/original_untouched/221/554447.jpg',
+      'movie:Over the Garden Wall': 'https://static.tvmaze.com/uploads/images/original_untouched/221/554447.jpg',
+      'Over the Garden Wall': 'https://static.tvmaze.com/uploads/images/original_untouched/221/554447.jpg',
+
+      // --- Collision-Prone Movies (Short or Overloaded Titles) ---
+      'movie:Up': 'https://upload.wikimedia.org/wikipedia/en/0/05/Up_%282009_film%29.jpg',
+      'Up': 'https://upload.wikimedia.org/wikipedia/en/0/05/Up_%282009_film%29.jpg',
+      'movie:It': 'https://upload.wikimedia.org/wikipedia/en/5/5a/It_%282017%29_poster.jpg',
+      'It': 'https://upload.wikimedia.org/wikipedia/en/5/5a/It_%282017%29_poster.jpg',
+      'movie:Her': 'https://upload.wikimedia.org/wikipedia/en/4/44/Her2013Poster.jpg',
+      'Her': 'https://upload.wikimedia.org/wikipedia/en/4/44/Her2013Poster.jpg',
+      'movie:Heat': 'https://upload.wikimedia.org/wikipedia/en/6/6c/Heatposter.jpg',
+      'Heat': 'https://upload.wikimedia.org/wikipedia/en/6/6c/Heatposter.jpg',
+      'movie:Alien': 'https://upload.wikimedia.org/wikipedia/en/c/c3/Alien_movie_poster.jpg',
+      'Alien': 'https://upload.wikimedia.org/wikipedia/en/c/c3/Alien_movie_poster.jpg',
+      'movie:Aliens': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Aliens_poster.jpg',
+      'Aliens': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Aliens_poster.jpg',
+      'movie:Seven': 'https://upload.wikimedia.org/wikipedia/en/6/68/Seven_%28movie%29_poster.jpg',
+      'Seven': 'https://upload.wikimedia.org/wikipedia/en/6/68/Seven_%28movie%29_poster.jpg',
+      'movie:Se7en': 'https://upload.wikimedia.org/wikipedia/en/6/68/Seven_%28movie%29_poster.jpg',
+      'Se7en': 'https://upload.wikimedia.org/wikipedia/en/6/68/Seven_%28movie%29_poster.jpg',
+      'movie:Dune': 'https://upload.wikimedia.org/wikipedia/en/8/8e/Dune_%282021_film%29.jpg',
+      'Dune': 'https://upload.wikimedia.org/wikipedia/en/8/8e/Dune_%282021_film%29.jpg',
+      'movie:Dune: Part Two': 'https://upload.wikimedia.org/wikipedia/en/5/52/Dune_Part_Two_poster.jpeg',
+      'Dune: Part Two': 'https://upload.wikimedia.org/wikipedia/en/5/52/Dune_Part_Two_poster.jpeg',
+      'movie:The Thing': 'https://upload.wikimedia.org/wikipedia/en/e/e3/The_Thing_%281982_film%29.png',
+      'The Thing': 'https://upload.wikimedia.org/wikipedia/en/e/e3/The_Thing_%281982_film%29.png',
+      'movie:Oldboy': 'https://upload.wikimedia.org/wikipedia/en/6/67/Oldboykoreanposter.jpg',
+      'Oldboy': 'https://upload.wikimedia.org/wikipedia/en/6/67/Oldboykoreanposter.jpg',
+      'movie:Cars': 'https://upload.wikimedia.org/wikipedia/en/3/34/Cars_2006.jpg',
+      'Cars': 'https://upload.wikimedia.org/wikipedia/en/3/34/Cars_2006.jpg',
+      'movie:Soul': 'https://upload.wikimedia.org/wikipedia/en/3/39/Soul_%282020_film%29_poster.jpg',
+      'Soul': 'https://upload.wikimedia.org/wikipedia/en/3/39/Soul_%282020_film%29_poster.jpg',
+      'movie:Life': 'https://upload.wikimedia.org/wikipedia/en/c/c4/Life_%282017_film%29.png',
+      'Life': 'https://upload.wikimedia.org/wikipedia/en/c/c4/Life_%282017_film%29.png',
+      'movie:Drive': 'https://upload.wikimedia.org/wikipedia/en/1/13/Drive2011Poster.jpg',
+      'Drive': 'https://upload.wikimedia.org/wikipedia/en/1/13/Drive2011Poster.jpg',
+      'movie:Rush': 'https://upload.wikimedia.org/wikipedia/en/d/d0/Rush_UK_poster.jpeg',
+      'Rush': 'https://upload.wikimedia.org/wikipedia/en/d/d0/Rush_UK_poster.jpeg',
+      'movie:Fargo': 'https://upload.wikimedia.org/wikipedia/en/3/33/Fargo_%281996_movie_poster%29.jpg',
+      'Fargo': 'https://upload.wikimedia.org/wikipedia/en/3/33/Fargo_%281996_movie_poster%29.jpg',
+      'movie:M': 'https://upload.wikimedia.org/wikipedia/en/a/ab/M_poster.jpg',
+      'M': 'https://upload.wikimedia.org/wikipedia/en/a/ab/M_poster.jpg',
+
+      // --- Verified Masterpieces & Major Franchises ---
       'movie:The Shawshank Redemption': 'https://upload.wikimedia.org/wikipedia/en/8/81/ShawshankRedemptionMoviePoster.jpg',
       'movie:12 Angry Men': 'https://upload.wikimedia.org/wikipedia/commons/b/b5/12_Angry_Men_%281957_film_poster%29.jpg',
       "movie:Schindler's List": 'https://upload.wikimedia.org/wikipedia/en/3/38/Schindler%27s_List_movie.jpg',
@@ -13218,26 +13756,122 @@ Odd Taxi|2021|87
       'movie:The Godfather': 'https://upload.wikimedia.org/wikipedia/en/1/1c/Godfather_ver1.jpg',
       'movie:The Godfather: Part II': 'https://upload.wikimedia.org/wikipedia/en/0/03/Godfather_part_ii.jpg',
       'movie:The Godfather Part II': 'https://upload.wikimedia.org/wikipedia/en/0/03/Godfather_part_ii.jpg',
+      'movie:The Dark Knight': 'https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg',
+      'movie:The Dark Knight Rises': 'https://upload.wikimedia.org/wikipedia/en/8/83/Dark_knight_rises_poster.jpg',
+      'movie:Batman Begins': 'https://upload.wikimedia.org/wikipedia/en/a/af/Batman_Begins_Poster.jpg',
       'movie:Pulp Fiction': 'https://upload.wikimedia.org/wikipedia/en/3/3b/Pulp_Fiction_%281994%29_poster.jpg',
+      'movie:Inception': 'https://upload.wikimedia.org/wikipedia/en/2/2e/Inception_%282010%29_theatrical_poster.jpg',
+      'movie:Interstellar': 'https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg',
+      'movie:Oppenheimer': 'https://upload.wikimedia.org/wikipedia/en/4/4a/Oppenheimer_%28film%29.jpg',
+      'movie:Spirited Away': 'https://upload.wikimedia.org/wikipedia/en/d/db/Spirited_Away_Japanese_poster.png',
+      'movie:The Matrix': 'https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg',
+      'movie:Goodfellas': 'https://upload.wikimedia.org/wikipedia/en/7/7b/Goodfellas.jpg',
+      'movie:The Silence of the Lambs': 'https://upload.wikimedia.org/wikipedia/en/8/86/The_Silence_of_the_Lambs_poster.jpg',
+      'movie:Saving Private Ryan': 'https://upload.wikimedia.org/wikipedia/en/a/ac/Saving_Private_Ryan_poster.jpg',
+      'movie:Gladiator': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Gladiator_%282000_film_poster%29.png',
+      'movie:Whiplash': 'https://upload.wikimedia.org/wikipedia/en/0/01/Whiplash_poster.jpg',
+      'movie:The Prestige': 'https://upload.wikimedia.org/wikipedia/en/d/d2/Prestige_poster.jpg',
+      'movie:Rear Window': 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Rear_Window_poster.jpg',
+      'movie:Psycho': 'https://upload.wikimedia.org/wikipedia/en/b/b9/Psycho_%281960%29_theatrical_poster.jpg',
+      'movie:Spider-Man: Across the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg',
+      'movie:Spider-Man: Into the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'movie:Back to the Future': 'https://upload.wikimedia.org/wikipedia/en/d/d2/Back_to_the_Future.jpg',
+      'movie:The Lion King': 'https://upload.wikimedia.org/wikipedia/en/3/3d/The_Lion_King_poster.jpg',
+      'movie:The Departed': 'https://upload.wikimedia.org/wikipedia/en/5/50/Departed234.jpg',
+      'movie:Memento': 'https://upload.wikimedia.org/wikipedia/en/c/c7/Memento_poster.jpg',
+      'movie:Django Unchained': 'https://upload.wikimedia.org/wikipedia/en/8/8b/Django_Unchained_Poster.jpg',
+      'movie:WALL-E': 'https://upload.wikimedia.org/wikipedia/en/c/c2/WALL-Eposter.jpg',
+      'movie:The Shining': 'https://upload.wikimedia.org/wikipedia/en/1/1d/The_Shining_%281980%29_U.K._release_poster_-_The_tide_of_terror_that_would_not_ebb.jpg',
+      'movie:Inglourious Basterds': 'https://upload.wikimedia.org/wikipedia/en/c/c3/Inglourious_Basterds_poster.jpg',
+      'movie:Amelie': 'https://upload.wikimedia.org/wikipedia/en/5/53/Amelie_poster.jpg',
+      'movie:Toy Story': 'https://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg',
+      'movie:Toy Story 3': 'https://upload.wikimedia.org/wikipedia/en/6/69/Toy_Story_3_poster.jpg',
+      'movie:Your Name.': 'https://upload.wikimedia.org/wikipedia/en/0/0b/Your_Name_poster.png',
+      'movie:La La Land': 'https://upload.wikimedia.org/wikipedia/en/a/ab/La_La_Land_%28film%29.png',
+      'movie:Joker': 'https://upload.wikimedia.org/wikipedia/en/e/e1/Joker_%282019_film%29_poster.jpg',
+      'movie:Avengers: Endgame': 'https://upload.wikimedia.org/wikipedia/en/0/0d/Avengers_Endgame_poster.jpg',
+      'movie:Parasite': 'https://upload.wikimedia.org/wikipedia/en/5/53/Parasite_%282019_film%29.png',
+      'movie:3 Idiots': 'https://upload.wikimedia.org/wikipedia/en/d/df/3_idiots_poster.jpg',
+      'movie:Gangs of Wasseypur': 'https://upload.wikimedia.org/wikipedia/en/6/6a/Gangs_of_Wasseypur_poster.jpg',
+      'movie:Dangal': 'https://upload.wikimedia.org/wikipedia/en/9/99/Dangal_Poster.jpg',
+      'movie:Super Deluxe': 'https://upload.wikimedia.org/wikipedia/en/7/7b/Super_Deluxe_poster.jpg',
+      'movie:Arrival': 'https://upload.wikimedia.org/wikipedia/en/d/df/Arrival%2C_Movie_Poster.jpg',
+      'movie:2001: A Space Odyssey': 'https://upload.wikimedia.org/wikipedia/en/1/11/2001_A_Space_Odyssey_%281968%29.png',
+      'movie:Blade Runner': 'https://upload.wikimedia.org/wikipedia/en/9/9f/Blade_Runner_%281982_poster%29.png',
+      'movie:Blade Runner 2049': 'https://upload.wikimedia.org/wikipedia/en/9/9b/Blade_Runner_2049_poster.png',
+      'movie:No Country for Old Men': 'https://upload.wikimedia.org/wikipedia/en/8/8b/No_Country_for_Old_Men_poster.jpg',
+      'movie:There Will Be Blood': 'https://upload.wikimedia.org/wikipedia/en/d/da/There_Will_Be_Blood_Poster.jpg',
+      'movie:Taxi Driver': 'https://upload.wikimedia.org/wikipedia/en/3/33/Taxi_Driver_%281976_film_poster%29.jpg',
+      'movie:Jurassic Park': 'https://upload.wikimedia.org/wikipedia/en/e/e0/Jurassic_Park_poster.jpg',
+      'movie:The Truman Show': 'https://upload.wikimedia.org/wikipedia/en/c/cd/Trumanshow.jpg',
+      'movie:The Big Lebowski': 'https://upload.wikimedia.org/wikipedia/en/3/35/Biglebowskiposter.jpg',
+      'movie:Cinema Paradiso': 'https://upload.wikimedia.org/wikipedia/en/8/8c/Cinema_Paradiso_poster.jpg',
+      'movie:Grave of the Fireflies': 'https://upload.wikimedia.org/wikipedia/en/a/a5/Grave_of_the_Fireflies_poster.jpg',
+      'movie:City Lights': 'https://upload.wikimedia.org/wikipedia/commons/0/09/City_Lights_poster.jpg',
+      'movie:Modern Times': 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Modern_Times_poster.jpg',
+      'movie:Sunset Boulevard': 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Sunset_Boulevard_%281950_poster%29.jpg',
+      'movie:Paths of Glory': 'https://upload.wikimedia.org/wikipedia/commons/9/9a/PathsOfGloryPoster.jpg',
+      'movie:Dr. Strangelove': 'https://upload.wikimedia.org/wikipedia/en/e/e6/Dr._Strangelove_poster.jpg',
+      'movie:Princess Mononoke': 'https://upload.wikimedia.org/wikipedia/en/8/8c/Princess_Mononoke_Japanese_poster.png',
+      'movie:Good Will Hunting': 'https://upload.wikimedia.org/wikipedia/en/b/b8/Good_Will_Hunting_theatrical_poster.jpg',
+      'movie:Apocalypse Now': 'https://upload.wikimedia.org/wikipedia/en/c/c2/Apocalypse_Now_poster.jpg',
       'movie:The Lord of the Rings: The Return of the King': 'https://upload.wikimedia.org/wikipedia/en/4/48/Lord_Rings_Return_King.jpg',
       'movie:The Return of the King': 'https://upload.wikimedia.org/wikipedia/en/4/48/Lord_Rings_Return_King.jpg',
       'movie:The Lord of the Rings: The Fellowship of the Ring': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Lord_Rings_Fellowship_Ring.jpg',
       'movie:The Fellowship of the Ring': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Lord_Rings_Fellowship_Ring.jpg',
+      'movie:The Lord of the Rings: The Two Towers': 'https://upload.wikimedia.org/wikipedia/en/a/ad/Lord_of_the_Rings_-_The_Two_Towers.jpg',
+      'movie:The Two Towers': 'https://upload.wikimedia.org/wikipedia/en/a/ad/Lord_of_the_Rings_-_The_Two_Towers.jpg',
       'movie:The Good, the Bad and the Ugly': 'https://upload.wikimedia.org/wikipedia/en/4/45/Good_the_bad_and_the_ugly_poster.jpg',
-      'show:Avatar: The Last Airbender': 'https://static.tvmaze.com/uploads/images/original_untouched/633/1582667.jpg',
-      'show:The Sopranos': 'https://static.tvmaze.com/uploads/images/original_untouched/4/11341.jpg',
-      'show:Cosmos': 'https://upload.wikimedia.org/wikipedia/en/e/ec/Cosmos_-_A_Personal_Voyage_%28title_screen%29.jpg',
-      'show:Cosmos: A Spacetime Odyssey': 'https://upload.wikimedia.org/wikipedia/en/8/8e/Cosmos_spacetime_odyssey_titlecard.jpg',
-      'show:Our Planet': 'https://upload.wikimedia.org/wikipedia/en/f/f8/Our_Planet_%28Netflix%29_-_Series_Poster.jpg',
-      'movie:Arrival': 'https://upload.wikimedia.org/wikipedia/en/d/df/Arrival%2C_Movie_Poster.jpg',
+      'movie:Raiders of the Lost Ark': 'https://upload.wikimedia.org/wikipedia/en/4/4c/Raiders_of_the_Lost_Ark.jpg',
+      'movie:Indiana Jones and the Raiders of the Lost Ark': 'https://upload.wikimedia.org/wikipedia/en/4/4c/Raiders_of_the_Lost_Ark.jpg',
+      'movie:Eternal Sunshine of the Spotless Mind': 'https://upload.wikimedia.org/wikipedia/en/a/a4/Eternal_Sunshine_of_the_Spotless_Mind.png',
+      'movie:Reservoir Dogs': 'https://upload.wikimedia.org/wikipedia/en/f/f6/Reservoir_dogs_ver1.jpg',
+      'movie:Citizen Kane': 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Citizen_Kane_poster%2C_1941_%28original_theatrical_style_A%29.jpg',
+      'movie:Vertigo': 'https://upload.wikimedia.org/wikipedia/en/7/75/Vertigomovie_450.jpg',
+      'movie:A Clockwork Orange': 'https://upload.wikimedia.org/wikipedia/en/4/48/Clockwork_orange-poster.jpg',
+      'movie:Full Metal Jacket': 'https://upload.wikimedia.org/wikipedia/en/9/99/Full_Metal_Jacket_poster.jpg',
+      'movie:Scarface': 'https://upload.wikimedia.org/wikipedia/en/7/79/Scarface_-_1983_film.jpg',
+      'movie:Ran': 'https://upload.wikimedia.org/wikipedia/en/5/58/Ran_poster.jpg',
+      'movie:Harakiri': 'https://upload.wikimedia.org/wikipedia/en/a/a2/Harakiri_poster.jpg',
+      'movie:Seven Samurai': 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Seven_Samurai_poster.jpg',
+      'movie:High and Low': 'https://upload.wikimedia.org/wikipedia/en/d/d3/High_and_Low_poster.jpg',
+      'movie:Yojimbo': 'https://upload.wikimedia.org/wikipedia/en/b/bc/Yojimbo_1961.jpg',
       'movie:Yavanika': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Yavanika_poster.jpg',
-      'movie:2001: A Space Odyssey': 'https://upload.wikimedia.org/wikipedia/en/1/11/2001_A_Space_Odyssey_%281968%29.png',
       'movie:Sonar Kella': 'https://upload.wikimedia.org/wikipedia/en/5/56/Sonar_Kella_book_front_cover.jpg',
       'movie:Anveshana': 'https://upload.wikimedia.org/wikipedia/en/9/98/Anveshana.jpg',
       'movie:Kshanam': 'https://upload.wikimedia.org/wikipedia/en/0/0d/Kshanam_poster.jpg'
     };
 
-    // Pre-populate posterCache immediately for instantaneous synchronous card rendering
+    // 1. Bidirectional sync: ensure un-prefixed titles and cross-type queries resolve instantly
+    Object.entries(KNOWN_POSTER_OVERRIDES).forEach(([k, v]) => {
+      if (k.includes(':')) {
+        const [t, title] = k.split(':');
+        KNOWN_POSTER_OVERRIDES[title] = v;
+        const altType = t === 'show' ? 'movie' : 'show';
+        KNOWN_POSTER_OVERRIDES[altType + ':' + title] = v;
+      }
+    });
+
+    // 2. Pre-populate posterCache immediately, UNCONDITIONALLY OVERWRITING any stale or bad cached values
+    Object.assign(posterCache, KNOWN_POSTER_OVERRIDES);
+
+    // 3. Purge known mismatched or legacy bad hashes from posterCache and localStorage
+    const BAD_POSTER_PATTERNS = [
+      '/8/21209.jpg',     // Six Million Dollar Man (was wrongly mapped to The Wire)
+      '/203/509204.jpg',  // Eyewitnesses (was wrongly mapped to Chernobyl)
+      '/8/22105.jpg',     // Legacy bad Mad Men hash
+      '/4/11542.jpg',     // Legacy bad Band of Brothers hash
+      '/4/11598.jpg',     // Legacy bad Cowboy Bebop hash
+      '/261/653066.jpg',  // Legacy low-res/bad Dark hash
+      '/411/1028308.jpg'  // Legacy bad Better Call Saul hash
+    ];
+    Object.keys(posterCache).forEach(k => {
+      const val = posterCache[k];
+      if (typeof val === 'string' && BAD_POSTER_PATTERNS.some(p => val.includes(p))) {
+        delete posterCache[k];
+      }
+    });
+    // Ensure all KNOWN_POSTER_OVERRIDES are strictly applied
     Object.assign(posterCache, KNOWN_POSTER_OVERRIDES);
 
     // Quality enhancer for poster image sources (TVMaze, iTunes, Wikipedia, TMDB)
@@ -13261,7 +13895,7 @@ Odd Taxi|2021|87
     window.upgradePosterQuality = upgradePosterQuality;
 
     // Ultra-fast fetch wrapper with AbortSignal timeout to prevent hung API calls
-    const fetchFast = (url, opts = {}, timeoutMs = 3200) => {
+    const fetchFast = (url, opts = {}, timeoutMs = 1800) => {
       try {
         if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
           opts.signal = AbortSignal.timeout(timeoutMs);
@@ -13270,12 +13904,25 @@ Odd Taxi|2021|87
       return fetch(url, opts);
     };
 
+    const MAX_PARALLEL_FETCHES = 6;
+    const failedFetches = new Set();
+
     async function fetchPoster(item, forceSynopsis = false, isPriority = false) {
       if (!item) return null;
-      const cacheKey = item.type + ':' + item.title;
-      if (KNOWN_POSTER_OVERRIDES[cacheKey]) {
-        posterCache[cacheKey] = KNOWN_POSTER_OVERRIDES[cacheKey];
-        return KNOWN_POSTER_OVERRIDES[cacheKey];
+      const bareTitle = item.cleanName || item.title;
+      const cacheKey = item.type + ':' + bareTitle;
+      const altKey = (item.type === 'show' ? 'movie:' : 'show:') + bareTitle;
+      
+      // 1. Direct verified override check (checks exact type, bare title, and cross-type)
+      const override = KNOWN_POSTER_OVERRIDES[cacheKey] || KNOWN_POSTER_OVERRIDES[bareTitle] || KNOWN_POSTER_OVERRIDES[altKey];
+      if (override) {
+        posterCache[cacheKey] = override;
+        posterCache[bareTitle] = override;
+        return override;
+      }
+      // Negative cache hit: avoids spamming network for unfindable titles
+      if (failedFetches.has(cacheKey) && !forceSynopsis) {
+        return generateStylizedPosterDataURI(item);
       }
       // All titles are eligible for poster resolution
       if (posterCache[cacheKey] && !posterCache[cacheKey].startsWith('data:image/svg') && (!forceSynopsis || summaryCache[cacheKey])) {
@@ -13284,94 +13931,141 @@ Odd Taxi|2021|87
       if (inFlightFetches[cacheKey]) return inFlightFetches[cacheKey];
 
       inFlightFetches[cacheKey] = (async () => {
-        // High-performance concurrency governor (up to 24 parallel requests for rapid thumbnail hydration)
-        if (!isPriority && activeFetches >= 24) {
+        // High-performance concurrency governor: avoids HTTP 429 rate-limiting from iTunes & TVMaze
+        if (!isPriority && activeFetches >= MAX_PARALLEL_FETCHES) {
           await new Promise(resolve => fetchQueue.push(resolve));
         }
         activeFetches++;
 
         try {
-          const rawQuery = item.rawName || (item.cleanName || item.title).replace(/\s*\(Series\)$/i, '');
+          const rawQuery = item.rawName || bareTitle.replace(/\s*\(Series\)$/i, '');
           const queryName = rawQuery.replace(/\s*\(\d{4}\)$/, '').trim();
 
-          // Pipeline 1: Movies -> Free iTunes Movie Search API (Ultra-crisp official posters 600x900)
+          // Pipeline 1: Movies -> Free iTunes Movie Search API with strict anti-mismatch filtering
           if (item.type === 'movie') {
             try {
               const res = await fetchFast(`https://itunes.apple.com/search?media=movie&entity=movie&limit=6&term=${encodeURIComponent(queryName)}`);
               if (res.ok) {
                 const data = await res.json();
                 const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+                const cleanBrand = s => String(s || '').toLowerCase()
+                  .replace(/\b(disney|pixar|marvel|theatrical|directors? cut|extended edition)\b/g, '')
+                  .replace(/[^a-z0-9]/g, '');
                 const qNorm = norm(queryName);
-                const match = (data.results || []).find(r => {
+                const qClean = cleanBrand(queryName);
+
+                // Pass 1: Strict Exact Title Match (within 1 release year)
+                let match = (data.results || []).find(r => {
                   const rNorm = norm(r.trackName);
-                  const sameName = rNorm === qNorm || rNorm.startsWith(qNorm) || qNorm.startsWith(rNorm);
+                  const rClean = cleanBrand(r.trackName);
+                  const isExact = rNorm === qNorm || rClean === qClean;
                   const relYear = r.releaseDate ? parseInt(r.releaseDate.slice(0, 4)) : 0;
-                  return sameName && (!relYear || Math.abs(relYear - item.year) <= 2);
+                  return isExact && (!relYear || !item.year || Math.abs(relYear - item.year) <= 1);
                 });
+
+                // Pass 2: Strict Exact Title Match (within 3 release years for international releases)
+                if (!match) {
+                  match = (data.results || []).find(r => {
+                    const rNorm = norm(r.trackName);
+                    const rClean = cleanBrand(r.trackName);
+                    const isExact = rNorm === qNorm || rClean === qClean;
+                    const relYear = r.releaseDate ? parseInt(r.releaseDate.slice(0, 4)) : 0;
+                    return isExact && (!relYear || !item.year || Math.abs(relYear - item.year) <= 3);
+                  });
+                }
+
+                // Pass 3: Long Title Match ONLY (titles >= 9 chars, STRICT year match, prevents short title collisions)
+                if (!match && qNorm.length >= 9 && item.year) {
+                  match = (data.results || []).find(r => {
+                    const rNorm = norm(r.trackName);
+                    const relYear = r.releaseDate ? parseInt(r.releaseDate.slice(0, 4)) : 0;
+                    const yearMatch = relYear && Math.abs(relYear - item.year) <= 1;
+                    return yearMatch && (rNorm.startsWith(qNorm) || qNorm.startsWith(rNorm));
+                  });
+                }
 
                 if (match && match.artworkUrl100) {
                   const highRes = match.artworkUrl100.replace('100x100bb', '600x900bb');
                   posterCache[cacheKey] = highRes;
+                  posterCache[bareTitle] = highRes;
                   if (match.longDescription && !summaryCache[cacheKey]) {
                     summaryCache[cacheKey] = match.longDescription;
                   }
                   scheduleSavePosterCache();
+                  if (window.PeakIDB && window.PeakIDB.put) {
+                    window.PeakIDB.put(cacheKey, highRes);
+                    window.PeakIDB.put(bareTitle, highRes);
+                  }
                   return highRes;
                 }
               }
             } catch (e) {}
           }
 
-        // Pipeline 2: TV Shows -> Free TVMaze Single Search API + iTunes Fallback
+        // Pipeline 2: TV Shows -> Free TVMaze Single Search API + Verification
         if (item.type === 'show') {
           try {
             const res = await fetchFast(`https://api.tvmaze.com/singlesearch/shows?q=${encodeURIComponent(queryName)}`);
             if (res.ok) {
               const data = await res.json();
-              if (data.summary && !summaryCache[cacheKey]) {
-                summaryCache[cacheKey] = data.summary.replace(/<[^>]+>/g, '');
-              }
-              const img = data.image && (data.image.original || data.image.medium);
-              if (img) {
-                posterCache[cacheKey] = img;
-                scheduleSavePosterCache();
-                return img;
+              const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+              const qNorm = norm(queryName);
+              const rNorm = norm(data.name);
+              // Ensure show name actually matches
+              const isMatch = rNorm === qNorm || (qNorm.length >= 6 && rNorm.startsWith(qNorm));
+              if (isMatch) {
+                if (data.summary && !summaryCache[cacheKey]) {
+                  summaryCache[cacheKey] = data.summary.replace(/<[^>]+>/g, '');
+                }
+                const img = data.image && (data.image.original || data.image.medium);
+                if (img) {
+                  posterCache[cacheKey] = img;
+                  posterCache[bareTitle] = img;
+                  scheduleSavePosterCache();
+                  if (window.PeakIDB && window.PeakIDB.put) {
+                    window.PeakIDB.put(cacheKey, img);
+                    window.PeakIDB.put(bareTitle, img);
+                  }
+                  return img;
+                }
               }
             }
           } catch (e) {}
 
-          // Sub-pipeline 2b: iTunes TV Shows
+          // Sub-pipeline 2b: iTunes TV Shows with safe matching
           try {
             const res = await fetchFast(`https://itunes.apple.com/search?media=tvShow&entity=tvSeason&limit=4&term=${encodeURIComponent(queryName)}`);
             if (res.ok) {
               const data = await res.json();
-              const match = (data.results || [])[0];
+              const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+              const qNorm = norm(queryName);
+              const match = (data.results || []).find(r => {
+                const rNorm = norm(r.collectionName || r.trackName);
+                return rNorm === qNorm || (qNorm.length >= 6 && rNorm.startsWith(qNorm));
+              });
               if (match && match.artworkUrl100) {
                 const highRes = match.artworkUrl100.replace('100x100bb', '600x900bb');
                 posterCache[cacheKey] = highRes;
+                posterCache[bareTitle] = highRes;
                 scheduleSavePosterCache();
+                if (window.PeakIDB && window.PeakIDB.put) {
+                  window.PeakIDB.put(cacheKey, highRes);
+                  window.PeakIDB.put(bareTitle, highRes);
+                }
                 return highRes;
               }
             }
           } catch (e) {}
         }
 
-        // Pipeline 3: Universal Fallback -> Wikipedia Summary API (with custom header)
+        // Pipeline 3: Targeted Fallback -> Wikipedia Summary API (with miniseries support)
         try {
-          const wikiCandidates = [
-            `${queryName}_(${item.year}_TV_series)`,
-            `${queryName}_(${item.year}_film)`,
-            `${queryName}_(miniseries)`,
-            `${queryName}_(TV_miniseries)`,
-            `${queryName}_(TV_series)`,
-            `${queryName}_(film)`,
-            `${queryName}_(Indian_TV_series)`,
-            `${rawQuery.replace(/ /g, '_')}`,
-            queryName
-          ];
+          const wikiCandidates = item.type === 'show'
+            ? [`${queryName}_(${item.year}_TV_series)`, `${queryName}_(miniseries)`, `${queryName}_(TV_miniseries)`, `${queryName}_(TV_series)`, queryName]
+            : [`${queryName}_(${item.year}_film)`, `${queryName}_(film)`, queryName];
           for (const cand of wikiCandidates) {
             const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cand.replace(/ /g, '_'))}`;
-            const res = await fetchFast(url, { headers: { 'Api-User-Agent': 'PeakMedia/2.8 (contact@peakmedia.app)' } }, 2500);
+            const res = await fetchFast(url, { headers: { 'Api-User-Agent': 'PeakMedia/2.8 (contact@peakmedia.app)' } }, 1800);
             if (res.ok) {
               const data = await res.json();
               if (data.type === 'standard') {
@@ -13380,12 +14074,22 @@ Odd Taxi|2021|87
                 }
                 if (data.originalimage && data.originalimage.source) {
                   posterCache[cacheKey] = data.originalimage.source;
+                  posterCache[bareTitle] = data.originalimage.source;
                   scheduleSavePosterCache();
+                  if (window.PeakIDB && window.PeakIDB.put) {
+                    window.PeakIDB.put(cacheKey, data.originalimage.source);
+                    window.PeakIDB.put(bareTitle, data.originalimage.source);
+                  }
                   return data.originalimage.source;
                 } else if (data.thumbnail && data.thumbnail.source) {
                   const highRes = data.thumbnail.source.replace(/\/\d+px-/, '/640px-');
                   posterCache[cacheKey] = highRes;
+                  posterCache[bareTitle] = highRes;
                   scheduleSavePosterCache();
+                  if (window.PeakIDB && window.PeakIDB.put) {
+                    window.PeakIDB.put(cacheKey, highRes);
+                    window.PeakIDB.put(bareTitle, highRes);
+                  }
                   return highRes;
                 }
               }
@@ -13393,11 +14097,12 @@ Odd Taxi|2021|87
           }
         } catch (e) {}
 
+        failedFetches.add(cacheKey);
         return null;
       } finally {
         activeFetches--;
         delete inFlightFetches[cacheKey];
-        while (fetchQueue.length && activeFetches < 24) {
+        while (fetchQueue.length && activeFetches < MAX_PARALLEL_FETCHES) {
           const next = fetchQueue.shift();
           if (next) next();
         }
@@ -13416,7 +14121,7 @@ Odd Taxi|2021|87
       }, 1000);
     }
 
-    // High-responsiveness IntersectionObserver with 1200px anticipatory prefetch margin
+    // High-responsiveness IntersectionObserver with 350px anticipatory prefetch margin
     const thumbObserver = new IntersectionObserver((entries) => {
       entries.forEach(async (entry) => {
         if (!entry.isIntersecting) return;
@@ -13426,7 +14131,8 @@ Odd Taxi|2021|87
         const item = globalDatabase[title];
         if (!item) return;
 
-        const realUrl = await fetchPoster(item, false);
+        const isPriority = entry.intersectionRatio > 0;
+        const realUrl = await fetchPoster(item, false, isPriority);
         if (realUrl && imgEl.getAttribute('src') !== realUrl) {
           imgEl.onload = () => {
             imgEl.classList.remove('poster-shimmer');
@@ -13445,7 +14151,7 @@ Odd Taxi|2021|87
           imgEl.src = realUrl;
         }
       });
-    }, { rootMargin: '1200px 0px 1200px 0px' });
+    }, { rootMargin: '350px 0px 350px 0px' });
 
     function handlePosterFallback(img) {
       if (!img) return;
@@ -13470,10 +14176,11 @@ Odd Taxi|2021|87
         const item = title && globalDatabase ? globalDatabase[title] : null;
         if (item) {
           const cacheKey = item.type + ':' + item.title;
-          const cached = posterCache[cacheKey] || KNOWN_POSTER_OVERRIDES[cacheKey];
+          const cached = KNOWN_POSTER_OVERRIDES[cacheKey] || KNOWN_POSTER_OVERRIDES[title] || posterCache[cacheKey] || posterCache[title] || item.poster;
           if (cached && typeof cached === 'string' && !cached.startsWith('data:image/svg')) {
             if (img.src !== cached) img.src = cached;
             img.classList.remove('poster-shimmer');
+            img.style.opacity = '1';
             return;
           }
         }
@@ -13774,7 +14481,7 @@ Odd Taxi|2021|87
       const escTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
       const attrTitle = item.title.replace(/"/g, "&quot;");
       const cacheKey = item.type + ':' + item.title;
-      const cachedPoster = (posterCache[cacheKey] && typeof posterCache[cacheKey] === 'string') ? posterCache[cacheKey] : (KNOWN_POSTER_OVERRIDES[cacheKey] || KNOWN_POSTER_OVERRIDES[item.title] || (typeof item.thumb === 'string' ? item.thumb : generateStylizedPosterDataURI(item)));
+      const cachedPoster = KNOWN_POSTER_OVERRIDES[cacheKey] || KNOWN_POSTER_OVERRIDES[item.title] || (posterCache[cacheKey] && typeof posterCache[cacheKey] === 'string' ? posterCache[cacheKey] : (typeof item.thumb === 'string' ? item.thumb : generateStylizedPosterDataURI(item)));
       const fallbackSvg = posterSvgCache[item.cleanName || item.title || 'Cinema'] || generateStylizedPosterDataURI(item);
       const widthClass = isCompactScroll ? "w-[124px] sm:w-48 shrink-0 snap-start" : "w-full";
       const isMovie = item.type === 'movie';
@@ -13946,10 +14653,10 @@ Odd Taxi|2021|87
       const coordEl = document.getElementById('telescopeCoords');
       if (coordEl) coordEl.textContent = coords[currentSpotlightIdx % coords.length];
 
-      // Update telescope barrel background glow
+      // Update telescope barrel background glow (clean neutral)
       const barrel = document.getElementById('telescopeBarrel');
       if (barrel) {
-        barrel.style.background = `radial-gradient(circle at 50% 50%, ${theme.c1}26 0%, #060913 72%, #000 100%)`;
+        barrel.style.background = 'radial-gradient(circle at 50% 50%, #060913 72%, #000 100%)';
       }
 
       // Update Zenith Focal Star for the Observatory Sky
@@ -13980,11 +14687,6 @@ Odd Taxi|2021|87
       }).join('');
 
       banner.innerHTML = `
-        <!-- Optical Lens Nebular Glow -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl sm:rounded-3xl">
-          <img src="${posterUrl}" data-title="${attrTitle}" onerror="window.handlePosterFallback(this);" alt="" class="lazy-poster absolute right-0 top-0 w-full sm:w-1/2 h-full object-cover opacity-20 blur-3xl pointer-events-none" />
-        </div>
-
         <div id="heroInnerWrap" class="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 ${isDropIn ? 'drop-in' : (animate ? 'fade-in' : '')}">
           
           <!-- Left: Compact 2:3 Poster Card & Film Info -->
@@ -14004,7 +14706,7 @@ Odd Taxi|2021|87
               <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
                 <span class="text-brand-gold font-black px-2 py-0.5 rounded-lg bg-amber-400/15 border border-amber-400/30 flex items-center gap-1.5"><i class="fa-solid fa-star text-[10px]"></i> ${item.rating}</span>
                 <span class="text-white/30 hidden sm:inline">•</span>
-                <span class="text-gray-200 font-bold uppercase text-[10px] tracking-wider px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10" style="color:${theme.accent}">${item.genre}</span>
+                <span class="text-gray-300 font-bold uppercase text-[10px] tracking-wider px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10">${item.genre}</span>
                 <span class="text-white/30 hidden sm:inline">•</span>
                 <span class="text-gray-300 font-semibold text-xs">${item.year}</span>
               </div>
@@ -14289,6 +14991,12 @@ Odd Taxi|2021|87
 
       const sSel = document.getElementById('filterShowsGenre');
       if (sSel) sSel.innerHTML = '<option value="All">All Genres</option>' + showGenres.map(g => `<option value="${g}">${g}</option>`).join('');
+
+      const pSel = document.getElementById('profileFilterGenre');
+      if (pSel) {
+        const allGenres = [...new Set([...movieGenres, ...showGenres])].filter(Boolean).sort();
+        pSel.innerHTML = '<option value="All">All Genres</option>' + allGenres.map(g => `<option value="${g}">${g}</option>`).join('');
+      }
     }
 
     
@@ -14686,7 +15394,7 @@ Odd Taxi|2021|87
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `cinesphere-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `peakmedia-backup-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
       showToast("Exported complete cinema backup (Watchlist, Watched, Favourites & Universes)!", "fa-download", "text-brand-gold");

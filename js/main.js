@@ -48,8 +48,21 @@
         try {
           const tx = this.db.transaction('posters', 'readwrite');
           const store = tx.objectStore('posters');
-          Object.entries(posterCache || {}).forEach(([k, v]) => {
-            if (v) store.put(v, k);
+          // 1. Read existing IDB cached posters back into memory posterCache
+          store.openCursor().onsuccess = e => {
+            const cursor = e.target.result;
+            if (cursor) {
+              if (typeof posterCache !== 'undefined' && cursor.key && cursor.value) {
+                if (!posterCache[cursor.key]) posterCache[cursor.key] = cursor.value;
+              }
+              cursor.continue();
+            }
+          };
+          // 2. Also save anything from current posterCache into IDB
+          Object.entries(typeof posterCache !== 'undefined' ? posterCache : {}).forEach(([k, v]) => {
+            if (v && typeof v === 'string' && !v.startsWith('data:image/svg')) {
+              store.put(v, k);
+            }
           });
           const gReq = store.getAllKeys();
           gReq.onsuccess = () => {
@@ -68,6 +81,7 @@
         } catch (err) {}
       }
     };
+    window.PeakIDB = PeakIDB;
     PeakIDB.init();
 
     // ---------------------------------------------------------
@@ -146,9 +160,78 @@
     if (!AVATAR_META[obProfile.avatar]) obProfile.avatar = 'cinephile';
 
     let obStep = 1;
-    const TOTAL_OB_STEPS = 6;
-    let obMovieQuery = '';
-    let obShowQuery = '';
+    const TOTAL_OB_STEPS = 8;
+    let obOthersExpanded = false;
+    let obAudioPreviewPlaying = false;
+    let obPreviewAudioEl = null;
+
+    // Fixed 12 Films & 12 Shows with reliable preloaded posters
+    const FIXED_OB_FILMS = [
+      { title: "The Godfather", year: 1972, rating: "9.2", lang: "en", poster: "https://upload.wikimedia.org/wikipedia/en/1/1c/Godfather_ver1.jpg" },
+      { title: "The Dark Knight", year: 2008, rating: "9.0", lang: "en", poster: "https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg" },
+      { title: "12 Angry Men", year: 1957, rating: "9.0", lang: "en", poster: "https://upload.wikimedia.org/wikipedia/commons/b/b5/12_Angry_Men_%281957_film_poster%29.jpg" },
+      { title: "Schindler's List", year: 1993, rating: "9.0", lang: "en", poster: "https://upload.wikimedia.org/wikipedia/en/3/38/Schindler%27s_List_movie.jpg" },
+      { title: "Pulp Fiction", year: 1994, rating: "8.9", lang: "en", poster: "https://upload.wikimedia.org/wikipedia/en/3/3b/Pulp_Fiction_%281994%29_poster.jpg" },
+      { title: "Inception", year: 2010, rating: "8.8", lang: "en", poster: "https://upload.wikimedia.org/wikipedia/en/2/2e/Inception_%282010%29_theatrical_poster.jpg" },
+      { title: "Fight Club", year: 1999, rating: "8.8", lang: "en", poster: "https://upload.wikimedia.org/wikipedia/en/f/fc/Fight_Club_poster.jpg" },
+      { title: "Parasite", year: 2019, rating: "8.5", lang: "ko", poster: "https://upload.wikimedia.org/wikipedia/en/5/53/Parasite_%282019_film%29.png" },
+      { title: "3 Idiots", year: 2009, rating: "8.4", lang: "hi", poster: "https://upload.wikimedia.org/wikipedia/en/d/df/3_idiots_poster.jpg" },
+      { title: "Gangs of Wasseypur", year: 2012, rating: "8.2", lang: "hi", poster: "https://upload.wikimedia.org/wikipedia/en/6/6a/Gangs_of_Wasseypur_poster.jpg" },
+      { title: "Dangal", year: 2016, rating: "8.3", lang: "hi", poster: "https://upload.wikimedia.org/wikipedia/en/9/99/Dangal_Poster.jpg" },
+      { title: "Super Deluxe", year: 2019, rating: "8.4", lang: "ta", poster: "https://upload.wikimedia.org/wikipedia/en/a/a1/Super_Deluxe_film_poster.jpg" }
+    ];
+
+    const FIXED_OB_SHOWS = [
+      { title: "Breaking Bad", year: 2008, rating: "9.5", lang: "en", poster: "https://static.tvmaze.com/uploads/images/original_untouched/501/1253519.jpg" },
+      { title: "Chernobyl", year: 2019, rating: "9.4", lang: "en", poster: "https://static.tvmaze.com/uploads/images/original_untouched/193/482599.jpg" },
+      { title: "The Wire", year: 2002, rating: "9.3", lang: "en", poster: "https://static.tvmaze.com/uploads/images/original_untouched/504/1260189.jpg" },
+      { title: "The Sopranos", year: 1999, rating: "9.2", lang: "en", poster: "https://static.tvmaze.com/uploads/images/original_untouched/4/11341.jpg" },
+      { title: "Succession", year: 2018, rating: "8.9", lang: "en", poster: "https://static.tvmaze.com/uploads/images/original_untouched/453/1134275.jpg" },
+      { title: "Better Call Saul", year: 2015, rating: "9.0", lang: "en", poster: "https://static.tvmaze.com/uploads/images/original_untouched/501/1253515.jpg" },
+      { title: "Fleabag", year: 2016, rating: "8.7", lang: "en", poster: "https://static.tvmaze.com/uploads/images/original_untouched/192/482341.jpg" },
+      { title: "Mad Men", year: 2007, rating: "8.7", lang: "en", poster: "https://static.tvmaze.com/uploads/images/original_untouched/2/5589.jpg" },
+      { title: "Scam 1992", year: 2020, rating: "9.2", lang: "hi", poster: "https://static.tvmaze.com/uploads/images/original_untouched/521/1304758.jpg" },
+      { title: "Panchayat", year: 2020, rating: "8.9", lang: "hi", poster: "https://static.tvmaze.com/uploads/images/original_untouched/517/1293627.jpg" },
+      { title: "Sacred Games", year: 2018, rating: "8.5", lang: "hi", poster: "https://static.tvmaze.com/uploads/images/original_untouched/204/511629.jpg" },
+      { title: "Dark", year: 2017, rating: "8.7", lang: "de", poster: "https://static.tvmaze.com/uploads/images/original_untouched/504/1262352.jpg" }
+    ];
+
+    // Preload & keep all 24 thumbnails loaded in cache immediately
+    function preloadObPosters() {
+      FIXED_OB_FILMS.forEach(it => {
+        const key = 'movie:' + it.title;
+        const posterUrl = (typeof KNOWN_POSTER_OVERRIDES !== 'undefined' && (KNOWN_POSTER_OVERRIDES[key] || KNOWN_POSTER_OVERRIDES[it.title])) || it.poster;
+        if (typeof posterCache !== 'undefined' && posterUrl) {
+          posterCache[key] = posterUrl;
+          posterCache[it.title] = posterUrl;
+        }
+        if (posterUrl) {
+          const img = new Image();
+          img.src = posterUrl;
+        }
+        if (window.PeakIDB && window.PeakIDB.put && posterUrl) {
+          window.PeakIDB.put(key, posterUrl);
+          window.PeakIDB.put(it.title, posterUrl);
+        }
+      });
+      FIXED_OB_SHOWS.forEach(it => {
+        const key = 'show:' + it.title;
+        const posterUrl = (typeof KNOWN_POSTER_OVERRIDES !== 'undefined' && (KNOWN_POSTER_OVERRIDES[key] || KNOWN_POSTER_OVERRIDES[it.title])) || it.poster;
+        if (typeof posterCache !== 'undefined' && posterUrl) {
+          posterCache[key] = posterUrl;
+          posterCache[it.title] = posterUrl;
+        }
+        if (posterUrl) {
+          const img = new Image();
+          img.src = posterUrl;
+        }
+        if (window.PeakIDB && window.PeakIDB.put && posterUrl) {
+          window.PeakIDB.put(key, posterUrl);
+          window.PeakIDB.put(it.title, posterUrl);
+        }
+      });
+    }
+    try { preloadObPosters(); } catch (e) {}
 
     function updateHeaderProfileUI() {
       const lbl = $('headerUsernameLabel');
@@ -168,11 +251,10 @@
     function updateObLiveTray() {
       const tray = $('obLiveTray');
       if (!tray) return;
-      const langCount = (obProfile.languages || (obProfile.language ? [obProfile.language] : ['English'])).length;
-      const gCount = 1 + (obProfile.secondaryGenres || []).length;
+      const langCount = (obProfile.languages || ['English', 'Hindi', 'Spanish', 'Tamil']).length;
+      const gCount = (obProfile.genres || ['Drama']).length;
       const mCount = (obProfile.favMoviesSeed || []).length;
       const sCount = (obProfile.favShowsSeed || []).length;
-      const muCount = (obProfile.musicMoods || []).length + (obProfile.favArtists || []).length;
       const shortName = (obProfile.username || 'Cinephile').slice(0, 12);
       tray.innerHTML = `
         <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-slate-700/60 text-[10px] sm:text-[11px] font-bold text-slate-200 whitespace-nowrap shrink-0 shadow-sm">${esc(shortName)}</span>
@@ -180,8 +262,64 @@
         <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-amber-500/40 text-[10px] sm:text-[11px] font-bold text-amber-300 whitespace-nowrap shrink-0 shadow-sm">${gCount} Genres</span>
         <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-cyan-500/40 text-[10px] sm:text-[11px] font-bold text-cyan-400 whitespace-nowrap shrink-0 shadow-sm">${mCount} Films</span>
         <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-purple-500/40 text-[10px] sm:text-[11px] font-bold text-purple-300 whitespace-nowrap shrink-0 shadow-sm">${sCount} Shows</span>
-        <span class="px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-emerald-500/40 text-[10px] sm:text-[11px] font-bold text-emerald-300 whitespace-nowrap shrink-0 shadow-sm">${muCount} Music</span>
       `;
+    }
+
+    function triggerLaunchAnimation(done) {
+      const ov = $('onboardingOverlay');
+      const launch = $('obLaunchOverlay');
+      const beam = $('obLaunchBeam');
+
+      if (ov) {
+        ov.classList.add('transition-opacity', 'duration-300', 'opacity-0');
+      }
+
+      if (launch) {
+        launch.classList.remove('hidden');
+        launch.classList.add('flex');
+        void launch.offsetWidth;
+        launch.classList.remove('opacity-0');
+        launch.classList.add('opacity-100');
+
+        if (beam) {
+          setTimeout(() => { beam.style.width = '100%'; }, 50);
+        }
+
+        // Synthesize soft celestial launch chime
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) {
+            const ctx = new AudioCtx();
+            if (ctx.state === 'suspended') ctx.resume();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.6);
+            gain.gain.setValueAtTime(0.12, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 1.2);
+          }
+        } catch (err) {}
+
+        setTimeout(() => {
+          launch.classList.remove('opacity-100');
+          launch.classList.add('opacity-0');
+          setTimeout(() => {
+            launch.classList.add('hidden');
+            launch.classList.remove('flex');
+            if (ov) {
+              ov.classList.remove('transition-opacity', 'duration-300', 'opacity-0');
+            }
+            if (done) done();
+          }, 600);
+        }, 1300);
+      } else {
+        if (done) done();
+      }
     }
 
     function renderObStep() {
@@ -196,109 +334,79 @@
         }
       }
 
+      // Minimal headers without step numbers, centralized
       const titles = [
-        'Your Profile & Avatar',
-        'Cinema & Audio Languages',
-        'Favorite Genres & Moods',
-        'Movies You Love',
-        'TV Shows You Binge',
-        'Music Moods & Singers'
+        'Profile',
+        'Languages',
+        'Genres',
+        'Films',
+        'Series',
+        'The Deciders',
+        'Soundtrack Lounge',
+        'Theme'
       ];
-      $('obStepKicker').textContent = `0${obStep} / 0${TOTAL_OB_STEPS}`;
-      $('obStepTitleTop').textContent = titles[obStep - 1];
+
+      const kicker = $('obStepKicker');
+      if (kicker) {
+        kicker.textContent = '';
+        kicker.classList.add('hidden');
+      }
+      $('obStepTitleTop').textContent = titles[obStep - 1] || 'Theme';
       $('obProgressBar').style.width = `${Math.round((obStep / TOTAL_OB_STEPS) * 100)}%`;
-      $('obBackBtn').style.visibility = obStep === 1 ? 'hidden' : 'visible';
-      $('obNextBtnLabel').textContent = obStep === TOTAL_OB_STEPS ? 'Start Exploring' : 'Continue';
-      $('obStepDots').innerHTML = [1, 2, 3, 4, 5, 6].map(s => `<span class="h-1.5 rounded-full transition-all ${s === obStep ? 'w-6 bg-brand-gold' : s < obStep ? 'w-2 bg-white/60' : 'w-2 bg-white/15'}"></span>`).join('');
+      
+      const backBtn = $('obBackBtn');
+      if (backBtn) {
+        if (obStep === 1) {
+          backBtn.classList.add('hidden');
+          backBtn.style.visibility = 'hidden';
+        } else {
+          backBtn.classList.remove('hidden');
+          backBtn.style.visibility = 'visible';
+        }
+      }
+
+      $('obNextBtnLabel').textContent = obStep === TOTAL_OB_STEPS ? 'Enter PeakMedia' : 'Continue';
+
+      const dots = $('obStepDots');
+      if (dots) dots.innerHTML = '';
       updateObLiveTray();
 
       const vp = $('obStepViewport');
 
-      // Safe global data access
-      const allMovies = (window.movies && window.movies.length) ? window.movies : (typeof movies !== 'undefined' ? movies : [
-        { title: "The Shawshank Redemption", cleanName: "The Shawshank Redemption", year: 1994, rating: 9.3, genre: "Drama", lang: "en" },
-        { title: "The Godfather", cleanName: "The Godfather", year: 1972, rating: 9.2, genre: "Crime", lang: "en" },
-        { title: "The Dark Knight", cleanName: "The Dark Knight", year: 2008, rating: 9.0, genre: "Action", lang: "en" },
-        { title: "Pulp Fiction", cleanName: "Pulp Fiction", year: 1994, rating: 8.9, genre: "Crime", lang: "en" },
-        { title: "Fight Club", cleanName: "Fight Club", year: 1999, rating: 8.8, genre: "Drama", lang: "en" },
-        { title: "Forrest Gump", cleanName: "Forrest Gump", year: 1994, rating: 8.8, genre: "Drama", lang: "en" },
-        { title: "Inception", cleanName: "Inception", year: 2010, rating: 8.8, genre: "Sci-Fi", lang: "en" },
-        { title: "Interstellar", cleanName: "Interstellar", year: 2014, rating: 8.7, genre: "Sci-Fi", lang: "en" },
-        { title: "3 Idiots", cleanName: "3 Idiots", year: 2009, rating: 8.4, genre: "Comedy", lang: "hi" },
-        { title: "Dangal", cleanName: "Dangal", year: 2016, rating: 8.3, genre: "Drama", lang: "hi" },
-        { title: "12th Fail", cleanName: "12th Fail", year: 2023, rating: 8.9, genre: "Drama", lang: "hi" },
-        { title: "RRR", cleanName: "RRR", year: 2022, rating: 8.0, genre: "Action", lang: "hi" },
-        { title: "Kireedam", cleanName: "Kireedam", year: 1989, rating: 8.9, genre: "Drama", lang: "ml" },
-        { title: "Jai Bhim", cleanName: "Jai Bhim", year: 2021, rating: 8.8, genre: "Drama", lang: "ta" },
-        { title: "Spirited Away", cleanName: "Spirited Away", year: 2001, rating: 8.6, genre: "Animation", lang: "ja" },
-        { title: "Parasite", cleanName: "Parasite", year: 2019, rating: 8.5, genre: "Drama", lang: "ko" },
-        { title: "The Matrix", cleanName: "The Matrix", year: 1999, rating: 8.7, genre: "Sci-Fi", lang: "en" },
-        { title: "Gladiator", cleanName: "Gladiator", year: 2000, rating: 8.5, genre: "Action", lang: "en" }
-      ]);
-
-      const allShows = (window.tvShows && window.tvShows.length) ? window.tvShows : (typeof tvShows !== 'undefined' ? tvShows : [
-        { title: "Breaking Bad", cleanName: "Breaking Bad", year: 2008, rating: 9.5, genre: "Crime", lang: "en" },
-        { title: "Game of Thrones", cleanName: "Game of Thrones", year: 2011, rating: 9.2, genre: "Fantasy", lang: "en" },
-        { title: "The Sopranos", cleanName: "The Sopranos", year: 1999, rating: 9.2, genre: "Crime", lang: "en" },
-        { title: "Avatar: The Last Airbender", cleanName: "Avatar: The Last Airbender", year: 2005, rating: 9.3, genre: "Animation", lang: "en" },
-        { title: "Chernobyl", cleanName: "Chernobyl", year: 2019, rating: 9.4, genre: "Drama", lang: "en" },
-        { title: "Stranger Things", cleanName: "Stranger Things", year: 2016, rating: 8.7, genre: "Sci-Fi", lang: "en" },
-        { title: "Dark", cleanName: "Dark", year: 2017, rating: 8.7, genre: "Sci-Fi", lang: "de" },
-        { title: "Succession", cleanName: "Succession", year: 2018, rating: 8.9, genre: "Drama", lang: "en" },
-        { title: "Better Call Saul", cleanName: "Better Call Saul", year: 2015, rating: 9.0, genre: "Crime", lang: "en" },
-        { title: "The Last of Us", cleanName: "The Last of Us", year: 2023, rating: 8.8, genre: "Drama", lang: "en" },
-        { title: "The Boys", cleanName: "The Boys", year: 2019, rating: 8.7, genre: "Action", lang: "en" },
-        { title: "Sherlock", cleanName: "Sherlock", year: 2010, rating: 9.1, genre: "Mystery", lang: "en" },
-        { title: "Mirzapur", cleanName: "Mirzapur", year: 2018, rating: 8.5, genre: "Crime", lang: "hi" },
-        { title: "Sacred Games", cleanName: "Sacred Games", year: 2018, rating: 8.6, genre: "Crime", lang: "hi" },
-        { title: "Panchayat", cleanName: "Panchayat", year: 2020, rating: 8.9, genre: "Comedy", lang: "hi" },
-        { title: "Scam 1992", cleanName: "Scam 1992", year: 2020, rating: 9.3, genre: "Biography", lang: "hi" },
-        { title: "The Family Man", cleanName: "The Family Man", year: 2019, rating: 8.7, genre: "Action", lang: "hi" },
-        { title: "Money Heist", cleanName: "Money Heist", year: 2017, rating: 8.2, genre: "Action", lang: "es" },
-        { title: "Peaky Blinders", cleanName: "Peaky Blinders", year: 2013, rating: 8.8, genre: "Crime", lang: "en" },
-        { title: "Friends", cleanName: "Friends", year: 1994, rating: 8.9, genre: "Comedy", lang: "en" }
-      ]);
-
-      const posterGetter = (item, type) => {
-        const key = type + ':' + item.title;
-        const overrides = window.KNOWN_POSTER_OVERRIDES || {};
-        if (overrides[key]) return overrides[key];
-        const cache = window.posterCache || {};
-        if (cache[key]) return cache[key];
-        if (window.generateStylizedPosterDataURI) return window.generateStylizedPosterDataURI(item);
-        if (typeof generateStylizedPosterDataURI === 'function') return generateStylizedPosterDataURI(item);
-        return '';
+      const resolvePoster = (it, type = 'movie') => {
+        const key = type + ':' + it.title;
+        if (typeof KNOWN_POSTER_OVERRIDES !== 'undefined') {
+          const ov = KNOWN_POSTER_OVERRIDES[key] || KNOWN_POSTER_OVERRIDES[it.title];
+          if (ov) return ov;
+        }
+        if (typeof posterCache !== 'undefined') {
+          if (posterCache[key]) return posterCache[key];
+          if (posterCache[it.title]) return posterCache[it.title];
+        }
+        if (window.getThumbUrl) {
+          const u = window.getThumbUrl(it.title);
+          if (u) return u;
+        }
+        if (it.poster) return it.poster;
+        return 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=80';
       };
 
-      const fallbackGetter = (item) => {
-        if (window.generateStylizedPosterDataURI) return window.generateStylizedPosterDataURI(item);
-        if (typeof generateStylizedPosterDataURI === 'function') return generateStylizedPosterDataURI(item);
-        return '';
-      };
-
-      // STEP 1: Avatar & Profile
+      // -------------------------------------------------------------
+      // STAGE 1: Profile (Display Name & Avatar) - Centralized
+      // -------------------------------------------------------------
       if (obStep === 1) {
         vp.innerHTML = `
-          <div class="ob-step-enter my-auto max-w-2xl mx-auto w-full space-y-6 py-2">
-            <div class="space-y-1.5 text-center">
-              <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Step 1 · Identity</span>
-              <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Choose your cinephile persona</h2>
-              <p class="text-xs sm:text-sm text-slate-300 font-medium">This is how you appear across your Taste DNA, playlists, and film journal.</p>
-            </div>
+          <div class="ob-step-enter max-w-2xl mx-auto w-full space-y-6 py-2 text-center">
             <div class="space-y-2 max-w-md mx-auto">
-              <label class="text-xs font-bold uppercase tracking-wider text-slate-300">Display Name</label>
-              <input id="obUsernameInput" type="text" value="${esc(obProfile.username || 'Cinephile')}" maxlength="24" class="w-full px-4 py-3 rounded-2xl bg-black/60 border border-white/15 text-white text-base font-bold focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all" placeholder="Enter your name">
+              <label for="obUsernameInput" class="block text-xs sm:text-sm font-bold uppercase tracking-wider text-brand-gold text-center">Display Name</label>
+              <input id="obUsernameInput" type="text" value="${esc(obProfile.username || 'Cinephile')}" maxlength="24" class="w-full px-4 py-3 rounded-2xl bg-black/60 border border-white/15 text-white text-base font-bold focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all text-center placeholder-slate-500 shadow-inner" placeholder="Enter your display name">
             </div>
             <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <label class="text-xs font-bold uppercase tracking-wider text-slate-300">Choose Profile Icon</label>
-                <span class="text-xs text-brand-gold font-bold">${AVATAR_META[obProfile.avatar]?.name || 'Cinephile'}</span>
-              </div>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
                 ${Object.keys(AVATAR_META).map(k => {
                   const m = AVATAR_META[k];
                   const sel = obProfile.avatar === k;
-                  return `<button type="button" data-obavatar="${k}" class="p-3.5 rounded-2xl border text-left flex items-center gap-3 transition-all ${sel ? 'border-brand-gold bg-brand-gold/15 shadow-lg' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
+                  return `<button type="button" data-obavatar="${k}" class="p-3.5 rounded-2xl border flex items-center gap-3 transition-all ${sel ? 'border-brand-gold bg-brand-gold/15 shadow-lg' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
                     <span class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">${m.svg}</span>
                     <div class="min-w-0">
                       <div class="text-xs font-bold text-white truncate">${esc(m.name)}</div>
@@ -320,69 +428,110 @@
         });
       }
 
-      // STEP 2: Cinema & Audio Languages (Multiple chips with toggle and selection count)
+      // -------------------------------------------------------------
+      // STAGE 2: Languages (English, Hindi, Spanish, Tamil, Others and All) - Centralized
+      // -------------------------------------------------------------
       else if (obStep === 2) {
-        const availableLangs = [
-          { name: 'English', sub: 'Hollywood & Global Cinema', tag: 'EN', flag: '🇺🇸' },
-          { name: 'Hindi', sub: 'Bollywood & Hindi Web Series', tag: 'HI', flag: '🇮🇳' },
-          { name: 'Malayalam', sub: 'Kerala New-Wave Masterpieces', tag: 'ML', flag: '🇮🇳' },
-          { name: 'Tamil', sub: 'Kollywood & Prestige Epics', tag: 'TA', flag: '🇮🇳' },
-          { name: 'Telugu', sub: 'Tollywood Spectacles & Classics', tag: 'TE', flag: '🇮🇳' },
-          { name: 'Kannada', sub: 'Sandalwood Thrillers & Epics', tag: 'KN', flag: '🇮🇳' },
-          { name: 'Bengali', sub: 'Art-House, Feluda & Classics', tag: 'BN', flag: '🇮🇳' },
-          { name: 'Punjabi', sub: 'Pollywood Cinema & Folk Pop', tag: 'PA', flag: '🇮🇳' },
-          { name: 'Marathi', sub: 'Celebrated Marathi Dramas', tag: 'MR', flag: '🇮🇳' },
-          { name: 'Spanish', sub: 'Latin & European Thrillers', tag: 'ES', flag: '🇪🇸' },
-          { name: 'Korean', sub: 'K-Drama & Modern Thrillers', tag: 'KO', flag: '🇰🇷' },
-          { name: 'Japanese', sub: 'Anime, Auteur & Classic Cinema', tag: 'JA', flag: '🇯🇵' },
-          { name: 'French', sub: 'Classic & Contemporary Auteurs', tag: 'FR', flag: '🇫🇷' },
-          { name: 'German', sub: 'European Mystery & Sci-Fi', tag: 'DE', flag: '🇩🇪' }
+        const topLangs = [
+          { name: 'English', tag: 'EN', flag: '🇺🇸', sub: 'Global' },
+          { name: 'Hindi', tag: 'HI', flag: '🇮🇳', sub: 'Bollywood' },
+          { name: 'Spanish', tag: 'ES', flag: '🇪🇸', sub: 'Ibero' },
+          { name: 'Tamil', tag: 'TA', flag: '🇮🇳', sub: 'Kollywood' }
         ];
 
-        const userLangs = new Set(obProfile.languages || ['English', 'Hindi']);
+        const otherLangs = [
+          { name: 'Malayalam', tag: 'ML', flag: '🇮🇳' },
+          { name: 'Telugu', tag: 'TE', flag: '🇮🇳' },
+          { name: 'Kannada', tag: 'KN', flag: '🇮🇳' },
+          { name: 'Bengali', tag: 'BN', flag: '🇮🇳' },
+          { name: 'Punjabi', tag: 'PA', flag: '🇮🇳' },
+          { name: 'Marathi', tag: 'MR', flag: '🇮🇳' },
+          { name: 'Korean', tag: 'KO', flag: '🇰🇷' },
+          { name: 'Japanese', tag: 'JA', flag: '🇯🇵' },
+          { name: 'French', tag: 'FR', flag: '🇫🇷' },
+          { name: 'German', tag: 'DE', flag: '🇩🇪' },
+          { name: 'Italian', tag: 'IT', flag: '🇮🇹' }
+        ];
+
+        const allAvailable = [...topLangs, ...otherLangs];
+        const userLangs = new Set(obProfile.languages || ['English', 'Hindi', 'Spanish', 'Tamil']);
+        const isAllActive = allAvailable.every(l => userLangs.has(l.name));
+        const othersSelectedCount = otherLangs.filter(l => userLangs.has(l.name)).length;
 
         vp.innerHTML = `
-          <div class="ob-step-enter my-auto max-w-3xl mx-auto w-full space-y-5 py-2">
-            <div class="space-y-1.5 text-center">
-              <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Cinema &amp; Audio Languages</span>
-              <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Which cinema languages do you watch? (${userLangs.size} selected)</h2>
-              <p class="text-xs sm:text-sm text-slate-300 font-medium">Select all the languages you enjoy. Peak Media tailors recommendations and audio tracks based on your selections.</p>
-            </div>
-
-            <!-- Quick Presets -->
-            <div class="flex flex-wrap items-center justify-center gap-2 pt-1 pb-1">
-              <button type="button" id="obLangPresetAll" class="px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${userLangs.size === availableLangs.length ? 'border-brand-gold bg-brand-gold text-black shadow-lg' : 'border-white/10 bg-white/5 text-slate-300 hover:text-white'}">
-                <i class="fa-solid fa-earth-americas mr-1.5"></i>Select All
+          <div class="ob-step-enter max-w-3xl mx-auto w-full space-y-6 py-2 text-center">
+            <!-- Master Filters: All vs Custom -->
+            <div class="flex items-center justify-center gap-3">
+              <button type="button" id="obLangAllToggle" class="px-5 py-2.5 rounded-2xl border text-xs sm:text-sm font-bold transition-all ${isAllActive ? 'border-brand-gold bg-brand-gold text-black shadow-lg shadow-amber-500/20' : 'border-white/10 bg-white/5 text-slate-300 hover:text-white'}">
+                <i class="fa-solid fa-earth-americas mr-2"></i>All Languages
               </button>
-              <button type="button" id="obLangPresetGlobal" class="px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${userLangs.size === 1 && userLangs.has('English') ? 'border-brand-gold bg-brand-gold text-black shadow-lg' : 'border-white/10 bg-white/5 text-slate-300 hover:text-white'}">
-                <i class="fa-solid fa-film mr-1.5"></i>Global / English
-              </button>
-              <button type="button" id="obLangPresetIndian" class="px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${['Hindi', 'Malayalam', 'Tamil', 'Telugu', 'Bengali'].every(l => userLangs.has(l)) ? 'border-brand-gold bg-brand-gold text-black shadow-lg' : 'border-white/10 bg-white/5 text-slate-300 hover:text-white'}">
-                <i class="fa-solid fa-clapperboard mr-1.5"></i>Indian Cinema Hub
+              <button type="button" id="obLangOthersToggle" class="px-5 py-2.5 rounded-2xl border text-xs sm:text-sm font-bold transition-all ${obOthersExpanded || othersSelectedCount > 0 ? 'border-cyan-400 bg-cyan-500/15 text-cyan-300' : 'border-white/10 bg-white/5 text-slate-300 hover:text-white'}">
+                <i class="fa-solid fa-sliders mr-2"></i>Others ${othersSelectedCount > 0 ? `(${othersSelectedCount})` : ''}
               </button>
             </div>
 
-            <!-- Language Chips Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[44vh] overflow-y-auto pr-1">
-              ${availableLangs.map(l => {
+            <!-- Top 4 Primary Language Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+              ${topLangs.map(l => {
                 const isSel = userLangs.has(l.name);
-                return `<button type="button" data-oblang="${l.name}" class="p-3 rounded-2xl border text-left flex items-center justify-between gap-2.5 transition-all ${isSel ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
+                return `<button type="button" data-oblang="${l.name}" class="p-4 rounded-2xl border flex items-center justify-between gap-3 transition-all ${isSel ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
                   <div class="min-w-0">
-                    <div class="flex items-center gap-1.5">
-                      <span class="text-sm">${l.flag}</span>
-                      <span class="text-xs sm:text-sm font-bold text-white truncate">${esc(l.name)}</span>
+                    <div class="flex items-center gap-2">
+                      <span class="text-base">${l.flag}</span>
+                      <span class="text-sm font-bold text-white truncate">${esc(l.name)}</span>
                     </div>
                     <div class="text-[10px] text-slate-400 truncate mt-0.5">${esc(l.sub)}</div>
                   </div>
-                  <div class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
+                  <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
                     ${isSel ? '✓' : '+'}
                   </div>
                 </button>`;
               }).join('')}
             </div>
+
+            <!-- Expandable Others Drawer -->
+            ${obOthersExpanded ? `
+              <div class="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3 text-left">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[28vh] overflow-y-auto pr-1">
+                  ${otherLangs.map(l => {
+                    const isSel = userLangs.has(l.name);
+                    return `<button type="button" data-oblang="${l.name}" class="p-2.5 rounded-xl border flex items-center justify-between gap-2 transition-all ${isSel ? 'border-cyan-400 bg-cyan-500/15' : 'border-white/10 bg-black/30 hover:bg-white/5'}">
+                      <div class="flex items-center gap-1.5 min-w-0">
+                        <span class="text-xs">${l.flag}</span>
+                        <span class="text-xs font-bold text-white truncate">${esc(l.name)}</span>
+                      </div>
+                      <div class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${isSel ? 'bg-cyan-400 text-black' : 'bg-white/10 text-slate-400'}">
+                        ${isSel ? '✓' : '+'}
+                      </div>
+                    </button>`;
+                  }).join('')}
+                </div>
+              </div>
+            ` : ''}
           </div>`;
 
-        // Toggle handler
+        // Handlers
+        const allBtn = $('obLangAllToggle');
+        if (allBtn) {
+          allBtn.onclick = () => {
+            if (isAllActive) {
+              obProfile.languages = ['English', 'Hindi', 'Spanish', 'Tamil'];
+            } else {
+              obProfile.languages = allAvailable.map(l => l.name);
+            }
+            obProfile.language = 'All';
+            renderObStep();
+          };
+        }
+
+        const othersBtn = $('obLangOthersToggle');
+        if (othersBtn) {
+          othersBtn.onclick = () => {
+            obOthersExpanded = !obOthersExpanded;
+            renderObStep();
+          };
+        }
+
         vp.querySelectorAll('[data-oblang]').forEach(b => {
           b.onclick = () => {
             const l = b.dataset.oblang;
@@ -392,36 +541,22 @@
               userLangs.add(l);
             }
             obProfile.languages = Array.from(userLangs);
-            if (userLangs.size === 1) obProfile.language = obProfile.languages[0];
-            else obProfile.language = 'All';
+            obProfile.language = obProfile.languages.length === 1 ? obProfile.languages[0] : 'All';
             renderObStep();
           };
         });
-
-        // Presets
-        const pAll = $('obLangPresetAll');
-        if (pAll) pAll.onclick = () => {
-          obProfile.languages = availableLangs.map(x => x.name);
-          obProfile.language = 'All';
-          renderObStep();
-        };
-        const pGlobal = $('obLangPresetGlobal');
-        if (pGlobal) pGlobal.onclick = () => {
-          obProfile.languages = ['English'];
-          obProfile.language = 'English';
-          renderObStep();
-        };
-        const pInd = $('obLangPresetIndian');
-        if (pInd) pInd.onclick = () => {
-          obProfile.languages = ['Hindi', 'Malayalam', 'Tamil', 'Telugu', 'Kannada', 'Bengali', 'Punjabi', 'Marathi', 'English'];
-          obProfile.language = 'All';
-          renderObStep();
-        };
       }
 
-      // STEP 3: Favorite Genres & Moods
+      // -------------------------------------------------------------
+      // STAGE 3: Genres (Synchronized with internal categoryData - No Slider / Compact Sizing)
+      // -------------------------------------------------------------
       else if (obStep === 3) {
-        const themes = window.genreThemes || (typeof genreThemes !== 'undefined' ? genreThemes : {
+        const catGenres = (window.categoryData ? Object.keys(window.categoryData) : [
+          'Drama', 'Crime', 'Action', 'Fantasy', 'Western', 'Sci-Fi', 'Thriller',
+          'Comedy', 'Animation', 'Horror', 'Romance', 'War', 'Mystery', 'Adventure', 'Musical'
+        ]).filter(g => g !== 'Documentary');
+
+        const themes = window.genreThemes || {
           Drama: { accent: '#f59e0b', icon: 'fa-masks-theater' },
           Action: { accent: '#ef4444', icon: 'fa-explosion' },
           'Sci-Fi': { accent: '#06b6d4', icon: 'fa-robot' },
@@ -433,95 +568,77 @@
           Romance: { accent: '#f43f5e', icon: 'fa-heart' },
           Horror: { accent: '#dc2626', icon: 'fa-ghost' },
           Mystery: { accent: '#6366f1', icon: 'fa-magnifying-glass' },
-          Adventure: { accent: '#10b981', icon: 'fa-compass' }
-        });
-        const genres = Object.keys(themes);
-        const selectedSet = new Set([obProfile.favoriteGenre, ...(obProfile.secondaryGenres || [])].filter(Boolean));
+          Western: { accent: '#d97706', icon: 'fa-hat-cowboy' },
+          Adventure: { accent: '#10b981', icon: 'fa-compass' },
+          War: { accent: '#71717a', icon: 'fa-shield-halved' },
+          Musical: { accent: '#14b8a6', icon: 'fa-music' }
+        };
+
+        const selGenres = new Set(obProfile.genres || (obProfile.favoriteGenre ? [obProfile.favoriteGenre] : ['Drama', 'Sci-Fi', 'Crime']));
+
         vp.innerHTML = `
-          <div class="ob-step-enter my-auto space-y-4 max-w-3xl mx-auto w-full">
-            <div class="space-y-1.5 text-center">
-              <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Core Genres</span>
-              <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Pick up to 4 genres you gravitate toward (${selectedSet.size} selected)</h2>
-              <p class="text-xs sm:text-sm text-slate-300 font-medium">Your primary pick anchors your spotlight shelf and shapes your Taste Constellation web.</p>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
-              ${genres.map(g => {
-                const th = themes[g] || themes.Drama;
-                const sel = selectedSet.has(g);
-                return `<button type="button" data-obgen="${esc(g)}" class="ob-genre-btn ${sel ? 'selected' : ''} p-3.5 rounded-2xl border border-white/10 bg-black/45 hover:bg-white/5 text-left flex items-center justify-between gap-2 transition-all">
-                  <span class="font-bold text-xs sm:text-sm text-white truncate">${esc(g)}</span>
-                  <span class="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center shrink-0"><i class="fa-solid ${th.icon} cat-icon-anim text-xs" style="color:${th.accent}"></i></span>
+          <div class="ob-step-enter max-w-4xl mx-auto w-full space-y-3 py-1 text-center">
+            <!-- 15 Genres formatted in 3 rows of 5 with adjusted compact sizes to eliminate slider/scrolling -->
+            <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-2.5 py-1">
+              ${catGenres.map(g => {
+                const isSel = selGenres.has(g);
+                const t = themes[g] || { accent: '#f59e0b', icon: 'fa-film' };
+                return `<button type="button" data-obgenre="${esc(g)}" class="p-2 sm:p-2.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all text-center group ${isSel ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10 scale-[1.02]' : 'border-white/10 bg-black/45 hover:bg-white/5 hover:border-white/20'}">
+                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i class="fa-solid ${t.icon} text-sm sm:text-base" style="color: ${t.accent}"></i>
+                  </div>
+                  <div class="text-[11px] sm:text-xs font-bold text-white truncate max-w-full">${esc(g)}</div>
+                  <div class="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
+                    ${isSel ? '✓' : '+'}
+                  </div>
                 </button>`;
               }).join('')}
             </div>
           </div>`;
-        vp.querySelectorAll('[data-obgen]').forEach(b => {
+
+        vp.querySelectorAll('[data-obgenre]').forEach(b => {
           b.onclick = () => {
-            const g = b.dataset.obgen;
-            let list = [obProfile.favoriteGenre, ...(obProfile.secondaryGenres || [])].filter(Boolean);
-            if (list.includes(g)) {
-              if (list.length > 1) list = list.filter(x => x !== g);
+            const g = b.dataset.obgenre;
+            if (selGenres.has(g)) {
+              if (selGenres.size > 1) selGenres.delete(g);
             } else {
-              list.push(g);
-              if (list.length > 4) list.shift();
+              selGenres.add(g);
             }
-            obProfile.favoriteGenre = list[0] || 'Drama';
-            obProfile.secondaryGenres = list.slice(1);
+            obProfile.genres = Array.from(selGenres);
+            obProfile.favoriteGenre = obProfile.genres[0] || 'Drama';
+            obProfile.secondaryGenres = obProfile.genres.slice(1);
             renderObStep();
           };
         });
       }
 
-      // STEP 4: Movies You Love
+      // -------------------------------------------------------------
+      // STAGE 4: Movies (Top 12 Fixed Curation - Kept Loaded In)
+      // -------------------------------------------------------------
       else if (obStep === 4) {
-        const langPref = obProfile.language === 'Hindi' ? 'hi' : obProfile.language === 'English' ? 'en' : 'all';
-        const gSet = new Set([obProfile.favoriteGenre, ...(obProfile.secondaryGenres || [])].filter(Boolean));
-        let pool = allMovies.slice().filter(m => langPref === 'all' || m.lang === langPref);
-        if (!pool.length) pool = allMovies.slice();
-        if (obMovieQuery.trim()) {
-          const q = obMovieQuery.toLowerCase().trim();
-          pool = allMovies.filter(m => (m.cleanName || m.title).toLowerCase().includes(q) || (m.genre && m.genre.toLowerCase().includes(q)));
-        } else {
-          pool.sort((a, b) => ((gSet.has(b.genre) ? 1.5 : 0) + (parseFloat(b.rating) || 0)) - ((gSet.has(a.genre) ? 1.5 : 0) + (parseFloat(a.rating) || 0)));
-        }
-        const topMovies = pool.slice(0, 18);
         const picked = new Set(obProfile.favMoviesSeed || []);
+
         vp.innerHTML = `
-          <div class="ob-step-enter space-y-4 max-w-4xl mx-auto w-full">
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-              <div>
-                <span class="text-xs font-bold uppercase tracking-widest text-brand-gold">Favorite Cinema</span>
-                <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Pick movies you love (${picked.size} selected)</h2>
-                <p class="text-xs sm:text-sm text-slate-300 font-medium">These seeds generate your Taste Constellation and power decider recommendations.</p>
-              </div>
-              <div class="relative w-full sm:w-64">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input id="obMovieSearchInp" type="text" value="${esc(obMovieQuery)}" placeholder="Search 2,500+ films..." class="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
-              </div>
-            </div>
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 max-h-[40vh] overflow-y-auto pr-1">
-              ${topMovies.map(m => {
+          <div class="ob-step-enter space-y-4 max-w-4xl mx-auto w-full py-1 text-center">
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 sm:gap-3 max-h-[54vh] overflow-y-auto pr-1 text-left">
+              ${FIXED_OB_FILMS.map(m => {
                 const isSel = picked.has(m.title);
-                const fb = fallbackGetter(m);
-                const src = posterGetter(m, 'movie') || fb;
-                return `<div data-obmovie="${esc(m.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer">
+                const src = resolvePoster(m, 'movie');
+                return `<div data-obmovie="${esc(m.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer rounded-xl bg-black/40 border ${isSel ? 'border-brand-gold bg-brand-gold/10' : 'border-white/10 hover:border-white/25'} transition-all">
                   <div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
-                    <img src="${src}" data-title="${esc(m.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster poster-shimmer w-full h-full object-cover" onload="this.classList.remove('poster-shimmer');" alt="">
+                    <img src="${src}" data-title="${esc(m.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-full h-full object-cover rounded-md" alt="">
                     <div class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
                   </div>
                   <div class="px-0.5">
-                    <div class="text-[11px] font-bold text-white truncate">${esc(m.cleanName || m.title)}</div>
+                    <div class="text-[11px] font-bold text-white truncate">${esc(m.title)}</div>
                     <div class="text-[10px] text-slate-400">${m.year} · ★ ${m.rating}</div>
                   </div>
                 </div>`;
               }).join('')}
             </div>
           </div>`;
+
         if (window.attachThumbObservers) attachThumbObservers(vp);
-        const sInp = $('obMovieSearchInp');
-        if (sInp) {
-          sInp.oninput = e => { obMovieQuery = e.target.value; renderObStep(); const el = $('obMovieSearchInp'); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } };
-        }
         vp.querySelectorAll('[data-obmovie]').forEach(card => {
           card.onclick = () => {
             const t = card.dataset.obmovie;
@@ -535,56 +652,33 @@
         });
       }
 
-      // STEP 5: TV Shows You Binge (Restored with artwork, checkmarks, search & counter)
+      // -------------------------------------------------------------
+      // STAGE 5: Shows (Top 12 Fixed Curation - Kept Loaded In)
+      // -------------------------------------------------------------
       else if (obStep === 5) {
-        const langPref = obProfile.language === 'Hindi' ? 'hi' : obProfile.language === 'English' ? 'en' : 'all';
-        const gSet = new Set([obProfile.favoriteGenre, ...(obProfile.secondaryGenres || [])].filter(Boolean));
-        let pool = allShows.slice().filter(s => langPref === 'all' || s.lang === langPref);
-        if (!pool.length) pool = allShows.slice();
-        if (obShowQuery.trim()) {
-          const q = obShowQuery.toLowerCase().trim();
-          pool = allShows.filter(s => (s.cleanName || s.title).toLowerCase().includes(q) || (s.genre && s.genre.toLowerCase().includes(q)));
-        } else {
-          pool.sort((a, b) => ((gSet.has(b.genre) ? 1.5 : 0) + (parseFloat(b.rating) || 0)) - ((gSet.has(a.genre) ? 1.5 : 0) + (parseFloat(a.rating) || 0)));
-        }
-        const topShows = pool.slice(0, 18);
         const picked = new Set(obProfile.favShowsSeed || []);
+
         vp.innerHTML = `
-          <div class="ob-step-enter space-y-4 max-w-4xl mx-auto w-full">
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-              <div>
-                <span class="text-xs font-bold uppercase tracking-widest text-purple-300">TV Series &amp; Shows</span>
-                <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Pick TV series you binge or love (${picked.size} selected)</h2>
-                <p class="text-xs sm:text-sm text-slate-300 font-medium">From prestige HBO dramas and sci-fi mysteries to anime and acclaimed Indian web series.</p>
-              </div>
-              <div class="relative w-full sm:w-64">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input id="obShowSearchInp" type="text" value="${esc(obShowQuery)}" placeholder="Search 1,150+ TV shows..." class="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
-              </div>
-            </div>
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 max-h-[40vh] overflow-y-auto pr-1">
-              ${topShows.map(s => {
+          <div class="ob-step-enter space-y-4 max-w-4xl mx-auto w-full py-1 text-center">
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 sm:gap-3 max-h-[54vh] overflow-y-auto pr-1 text-left">
+              ${FIXED_OB_SHOWS.map(s => {
                 const isSel = picked.has(s.title);
-                const fb = fallbackGetter(s);
-                const src = posterGetter(s, 'show') || fb;
-                return `<div data-obshow="${esc(s.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer">
+                const src = resolvePoster(s, 'show');
+                return `<div data-obshow="${esc(s.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer rounded-xl bg-black/40 border ${isSel ? 'border-brand-gold bg-brand-gold/10' : 'border-white/10 hover:border-white/25'} transition-all">
                   <div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
-                    <img src="${src}" data-title="${esc(s.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster poster-shimmer w-full h-full object-cover" onload="this.classList.remove('poster-shimmer');" alt="">
+                    <img src="${src}" data-title="${esc(s.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-full h-full object-cover rounded-md" alt="">
                     <div class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
                   </div>
                   <div class="px-0.5">
-                    <div class="text-[11px] font-bold text-white truncate">${esc(s.cleanName || s.title)}</div>
+                    <div class="text-[11px] font-bold text-white truncate">${esc(s.title)}</div>
                     <div class="text-[10px] text-slate-400">${s.year} · ★ ${s.rating}</div>
                   </div>
                 </div>`;
               }).join('')}
             </div>
           </div>`;
+
         if (window.attachThumbObservers) attachThumbObservers(vp);
-        const sInp = $('obShowSearchInp');
-        if (sInp) {
-          sInp.oninput = e => { obShowQuery = e.target.value; renderObStep(); const el = $('obShowSearchInp'); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } };
-        }
         vp.querySelectorAll('[data-obshow]').forEach(card => {
           card.onclick = () => {
             const t = card.dataset.obshow;
@@ -598,94 +692,302 @@
         });
       }
 
-      // STEP 6: Music Moods & Singers
-      else {
-        const moods = [
-          ['Romantic & Melody', 'fa-heart', 'text-rose-400'],
-          ['Chill & Acoustic', 'fa-feather', 'text-emerald-400'],
-          ['Pop & Hits', 'fa-bolt', 'text-brand-gold'],
-          ['Party & Energy', 'fa-fire', 'text-orange-400'],
-          ['Focus & Instrumental', 'fa-brain', 'text-cyan-400'],
-          ['Melancholic & Soul', 'fa-cloud-rain', 'text-blue-400'],
-          ['Indie & Folk', 'fa-guitar', 'text-amber-400'],
-          ['Rock & Anthems', 'fa-drum', 'text-red-400'],
-          ['R&B & Hip-Hop', 'fa-headphones', 'text-purple-400'],
-          ['Nostalgia & Classics', 'fa-compact-disc', 'text-teal-400']
+      // -------------------------------------------------------------
+      // STAGE 6: Deciders (Site Overview - Categorization, Micro-Interactions, Taste Sampling)
+      // -------------------------------------------------------------
+      else if (obStep === 6) {
+        const socialDeciders = [
+          { name: "The Duel", icon: "fa-crosshairs", color: "text-amber-400", border: "hover:border-amber-400/60", how: "1v1 knockout bracket — vote between two films until one champion remains." },
+          { name: "Matchmaker", icon: "fa-heart", color: "text-rose-400", border: "hover:border-rose-400/60", how: "Combines tastes between viewers or genres to find mutual watchlist hits." }
         ];
-        const artists = [
-          'Arijit Singh', 'The Weeknd', 'Taylor Swift', 'Shreya Ghoshal', 'Atif Aslam',
-          'KK', 'Pritam', 'A.R. Rahman', 'Ed Sheeran', 'Dua Lipa', 'Justin Bieber',
-          'Eminem', 'Billie Eilish', 'Anirudh Ravichander', 'Sid Sriram', 'Kendrick Lamar',
-          'Imagine Dragons', 'One Direction', 'Charlie Puth', 'Post Malone'
+
+        const soloDeciders = [
+          { name: "Mood Dial", icon: "fa-compass-drafting", color: "text-sky-400", border: "hover:border-sky-400/60", how: "Tune your immediate emotional atmosphere for targeted resonance." },
+          { name: "Ricochet", icon: "fa-arrows-split-up-and-left", color: "text-cyan-400", border: "hover:border-cyan-400/60", how: "Chain-reaction roulette — each pick ricochets into connected hidden gems." },
+          { name: "Constellation", icon: "fa-atom", color: "text-purple-400", border: "hover:border-purple-400/60", how: "Plots your taste in a 3D galaxy cluster to reveal neighboring stars." },
+          { name: "The Vault", icon: "fa-vault", color: "text-emerald-400", border: "hover:border-emerald-400/60", how: "Unlocks rare, unstreamed, and cult cinema archives by decade and genre." }
         ];
-        const selMoods = new Set(obProfile.musicMoods || ['Romantic & Melody', 'Pop & Hits']);
-        const selArtists = new Set(obProfile.favArtists || ['Arijit Singh', 'The Weeknd']);
+
+        if (!window.obSelectedTasteSample) window.obSelectedTasteSample = 'adrenaline';
+
+        const TASTE_SAMPLES = {
+          adrenaline: {
+            title: "The Duel",
+            icon: "fa-crosshairs",
+            color: "text-amber-400",
+            bg: "bg-amber-400/10 border-amber-400/40",
+            sample: "Top Gun: Maverick vs Mad Max: Fury Road",
+            sub: "Live 1v1 bracket round active · Vote to decide the champion"
+          },
+          mindbending: {
+            title: "Constellation",
+            icon: "fa-atom",
+            color: "text-purple-400",
+            bg: "bg-purple-400/10 border-purple-400/40",
+            sample: "Inception ↔ Interstellar ↔ Tenet",
+            sub: "3D Galaxy node cluster · Spacetime cinematic web connected"
+          },
+          cozy: {
+            title: "Mood Dial",
+            icon: "fa-compass-drafting",
+            color: "text-sky-400",
+            bg: "bg-sky-400/10 border-sky-400/40",
+            sample: "Spirited Away & Paddington 2",
+            sub: "Atmosphere dial tuned to Warm Hearth & Gentle Wonder"
+          }
+        };
+
+        const activeTaste = TASTE_SAMPLES[window.obSelectedTasteSample] || TASTE_SAMPLES.adrenaline;
 
         vp.innerHTML = `
-          <div class="ob-step-enter space-y-5 my-auto max-w-3xl mx-auto w-full">
-            <div class="space-y-1.5 text-center">
-              <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">3,069-Song Ad-Free Music Vault</span>
-              <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">Tune your soundtrack &amp; favorite singers</h2>
-              <p class="text-xs sm:text-sm text-slate-300 font-medium">Selected: ${selMoods.size} mood${selMoods.size === 1 ? '' : 's'} · ${selArtists.size} singer${selArtists.size === 1 ? '' : 's'}. Tailors your Music tab and audio playlists.</p>
+          <div class="ob-step-enter max-w-4xl mx-auto w-full space-y-4 py-1 text-center">
+            <!-- Central & Cooler Deciders Title -->
+            <div class="flex items-center justify-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 animate-pulse shadow-[0_0_12px_#f59e0b]"></span>
+              <h2 class="text-xl sm:text-2xl font-display font-black uppercase tracking-[0.22em] bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(245,158,11,0.35)]">
+                The Deciders
+              </h2>
             </div>
-            <div class="space-y-2">
-              <div class="flex items-center justify-between">
-                <label class="text-xs font-bold uppercase tracking-wider text-slate-200">Music Vibes &amp; Moods</label>
-                <span class="text-xs text-brand-gold font-bold">${selMoods.size} Selected</span>
+
+            <!-- Decision-Type Categorization -->
+            <div class="space-y-3.5 text-left max-h-[46vh] overflow-y-auto pr-1">
+              <!-- Category 1: Social & Duo -->
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-rose-400/90 pl-1">
+                  <i class="fa-solid fa-users text-[11px]"></i>
+                  <span>Social &amp; Duo Decision</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  ${socialDeciders.map(d => `
+                    <div class="group p-3.5 rounded-2xl bg-black/45 border border-white/10 ${d.border} hover:bg-white/5 transition-all flex flex-col gap-2 cursor-pointer relative overflow-hidden">
+                      <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                          <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center ${d.color} shrink-0 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid ${d.icon} text-xs"></i>
+                          </div>
+                          <div class="text-sm font-bold text-white truncate">${esc(d.name)}</div>
+                        </div>
+                        <span class="text-[9px] font-mono text-slate-400 group-hover:text-amber-300 px-1.5 py-0.5 rounded bg-white/5 border border-white/10 transition-colors">Preview</span>
+                      </div>
+                      <div class="text-[11px] text-slate-300/80 leading-relaxed">${esc(d.how)}</div>
+                    </div>
+                  `).join('')}
+                </div>
               </div>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
-                ${moods.map(([m, ic, col]) => {
-                  const on = selMoods.has(m);
-                  return `<button type="button" data-obmood="${esc(m)}" class="p-3 rounded-2xl border text-left flex items-center justify-between gap-2 transition-all ${on ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
-                    <span class="text-xs font-bold text-white truncate">${esc(m)}</span>
-                    <i class="fa-solid ${ic} ${col} text-xs shrink-0"></i>
-                  </button>`;
-                }).join('')}
+
+              <!-- Category 2: Solo Exploration -->
+              <div class="space-y-2 pt-1">
+                <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-cyan-400/90 pl-1">
+                  <i class="fa-solid fa-compass text-[11px]"></i>
+                  <span>Solo Exploration &amp; Mood</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                  ${soloDeciders.map(d => `
+                    <div class="group p-3.5 rounded-2xl bg-black/45 border border-white/10 ${d.border} hover:bg-white/5 transition-all flex flex-col gap-2 cursor-pointer relative overflow-hidden">
+                      <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                          <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center ${d.color} shrink-0 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid ${d.icon} text-xs"></i>
+                          </div>
+                          <div class="text-xs font-bold text-white truncate">${esc(d.name)}</div>
+                        </div>
+                        <span class="text-[8px] font-mono text-slate-400 group-hover:text-cyan-300 px-1 py-0.5 rounded bg-white/5 border border-white/10 transition-colors">Solo</span>
+                      </div>
+                      <div class="text-[10px] text-slate-300/80 leading-relaxed">${esc(d.how)}</div>
+                    </div>
+                  `).join('')}
+                </div>
               </div>
             </div>
-            <div class="space-y-2">
-              <div class="flex items-center justify-between">
-                <label class="text-xs font-bold uppercase tracking-wider text-slate-200">Singers &amp; Artists You Listen To</label>
-                <span class="text-xs text-brand-gold font-bold">${selArtists.size} Selected</span>
+
+            <!-- Interactive 1-tap Taste Sample at Bottom -->
+            <div class="pt-2 border-t border-white/10 space-y-2.5">
+              <div class="flex items-center justify-center gap-2">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Taste Sample:</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" data-taste="adrenaline" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all ${window.obSelectedTasteSample === 'adrenaline' ? 'border-amber-400 bg-amber-400/20 text-amber-300' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'}">
+                    ⚡ Adrenaline
+                  </button>
+                  <button type="button" data-taste="mindbending" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all ${window.obSelectedTasteSample === 'mindbending' ? 'border-purple-400 bg-purple-400/20 text-purple-300' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'}">
+                    🌀 Mind-Bending
+                  </button>
+                  <button type="button" data-taste="cozy" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all ${window.obSelectedTasteSample === 'cozy' ? 'border-sky-400 bg-sky-400/20 text-sky-300' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'}">
+                    ☕ Cozy
+                  </button>
+                </div>
               </div>
-              <div class="flex flex-wrap gap-2 max-h-[22vh] overflow-y-auto pr-1">
-                ${artists.map(a => {
-                  const on = selArtists.has(a);
-                  return `<button type="button" data-obart="${esc(a)}" class="px-3.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${on ? 'border-brand-gold bg-brand-gold text-black shadow-md shadow-amber-500/20' : 'border-white/10 bg-black/45 text-slate-300 hover:text-white hover:bg-white/5'}">
-                    <i class="fa-solid fa-music mr-1.5 text-[10px]"></i>${esc(a)}
-                  </button>`;
-                }).join('')}
+
+              <!-- Live Sample Decider Match Output -->
+              <div class="p-3 rounded-xl border ${activeTaste.bg} flex items-center justify-between gap-3 text-left transition-all">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-8 h-8 rounded-lg bg-black/40 border border-white/10 flex items-center justify-center ${activeTaste.color} shrink-0">
+                    <i class="fa-solid ${activeTaste.icon} text-sm"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-white flex items-center gap-1.5 truncate">
+                      <span>${activeTaste.title}:</span>
+                      <span class="${activeTaste.color} font-mono">${activeTaste.sample}</span>
+                    </div>
+                    <div class="text-[10px] text-slate-400 truncate">${activeTaste.sub}</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-bold text-slate-400 bg-black/40 px-2 py-1 rounded-md border border-white/10 shrink-0">1-Tap Live</span>
               </div>
             </div>
           </div>`;
 
-        vp.querySelectorAll('[data-obmood]').forEach(b => {
-          b.onclick = () => {
-            const m = b.dataset.obmood;
-            const arr = obProfile.musicMoods || [];
-            const idx = arr.indexOf(m);
-            if (idx > -1) { if (arr.length > 1) arr.splice(idx, 1); }
-            else arr.push(m);
-            obProfile.musicMoods = arr;
+        vp.querySelectorAll('[data-taste]').forEach(btn => {
+          btn.onclick = () => {
+            window.obSelectedTasteSample = btn.dataset.taste;
+            try {
+              const AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (AudioCtx) {
+                const ctx = new AudioCtx();
+                if (ctx.state === 'suspended') ctx.resume();
+                const osc = ctx.createOscillator();
+                const g = ctx.createGain();
+                osc.type = 'sine';
+                const f = btn.dataset.taste === 'adrenaline' ? 660 : (btn.dataset.taste === 'mindbending' ? 520 : 440);
+                osc.frequency.setValueAtTime(f, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(f * 1.5, ctx.currentTime + 0.15);
+                g.gain.setValueAtTime(0.08, ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+                osc.connect(g);
+                g.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.25);
+              }
+            } catch (_) {}
             renderObStep();
           };
         });
+      }
 
-        vp.querySelectorAll('[data-obart]').forEach(b => {
+      // -------------------------------------------------------------
+      // STAGE 7: Music Lounge (Vinyl Turntable + Language Toggle)
+      // -------------------------------------------------------------
+      else if (obStep === 7) {
+        if (!obProfile.musicLang) obProfile.musicLang = 'all';
+
+        vp.innerHTML = `
+          <div class="ob-step-enter max-w-xl mx-auto w-full space-y-6 py-4 flex flex-col items-center justify-center text-center">
+            <!-- Exact Turntable Visualizer from Music section with Articulated Tone Arm & Purple Neon Badge -->
+            <div class="relative shrink-0 cursor-pointer flex flex-col items-center justify-center p-1" onclick="if(window.openMusicFromVinyl){window.openMusicFromVinyl();}" title="Click to open Music Lounge">
+              <!-- Animated Ripple effect from click cue -->
+              <div class="absolute inset-1 rounded-full border border-purple-400/40 vinyl-click-ripple pointer-events-none"></div>
+
+              <!-- Turntable Vinyl Disc matching #homeVinylShowcase -->
+              <div id="obTurntableDisc" class="vinyl-record-disc m-hover-scale w-32 h-32 sm:w-36 sm:h-36 rounded-full relative flex items-center justify-center shadow-2xl transition-transform" style="animation-duration: 4s;">
+                <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
+                <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
+                <div class="vinyl-center-album absolute w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-purple-400/80 flex items-center justify-center shadow-inner overflow-hidden">
+                  <i class="fa-solid fa-record-vinyl text-purple-300 text-base sm:text-lg"></i>
+                </div>
+              </div>
+
+              <!-- Articulated Realistic Tone Arm Overlay matching #homeToneArm -->
+              <div class="vinyl-tone-arm absolute pointer-events-none" style="top: 2px; right: 10px;">
+                <div class="tone-arm-pivot"></div>
+                <div class="tone-arm-rod"></div>
+                <div class="tone-arm-head"></div>
+              </div>
+
+              <span class="text-sm sm:text-base font-display font-black tracking-widest text-purple-300 uppercase mt-2.5 transition-colors">MUSIC</span>
+
+              <!-- Animated Mouse Cursor Clicking Demonstration -->
+              <div class="absolute bottom-6 -right-6 pointer-events-none flex items-center gap-2 animate-mouse-click z-20">
+                <svg class="w-7 h-7 text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] filter" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4.5 1.5l14 10.7-6.1 1 3.8 7.7-3.1 1.5-3.8-7.8-4.8 4.6z"/>
+                </svg>
+                <span class="px-2.5 py-1 rounded-full bg-black/85 border border-purple-400/40 text-[10px] font-black tracking-wider text-purple-300 uppercase shadow-lg backdrop-blur-sm whitespace-nowrap">
+                  Click to open
+                </span>
+              </div>
+            </div>
+
+            <!-- Language Toggle (Replacing Play Sample per user request) -->
+            <div class="space-y-2.5">
+              <div class="text-[11px] font-extrabold uppercase tracking-widest text-purple-300">
+                Soundtrack Language
+              </div>
+              <div class="inline-flex items-center bg-black/60 p-1.5 rounded-2xl border border-purple-400/30 gap-1.5 shadow-xl" role="group" aria-label="Music Language Switch">
+                <button type="button" data-obmusiclang="all" class="px-5 py-2 rounded-xl text-xs font-bold transition-all ${obProfile.musicLang === 'all' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5'}">All</button>
+                <button type="button" data-obmusiclang="en" class="px-5 py-2 rounded-xl text-xs font-bold transition-all ${obProfile.musicLang === 'en' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5'}">English</button>
+                <button type="button" data-obmusiclang="hi" class="px-5 py-2 rounded-xl text-xs font-bold transition-all ${obProfile.musicLang === 'hi' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5'}">Hindi</button>
+              </div>
+              <p class="text-xs text-slate-400">Sets your default soundtrack and OST curation in the Music Lounge</p>
+            </div>
+          </div>`;
+
+        vp.querySelectorAll('[data-obmusiclang]').forEach(btn => {
+          btn.onclick = () => {
+            obProfile.musicLang = btn.dataset.obmusiclang;
+            renderObStep();
+          };
+        });
+      }
+
+      // -------------------------------------------------------------
+      // STAGE 8: Theme Selection (Style Accents ONLY)
+      // -------------------------------------------------------------
+      else if (obStep === 8) {
+        if (!obProfile.settings) obProfile.settings = {};
+        const currentTheme = document.body.getAttribute('data-theme') || obProfile.settings.theme || 'space';
+
+        const styleAccents = [
+          ['space', 'Deep Cosmos', '#38bdf8', 'Starlight Cyan'],
+          ['clear', 'Summit Gold', '#F5C518', 'Classic Gold'],
+          ['noir', 'Noir Rain', '#94a3b8', 'Slate Charcoal'],
+          ['neon', 'Cyber Cyan', '#06b6d4', 'Electric Pulse'],
+          ['aurora', 'Aurora Emerald', '#34d399', 'Northern Glow'],
+          ['golden', 'Amber Horizon', '#ff9f1c', 'Warm Sunburst'],
+          ['blood', 'Crimson Eclipse', '#ef4444', 'Red Embers'],
+          ['velvet', 'Velvet Nebula', '#a855f7', 'Cosmic Violet']
+        ];
+
+        vp.innerHTML = `
+          <div class="ob-step-enter max-w-3xl mx-auto w-full py-3 text-center space-y-4">
+            <!-- Selection of Style Accents Only -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+              ${styleAccents.map(([id, name, color, desc]) => {
+                const isSel = currentTheme === id;
+                return `
+                  <button type="button" data-obtheme="${id}" class="p-3.5 sm:p-4 rounded-2xl border flex flex-col justify-between gap-3 transition-all ${isSel ? 'border-brand-gold bg-brand-gold/15 ring-2 ring-brand-gold/40 shadow-xl scale-[1.02]' : 'border-white/10 bg-black/45 hover:bg-white/5 hover:border-white/20'}">
+                    <div class="flex items-center justify-between">
+                      <div class="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center shadow-lg shrink-0" style="background:${color}"></div>
+                      <div class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
+                        ${isSel ? '✓' : ''}
+                      </div>
+                    </div>
+                    <div class="min-w-0">
+                      <div class="text-xs sm:text-sm font-bold text-white truncate">${name}</div>
+                      <div class="text-[10px] text-slate-400 mt-0.5 truncate">${desc}</div>
+                    </div>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>`;
+
+        vp.querySelectorAll('[data-obtheme]').forEach(b => {
           b.onclick = () => {
-            const a = b.dataset.obart;
-            const arr = obProfile.favArtists || [];
-            const idx = arr.indexOf(a);
-            if (idx > -1) arr.splice(idx, 1);
-            else arr.push(a);
-            obProfile.favArtists = arr;
+            const tid = b.dataset.obtheme;
+            obProfile.settings.theme = tid;
+            document.body.setAttribute('data-theme', tid);
+            saveLS('cs_theme_v2', tid);
             renderObStep();
           };
         });
       }
     }
 
-        function applyProfileAndCloseWizard() {
+    function applyProfileAndCloseWizard() {
+      if (obPreviewAudioEl) {
+        obPreviewAudioEl.pause();
+        obPreviewAudioEl = null;
+        obAudioPreviewPlaying = false;
+      }
+
       // Seed selected movies and shows into Favorites & Watched so the user's Library & DNA work immediately
       const seedMedia = [...(obProfile.favMoviesSeed || []), ...(obProfile.favShowsSeed || [])];
       seedMedia.forEach(t => {
@@ -696,14 +998,14 @@
         saveLS('cs_favs', favTitles);
         saveLS('cs_watched', watchedTitles);
       }
-      // Seed a few songs by selected artists into songFavs if empty
-      ensureMusicLoaded();
-      if ((obProfile.favArtists || []).length && musicCatalog && musicCatalog.length) {
-        const artSet = new Set(obProfile.favArtists.map(x => x.toLowerCase()));
-        musicCatalog.filter(s => artSet.has((s.a || '').toLowerCase())).slice(0, 6).forEach(s => {
-          if (!songFavs.includes(s.id)) songFavs.push(s.id);
-        });
-        saveLS('cs_song_favs', songFavs);
+
+      if (obProfile.musicLang) {
+        saveLS('cs_music_lang', obProfile.musicLang);
+        const mSel = $('musicFilterLang');
+        if (mSel) {
+          mSel.value = obProfile.musicLang;
+          if (typeof window.filterAndRenderMusic === 'function') window.filterAndRenderMusic();
+        }
       }
 
       saveLS('cs_profile_v1', obProfile);
@@ -718,13 +1020,23 @@
     }
 
     window.openOnboardingWizard = function(reset = true) {
-      if (reset) obStep = 1;
+      if (reset) {
+        obStep = 1;
+        obOthersExpanded = false;
+        obAudioPreviewPlaying = false;
+      }
       const ov = $('onboardingOverlay');
       ov.classList.remove('hidden');
       ov.classList.add('flex');
       renderObStep();
     };
+
     window.skipOnboardingWizard = function() {
+      if (obPreviewAudioEl) {
+        obPreviewAudioEl.pause();
+        obPreviewAudioEl = null;
+        obAudioPreviewPlaying = false;
+      }
       // Only allow closing without full steps if already onboarded previously
       if (!getLS('cs_onboarded_v1', null)) return;
       const ov = $('onboardingOverlay');
@@ -732,23 +1044,40 @@
       ov.classList.remove('flex');
       updateHeaderProfileUI();
     };
+
     window.obPrevStep = function() {
-      if (obStep > 1) { obStep--; renderObStep(); }
+      if (obStep > 1) {
+        if (obPreviewAudioEl) {
+          obPreviewAudioEl.pause();
+          obAudioPreviewPlaying = false;
+        }
+        obStep--;
+        renderObStep();
+      }
     };
+
     window.obNextStep = function() {
       if (obStep === 1) {
         const inp = $('obUsernameInput');
         if (inp && inp.value.trim()) obProfile.username = inp.value.trim();
       }
+      if (obPreviewAudioEl) {
+        obPreviewAudioEl.pause();
+        obAudioPreviewPlaying = false;
+      }
       if (obStep < TOTAL_OB_STEPS) {
         obStep++;
         renderObStep();
       } else {
-        const ov = $('onboardingOverlay');
-        ov.classList.add('hidden');
-        ov.classList.remove('flex');
-        applyProfileAndCloseWizard();
-        showToast(`Welcome aboard, ${obProfile.username}!`, 'fa-mountain-sun', 'text-brand-gold');
+        triggerLaunchAnimation(() => {
+          const ov = $('onboardingOverlay');
+          if (ov) {
+            ov.classList.add('hidden');
+            ov.classList.remove('flex');
+          }
+          applyProfileAndCloseWizard();
+          showToast(`Welcome aboard, ${obProfile.username || 'Cinephile'}!`, 'fa-mountain-sun', 'text-brand-gold');
+        });
       }
     };
     // ---------------------------------------------------------
@@ -2203,6 +2532,70 @@
       }
     };
 
+    window.syncProfileCatalogFilter = function(field, value) {
+      if (!obProfile.settings) obProfile.settings = {};
+      if (!obProfile.settings.catalogFilter) obProfile.settings.catalogFilter = {};
+      obProfile.settings.catalogFilter[field] = value;
+      saveLS('cs_profile_v1', obProfile);
+
+      if (field === 'genre') {
+        const mg = $('filterMoviesGenre'), sg = $('filterShowsGenre');
+        if (mg) mg.value = value;
+        if (sg) sg.value = value;
+      } else if (field === 'decade') {
+        const md = $('filterMoviesDecade'), sd = $('filterShowsDecade');
+        if (md) md.value = value;
+        if (sd) sd.value = value;
+      } else if (field === 'platform') {
+        const mp = $('filterMoviesPlatform'), sp = $('filterShowsPlatform');
+        if (mp) mp.value = value;
+        if (sp) sp.value = value;
+      } else if (field === 'sort') {
+        const ms = $('sortMovies'), ss = $('sortShows');
+        if (ms) ms.value = value;
+        if (ss) ss.value = value;
+      }
+
+      if (typeof window.renderMovies === 'function') window.renderMovies();
+      if (typeof window.renderShows === 'function') window.renderShows();
+      showToast(`Catalog filter set to: ${value}`, 'fa-sliders', 'text-brand-gold');
+    };
+
+    window.resetProfileCatalogFilters = function() {
+      if (!obProfile.settings) obProfile.settings = {};
+      obProfile.settings.catalogFilter = {
+        genre: 'All',
+        decade: 'All',
+        platform: 'All',
+        sort: 'popular'
+      };
+      saveLS('cs_profile_v1', obProfile);
+
+      const pGenre = $('profileFilterGenre'), pDecade = $('profileFilterDecade');
+      const pPlatform = $('profileFilterPlatform'), pSort = $('profileFilterSort');
+      if (pGenre) pGenre.value = 'All';
+      if (pDecade) pDecade.value = 'All';
+      if (pPlatform) pPlatform.value = 'All';
+      if (pSort) pSort.value = 'popular';
+
+      const mg = $('filterMoviesGenre'), sg = $('filterShowsGenre');
+      if (mg) mg.value = 'All';
+      if (sg) sg.value = 'All';
+      const md = $('filterMoviesDecade'), sd = $('filterShowsDecade');
+      if (md) md.value = 'All';
+      if (sd) sd.value = 'All';
+      const mp = $('filterMoviesPlatform'), sp = $('filterShowsPlatform');
+      if (mp) mp.value = 'All';
+      if (sp) sp.value = 'All';
+      const ms = $('sortMovies'), ss = $('sortShows');
+      if (ms) ms.value = 'popular';
+      if (ss) ss.value = 'popular';
+
+      if (typeof window.renderMovies === 'function') window.renderMovies();
+      if (typeof window.renderShows === 'function') window.renderShows();
+      showToast('Catalog filters reset to default', 'fa-rotate-left', 'text-cyan-400');
+    };
+
     window.toggleMoreAtmosphereThemes = function() {
       showAllAtmosphereThemes = !showAllAtmosphereThemes;
       window.syncProfileThemeStudio();
@@ -2245,7 +2638,7 @@
         </button>`;
       };
 
-      const fitThemes = PROFILE_THEMES_LIST.slice(0, 6);
+      const fitThemes = PROFILE_THEMES_LIST.slice(0, 8);
       const grid = $('profileThemeSwatchGrid');
       if (grid) grid.innerHTML = fitThemes.map(buildThemeCard).join('');
       const hubGrid = $('hubQuickThemeSwatches');
