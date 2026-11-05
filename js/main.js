@@ -341,7 +341,7 @@
         'Genres',
         'Films',
         'Series',
-        'The Deciders',
+        'Deciders',
         'Soundtrack Lounge',
         'Theme'
       ];
@@ -745,7 +745,7 @@
             <div class="flex items-center justify-center gap-2.5">
               <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 animate-pulse shadow-[0_0_12px_#f59e0b]"></span>
               <h2 class="text-xl sm:text-2xl font-display font-black uppercase tracking-[0.22em] bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(245,158,11,0.35)]">
-                The Deciders
+                Deciders
               </h2>
             </div>
 
