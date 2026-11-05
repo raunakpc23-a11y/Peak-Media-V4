@@ -2398,5 +2398,102 @@ body.reduce-fx .m-hover-scale:hover [data-spin],
 body.reduce-fx .m-hover-scale:hover.vinyl-record-disc,
 body.reduce-fx #homeVinylDisc.m-hover-scale:hover { animation: none; }
 
+/* ==========================================================================
+   PHONE & TOUCH DEVICE MOBILE OPTIMIZATIONS
+   ========================================================================== */
+html, body {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Safe area support for iOS Dynamic Island, Home Indicator & Notches */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  #mobileBottomNav {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom)) !important;
+  }
+  #musicMiniPlayer {
+    bottom: calc(4rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  @media (min-width: 768px) {
+    #musicMiniPlayer {
+      bottom: 0px !important;
+    }
+  }
+}
+
+/* Mobile Bottom Navigation Dock Styling */
+#mobileBottomNav {
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#mobileBottomNav .mnav-btn {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+#mobileBottomNav .mnav-btn:active {
+  transform: scale(0.92);
+}
+
+/* Touch responsiveness for horizontal shelves and lists */
+.shelf-scroll-row,
+.cat-scroll,
+.reel,
+#subNav,
+.deciders-tools-rail {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* Touch targets and cards on mobile devices */
+@media (max-width: 640px) {
+  /* Prevent horizontal page blowouts */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Compact and touch-friendly header search */
+  .header-search-bar {
+    font-size: 11px;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+
+  /* Deciders Rail in Horizontal Mode */
+  .deciders-tools-rail {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 0.25rem;
+    overflow-x: auto;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: none;
+  }
+  .deciders-tools-rail .decider-glyph-btn {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Modals as bottom-sheets with comfortable scrolling */
+  #detailModal > div,
+  #langCompareModal > div {
+    max-height: 94vh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Ensure card action buttons can be tapped on mobile */
+  .group:active .opacity-0,
+  .group:focus-within .opacity-0 {
+    opacity: 1 !important;
+  }
+}
+
+
 
 
