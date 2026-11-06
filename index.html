@@ -1646,7 +1646,7 @@
             </h1>
           </div>
 
-          <!-- Right: Quick Controls: Shuffle, Playlists, Favs, Resume, Stop (Comfortably Sized & Distinct) -->
+          <!-- Right: Quick Controls: Shuffle, Playlists, Resume, Stop (Comfortably Sized & Distinct) -->
           <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="h-9 px-2.5 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
               <i class="fa-solid fa-shuffle text-purple-300 text-xs"></i> <span class="hidden sm:inline">Shuffle</span>
@@ -1655,11 +1655,6 @@
               <i class="fa-solid fa-list text-purple-300 text-xs"></i>
               <span class="hidden sm:inline">Playlists</span>
               <span class="text-[10px] font-mono font-bold text-purple-300 bg-purple-900/60 px-1 rounded" id="musicCustomPlaylistsCountBadge">1</span>
-            </button>
-            <button type="button" onclick="setMusicViewMode(musicViewMode === 'favs' ? 'all' : 'favs')" id="mHeaderFavsBtn" title="Favorites" class="h-9 px-2 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
-              <i class="fa-solid fa-heart text-rose-400 text-xs"></i>
-              <span class="hidden sm:inline">Favs</span>
-              <span class="text-[10px] font-mono font-bold text-rose-300 bg-rose-950/60 px-1 rounded" id="musicFavsCountBadge">0</span>
             </button>
             <button type="button" id="musicResumeBtn" data-pulse onclick="musicResumeLast()" title="Resume Last Track" class="h-9 px-2.5 sm:px-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center justify-center gap-1 shadow transition-all active:scale-95">
               <i class="fa-solid fa-play text-[11px]"></i> <span class="hidden sm:inline">Resume</span>

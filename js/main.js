@@ -1493,7 +1493,7 @@
                 <i class="fa-solid fa-heart"></i>
               </div>
               <h3 class="text-base font-bold text-white">Your Favorites Playlist is Empty</h3>
-              <p class="text-xs text-gray-400 max-w-sm mx-auto">Tap the heart on any song card to add it to your Favorites inbuilt playlist!</p>
+              <p class="text-xs text-gray-400 max-w-sm mx-auto">Tap the heart on any song card to add it to your Favorites playlist!</p>
               <button type="button" onclick="setMusicViewMode('all')" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow transition-all cursor-pointer">Explore All Songs</button>
             </div>`;
         } else {
@@ -2647,9 +2647,8 @@
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse shrink-0"></span>
-                <h4 class="font-display font-bold text-sm sm:text-base text-white group-hover:text-rose-300 transition-colors truncate flex items-center gap-1.5">
-                  <span>Favorites</span>
-                  <span class="px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 text-[10px] font-mono font-bold">Inbuilt</span>
+                <h4 class="font-display font-bold text-sm sm:text-base text-white group-hover:text-rose-300 transition-colors truncate">
+                  Favorites
                 </h4>
               </div>
               <div class="text-xs text-gray-400 mt-1 flex items-center gap-2 font-mono">
@@ -2772,7 +2771,7 @@
     window.viewCustomPlaylistTracks = function(id) {
       activeViewingPlaylistId = id;
       const pl = (id === 'inbuilt_favorites') 
-        ? { id: 'inbuilt_favorites', name: 'Favorites (Inbuilt)', tracks: songFavs }
+        ? { id: 'inbuilt_favorites', name: 'Favorites', tracks: songFavs }
         : customSongLists.find(p => p.id === id);
       if (!pl) return;
 
@@ -2947,7 +2946,7 @@
         if (songFavs.includes(trackId)) {
           toggleSongFav(trackId);
         }
-        const pl = { id: 'inbuilt_favorites', name: 'Favorites (Inbuilt)', tracks: songFavs };
+        const pl = { id: 'inbuilt_favorites', name: 'Favorites', tracks: songFavs };
         renderPlaylistTracksModalContent(pl);
         const countEl = $('playlistTracksModalCount');
         if (countEl) countEl.textContent = `${songFavs.length} tracks`;
@@ -3002,9 +3001,8 @@
               <i class="fa-solid fa-heart"></i>
             </div>
             <div class="min-w-0 text-left">
-              <span class="font-bold text-xs truncate block text-white flex items-center gap-1.5">
-                <span>Favorites</span>
-                <span class="px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 text-[9px] uppercase font-mono">Inbuilt</span>
+              <span class="font-bold text-xs truncate block text-white">
+                Favorites
               </span>
               <span class="text-[10px] text-gray-400 font-mono">${songFavs.length} tracks</span>
             </div>
