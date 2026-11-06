@@ -3220,9 +3220,9 @@
       $('profileLangSummary').textContent = `Language: ${obProfile.language || 'All'} · Genre: ${obProfile.favoriteGenre || 'Sci-Fi'}`;
 
       $('profileAvatarGrid').innerHTML = AVATAR_PRESETS.map(k => `
-        <button type="button" onclick="selectProfileAvatar('${k}')" class="p-1.5 rounded-xl border flex flex-col items-center justify-center gap-0.5 transition-all ${obProfile.avatar === k ? 'border-brand-gold bg-brand-gold/20 scale-105' : 'border-white/10 bg-black/40 hover:bg-white/5'}">
-          <div class="w-8 h-8">${window.getAvatar3CHTML(k)}</div>
-          <span class="text-[9px] font-bold text-gray-300">${AVATAR_META[k].name}</span>
+        <button type="button" onclick="selectProfileAvatar('${k}')" class="p-2 min-h-[44px] rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${obProfile.avatar === k ? 'border-brand-gold bg-brand-gold/20 scale-105' : 'border-white/10 bg-black/40 hover:bg-white/5'}">
+          <div class="w-8 h-8 shrink-0">${window.getAvatar3CHTML(k)}</div>
+          <span class="text-[10px] font-bold text-gray-200 whitespace-nowrap overflow-hidden text-ellipsis w-full text-center px-1">${esc(AVATAR_META[k].name)}</span>
         </button>
       `).join('');
 

@@ -73,12 +73,46 @@
 
   document.body.appendChild(btn);
 
-  // On desktop (md+) push it lower so it doesn't overlap the mini-player
+  // Coordinated Floating Install Button Positioning (Defect 1)
+  // Elevates button above persistent audio player bar & suppresses completely during modal dialogs
   function positionBtn() {
-    btn.style.bottom = window.innerWidth >= 768 ? '1.5rem' : '5.5rem';
+    if (!deferredPrompt && btn.style.display === 'none') return;
+
+    // Check if any full-screen modal or overlay is open
+    const detailModal = document.getElementById('detailModal');
+    const goldenModal = document.getElementById('goldenTicketModal');
+    const surpriseModal = document.getElementById('surpriseModal');
+    const onboardingOverlay = document.getElementById('onboardingOverlay');
+    const isModalOpen = (detailModal && !detailModal.classList.contains('hidden')) ||
+                        (goldenModal && !goldenModal.classList.contains('hidden')) ||
+                        (surpriseModal && !surpriseModal.classList.contains('hidden')) ||
+                        (onboardingOverlay && !onboardingOverlay.classList.contains('hidden'));
+
+    if (isModalOpen) {
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
+      return;
+    } else {
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+    }
+
+    // Check if audio mini-player bar is active
+    const miniPlayer = document.getElementById('musicMiniPlayer');
+    const isPlayerActive = miniPlayer && !miniPlayer.classList.contains('hidden');
+
+    if (window.innerWidth >= 768) {
+      btn.style.bottom = isPlayerActive ? '5.5rem' : '1.5rem';
+    } else {
+      // Mobile: lift above bottom-nav + persistent audio player controls (136px / 8.5rem)
+      btn.style.bottom = isPlayerActive ? '8.8rem' : '5rem';
+    }
   }
+
+  window.syncInstallButtonPosition = positionBtn;
   positionBtn();
   window.addEventListener('resize', positionBtn);
+  setInterval(positionBtn, 500);
 
   // Browser fires this when the app is installable
   window.addEventListener('beforeinstallprompt', function (e) {

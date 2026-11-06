@@ -13764,7 +13764,7 @@ Odd Taxi|2021|87
       'movie:Interstellar': 'https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg',
       'movie:Oppenheimer': 'https://upload.wikimedia.org/wikipedia/en/4/4a/Oppenheimer_%28film%29.jpg',
       'movie:Spirited Away': 'https://upload.wikimedia.org/wikipedia/en/d/db/Spirited_Away_Japanese_poster.png',
-      'movie:The Matrix': 'https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg',
+      'movie:The Matrix': 'https://upload.wikimedia.org/wikipedia/en/d/db/The_Matrix.png',
       'movie:Goodfellas': 'https://upload.wikimedia.org/wikipedia/en/7/7b/Goodfellas.jpg',
       'movie:The Silence of the Lambs': 'https://upload.wikimedia.org/wikipedia/en/8/86/The_Silence_of_the_Lambs_poster.jpg',
       'movie:Saving Private Ryan': 'https://upload.wikimedia.org/wikipedia/en/a/ac/Saving_Private_Ryan_poster.jpg',
@@ -13772,7 +13772,7 @@ Odd Taxi|2021|87
       'movie:Whiplash': 'https://upload.wikimedia.org/wikipedia/en/0/01/Whiplash_poster.jpg',
       'movie:The Prestige': 'https://upload.wikimedia.org/wikipedia/en/d/d2/Prestige_poster.jpg',
       'movie:Rear Window': 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Rear_Window_poster.jpg',
-      'movie:Psycho': 'https://upload.wikimedia.org/wikipedia/en/b/b9/Psycho_%281960%29_theatrical_poster.jpg',
+      'movie:Psycho': 'https://upload.wikimedia.org/wikipedia/commons/7/76/Psycho_%281960%29_theatrical_poster_%28retouched%29.jpg',
       'movie:Spider-Man: Across the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg',
       'movie:Spider-Man: Into the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
       'movie:Back to the Future': 'https://upload.wikimedia.org/wikipedia/en/d/d2/Back_to_the_Future.jpg',
@@ -13780,7 +13780,7 @@ Odd Taxi|2021|87
       'movie:The Departed': 'https://upload.wikimedia.org/wikipedia/en/5/50/Departed234.jpg',
       'movie:Memento': 'https://upload.wikimedia.org/wikipedia/en/c/c7/Memento_poster.jpg',
       'movie:Django Unchained': 'https://upload.wikimedia.org/wikipedia/en/8/8b/Django_Unchained_Poster.jpg',
-      'movie:WALL-E': 'https://upload.wikimedia.org/wikipedia/en/c/c2/WALL-Eposter.jpg',
+      'movie:WALL-E': 'https://upload.wikimedia.org/wikipedia/en/4/4c/WALL-E_poster.jpg',
       'movie:The Shining': 'https://upload.wikimedia.org/wikipedia/en/1/1d/The_Shining_%281980%29_U.K._release_poster_-_The_tide_of_terror_that_would_not_ebb.jpg',
       'movie:Inglourious Basterds': 'https://upload.wikimedia.org/wikipedia/en/c/c3/Inglourious_Basterds_poster.jpg',
       'movie:Amelie': 'https://upload.wikimedia.org/wikipedia/en/5/53/Amelie_poster.jpg',
@@ -13794,7 +13794,7 @@ Odd Taxi|2021|87
       'movie:3 Idiots': 'https://upload.wikimedia.org/wikipedia/en/d/df/3_idiots_poster.jpg',
       'movie:Gangs of Wasseypur': 'https://upload.wikimedia.org/wikipedia/en/6/6a/Gangs_of_Wasseypur_poster.jpg',
       'movie:Dangal': 'https://upload.wikimedia.org/wikipedia/en/9/99/Dangal_Poster.jpg',
-      'movie:Super Deluxe': 'https://upload.wikimedia.org/wikipedia/en/7/7b/Super_Deluxe_poster.jpg',
+      'movie:Super Deluxe': 'https://upload.wikimedia.org/wikipedia/en/a/a1/Super_Deluxe_film_poster.jpg',
       'movie:Arrival': 'https://upload.wikimedia.org/wikipedia/en/d/df/Arrival%2C_Movie_Poster.jpg',
       'movie:2001: A Space Odyssey': 'https://upload.wikimedia.org/wikipedia/en/1/11/2001_A_Space_Odyssey_%281968%29.png',
       'movie:Blade Runner': 'https://upload.wikimedia.org/wikipedia/en/9/9f/Blade_Runner_%281982_poster%29.png',
@@ -13819,8 +13819,8 @@ Odd Taxi|2021|87
       'movie:The Return of the King': 'https://upload.wikimedia.org/wikipedia/en/4/48/Lord_Rings_Return_King.jpg',
       'movie:The Lord of the Rings: The Fellowship of the Ring': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Lord_Rings_Fellowship_Ring.jpg',
       'movie:The Fellowship of the Ring': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Lord_Rings_Fellowship_Ring.jpg',
-      'movie:The Lord of the Rings: The Two Towers': 'https://upload.wikimedia.org/wikipedia/en/a/ad/Lord_of_the_Rings_-_The_Two_Towers.jpg',
-      'movie:The Two Towers': 'https://upload.wikimedia.org/wikipedia/en/a/ad/Lord_of_the_Rings_-_The_Two_Towers.jpg',
+      'movie:The Lord of the Rings: The Two Towers': 'https://upload.wikimedia.org/wikipedia/en/a/a1/Lord_Rings_Two_Towers.jpg',
+      'movie:The Two Towers': 'https://upload.wikimedia.org/wikipedia/en/a/a1/Lord_Rings_Two_Towers.jpg',
       'movie:The Good, the Bad and the Ugly': 'https://upload.wikimedia.org/wikipedia/en/4/45/Good_the_bad_and_the_ugly_poster.jpg',
       'movie:Raiders of the Lost Ark': 'https://upload.wikimedia.org/wikipedia/en/4/4c/Raiders_of_the_Lost_Ark.jpg',
       'movie:Indiana Jones and the Raiders of the Lost Ark': 'https://upload.wikimedia.org/wikipedia/en/4/4c/Raiders_of_the_Lost_Ark.jpg',
@@ -13833,7 +13833,7 @@ Odd Taxi|2021|87
       'movie:Scarface': 'https://upload.wikimedia.org/wikipedia/en/7/79/Scarface_-_1983_film.jpg',
       'movie:Ran': 'https://upload.wikimedia.org/wikipedia/en/5/58/Ran_poster.jpg',
       'movie:Harakiri': 'https://upload.wikimedia.org/wikipedia/en/a/a2/Harakiri_poster.jpg',
-      'movie:Seven Samurai': 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Seven_Samurai_poster.jpg',
+      'movie:Seven Samurai': 'https://upload.wikimedia.org/wikipedia/en/c/c8/Seven_Samurai_Poster.png',
       'movie:High and Low': 'https://upload.wikimedia.org/wikipedia/en/d/d3/High_and_Low_poster.jpg',
       'movie:Yojimbo': 'https://upload.wikimedia.org/wikipedia/en/b/bc/Yojimbo_1961.jpg',
       'movie:Yavanika': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Yavanika_poster.jpg',
@@ -13863,7 +13863,13 @@ Odd Taxi|2021|87
       '/4/11542.jpg',     // Legacy bad Band of Brothers hash
       '/4/11598.jpg',     // Legacy bad Cowboy Bebop hash
       '/261/653066.jpg',  // Legacy low-res/bad Dark hash
-      '/411/1028308.jpg'  // Legacy bad Better Call Saul hash
+      '/411/1028308.jpg', // Legacy bad Better Call Saul hash
+      'The_Matrix_Poster.jpg',
+      'Lord_of_the_Rings_-_The_Two_Towers.jpg',
+      'Seven_Samurai_poster.jpg',
+      'Super_Deluxe_poster.jpg',
+      'WALL-Eposter.jpg',
+      'Psycho_%281960%29_theatrical_poster.jpg'
     ];
     Object.keys(posterCache).forEach(k => {
       const val = posterCache[k];
@@ -15780,44 +15786,44 @@ Odd Taxi|2021|87
             </div>
 
             <!-- Action Row: Primary Watch, Secondary Platform/Trailer, Sleek User Toolbar -->
-            <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-white/10">
-              <!-- Streaming & Viewing Actions -->
-              <div class="flex flex-wrap items-center gap-2">
+            <div class="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-white/10">
+              <!-- Streaming & Viewing Actions (Stacked full-width on mobile, horizontal on sm+) -->
+              <div class="flex flex-col xs:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                 ${cinejoyStreamUrl ? `
-                <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition-all">
-                  <i class="fa-solid fa-circle-play text-xs"></i> <span>Watch on Cinejoy</span>
+                <a href="${cinejoyStreamUrl}" target="_blank" rel="noopener noreferrer" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', '${item.type}') : true" class="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-all active:scale-98">
+                  <i class="fa-solid fa-circle-play text-sm"></i> <span>Watch on Cinejoy</span>
                 </a>` : ''}
 
                 ${indiaPlatform ? `
-                <a href="${platSearchUrl}" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl ${platClass} border font-bold text-xs flex items-center gap-1.5 transition-all">
+                <a href="${platSearchUrl}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl ${platClass} border font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all active:scale-98">
                   <i class="${platIcon}"></i> <span>${platLabel}</span>
                 </a>` : `
-                <a href="https://www.youtube.com/results?search_query=${encodeURIComponent((item.rawName || item.cleanName) + ' ' + item.year + ' official trailer')}" target="_blank" rel="noopener" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', 'trailer') : true" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition-all">
+                <a href="https://www.youtube.com/results?search_query=${encodeURIComponent((item.rawName || item.cleanName) + ' ' + item.year + ' official trailer')}" target="_blank" rel="noopener" onclick="return window.handleStreamingLinkClick ? window.handleStreamingLinkClick(event, this.href, '${item.cleanName ? item.cleanName.replace(/'/g, "\\'") : item.title.replace(/'/g, "\\'")}', 'trailer') : true" class="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all active:scale-98">
                   <i class="fa-brands fa-youtube text-red-500"></i> <span>Trailer</span>
                 </a>`}
               </div>
 
-              <!-- User Film Interaction Strip (Letterboxd Style) -->
-              <div class="flex items-center gap-1.5">
+              <!-- User Film Interaction Strip (Letterboxd Style - Spacious 44px Touch Targets) -->
+              <div class="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10 w-full sm:w-auto">
                 <!-- Watchlist Heart -->
-                <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" title="${isW ? 'In Watchlist (Click to remove)' : 'Add to Watchlist'}" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all ${isW ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10'}">
-                  <i class="fa-${isW ? 'solid' : 'regular'} fa-heart text-sm ${isW ? 'text-rose-400' : 'text-gray-400'}"></i>
+                <button onclick="toggleWishlist('${escTitle}', event); openDetailModal('${escTitle}');" title="${isW ? 'In Watchlist (Click to remove)' : 'Add to Watchlist'}" class="min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center transition-all ${isW ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10'} active:scale-95" aria-label="Watchlist">
+                  <i class="fa-${isW ? 'solid' : 'regular'} fa-heart text-base ${isW ? 'text-rose-400' : 'text-gray-400'}"></i>
                 </button>
 
                 <!-- Watched Toggle -->
-                <button onclick="toggleWatched('${escTitle}', event); openDetailModal('${escTitle}');" title="${isWatched ? 'Mark as Unwatched' : 'Mark as Watched'}" class="px-3 py-1.5 h-9 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${isWatched ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10'}">
+                <button onclick="toggleWatched('${escTitle}', event); openDetailModal('${escTitle}');" title="${isWatched ? 'Mark as Unwatched' : 'Mark as Watched'}" class="flex-1 sm:flex-initial min-h-[44px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all ${isWatched ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10'} active:scale-95" aria-label="Watched">
                   <i class="fa-solid ${isWatched ? 'fa-check' : 'fa-eye'}"></i> <span>${isWatched ? 'Watched' : 'Watch'}</span>
                 </button>
 
                 <!-- Favourite Star -->
-                <button onclick="toggleFav('${escTitle}', event); openDetailModal('${escTitle}');" title="Toggle Favourite" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all ${favTitles.includes(item.title) ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40' : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10'}">
-                  <i class="fa-${favTitles.includes(item.title) ? 'solid' : 'regular'} fa-star text-sm ${favTitles.includes(item.title) ? 'text-amber-300' : 'text-gray-400'}"></i>
+                <button onclick="toggleFav('${escTitle}', event); openDetailModal('${escTitle}');" title="Toggle Favourite" class="min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center transition-all ${favTitles.includes(item.title) ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40' : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10'} active:scale-95" aria-label="Favourite">
+                  <i class="fa-${favTitles.includes(item.title) ? 'solid' : 'regular'} fa-star text-base ${favTitles.includes(item.title) ? 'text-amber-300' : 'text-gray-400'}"></i>
                 </button>
 
                 ${isWatched ? `
                 <!-- Golden Ticket Top 3 Mint -->
-                <button id="modalMintBtn" onclick="toggleMintGoldenTicket('${escTitle}'); openDetailModal('${escTitle}');" title="Mint to Top 3 Golden Tickets" class="px-3 py-1.5 h-9 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${isMintedInTop3 ? 'bg-amber-400 text-black font-extrabold shadow-sm' : 'bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 border border-amber-400/30'}">
-                  <i class="fa-solid fa-ticket"></i>
+                <button id="modalMintBtn" onclick="toggleMintGoldenTicket('${escTitle}'); openDetailModal('${escTitle}');" title="Mint to Top 3 Golden Tickets" class="flex-1 sm:flex-initial min-h-[44px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all ${isMintedInTop3 ? 'bg-amber-400 text-black font-extrabold shadow-sm' : 'bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 border border-amber-400/30'} active:scale-95" aria-label="Mint Golden Ticket">
+                  <i class="fa-solid fa-ticket text-sm"></i>
                   <span>${isMintedInTop3 ? 'Ticket #Minted' : 'Mint Ticket'}</span>
                 </button>` : ''}
               </div>
