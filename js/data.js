@@ -15229,7 +15229,7 @@ Odd Taxi|2021|87
       const pillsEl = document.getElementById('genreQuickPills');
       if (!pillsEl) return;
       pillsEl.innerHTML = genres.map((g, idx) => {
-        return `<button onclick="selectGenreTab('${g}')" id="genrePill-${g}" class="genre-tab-pill px-3 py-1 rounded-lg ${idx === 0 ? 'bg-brand-gold text-black font-bold' : 'bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-300 hover:text-white'} transition-all">
+        return `<button onclick="selectGenreTab('${g}')" id="genrePill-${g}" title="${g}" class="genre-tab-pill truncate text-center px-2 py-1.5 sm:px-3 sm:py-1 rounded-lg text-xs ${idx === 0 ? 'bg-brand-gold text-black font-bold' : 'bg-white/5 hover:bg-white/10 border border-white/10 font-medium text-gray-300 hover:text-white'} transition-all">
           ${g}
         </button>`;
       }).join('');
@@ -15239,10 +15239,10 @@ Odd Taxi|2021|87
     window.selectGenreTab = function(genre) {
       const pills = document.querySelectorAll('.genre-tab-pill');
       pills.forEach(p => {
-        p.className = 'genre-tab-pill px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-300 hover:text-white transition-all';
+        p.className = 'genre-tab-pill truncate text-center px-2 py-1.5 sm:px-3 sm:py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-300 hover:text-white transition-all';
       });
       const activePill = document.getElementById(`genrePill-${genre}`);
-      if (activePill) activePill.className = 'genre-tab-pill px-3 py-1 rounded-lg bg-brand-gold text-black font-bold text-xs transition-all shadow-sm';
+      if (activePill) activePill.className = 'genre-tab-pill truncate text-center px-2 py-1.5 sm:px-3 sm:py-1 rounded-lg bg-brand-gold text-black font-bold text-xs transition-all shadow-sm';
 
       const catList = document.getElementById('categoriesList');
       if (!catList) return;
@@ -15993,6 +15993,21 @@ Odd Taxi|2021|87
       tick();
     }
 
+    function initCinemaRouletteStage() {
+      if (!currentSurpriseWinner) {
+        const rawPool = getEligibleSurprisePool();
+        const pool = (rawPool && rawPool.length) ? rawPool : [...movies, ...tvShows];
+        if (pool && pool.length) {
+          const highTier = pool.filter(i => parseFloat(i.rating) >= 8.0);
+          const finalPool = highTier.length >= 6 ? highTier : pool;
+          currentSurpriseWinner = finalPool[Math.floor(Math.random() * finalPool.length)];
+        }
+      }
+      if (currentSurpriseWinner) {
+        renderWinnerDisplay(currentSurpriseWinner);
+      }
+    }
+
     function spinSurpriseWheel() {
       runCinemaRouletteSpin();
     }
@@ -16653,6 +16668,7 @@ Odd Taxi|2021|87
     window.prefillFromWishlist = prefillFromWishlist;
     window.spinSurpriseWheel = spinSurpriseWheel;
     window.runCinemaRouletteSpin = runCinemaRouletteSpin;
+    window.initCinemaRouletteStage = initCinemaRouletteStage;
     window.generateRecommendation = generateRecommendation;
     window.initCineMatchmaker = initCineMatchmaker;
     window.rejectRecommendation = rejectRecommendation;

@@ -1253,6 +1253,7 @@
       if ($('musicTotalSongsCount')) $('musicTotalSongsCount').textContent = musicCatalog.length.toLocaleString();
       if ($('musicTotalPlaylistsCount')) $('musicTotalPlaylistsCount').textContent = musicPlaylists.length;
       if ($('musicFavCountBadge')) $('musicFavCountBadge').textContent = songFavs.length;
+      if ($('musicFavsCountBadge')) $('musicFavsCountBadge').textContent = songFavs.length;
       if ($('musicAdFreeCountBadge')) $('musicAdFreeCountBadge').textContent = songAdFree.length;
       if (window.updateCustomPlaylistsCount) window.updateCustomPlaylistsCount();
 
@@ -1313,7 +1314,17 @@
     window.setMusicViewMode = function(mode) {
       musicViewMode = mode;
       const favBtn = $('mview-favs');
-      if (favBtn) favBtn.className = 'px-3 py-2 rounded-xl text-xs font-bold transition-all ' + (mode === 'favs' ? 'bg-brand-gold text-black shadow' : 'bg-white/5 text-gray-300 hover:text-white border border-white/10');
+      if (favBtn) favBtn.className = 'px-3 py-2 rounded-xl text-xs font-bold transition-all ' + (mode === 'favs' ? 'bg-rose-500 text-white shadow-[0_0_12px_rgba(244,63,94,0.5)]' : 'bg-white/5 text-gray-300 hover:text-white border border-white/10');
+      const headerFavBtn = $('mHeaderFavsBtn');
+      if (headerFavBtn) {
+        if (mode === 'favs') {
+          headerFavBtn.className = 'h-9 px-2 sm:px-3 rounded-xl bg-rose-500/35 border border-rose-400 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-[0_0_12px_rgba(244,63,94,0.4)] transition-all active:scale-95';
+        } else {
+          headerFavBtn.className = 'h-9 px-2 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95';
+        }
+      }
+      if ($('musicFavsCountBadge')) $('musicFavsCountBadge').textContent = songFavs.length;
+      if ($('musicFavCountBadge')) $('musicFavCountBadge').textContent = songFavs.length;
       filterAndRenderMusic(true);
     };
     window.filterMusicByPlaylist = function(pid, btnEl) {
@@ -1932,6 +1943,8 @@
       }
       saveLS('cs_song_favs', songFavs);
       if ($('musicFavCountBadge')) $('musicFavCountBadge').textContent = songFavs.length;
+      if ($('musicFavsCountBadge')) $('musicFavsCountBadge').textContent = songFavs.length;
+      if ($('profStatSongFavs')) $('profStatSongFavs').textContent = songFavs.length;
       updateMiniPlayerUI();
       if (!$('tab-music').classList.contains('hidden')) filterAndRenderMusic(false);
     };

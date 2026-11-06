@@ -108,10 +108,21 @@
       <path d="M18.5 9.5v7M15 13h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
     </symbol>
 
-    <!-- Simple Custom Member Profile Glyph (Minimalist Silhouette) -->
+    <!-- Bespoke Peak Media Member Avatar Glyph -->
     <symbol id="pmUserProfileIcon" viewBox="0 0 24 24">
-      <circle cx="12" cy="7.5" r="4" fill="currentColor"/>
-      <path d="M4 19.5c0-4 3.5-6.5 8-6.5s8 2.5 8 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="pmProfGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffe699"/>
+          <stop offset="100%" stop-color="#f5c518"/>
+        </linearGradient>
+      </defs>
+      <!-- Shield / Badge Contour -->
+      <path d="M12 2L4 5.5v5.8c0 4.8 3.4 9.3 8 10.7 4.6-1.4 8-5.9 8-10.7V5.5L12 2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" opacity="0.45"/>
+      <!-- Peak Monogram / Visor Crown at top -->
+      <path d="M9 7.5L12 4.5l3 3" fill="none" stroke="url(#pmProfGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Inner User Avatar Silhouette -->
+      <circle cx="12" cy="10" r="3.2" fill="url(#pmProfGrad)"/>
+      <path d="M6.8 18.2c.8-2.6 2.8-4 5.2-4s4.4 1.4 5.2 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </symbol>
   </svg>
 
@@ -221,6 +232,14 @@
 
     <!-- 9. Cinema Roulette: 8-facet turbine & spring ticker -->
     <symbol id="decRoulette" viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="rouletteGold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fff1b8"/>
+          <stop offset="50%" stop-color="#f5c451"/>
+          <stop offset="100%" stop-color="#a8741a"/>
+        </linearGradient>
+      </defs>
+      <circle cx="32" cy="34" r="24" fill="#0d111b"/>
       <path d="M32 34L32.0 10.0A24 24 0 0 1 49.0 17.0Z" fill="#b3261e" stroke="#d9a21b" stroke-width=".8"/>
       <path d="M32 34L49.0 17.0A24 24 0 0 1 56.0 34.0Z" fill="#1d1d26" stroke="#d9a21b" stroke-width=".8"/>
       <path d="M32 34L56.0 34.0A24 24 0 0 1 49.0 51.0Z" fill="#b3261e" stroke="#d9a21b" stroke-width=".8"/>
@@ -229,11 +248,11 @@
       <path d="M32 34L15.0 51.0A24 24 0 0 1 8.0 34.0Z" fill="#1d1d26" stroke="#d9a21b" stroke-width=".8"/>
       <path d="M32 34L8.0 34.0A24 24 0 0 1 15.0 17.0Z" fill="#b3261e" stroke="#d9a21b" stroke-width=".8"/>
       <path d="M32 34L15.0 17.0A24 24 0 0 1 32.0 10.0Z" fill="#1d1d26" stroke="#d9a21b" stroke-width=".8"/>
-      <circle cx="32" cy="34" r="24" fill="none" stroke="url(#gd)" stroke-width="3"/>
-      <circle cx="32" cy="34" r="7" fill="url(#gd)" stroke="#5a3a08"/>
-      <circle cx="32" cy="34" r="2" fill="#14141c"/>
+      <circle cx="32" cy="34" r="24" fill="none" stroke="url(#rouletteGold)" stroke-width="2.5"/>
+      <circle cx="32" cy="34" r="7" fill="url(#rouletteGold)" stroke="#5a3a08" stroke-width="1"/>
+      <circle cx="32" cy="34" r="2.5" fill="#14141c"/>
       <circle cx="46" cy="22" r="2.8" fill="#f4f1ea"/>
-      <path d="M27 3h10l-5 10z" fill="url(#gd)"/>
+      <path d="M28 4h8l-4 9z" fill="#f5c451" stroke="#5a3a08" stroke-width="0.8"/>
     </symbol>
 
     <!-- 6. Matchmaker: Overlapping projector apertures & luminous intersection -->
@@ -919,7 +938,7 @@
     <!-- TAB 3: CATEGORIES -->
     <section id="tab-categories" class="tab-pane hidden fade-in space-y-4">
       <div class="border-b border-white/10 pb-3 flex items-center gap-3">
-        <div id="genreQuickPills" class="flex flex-wrap gap-1.5 py-1 flex-1"></div>
+        <div id="genreQuickPills" class="grid grid-cols-5 sm:flex sm:flex-wrap gap-1.5 py-1 flex-1 w-full"></div>
       </div>
       <div id="categoriesList" class="space-y-6"></div>
     </section>
@@ -954,6 +973,9 @@
         <div class="deciders-tools-rail" role="tablist" aria-label="Deciders Tools">
           <button type="button" onclick="selectDeciderTool('mood')" id="deciderRailBtn-mood" class="decider-glyph-btn active" data-pop title="Mood" aria-label="Mood">
             <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decMood"></use></svg>
+          </button>
+          <button type="button" onclick="selectDeciderTool('roulette')" id="deciderRailBtn-roulette" class="decider-glyph-btn" data-pop title="Roulette" aria-label="Roulette">
+            <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decRoulette"></use></svg>
           </button>
           <button type="button" onclick="selectDeciderTool('swipe')" id="deciderRailBtn-swipe" class="decider-glyph-btn" data-pop title="Swipe" aria-label="Swipe">
             <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decSwipe"></use></svg>
@@ -1664,7 +1686,7 @@
             </h1>
           </div>
 
-          <!-- Right: Quick Controls: Shuffle, Playlists, Resume, Stop (Comfortably Sized & Distinct) -->
+          <!-- Right: Quick Controls: Shuffle, Playlists, Favs, Resume, Stop (Comfortably Sized & Distinct) -->
           <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="h-9 px-2.5 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
               <i class="fa-solid fa-shuffle text-purple-300 text-xs"></i> <span class="hidden sm:inline">Shuffle</span>
@@ -1673,6 +1695,11 @@
               <i class="fa-solid fa-list text-purple-300 text-xs"></i>
               <span class="hidden sm:inline">Playlists</span>
               <span class="text-[10px] font-mono font-bold text-purple-300 bg-purple-900/60 px-1 rounded" id="musicCustomPlaylistsCountBadge">1</span>
+            </button>
+            <button type="button" onclick="setMusicViewMode(musicViewMode === 'favs' ? 'all' : 'favs')" id="mHeaderFavsBtn" title="Favorites" class="h-9 px-2 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
+              <i class="fa-solid fa-heart text-rose-400 text-xs"></i>
+              <span class="hidden sm:inline">Favs</span>
+              <span class="text-[10px] font-mono font-bold text-rose-300 bg-rose-950/60 px-1 rounded" id="musicFavsCountBadge">0</span>
             </button>
             <button type="button" id="musicResumeBtn" data-pulse onclick="musicResumeLast()" title="Resume Last Track" class="h-9 px-2.5 sm:px-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center justify-center gap-1 shadow transition-all active:scale-95">
               <i class="fa-solid fa-play text-[11px]"></i> <span class="hidden sm:inline">Resume</span>
@@ -2079,7 +2106,10 @@
                   </div>
                   <div class="flex items-center gap-1">
                     <button id="cxFit" title="Fit constellation to view" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 transition-all flex items-center gap-1">
-                      <i class="fa-solid fa-expand text-brand-gold"></i> <span class="hidden sm:inline">Fit</span>
+                      <i class="fa-solid fa-arrows-to-dot text-brand-gold"></i> <span class="hidden sm:inline">Fit</span>
+                    </button>
+                    <button id="cxFullscreen" onclick="toggleConstellationFullscreen()" title="Fullscreen constellation" aria-label="Fullscreen constellation" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-brand-gold hover:text-white transition-all flex items-center gap-1">
+                      <i class="fa-solid fa-expand" id="cxFsIcon"></i> <span class="hidden sm:inline" id="cxFsLabel">Fullscreen</span>
                     </button>
                     <button id="cxReset" title="Reset node positions" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-400 hover:text-white transition-all">
                       <i class="fa-solid fa-rotate-left"></i>
@@ -2094,6 +2124,11 @@
               <div id="cxWrap" class="relative rounded-2xl overflow-hidden border border-white/10 h-72 sm:h-96 w-full" style="background: radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%)">
                 <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
                 <div id="cxLegend" class="absolute top-2.5 left-2.5 flex flex-wrap gap-x-2.5 gap-y-1 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
+                
+                <!-- Fullscreen Overlay Exit Button -->
+                <button id="cxFsExitBtn" onclick="toggleConstellationFullscreen()" aria-label="Exit fullscreen" class="hidden absolute top-3 left-3 z-30 px-3 py-1.5 rounded-xl bg-black/85 hover:bg-black text-white text-xs font-bold border border-white/20 items-center gap-1.5 backdrop-blur-md shadow-2xl transition-all cursor-pointer">
+                  <i class="fa-solid fa-compress text-brand-gold"></i> <span>Exit Fullscreen</span>
+                </button>
                 
                 <!-- Zoom Buttons Overlay -->
                 <div class="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
@@ -2199,13 +2234,12 @@
         <input id="palInput" oninput="palSearch(this.value)" placeholder="Search any of 2,700+ movies or TV series..." class="flex-1 bg-transparent py-3.5 sm:py-4 text-sm text-white placeholder-gray-400 focus:outline-none">
         <kbd class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-gray-300">ESC</kbd>
       </div>
-      <!-- Mobile Encapsulated Sub-Filters: Home, Films, Shows, Universes, Dramas -->
+      <!-- Mobile Encapsulated Sub-Filters: Home, Films, Shows, Universes -->
       <div id="palSubFilterRow" class="flex sm:hidden items-center justify-between px-3 py-2 bg-[#070a12] border-b border-white/10 gap-1.5 overflow-x-auto scrollbar-none text-[11px]">
         <button type="button" onclick="setPalSearchScope('home')" id="palScope-home" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-bold text-center bg-brand-gold text-black transition-all">Home</button>
         <button type="button" onclick="setPalSearchScope('films')" id="palScope-films" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all">Films</button>
         <button type="button" onclick="setPalSearchScope('shows')" id="palScope-shows" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all">Shows</button>
         <button type="button" onclick="setPalSearchScope('universes')" id="palScope-universes" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all">Universes</button>
-        <button type="button" onclick="setPalSearchScope('dramas')" id="palScope-dramas" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all">Dramas</button>
       </div>
       <div id="palList" class="max-h-80 overflow-y-auto divide-y divide-white/10 bg-[#0c101c]"></div>
     </div>

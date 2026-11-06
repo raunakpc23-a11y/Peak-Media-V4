@@ -282,6 +282,58 @@
     const zin = document.getElementById('cxZin'); if (zin) zin.onclick = () => zoom(1.25);
     const zout = document.getElementById('cxZout'); if (zout) zout.onclick = () => zoom(.8);
     const fitBtn = document.getElementById('cxFit'); if (fitBtn) fitBtn.onclick = fit;
+
+    function toggleConstellationFullscreen() {
+      const wrap = document.getElementById('cxWrap');
+      if (!wrap) return;
+      const isFs = wrap.classList.contains('cx-fullscreen-active') || document.fullscreenElement === wrap;
+      const fsIcon = document.getElementById('cxFsIcon');
+      const fsLabel = document.getElementById('cxFsLabel');
+      const exitBtn = document.getElementById('cxFsExitBtn');
+
+      if (!isFs) {
+        // Enter fullscreen
+        wrap.classList.add('cx-fullscreen-active');
+        if (wrap.requestFullscreen) {
+          wrap.requestFullscreen().catch(() => {});
+        } else if (wrap.webkitRequestFullscreen) {
+          wrap.webkitRequestFullscreen();
+        }
+        if (fsIcon) { fsIcon.classList.remove('fa-expand'); fsIcon.classList.add('fa-compress'); }
+        if (fsLabel) fsLabel.textContent = 'Exit';
+        if (exitBtn) { exitBtn.classList.remove('hidden'); exitBtn.classList.add('flex'); }
+      } else {
+        // Exit fullscreen
+        wrap.classList.remove('cx-fullscreen-active');
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        if (fsIcon) { fsIcon.classList.remove('fa-compress'); fsIcon.classList.add('fa-expand'); }
+        if (fsLabel) fsLabel.textContent = 'Fullscreen';
+        if (exitBtn) { exitBtn.classList.add('hidden'); exitBtn.classList.remove('flex'); }
+      }
+      setTimeout(() => {
+        resize();
+        fit();
+      }, 60);
+    }
+    window.toggleConstellationFullscreen = toggleConstellationFullscreen;
+
+    const fsBtn = document.getElementById('cxFullscreen');
+    if (fsBtn) fsBtn.onclick = toggleConstellationFullscreen;
+    const fsExitBtn = document.getElementById('cxFsExitBtn');
+    if (fsExitBtn) fsExitBtn.onclick = toggleConstellationFullscreen;
+
+    document.addEventListener('fullscreenchange', () => {
+      const wrap = document.getElementById('cxWrap');
+      if (!wrap) return;
+      if (!document.fullscreenElement && wrap.classList.contains('cx-fullscreen-active')) {
+        toggleConstellationFullscreen();
+      }
+    });
+
     const typeSel = document.getElementById('cxType'); if (typeSel) typeSel.onchange = e => { S.type = e.target.value; build(true); };
     const wishChk = document.getElementById('cxWish'); if (wishChk) wishChk.onchange = e => { S.wish = e.target.checked; build(true); };
     const resetBtn = document.getElementById('cxReset'); if (resetBtn) resetBtn.onclick = () => { S.explored.clear(); S.by = {}; S.sel = null; S.built = false; build(false); };

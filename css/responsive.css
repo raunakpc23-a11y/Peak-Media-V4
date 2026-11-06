@@ -161,9 +161,9 @@
       display: flex !important;
       flex-direction: row !important;
       align-items: center !important;
-      justify-content: space-around !important;
-      gap: 0.15rem !important;
-      padding: 0.25rem 0.1rem !important;
+      justify-content: space-between !important;
+      gap: 0.1rem !important;
+      padding: 0.25rem 0.2rem !important;
       width: 100% !important;
       overflow-x: hidden !important;
       border-right: none !important;
@@ -173,14 +173,48 @@
     .deciders-tools-rail .decider-glyph-btn {
       flex: 1 1 0% !important;
       min-width: 0 !important;
-      max-width: 36px !important;
-      height: 36px !important;
-      padding: 0.2rem !important;
+      max-width: 32px !important;
+      height: 32px !important;
+      padding: 0.15rem !important;
       margin: 0 !important;
+      border-radius: 8px !important;
     }
     .deciders-tools-rail .decider-mark {
       width: 100% !important;
       height: 100% !important;
+    }
+
+    /* Genre quick pills on mobile: 5 columns = exactly 3 complete rows of 5, zero orphans */
+    #genreQuickPills {
+      display: grid !important;
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      gap: 0.25rem !important;
+      width: 100% !important;
+    }
+    #genreQuickPills .genre-tab-pill {
+      padding: 0.35rem 0.15rem !important;
+      font-size: 0.65rem !important;
+      text-align: center !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      width: 100% !important;
+    }
+
+    /* Taste Constellation Web Fullscreen Mode */
+    #cxWrap.cx-fullscreen-active {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      z-index: 99999 !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+    }
+    #cxWrap.cx-fullscreen-active #cxFsExitBtn {
+      display: flex !important;
     }
     #tab-movies h1, #tab-shows h1, #tab-categories h1, #tab-universes h1,
     #tab-duel h1, #tab-match h1, #tab-ricochet h1, #tab-marathon h1, #tab-compat h1, #tab-admin h2, #tab-admin h3 {

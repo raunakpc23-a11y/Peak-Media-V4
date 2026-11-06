@@ -550,8 +550,8 @@
     if (tool === 'mood') {
       if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 40);
     } else if (tool === 'roulette') {
-      if (window.runCinemaRouletteSpin) window.runCinemaRouletteSpin();
-      else if (window.spinSurpriseWheel) window.spinSurpriseWheel();
+      if (window.initCinemaRouletteStage) window.initCinemaRouletteStage();
+      else if (window.runCinemaRouletteSpin) window.runCinemaRouletteSpin();
     } else if (tool === 'swipe') {
       if (window.initSwipeStage) window.initSwipeStage();
     } else if (tool === 'duel') {
@@ -755,7 +755,7 @@
   window._palScope = 'home';
   window.setPalSearchScope = function(scope) {
     window._palScope = scope || 'home';
-    const scopes = ['home', 'films', 'shows', 'universes', 'dramas'];
+    const scopes = ['home', 'films', 'shows', 'universes'];
     scopes.forEach(s => {
       const el = document.getElementById('palScope-' + s);
       if (el) {
@@ -802,7 +802,7 @@
     p.classList.remove('hidden');
     p.classList.add('flex');
     window._palScope = 'home';
-    const scopes = ['home', 'films', 'shows', 'universes', 'dramas'];
+    const scopes = ['home', 'films', 'shows', 'universes'];
     scopes.forEach(s => {
       const el = document.getElementById('palScope-' + s);
       if (el) {

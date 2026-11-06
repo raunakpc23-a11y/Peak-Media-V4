@@ -312,7 +312,7 @@
       const c = dctx; c.setTransform(2, 0, 0, 2, 0, 0); c.clearRect(0, 0, 600, 760);
       const bg = c.createLinearGradient(0, 0, 600, 760); bg.addColorStop(0, '#0e1226'); bg.addColorStop(.6, '#0a0d18'); bg.addColorStop(1, '#1a1030'); c.fillStyle = bg; c.fillRect(0, 0, 600, 760);
       c.strokeStyle = 'rgba(245,197,24,.35)'; c.lineWidth = 2; c.strokeRect(14, 14, 572, 732);
-      c.textAlign = 'center'; c.fillStyle = '#F5C518'; c.font = '800 13px Inter, sans-serif'; c.fillText('C I N E S P H E R E   ·   T A S T E   D N A', 300, 52);
+      c.textAlign = 'center'; c.fillStyle = '#F5C518'; c.font = '800 13px Inter, sans-serif'; c.fillText('P E A K   M E D I A   ·   T A S T E   D N A', 300, 52);
       let fs = 38; c.font = `800 ${fs}px "Space Grotesk", Inter, sans-serif`; while (c.measureText(tgt.id).width > 520 && fs > 20) { fs--; c.font = `800 ${fs}px "Space Grotesk", Inter, sans-serif`; }
       c.fillStyle = '#fff'; c.fillText(tgt.id, 300, 102);
       c.fillStyle = '#9ca3af'; c.font = '600 13px Inter, sans-serif'; c.fillText(tgt.n ? tgt.era : 'Mark titles as watched to grow your DNA', 300, 128);
@@ -354,14 +354,55 @@
       drawDNA(); if (moving) requestAnimationFrame(dnaFrame); else dnaAnim = false;
     }
     function refreshDNA() { tgt = computeDNA(); $('dnaIdentity').textContent = tgt.id; if (!dnaAnim) { dnaAnim = true; requestAnimationFrame(dnaFrame); } }
-    const encode = () => 'CS1-' + btoa(JSON.stringify({ g: tgt.g.map(v => Math.round(v * 100)), e: tgt.e.map(v => Math.round(v * 100)), p: Math.round(tgt.p * 100), n: tgt.n, id: tgt.id.replace(/[^\x20-\x7E]/g, '') }));
+    const encode = () => 'PM1-' + btoa(unescape(encodeURIComponent(JSON.stringify({
+      g: tgt.g.map(v => Math.round(v * 100)),
+      e: tgt.e.map(v => Math.round(v * 100)),
+      p: Math.round(tgt.p * 100),
+      n: tgt.n,
+      id: tgt.id
+    }))));
+
     function decode(s) {
       try {
-        const o = JSON.parse(atob(s.trim().replace(/^CS1-/, '')));
-        if ((o.g.length !== 13 && o.g.length !== 10) || (o.e.length !== 7 && o.e.length !== 9)) return null; if (o.e.length === 9) o.e = [o.e[0]+o.e[1]+o.e[2], ...o.e.slice(3)];
-        const gArr = o.g.length === 10 ? [...o.g, 0, 0, 0] : o.g;
-        return { g: gArr.map(v => clamp(v / 100, 0, 1)), e: o.e.map(v => clamp(v / 100, 0, 1)), p: clamp(o.p / 100, 0, 1), n: o.n | 0, id: String(o.id).slice(0, 60) };
-      } catch (e) { return null; }
+        if (!s || typeof s !== 'string') return null;
+        let clean = s.trim().replace(/^(?:PM1|CS1)-/i, '').trim();
+        clean = clean.replace(/["';\s]/g, '');
+        if (!clean) return null;
+        const jsonStr = decodeURIComponent(escape(atob(clean)));
+        const o = JSON.parse(jsonStr);
+        if (!o || !Array.isArray(o.g) || !Array.isArray(o.e)) return null;
+
+        // Normalize genres to DG length (13)
+        let gArr = o.g;
+        if (gArr.length < DG.length) {
+          gArr = [...gArr, ...Array(DG.length - gArr.length).fill(0)];
+        } else if (gArr.length > DG.length) {
+          gArr = gArr.slice(0, DG.length);
+        }
+
+        // Normalize eras to ER length (5)
+        let eArr = o.e;
+        if (eArr.length === 9) {
+          eArr = [eArr[0] + eArr[1] + eArr[2], eArr[3], eArr[4], eArr[5], eArr[6] || 0];
+        } else if (eArr.length === 7) {
+          eArr = [eArr[0] + eArr[1], eArr[2], eArr[3], eArr[4], eArr[5] || 0];
+        } else if (eArr.length < ER.length) {
+          eArr = [...eArr, ...Array(ER.length - eArr.length).fill(0)];
+        } else if (eArr.length > ER.length) {
+          eArr = eArr.slice(0, ER.length);
+        }
+
+        return {
+          g: gArr.map(v => clamp(Number(v) / 100, 0, 1)),
+          e: eArr.map(v => clamp(Number(v) / 100, 0, 1)),
+          p: clamp(Number(o.p || 50) / 100, 0, 1),
+          n: o.n | 0,
+          id: String(o.id || 'Cinephile').slice(0, 60)
+        };
+      } catch (e) {
+        console.warn('Decode DNA error:', e);
+        return null;
+      }
     }
     function compat(a, b) {
       const dot = a.g.reduce((s, v, i) => s + v * b.g[i], 0), na = Math.hypot(...a.g), nb = Math.hypot(...b.g);
@@ -373,11 +414,29 @@
     };
     $('dnaCopy').onclick = async () => {
       const code = encode();
-      try { await navigator.clipboard.writeText(code); showToast('Compare code copied - send it to a friend!', 'fa-copy', 'text-brand-gold'); }
-      catch (e) { $('dnaFriendCode').value = code; $('dnaFriendCode').select(); showToast('Code placed in the box - copy it manually', 'fa-copy', 'text-brand-gold'); }
+      let copied = false;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(code);
+          copied = true;
+        } catch (_) {}
+      }
+      if (!copied) {
+        const input = $('dnaFriendCode');
+        if (input) {
+          input.value = code;
+          input.focus();
+          input.select();
+          try {
+            copied = document.execCommand('copy');
+          } catch (_) {}
+        }
+      }
+      showToast(copied ? 'Compare code copied — send to a friend!' : 'Code placed in box — copy it manually', 'fa-copy', 'text-brand-gold');
     };
     $('dnaOverlay').onclick = () => {
-      const f = decode($('dnaFriendCode').value);
+      const inputVal = ($('dnaFriendCode') ? $('dnaFriendCode').value : '') || '';
+      const f = decode(inputVal);
       if (!f) { showToast('That compare code is not valid', 'fa-triangle-exclamation', 'text-rose-400'); return; }
       friend = f; const el = $('dnaCompat'); el.classList.remove('hidden');
       el.innerHTML = `Compatibility with <b class="text-cyan-300">${esc(f.id)}</b>: <b class="text-brand-gold text-xl">${compat(tgt, f)}%</b>`; refreshDNA();
