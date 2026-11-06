@@ -1364,6 +1364,37 @@
     renderSkyConstellations();
   }
 
+  // -------------------------------------------------------------
+  // Global App Fullscreen Controller
+  // -------------------------------------------------------------
+  window.toggleAppFullscreen = function() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+  };
+
+  document.addEventListener('fullscreenchange', () => {
+    const icon = document.getElementById('appFsIcon');
+    if (!icon) return;
+    if (document.fullscreenElement) {
+      icon.classList.remove('fa-expand');
+      icon.classList.add('fa-compress');
+    } else {
+      icon.classList.remove('fa-compress');
+      icon.classList.add('fa-expand');
+    }
+  });
+
   if (typeof window !== 'undefined') {
     window.renderSkyConstellations = renderSkyConstellations;
     window.initObservatorySky = initObservatorySky;

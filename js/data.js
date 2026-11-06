@@ -13194,6 +13194,14 @@ Odd Taxi|2021|87
 
 
     const KNOWN_POSTER_OVERRIDES = {
+      // --- Star Wars Episode V Verified Keyart ---
+      'movie:Star Wars: Episode V - The Empire Strikes Back': 'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
+      'show:Star Wars: Episode V - The Empire Strikes Back': 'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
+      'Star Wars: Episode V - The Empire Strikes Back': 'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
+      'Star Wars: The Empire Strikes Back': 'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
+      'The Empire Strikes Back': 'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
+      'Star Wars Episode V': 'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
+
       // --- TV Series & Miniseries (100% Accurate Verified TVMaze Original Keyart) ---
       'show:24': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2330.jpg',
       'movie:24': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2330.jpg',
@@ -14214,10 +14222,21 @@ Odd Taxi|2021|87
     };
     window.setLocal = setLocal;
 
-    window.wishlistTitles = getLocal('cs_wishlist', ["Inception", "The Dark Knight", "Breaking Bad", "Spirited Away", "Dune: Part Two"]).filter(t => globalDatabase[t]);
-    window.watchedTitles = getLocal('cs_watched', ["The Shawshank Redemption", "Pulp Fiction", "Interstellar", "Stranger Things"]).filter(t => globalDatabase[t]);
-    window.favTitles = getLocal('cs_favs', ["Inception", "The Dark Knight"]).filter(t => globalDatabase[t]);
-    window.myRatings = getLocal('cs_ratings', { "Inception": 5, "The Dark Knight": 5 });
+    // Clean user lists: start fresh with zero pre-populated / demo items
+    if (!localStorage.getItem('pm_cleaned_user_lists_v2')) {
+      try {
+        localStorage.removeItem('cs_wishlist');
+        localStorage.removeItem('cs_watched');
+        localStorage.removeItem('cs_favs');
+        localStorage.removeItem('cs_ratings');
+        localStorage.setItem('pm_cleaned_user_lists_v2', '1');
+      } catch (_) {}
+    }
+
+    window.wishlistTitles = getLocal('cs_wishlist', []).filter(t => globalDatabase[t]);
+    window.watchedTitles = getLocal('cs_watched', []).filter(t => globalDatabase[t]);
+    window.favTitles = getLocal('cs_favs', []).filter(t => globalDatabase[t]);
+    window.myRatings = getLocal('cs_ratings', {});
 
     var wishlistTitles = window.wishlistTitles;
     var watchedTitles = window.watchedTitles;
@@ -14686,8 +14705,8 @@ Odd Taxi|2021|87
         const sPoster = posterCache[(sItem.type || 'movie') + ':' + (sItem.title || s.title)] || sFallback;
         const isActive = i === currentSpotlightIdx;
         return `
-          <button type="button" onclick="renderHeroSpotlight(${i}, true)" title="${sEscTitle}" class="relative shrink-0 rounded-xl overflow-hidden transition-all duration-200 group ${isActive ? 'ring-2 ring-brand-gold scale-105 shadow-md shadow-brand-gold/30' : 'opacity-65 hover:opacity-100 hover:scale-105 ring-1 ring-white/10'}">
-            <img src="${sPoster}" data-title="${sAttrTitle}" data-type="${sItem.type || 'movie'}" onerror="window.handlePosterFallback(this);" class="w-8 h-12 sm:w-9 sm:h-14 object-cover lazy-poster" alt="${sAttrTitle}" />
+          <button type="button" onclick="renderHeroSpotlight(${i}, true)" title="${sEscTitle}" class="relative shrink-0 rounded-xl overflow-hidden transition-all duration-200 group border-0 ${isActive ? 'scale-105 shadow-lg shadow-brand-gold/35' : 'opacity-60 hover:opacity-100 hover:scale-105'}">
+            <img src="${sPoster}" data-title="${sAttrTitle}" data-type="${sItem.type || 'movie'}" onerror="window.handlePosterFallback(this);" class="w-8 h-12 sm:w-9 sm:h-14 object-cover lazy-poster border-0" alt="${sAttrTitle}" />
           </button>
         `;
       }).join('');
@@ -14697,10 +14716,10 @@ Odd Taxi|2021|87
           
           <!-- Left: Compact 2:3 Poster Card & Film Info -->
           <div class="flex items-center gap-3.5 sm:gap-5 w-full md:w-auto min-w-0">
-            <!-- Authentic 2:3 Poster with cinematic depth -->
+            <!-- Authentic 2:3 Poster with cinematic depth (No borders) -->
             <div class="relative group cursor-pointer shrink-0" onclick="openDetailModal('${escTitle}')" title="View Details">
-              <div class="relative w-20 sm:w-24 md:w-28 rounded-xl overflow-hidden border border-white/20 shadow-xl group-hover:border-brand-gold group-hover:scale-102 transition-all">
-                <img src="${posterUrl}" data-title="${attrTitle}" onerror="window.handlePosterFallback(this);" alt="${attrTitle}" class="lazy-poster w-full aspect-[2/3] object-cover" />
+              <div class="relative w-20 sm:w-24 md:w-28 rounded-xl overflow-hidden shadow-2xl group-hover:scale-102 transition-all border-0">
+                <img src="${posterUrl}" data-title="${attrTitle}" onerror="window.handlePosterFallback(this);" alt="${attrTitle}" class="lazy-poster w-full aspect-[2/3] object-cover border-0" />
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity backdrop-blur-[2px]">
                   <span class="w-8 h-8 rounded-full bg-brand-gold text-black flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-xs ml-0.5"></i></span>
                 </div>
