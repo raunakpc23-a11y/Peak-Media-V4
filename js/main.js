@@ -2709,7 +2709,7 @@
               <button type="button" onclick="viewCustomPlaylistTracks('${pl.id}')" title="Inspect & reorder tracks" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-purple-500/20 text-gray-300 hover:text-white border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
                 <i class="fa-solid fa-list-ul text-[11px] text-purple-300"></i> <span>Tracks</span>
               </button>
-              <button type="button" onclick="deleteMusicCustomPlaylist('${pl.id}')" title="Delete playlist" class="w-8 h-8 rounded-xl bg-red-600/10 hover:bg-red-600/30 text-red-400 hover:text-red-200 flex items-center justify-center text-xs transition-all cursor-pointer">
+              <button type="button" onclick="deleteMusicCustomPlaylist('${pl.id}', event)" title="Delete playlist" class="w-8 h-8 rounded-xl bg-red-600/10 hover:bg-red-600/30 text-red-400 hover:text-red-200 flex items-center justify-center text-xs transition-all cursor-pointer">
                 <i class="fa-solid fa-trash text-[11px]"></i>
               </button>
             </div>
@@ -2738,32 +2738,66 @@
     let pendingDeletePlaylistTarget = null;
 
     window.openDeletePlaylistConfirmModal = function(typeOrId, optIdx) {
+      ensureMusicLoaded();
       let type = 'music';
-      let targetId = typeOrId;
+      let targetId = null;
+
       if (typeOrId === 'media') {
         type = 'media';
         targetId = optIdx;
+      } else if (typeOrId === 'music') {
+        type = 'music';
+        targetId = optIdx;
+      } else if (typeof typeOrId === 'number') {
+        type = 'media';
+        targetId = typeOrId;
+      } else {
+        type = 'music';
+        targetId = typeOrId;
       }
 
       if (type === 'music') {
-        if (targetId === 'inbuilt_favorites') return;
-        const pl = customSongLists.find(p => p.id === targetId);
-        if (!pl) return;
-        pendingDeletePlaylistTarget = { type: 'music', id: targetId, name: pl.name, count: (pl.tracks || []).length };
+        if (!targetId || targetId === 'inbuilt_favorites') {
+          showToast("The Favorites playlist is a built-in library and cannot be deleted.", "fa-circle-info", "text-amber-400");
+          return;
+        }
+        if (!Array.isArray(customSongLists)) {
+          customSongLists = loadLS('cs_song_lists', []);
+        }
+        const pl = customSongLists.find(p => String(p.id) === String(targetId));
+        if (!pl) {
+          console.warn('[openDeletePlaylistConfirmModal] Playlist not found for id:', targetId, customSongLists);
+          showToast("Playlist not found.", "fa-triangle-exclamation", "text-rose-400");
+          return;
+        }
+        pendingDeletePlaylistTarget = { type: 'music', id: pl.id, name: pl.name, count: (pl.tracks || []).length };
       } else if (type === 'media') {
+        if (!Array.isArray(customMediaLists)) {
+          customMediaLists = loadLS('cs_custom_lists', []);
+        }
         const lst = customMediaLists[targetId];
-        if (!lst) return;
+        if (!lst) {
+          console.warn('[openDeletePlaylistConfirmModal] Media list not found for idx:', targetId);
+          return;
+        }
         pendingDeletePlaylistTarget = { type: 'media', idx: targetId, name: lst.name, count: (lst.items || []).length };
       }
 
       if (!pendingDeletePlaylistTarget) return;
 
       const modal = $('deletePlaylistConfirmModal');
+      const headingEl = $('delPlaylistModalHeading');
       const nameEl = $('delPlaylistModalTargetName');
       const countEl = $('delPlaylistModalTrackCount');
+
+      if (headingEl) {
+        headingEl.textContent = pendingDeletePlaylistTarget.type === 'music' ? 'Delete Music Playlist?' : 'Delete Media List?';
+      }
       if (nameEl) nameEl.textContent = `"${pendingDeletePlaylistTarget.name}"`;
       if (countEl) countEl.textContent = `${pendingDeletePlaylistTarget.count} ${pendingDeletePlaylistTarget.type === 'music' ? 'songs' : 'titles'}`;
+
       if (modal) {
+        modal.style.display = 'flex';
         modal.classList.remove('hidden');
         modal.classList.add('flex');
       }
@@ -2773,6 +2807,7 @@
       pendingDeletePlaylistTarget = null;
       const modal = $('deletePlaylistConfirmModal');
       if (modal) {
+        modal.style.display = 'none';
         modal.classList.add('hidden');
         modal.classList.remove('flex');
       }
@@ -2785,7 +2820,7 @@
       if (target.type === 'music') {
         const id = target.id;
         const name = target.name || 'Playlist';
-        customSongLists = customSongLists.filter(p => p.id !== id);
+        customSongLists = customSongLists.filter(p => String(p.id) !== String(id));
         saveLS('cs_song_lists', customSongLists);
         renderMusicCustomPlaylistsList();
         if (window.updateCustomPlaylistsCount) window.updateCustomPlaylistsCount();
@@ -2806,7 +2841,11 @@
       }
     };
 
-    window.deleteMusicCustomPlaylist = function(id) {
+    window.deleteMusicCustomPlaylist = function(id, evt) {
+      if (evt && evt.stopPropagation) {
+        evt.stopPropagation();
+        evt.preventDefault();
+      }
       window.openDeletePlaylistConfirmModal('music', id);
     };
 
@@ -2854,6 +2893,16 @@
           window.playCustomPlaylistById(pl.id, false);
           closeMusicPlaylistTracksModal();
         };
+      }
+
+      const delBtn = $('playlistTracksDeletePlBtn');
+      if (delBtn) {
+        if (pl.id !== 'inbuilt_favorites') {
+          delBtn.classList.remove('hidden');
+          delBtn.onclick = () => window.openDeletePlaylistConfirmModal('music', pl.id);
+        } else {
+          delBtn.classList.add('hidden');
+        }
       }
 
       const searchInput = $('playlistTrackSearchInput');
