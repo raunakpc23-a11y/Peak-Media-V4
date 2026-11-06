@@ -7,19 +7,29 @@
       try {
         localStorage.removeItem('cs_mode');
         localStorage.removeItem('theme_mode');
-        var p = localStorage.getItem('cs_theme_v2') || 'space';
-        if (p === 'dawn') { p = 'space'; localStorage.setItem('cs_theme_v2', 'space'); }
+        var rawP = localStorage.getItem('cs_theme_v2');
+        var p = 'blood';
+        if (rawP) {
+          try { p = JSON.parse(rawP); } catch(e) { p = rawP; }
+        }
+        if (!p || p === 'dawn') p = 'blood';
         document.documentElement.setAttribute('data-mode', 'dark');
-        document.documentElement.className = 'dark bg-[#03050a]';
-        document.documentElement.style.backgroundColor = '#03050a';
+        document.documentElement.className = 'dark';
+        document.documentElement.style.backgroundColor = 'var(--bg, #0c0203)';
         document.documentElement.style.colorScheme = 'dark';
         document.documentElement.setAttribute('data-palette', p);
         document.documentElement.setAttribute('data-theme', p);
+        if (document.body) {
+          document.body.setAttribute('data-palette', p);
+          document.body.setAttribute('data-theme', p);
+        }
       } catch (e) {}
     })();
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Your Summit of Film, Shows &amp; Music</title>
+  <!-- Preload Initial Decider Roulette Thumbnail (Interstellar) -->
+  <link rel="preload" as="image" href="https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SX300.jpg">
   <link rel="icon" type="image/svg+xml" href="icons/peak-media.svg">
   <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20760%20760%22%20width%3D%22512%22%20height%3D%22512%22%20fill%3D%22none%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22favSkyBg%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23071022%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23050811%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23081832%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22favSkyMain%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23F0F9FF%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2230%25%22%20stop-color%3D%22%237DD3FC%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2265%25%22%20stop-color%3D%22%2338BDF8%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230EA5E9%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22favSkySun%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%237DD3FC%22%20stop-opacity%3D%220.42%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230EA5E9%22%20stop-opacity%3D%220.06%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22732%22%20height%3D%22732%22%20rx%3D%22164%22%20fill%3D%22url%28%23favSkyBg%29%22%20stroke%3D%22%2338BDF8%22%20stroke-opacity%3D%220.55%22%20stroke-width%3D%2214%22/%3E%0A%20%20%3Ccircle%20cx%3D%22462%22%20cy%3D%22240%22%20r%3D%22220%22%20fill%3D%22%2338BDF8%22%20fill-opacity%3D%220.14%22/%3E%0A%20%20%3Cg%20transform%3D%22translate%28-25%2C%20150%29%22%3E%0A%20%20%20%20%3Cg%20stroke%3D%22%23FFFFFF%22%20stroke-width%3D%228%22%20stroke-linejoin%3D%22miter%22%20fill%3D%22%23060A14%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M135%20130%20H205%20C230%20130%20245%20144%20245%20168%20C245%20192%20230%20206%20205%20206%20H168%20V250%20H135%20Z%20M168%20156%20V180%20H200%20C210%20180%20215%20175%20215%20168%20C215%20161%20210%20156%20200%20156%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M272%20130%20H365%20V156%20H305%20V177%20H355%20V202%20H305%20V224%20H365%20V250%20H272%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M438%20130%20H468%20L520%20250%20H484%20L473%20222%20H432%20L421%20250%20H385%20Z%20M441%20196%20H464%20L452.5%20164%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M538%20130%20H572%20V182%20L626%20130%20H668%20L608%20186%20L672%20250%20H628%20L572%20194%20V250%20H538%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M135%20282%20H172%20L196.5%20344%20L221%20282%20H258%20V402%20H227%20V334%20L203%20392%20H190%20L166%20334%20V402%20H135%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M278%20282%20H368%20V308%20H311%20V329%20H358%20V354%20H311%20V376%20H368%20V402%20H278%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M388%20282%20H440%20C472%20282%20492%20304%20492%20342%20C492%20380%20472%20402%20440%20402%20H388%20Z%20M421%20308%20V376%20H438%20C453%20376%20461%20364%20461%20342%20C461%20320%20453%20308%20438%20308%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M512%20282%20H552%20V402%20H512%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M618%20282%20H648%20L698%20402%20H663%20L652%20374%20H612%20L601%20402%20H566%20Z%20M621%20348%20H643%20L632%20316%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22482%2C56%20385%2C186%20288%2C248%20195%2C304%2078%2C356%20238%2C326%20332%2C294%20424%2C268%20460%2C138%22%20fill%3D%22%23071020%22%20fill-opacity%3D%220.86%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22482%2C56%20516%2C118%20558%2C188%20610%2C256%20674%2C328%20736%2C362%20612%2C332%20518%2C286%20485%2C142%22%20fill%3D%22url%28%23favSkySun%29%22/%3E%0A%20%20%20%20%3Cg%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M78%20356%20L195%20304%20L288%20248%20L385%20186%20L435%20126%20L468%2082%20L482%2056%22%20stroke%3D%22url%28%23favSkyMain%29%22%20stroke-width%3D%2211.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L516%20118%20L558%20188%20L610%20256%20L674%20328%20L736%20362%22%20stroke%3D%22url%28%23favSkyMain%29%22%20stroke-width%3D%2211.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M468%2082%20L476%20112%20L450%20172%20L418%20214%22%20stroke%3D%22%23BAE6FD%22%20stroke-width%3D%227.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L485%20142%20L500%20188%20L522%20232%22%20stroke%3D%22%23E0F2FE%22%20stroke-width%3D%227.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L460%20138%20L428%20210%20L376%20286%20L312%20348%22%20stroke%3D%22%230EA5E9%22%20stroke-width%3D%226.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L504%20134%20L542%20216%20L588%20296%20L640%20356%22%20stroke%3D%22%230EA5E9%22%20stroke-width%3D%226.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M108%20346%20L168%20312%20L208%20318%20L246%20298%20L310%20262%22%20stroke%3D%22%2338BDF8%22%20stroke-width%3D%226.8%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M568%20206%20L608%20242%20L626%20254%20L648%20294%20L678%20330%22%20stroke%3D%22%2338BDF8%22%20stroke-width%3D%226.8%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M150%20366%20L238%20326%20L332%20294%20L424%20268%20L518%20286%20L612%20332%20L706%20368%22%20stroke%3D%22%2360A5FA%22%20stroke-width%3D%225.5%22%20opacity%3D%220.92%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E">
     <link rel="manifest" href="manifest.json">
@@ -61,7 +71,7 @@
   <link rel="stylesheet" href="css/widgets.css?v=5.1">
   <link rel="stylesheet" href="css/responsive.css?v=5.1">
 </head>
-<body data-theme="space" data-mode="dark" class="mode-dark min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased bg-[#03050a] text-slate-100" style="background-color: #03050a; color: #f3f4f6;">
+<body data-theme="blood" data-mode="dark" class="mode-dark min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased bg-[#0c0203] text-slate-100" style="background-color: #0c0203; color: #f3f4f6;">
 
   <!-- Reconstructed Leave Button Gradients & Vector Glyph -->
   <svg width="0" height="0" class="absolute" style="position:absolute" aria-hidden="true" focusable="false">
@@ -82,6 +92,25 @@
       <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <!-- Exit arrow with intentional 2px vector stroke -->
       <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- Custom Sleek Vector Icon for Custom Playlists -->
+    <symbol id="pmCustomPlaylistIcon" viewBox="0 0 24 24">
+      <path d="M3.5 6h10.5M3.5 11h7.5M3.5 16h7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M17.5 15.5V5.5l4-1.2v9.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="15.5" cy="16.5" r="2.5" fill="currentColor"/>
+    </symbol>
+
+    <!-- Custom Sleek Vector Icon for Add Track to Playlist -->
+    <symbol id="pmAddTrackPlaylistIcon" viewBox="0 0 24 24">
+      <path d="M3.5 6h11M3.5 11h7.5M3.5 16h7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M18.5 9.5v7M15 13h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    </symbol>
+
+    <!-- Simple Custom Member Profile Glyph (Minimalist Silhouette) -->
+    <symbol id="pmUserProfileIcon" viewBox="0 0 24 24">
+      <circle cx="12" cy="7.5" r="4" fill="currentColor"/>
+      <path d="M4 19.5c0-4 3.5-6.5 8-6.5s8 2.5 8 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
     </symbol>
   </svg>
 
@@ -315,21 +344,21 @@
   </svg>
 
   <header class="observatory-master-console sticky top-0 z-40 transition-all">
-    <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between gap-1.5 sm:gap-4">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2.5 sm:gap-4">
       
       <!-- Left: Peak Media Brand Icon & Back Button -->
-      <div class="flex items-center gap-2 shrink-0">
+      <div class="flex items-center gap-2.5 shrink-0">
         <!-- Reconstructed Leave Button (returns to the opening view from any tab) -->
         <button type="button" id="headerBackHomeBtn" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round leave-tab-btn hidden" aria-label="Leave this tab and return home">
-          <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="leave-icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
 
-        <!-- Peak Media Brand Icon (Original Mountain Logo) -->
-        <div id="headerBrandPlate" class="cursor-pointer shrink-0 flex items-center transition-transform hover:scale-105 active:scale-95" onclick="switchTab('discover')" title="Peak Media">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-7 sm:h-9 w-auto" fill="none">
+        <!-- Peak Media Brand Icon (Scaled prominent, bold and balanced) -->
+        <div id="headerBrandPlate" class="cursor-pointer shrink-0 flex items-center transition-transform hover:scale-105 active:scale-95" onclick="returnToOpeningPage()" title="Peak Media">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-8.5 sm:h-10 md:h-11 w-auto drop-shadow-md" fill="none">
             <defs>
               <linearGradient id="hdrGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#F0F9FF"/>
@@ -368,12 +397,12 @@
         </div>
       </div>
 
-      <!-- Center: Clean Omni-Search Input Trigger (Unified Search, No Tabs) -->
-      <div id="headerSearchBarContainer" class="flex-1 max-w-lg mx-2 sm:mx-6">
+      <!-- Center: Clean Omni-Search Input Trigger (Generous, Balanced Scale) -->
+      <div id="headerSearchBarContainer" class="flex-1 max-w-lg sm:max-w-xl lg:max-w-2xl mx-2 sm:mx-4">
         <div class="relative w-full cursor-pointer group" onclick="triggerOmniSearch()" title="Search catalog (Press /)">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-brand-gold text-xs transition-colors"></i>
-          <input type="text" readonly placeholder="Search movies, series, soundtracks, genres... (/)" class="header-search-bar w-full pl-9 pr-8 py-2 sm:py-2.5 rounded-xl text-xs placeholder-gray-400 cursor-pointer transition-all shadow-inner focus:outline-none">
-          <kbd class="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-white/10 text-[10px] font-mono text-gray-400 border border-white/10">/</kbd>
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-brand-gold text-sm transition-colors"></i>
+          <input type="text" readonly placeholder="Search movies, series, soundtracks, genres... (/)" class="header-search-bar w-full pl-11 pr-10 py-2.5 sm:py-3.5 rounded-2xl text-xs sm:text-sm placeholder-gray-400 cursor-pointer transition-all shadow-inner border border-white/10 hover:border-brand-gold/40 focus:outline-none">
+          <kbd class="hidden sm:inline-block absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-lg bg-white/10 text-[11px] font-mono text-gray-400 border border-white/10">/</kbd>
         </div>
       </div>
 
@@ -387,11 +416,12 @@
         <span id="hdrReelCount"></span>
       </div>
 
-      <!-- Right: Profile Avatar with Progress Ring -->
-      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 relative">
-        <!-- Profile Button (Generic User Icon only) -->
-        <button type="button" id="userProfileBtn" onclick="switchTab('profile')" title="Profile" class="header-action-btn w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-brand-gold transition-all active:scale-95 shadow-sm" aria-label="Profile">
-          <i class="fa-solid fa-user text-xs sm:text-sm text-brand-gold"></i>
+      <!-- Right: Profile Button (Expanded, Clean Custom Member Glyph) -->
+      <div class="flex items-center gap-2 shrink-0 relative">
+        <button type="button" id="userProfileBtn" onclick="switchTab('profile')" title="Profile" class="header-action-btn w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center text-brand-gold hover:text-white border border-brand-gold/25 hover:border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 transition-all active:scale-95 shadow-sm group cursor-pointer" aria-label="Profile">
+          <svg class="w-5.5 h-5.5 sm:w-6 sm:h-6 text-brand-gold group-hover:scale-110 transition-transform" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#pmUserProfileIcon"></use>
+          </svg>
           <span id="profileRingCircle" class="hidden"></span>
           <span id="headerUsernameLabel" class="hidden"></span>
           <span id="headerAvatarBadge" class="hidden">👤</span>
@@ -554,62 +584,74 @@
           </div>
         </div>
 
-        <!-- MUSIC LAUNCHER (Compact box, finale/visualizer takes most space, seamless expand to Music page) -->
-        <div id="homeVinylShowcase" class="theme-card-bg p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border shadow-lg flex items-center justify-between gap-4 group transition-all duration-300">
-          <!-- Finale / Turntable Visualizer (Takes most of the space, grows on hover, expands to music page on click) -->
-          <div class="relative shrink-0 cursor-pointer flex flex-col items-center justify-center p-1" onclick="openMusicFromVinyl()" title="Click to open Music Lounge">
-            <div id="homeVinylDisc" class="vinyl-record-disc m-hover-scale w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full relative flex items-center justify-center shadow-2xl transition-transform" data-spin>
-              <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
-              <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
-              <div class="vinyl-center-label relative w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-[#120d20]">
-                <img id="homeVinylThumb" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg" alt="Album Art" class="w-full h-full object-cover" />
-                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <span class="w-2.5 h-2.5 rounded-full bg-brand-gold border border-black shadow"></span>
-                </div>
-              </div>
+        <!-- MUSIC (Responsive Showcase Deck) -->
+        <div id="homeVinylShowcase" class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl theme-card-bg border border-white/10 shadow-lg flex flex-col justify-between gap-3 min-h-[170px] sm:min-h-[190px] group transition-all duration-300">
+          <!-- Title & direct click to Music Lounge (Big display text filling the rest of the box) -->
+          <div class="flex-1 flex items-center justify-center cursor-pointer group py-2 sm:py-3.5 transition-all" onclick="openMusicFromVinyl()" title="Open Music Lounge">
+            <div class="flex items-center justify-center gap-3 sm:gap-4 text-center">
+              <span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-gradient-to-r from-purple-400 to-fuchsia-300 animate-pulse shadow-[0_0_16px_#c084fc] shrink-0"></span>
+              <span class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-black uppercase tracking-[0.16em] sm:tracking-[0.24em] md:tracking-[0.28em] bg-gradient-to-r from-purple-200 via-fuchsia-100 to-purple-400 bg-clip-text text-transparent group-hover:from-white group-hover:to-purple-300 transition-all drop-shadow-[0_2px_16px_rgba(192,132,252,0.4)] select-none">
+                Music
+              </span>
+              <i class="fa-solid fa-arrow-right text-base sm:text-xl text-purple-400/80 group-hover:text-purple-300 group-hover:translate-x-2 transition-all shrink-0"></i>
             </div>
-            <!-- Articulated Tone Arm -->
-            <div id="homeVinylToneArm" class="vinyl-tone-arm">
-              <div class="tone-arm-pivot"></div>
-              <div class="tone-arm-rod"></div>
-              <div class="tone-arm-head"></div>
-            </div>
-            <span class="text-sm sm:text-base font-display font-black tracking-widest text-purple-300 uppercase mt-2.5 group-hover:text-purple-200 transition-colors">MUSIC</span>
           </div>
 
-          <!-- Metadata & Audio Control Row (Borderless, compact, very small text, no box around play control) -->
-          <div class="flex-1 min-w-0 flex flex-col justify-between gap-2.5">
-            <!-- Very small Title & Artist -->
-            <div class="min-w-0 cursor-pointer" onclick="openMusicFromVinyl()">
-              <h3 id="homeVinylTitle" class="text-xs sm:text-sm font-bold text-white tracking-tight truncate hover:text-purple-300 transition-colors">
-                Starboy (Official Theme)
-              </h3>
-              <p id="homeVinylArtist" class="text-[10px] text-purple-200/70 truncate mt-0.5">
-                The Weeknd · Pop &amp; Hits
-              </p>
+          <!-- Lower Row: Turntable Disc, Track Details & Controls -->
+          <div class="flex items-center justify-between gap-3 sm:gap-4 border-t border-white/10 pt-3 w-full">
+            <!-- Turntable Disc (Prominent & Big) -->
+            <div class="relative shrink-0 cursor-pointer flex items-center justify-center" onclick="openMusicFromVinyl()" title="Click to open Music Lounge">
+              <div id="homeVinylDisc" class="vinyl-record-disc m-hover-scale w-20 h-20 sm:w-24 sm:h-24 rounded-full relative flex items-center justify-center shadow-2xl transition-transform" data-spin>
+                <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
+                <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
+                <div class="vinyl-center-label relative w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-purple-400/80 shadow-inner">
+                  <img id="homeVinylThumb" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg" alt="Album Art" class="w-full h-full object-cover" />
+                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span class="w-2 h-2 rounded-full bg-brand-gold border border-black shadow"></span>
+                  </div>
+                </div>
+              </div>
+              <div id="homeVinylToneArm" class="vinyl-tone-arm">
+                <div class="tone-arm-pivot"></div>
+                <div class="tone-arm-rod"></div>
+                <div class="tone-arm-head"></div>
+              </div>
             </div>
 
-            <!-- Equalizer Soundwave -->
-            <div class="flex items-center gap-0.5 h-4 cursor-pointer" onclick="openMusicFromVinyl()">
-              <span class="eq-bar eq-1"></span>
-              <span class="eq-bar eq-2"></span>
-              <span class="eq-bar eq-3"></span>
-              <span class="eq-bar eq-4"></span>
-              <span class="eq-bar eq-5"></span>
-              <span class="eq-bar eq-6"></span>
-            </div>
+            <!-- Metadata & Audio Control Row -->
+            <div class="flex-1 min-w-0 flex flex-col justify-between gap-1.5">
+              <div class="min-w-0 cursor-pointer" onclick="openMusicFromVinyl()">
+                <h3 id="homeVinylTitle" class="text-xs sm:text-sm font-bold text-white tracking-tight truncate hover:text-purple-300 transition-colors">
+                  Starboy (Official Theme)
+                </h3>
+                <p id="homeVinylArtist" class="text-[10px] text-purple-200/70 truncate mt-0.5">
+                  The Weeknd · Pop &amp; Hits
+                </p>
+              </div>
 
-            <!-- Borderless Floating Audio Controls (Grows slightly on hover, triggers playback/next) -->
-            <div class="flex items-center gap-3 pt-1">
-              <button type="button" id="homeVinylPlayBtn" onclick="toggleHomeVinylPlayback(event)" class="text-brand-gold hover:text-yellow-300 hover:scale-110 active:scale-95 transition-all flex items-center gap-1.5 focus:outline-none" title="Play / Pause Track">
-                <i id="homeVinylPlayIcon" class="fa-solid fa-play text-base"></i>
-                <span id="homeVinylPlayText" class="text-xs font-extrabold uppercase tracking-wider">Play</span>
-              </button>
+              <!-- Equalizer & Audio Controls -->
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-0.5 h-3 cursor-pointer" onclick="openMusicFromVinyl()">
+                  <span class="eq-bar eq-1"></span>
+                  <span class="eq-bar eq-2"></span>
+                  <span class="eq-bar eq-3"></span>
+                  <span class="eq-bar eq-4"></span>
+                  <span class="eq-bar eq-5"></span>
+                  <span class="eq-bar eq-6"></span>
+                </div>
 
-              <button type="button" onclick="window.musicNext(); if(window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();" class="text-gray-300 hover:text-white hover:scale-110 active:scale-95 transition-all flex items-center gap-1 focus:outline-none" title="Next Song">
-                <i class="fa-solid fa-forward-step text-sm text-purple-300"></i>
-                <span class="text-xs font-semibold">Next</span>
-              </button>
+                <div class="flex items-center gap-2.5">
+                  <button type="button" id="homeVinylPlayBtn" onclick="toggleHomeVinylPlayback(event)" class="text-brand-gold hover:text-yellow-300 hover:scale-110 active:scale-95 transition-all flex items-center gap-1 focus:outline-none" title="Play / Pause Track">
+                    <i id="homeVinylPlayIcon" class="fa-solid fa-play text-sm"></i>
+                    <span id="homeVinylPlayText" class="text-xs font-extrabold uppercase tracking-wider">Play</span>
+                  </button>
+
+                  <button type="button" onclick="window.musicNext(); if(window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();" class="text-gray-300 hover:text-white hover:scale-110 active:scale-95 transition-all flex items-center gap-1 focus:outline-none" title="Next Song">
+                    <i class="fa-solid fa-forward-step text-xs text-purple-300"></i>
+                    <span class="text-xs font-semibold">Next</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <!-- Hidden status badge for background sync -->
@@ -661,8 +703,6 @@
         <span id="homeProfileWatchlistCount">0</span>
         <span id="homeProfileWatchedCount">0</span>
         <span id="homeProfileFavCount">0</span>
-      </div>
-
       </div>
 
       <!-- 5. CONTENT FILTERS (Hidden per user request, background functions preserved) -->
@@ -890,7 +930,7 @@
       <!-- Title & Header Bar (Central & Cooler) -->
       <div class="flex items-center justify-between border-b border-white/10 pb-2 shrink-0 relative">
         <div class="flex items-center gap-3">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round" aria-label="Leave this tab and return home">
+          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round leave-tab-btn" aria-label="Leave this tab and return home">
             <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -997,16 +1037,16 @@
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Live Recommendations Track -->
-            <div class="space-y-1 pt-1">
-              <div class="flex items-center justify-between px-1">
-                <span class="text-xs font-bold uppercase tracking-wider text-gray-300">Live Recommendations</span>
-                <span class="text-[11px] text-gray-400 font-mono">Calibrated to dial</span>
-              </div>
-              <div class="has-arrows">
-                <div id="moodRow" class="hscroll flex gap-3 overflow-x-auto pb-1 pt-0.5 snap-x"></div>
+              <!-- Live Recommendations Track seamlessly integrated inside card -->
+              <div class="mt-4 pt-3 border-t border-white/10 space-y-1.5">
+                <div class="flex items-center justify-between px-1">
+                  <span class="text-xs font-bold uppercase tracking-wider text-gray-300">Live Recommendations</span>
+                  <span class="text-[11px] text-gray-400 font-mono">Calibrated to dial</span>
+                </div>
+                <div class="has-arrows">
+                  <div id="moodRow" class="hscroll flex gap-3 overflow-x-auto pb-1 pt-0.5 snap-x"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -1478,12 +1518,12 @@
                   </button>
                 </div>
               </div>
-              <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 items-start">
-                <div class="space-y-2 mx-auto w-full max-w-[280px] sm:max-w-[320px] flex flex-col items-center">
-                  <canvas id="rcCv" width="520" height="693" class="w-full max-h-[350px] sm:max-h-[370px] w-auto h-auto rounded-2xl border-2 border-white/20 bg-[#070b14] shadow-2xl block"></canvas>
-                  <div class="flex gap-2 items-center w-full pt-1">
-                    <span class="text-[11px] text-gray-300 font-bold shrink-0">Power</span>
-                    <input id="rcPower" type="range" min="40" max="100" value="80" class="accent-brand-gold flex-1" aria-label="Launch power">
+              <div class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
+                <div class="space-y-3 w-full flex flex-col items-center">
+                  <canvas id="rcCv" width="520" height="693" class="w-full max-w-[520px] h-auto rounded-3xl border-2 border-cyan-400/30 bg-[#070b14] shadow-[0_0_30px_rgba(6,182,212,0.2)] block"></canvas>
+                  <div class="flex gap-3 items-center w-full max-w-[520px] px-2 pt-1">
+                    <span class="text-xs text-gray-300 font-bold shrink-0">Launch Power</span>
+                    <input id="rcPower" type="range" min="40" max="100" value="80" class="accent-brand-gold flex-1 h-2 rounded-lg cursor-grab" aria-label="Launch power">
                   </div>
                 </div>
 
@@ -1590,10 +1630,16 @@
       <!-- MUSIC LOUNGE & SOUNDTRACK VAULT HERO (Compact Slim Header) -->
       <div data-content class="relative rounded-2xl overflow-hidden p-2.5 sm:p-3.5 shadow-xl border border-purple-500/35 bg-gradient-to-br from-[#120a1f] via-[#090b14] to-[#04060b]">
         <div class="relative z-10 flex items-center justify-between gap-3">
-          <!-- Lounge Title & Callout -->
+          <!-- Back to Home + Lounge Title -->
           <div class="flex items-center gap-2.5 min-w-0">
-            <div class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-purple-950/60 border border-purple-400/50 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(192,132,252,0.35)]">
-              <i class="fa-solid fa-record-vinyl text-lg text-purple-300"></i>
+            <button type="button" onclick="returnFromMusic()" title="Leave tab · Return to Home" class="leave round leave-tab-btn shrink-0" aria-label="Leave this tab and return home">
+              <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-purple-950/70 border border-purple-400/60 flex items-center justify-center shrink-0 shadow-[0_0_18px_rgba(192,132,252,0.45)]">
+              <i class="fa-solid fa-record-vinyl text-xl sm:text-2xl text-purple-300"></i>
             </div>
             <div class="min-w-0">
               <div class="text-[9px] font-black uppercase tracking-widest text-purple-300 font-mono flex items-center gap-1.5">
@@ -1605,16 +1651,14 @@
             </div>
           </div>
 
-          <!-- Quick Controls: Back to Home, Shuffle, Resume, Stop -->
+          <!-- Quick Controls: Shuffle, Playlists, Resume, Stop -->
           <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <button type="button" onclick="closeMusicToVinyl()" title="Leave tab · Return to Home" class="leave round" aria-label="Leave this tab and return home">
-              <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
             <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
               <i class="fa-solid fa-shuffle text-purple-300 text-xs"></i> <span>Shuffle</span>
+            </button>
+            <button type="button" onclick="openMusicCustomPlaylistsModal()" id="mHeaderPlaylistsBtn" title="Custom Playlists" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
+              <svg class="w-4 h-4 text-purple-300 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmCustomPlaylistIcon"></use></svg>
+              <span>Playlists</span> (<span id="musicCustomPlaylistsCountBadge">1</span>)
             </button>
             <button type="button" id="musicResumeBtn" data-pulse onclick="musicResumeLast()" title="Resume Last Track" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
               <i class="fa-solid fa-play text-[11px]"></i> <span>Resume</span>
@@ -1724,7 +1768,7 @@
       <!-- Library Header: Title + Spine View Icon + Back up and Restore -->
       <div class="border-b border-white/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round" aria-label="Leave this tab and return home">
+          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round leave-tab-btn" aria-label="Leave this tab and return home">
             <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2305,6 +2349,7 @@
       <div class="flex items-center justify-between sm:justify-end gap-1.5 border-t sm:border-t-0 border-white/10 pt-1.5 sm:pt-0 shrink-0">
         <div class="flex items-center gap-1">
           <button type="button" onclick="musicToggleShuffle()" id="mpShuffleBtn" title="Shuffle" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 flex items-center justify-center text-xs"><i class="fa-solid fa-shuffle"></i></button>
+          <button type="button" onclick="addCurrentPlayingSongToPlaylist()" id="mpAddPlaylistBtn" title="Add to Playlist" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-purple-300 hover:text-white flex items-center justify-center text-xs transition-colors"><svg class="w-4 h-4 text-purple-300" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmAddTrackPlaylistIcon"></use></svg></button>
           <button type="button" onclick="musicToggleRepeat()" id="mpRepeatBtn" title="Repeat Mode" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 flex items-center justify-center text-xs"><i class="fa-solid fa-repeat"></i></button>
           <button type="button" onclick="musicToggleCurrentFav()" id="mpFavBtn" title="Favorite Song" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center text-xs"><i class="fa-solid fa-heart"></i></button>
         </div>
@@ -2362,6 +2407,96 @@
   <!-- MODAL: SHARED LIST IMPORT / CREATE PLAYLIST -->
   <div id="customListModal" class="fixed inset-0 z-[75] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='customListModal')closeCustomListModal()">
     <div id="customListModalContent" class="glass-card w-full max-w-lg rounded-3xl border border-white/20 p-6 space-y-4 shadow-2xl animate-fadeIn"></div>
+  </div>
+
+  <!-- MODAL: MUSIC CUSTOM PLAYLISTS MANAGER -->
+  <div id="musicCustomPlaylistsModal" class="fixed inset-0 z-[80] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='musicCustomPlaylistsModal')closeMusicCustomPlaylistsModal()">
+    <div class="glass-card w-full max-w-2xl rounded-3xl border border-purple-500/30 bg-[#090b14]/95 p-5 sm:p-7 space-y-5 shadow-2xl animate-fadeIn max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-300">
+            <svg class="w-5 h-5 text-purple-300" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmCustomPlaylistIcon"></use></svg>
+          </div>
+          <div>
+            <h3 class="text-lg sm:text-xl font-display font-black text-white">Custom Playlists</h3>
+            <p class="text-xs text-purple-200/70">Create and curate your personal music mixtapes</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeMusicCustomPlaylistsModal()" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Quick New Playlist Creation Form -->
+      <div class="p-3.5 rounded-2xl bg-black/40 border border-white/10 flex flex-col sm:flex-row gap-2 shrink-0">
+        <input type="text" id="newCustomPlaylistInput" placeholder="Name your playlist (e.g. Midnight Chill, Workout Beats)..." class="flex-1 px-3.5 py-2 rounded-xl bg-black/60 border border-purple-500/30 text-xs text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 font-mono">
+        <button type="button" onclick="createMusicCustomPlaylist()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg flex items-center justify-center gap-1.5 shrink-0 transition-all active:scale-95">
+          <i class="fa-solid fa-plus text-[11px]"></i> Create Playlist
+        </button>
+      </div>
+
+      <!-- Playlists Container (Scrollable) -->
+      <div id="customPlaylistsModalList" class="flex-1 overflow-y-auto space-y-3 pr-1"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: VIEW & MANAGE TRACKS IN A PLAYLIST -->
+  <div id="musicPlaylistTracksModal" class="fixed inset-0 z-[85] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='musicPlaylistTracksModal')closeMusicPlaylistTracksModal()">
+    <div class="glass-card w-full max-w-xl rounded-3xl border border-purple-500/30 bg-[#090b14]/95 p-5 sm:p-6 space-y-4 shadow-2xl animate-fadeIn max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+        <div>
+          <h3 id="playlistTracksModalTitle" class="text-lg font-display font-bold text-white">Playlist Tracks</h3>
+          <div id="playlistTracksModalCount" class="text-xs text-gray-400">0 tracks</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="playlistTracksPlayAllBtn" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold flex items-center gap-1 transition-all">
+            <i class="fa-solid fa-play text-[10px]"></i> Play All
+          </button>
+          <button type="button" onclick="closeMusicPlaylistTracksModal()" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Search & Direct Add Track to this Playlist -->
+      <div class="space-y-1.5 shrink-0">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+          <input type="text" id="playlistTrackSearchInput" oninput="searchCatalogForPlaylist(this.value)" placeholder="Search songs or artists in catalog to add..." class="w-full pl-8 pr-3 py-2 rounded-xl bg-black/60 border border-purple-500/30 text-xs text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 font-mono">
+        </div>
+        <div id="playlistTrackSearchResults" class="hidden max-h-36 overflow-y-auto rounded-xl bg-black/90 border border-purple-500/30 p-1.5 space-y-1 shadow-xl"></div>
+      </div>
+
+      <div id="playlistTracksModalList" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD TRACK TO CUSTOM PLAYLIST -->
+  <div id="addToPlaylistModal" class="fixed inset-0 z-[85] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md" onclick="if(event.target.id==='addToPlaylistModal')closeAddToCustomPlaylistModal()">
+    <div class="glass-card w-full max-w-md rounded-3xl border border-purple-500/30 bg-[#090b14]/95 p-5 sm:p-6 space-y-4 shadow-2xl animate-fadeIn max-h-[80vh] flex flex-col">
+      <div class="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
+        <h3 class="text-base font-display font-bold text-white flex items-center gap-2">
+          <svg class="w-5 h-5 text-purple-400 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmAddTrackPlaylistIcon"></use></svg>
+          <span>Add Track to Playlist</span>
+        </h3>
+        <button type="button" onclick="closeAddToCustomPlaylistModal()" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Target Track Banner -->
+      <div id="addToPlaylistTrackBanner" class="p-3 rounded-2xl bg-black/50 border border-white/10 flex items-center gap-3 shrink-0"></div>
+
+      <!-- Quick create & add -->
+      <div class="flex gap-2 shrink-0">
+        <input type="text" id="quickAddPlaylistInput" placeholder="New playlist name..." class="flex-1 px-3 py-1.5 rounded-xl bg-black/60 border border-purple-500/30 text-xs text-white placeholder-purple-300/40 focus:outline-none font-mono">
+        <button type="button" onclick="quickCreateAndAddTrack()" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shrink-0 transition-all">Create &amp; Add</button>
+      </div>
+
+      <!-- Existing Playlists Selection List -->
+      <div class="text-xs font-bold text-gray-400 shrink-0">Choose Playlist:</div>
+      <div id="addToPlaylistOptionsList" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
+    </div>
   </div>
 
   <!-- FOOTER -->

@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v7.0-speed-boost';
+const CACHE_NAME = 'peak-media-v7.1-speed-boost';
 const POSTER_CACHE = 'peak-media-posters-v1';
 
 // All local files to pre-cache the moment the SW installs
@@ -41,12 +41,10 @@ const CACHEABLE_CDN_ORIGINS = [
   'https://cdn.tailwindcss.com',
 ];
 
-// Origins we deliberately never cache (live streams, APIs, YouTube iframes)
+// Origins we deliberately never cache (live streams, APIs, YouTube video player iframes)
 const PASSTHROUGH_ORIGINS = [
-  'https://www.youtube.com',
-  'https://youtube.com',
-  'https://ytimg.com',
-  'https://i.ytimg.com',
+  'https://www.youtube.com/embed',
+  'https://www.youtube.com/watch',
   'https://api.supabase.co',
   'https://supabase.co',
 ];
@@ -91,8 +89,8 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
 
-  // 1. Always pass through YouTube, Supabase, live APIs, etc.
-  if (PASSTHROUGH_ORIGINS.some(o => url.origin.startsWith(o) || url.hostname.includes('ytimg'))) {
+  // 1. Always pass through YouTube player iframes, Supabase, live APIs, etc. (do not block image thumbnails)
+  if (PASSTHROUGH_ORIGINS.some(o => url.href.startsWith(o))) {
     return; // let the browser handle it directly
   }
 
@@ -103,6 +101,7 @@ self.addEventListener('fetch', event => {
     url.hostname.includes('wikimedia.org') ||
     url.hostname.includes('unsplash.com') ||
     url.hostname.includes('tmdb.org') ||
+    url.hostname.includes('ytimg.com') ||
     event.request.destination === 'image'
   ) {
     event.respondWith(

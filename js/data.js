@@ -15922,7 +15922,8 @@ Odd Taxi|2021|87
         modal.classList.remove('hidden');
         modal.classList.add('flex');
       }
-      const pool = [...movies, ...tvShows];
+      const rawPool = getEligibleSurprisePool();
+      const pool = (rawPool && rawPool.length) ? rawPool : [...movies, ...tvShows];
       if (!pool.length) {
         isSpinning = false;
         return;
@@ -15965,7 +15966,10 @@ Odd Taxi|2021|87
         if (stepIdx < delays.length) {
           setTimeout(tick, delays[stepIdx]);
         } else {
-          const winner = pool[Math.floor(Math.random() * pool.length)];
+          // Intelligent weighted distribution: favor elite-rated titles in the selected filter
+          const highTier = pool.filter(i => parseFloat(i.rating) >= 8.0);
+          const finalPool = highTier.length >= 6 ? highTier : pool;
+          const winner = finalPool[Math.floor(Math.random() * finalPool.length)];
           currentSurpriseWinner = winner;
           renderWinnerDisplay(winner);
           isSpinning = false;
@@ -16187,7 +16191,42 @@ Odd Taxi|2021|87
     // ==========================================
     let rankedRecommendations = [];
     let recBatchOffset = 0;
-    let rejectsLeft = 3;
+    let rejectsLeft = 4;
+
+    // Multi-Vector Taste DNA & Semantic Affinity Matrix
+    const GENRE_HARMONY_MAP = {
+      "Sci-Fi": { "Sci-Fi": 1.0, "Thriller": 0.85, "Action": 0.80, "Mystery": 0.78, "Adventure": 0.75, "Drama": 0.65 },
+      "Action": { "Action": 1.0, "Adventure": 0.88, "Thriller": 0.82, "Crime": 0.78, "Sci-Fi": 0.80 },
+      "Drama": { "Drama": 1.0, "Crime": 0.88, "Mystery": 0.82, "Biography": 0.92, "History": 0.88, "Romance": 0.76, "Thriller": 0.72 },
+      "Crime": { "Crime": 1.0, "Thriller": 0.92, "Mystery": 0.88, "Drama": 0.86, "Action": 0.75 },
+      "Thriller": { "Thriller": 1.0, "Mystery": 0.92, "Crime": 0.90, "Sci-Fi": 0.85, "Drama": 0.75, "Horror": 0.80 },
+      "Comedy": { "Comedy": 1.0, "Romance": 0.82, "Animation": 0.78, "Adventure": 0.72, "Drama": 0.60 },
+      "Romance": { "Romance": 1.0, "Drama": 0.82, "Comedy": 0.80 },
+      "Horror": { "Horror": 1.0, "Mystery": 0.88, "Thriller": 0.85, "Fantasy": 0.65 },
+      "Animation": { "Animation": 1.0, "Adventure": 0.88, "Comedy": 0.82, "Family": 0.92, "Fantasy": 0.85 },
+      "Adventure": { "Adventure": 1.0, "Action": 0.88, "Sci-Fi": 0.80, "Animation": 0.85, "Fantasy": 0.85 },
+      "Biography": { "Biography": 1.0, "Drama": 0.92, "History": 0.95, "Crime": 0.80 },
+      "History": { "History": 1.0, "Drama": 0.88, "Biography": 0.95, "War": 0.95 }
+    };
+
+    function getCinemaDecadeCluster(year) {
+      if (year < 1980) return { id: 'classics', name: 'Golden Era Classics', center: 1972 };
+      if (year < 1990) return { id: '80s', name: '80s Cult & Blockbuster Wave', center: 1985 };
+      if (year < 2000) return { id: '90s', name: '90s Prestige & Indie Golden Age', center: 1995 };
+      if (year < 2010) return { id: '2000s', name: '2000s Millennial Peak', center: 2005 };
+      if (year < 2020) return { id: '2010s', name: '2010s Prestige & Modern Auteur', center: 2015 };
+      return { id: '2020s', name: 'Contemporary Visionary Wave', center: 2023 };
+    }
+
+    const CINEMATIC_AUTEUR_UNIVERSE = [
+      { name: "Christopher Nolan Mind-Benders", titles: ["Inception", "Interstellar", "The Dark Knight", "The Prestige", "Memento", "Tenet", "Oppenheimer", "Batman Begins", "Dunkirk"] },
+      { name: "Denis Villeneuve Epics", titles: ["Dune", "Dune: Part Two", "Blade Runner 2049", "Arrival", "Prisoners", "Sicario", "Incendies"] },
+      { name: "David Fincher Neo-Noir", titles: ["Se7en", "Fight Club", "Zodiac", "The Social Network", "Gone Girl", "Mindhunter", "Panic Room"] },
+      { name: "Martin Scorsese Crime Sagas", titles: ["Goodfellas", "Taxi Driver", "The Departed", "The Wolf of Wall Street", "Casino", "Shutter Island", "The Irishman"] },
+      { name: "Quentin Tarantino Stylized Masterpieces", titles: ["Pulp Fiction", "Django Unchained", "Inglourious Basterds", "Kill Bill", "Reservoir Dogs"] },
+      { name: "HBO Prestige TV Hall of Fame", titles: ["The Wire", "Chernobyl", "Band of Brothers", "The Sopranos", "Succession", "True Detective", "Game of Thrones"] },
+      { name: "Peak Anime & Ghibli Masterworks", titles: ["Spirited Away", "Princess Mononoke", "Spider-Man: Into the Spider-Verse", "Spider-Man: Across the Spider-Verse", "WALL-E", "Your Name", "Attack on Titan", "Death Note"] }
+    ];
 
     function generateRecommendation() {
       if (!activeTags.recTags.length) {
@@ -16204,37 +16243,93 @@ Odd Taxi|2021|87
         return;
       }
 
-      const genreCounts = {};
-      const platCounts = {};
-      let avgYear = 0;
-      selected.forEach(item => {
-        genreCounts[item.genre] = (genreCounts[item.genre] || 0) + 1;
-        platCounts[item.platformName] = (platCounts[item.platformName] || 0) + 1;
-        avgYear += item.year;
-      });
-      avgYear = Math.round(avgYear / selected.length);
+      const seedGenres = selected.map(s => s.genre);
+      let avgYear = Math.round(selected.reduce((acc, s) => acc + s.year, 0) / selected.length);
+      const seedDecades = selected.map(s => getCinemaDecadeCluster(s.year).id);
 
       const candidates = allTitles
         .filter(t => !activeTags.recTags.includes(t) && !watchedTitles.includes(t))
         .map(t => {
           const item = globalDatabase[t];
-          const genreRatio = (genreCounts[item.genre] || 0) / selected.length;
-          const genreWeight = genreRatio * 34;
+          if (!item) return null;
+
+          // 1. Multi-vector Semantic Genre Resonance (stricter blended harmony across seeds)
+          let totalAff = 0;
+          let maxAffinity = 0;
+          let bestSeed = null;
+          selected.forEach(seed => {
+            const row = GENRE_HARMONY_MAP[seed.genre];
+            const aff = row ? (row[item.genre] || (seed.genre === item.genre ? 1.0 : 0.35)) : (seed.genre === item.genre ? 1.0 : 0.35);
+            totalAff += aff;
+            if (aff > maxAffinity) {
+              maxAffinity = aff;
+              bestSeed = seed;
+            }
+          });
+          const avgAff = totalAff / selected.length;
+          const blendedAffinity = (avgAff * 0.6) + (maxAffinity * 0.4);
+          const genreWeight = blendedAffinity * 34;
+
+          // 2. Era Clustering & Temporal Sync (stricter penalty for decade divergence)
+          const itemCluster = getCinemaDecadeCluster(item.year);
+          const eraMatchesSeed = seedDecades.includes(itemCluster.id);
           const eraDiff = Math.abs(item.year - avgYear);
-          const eraWeight = Math.max(0, 16 - (eraDiff * 0.45));
-          const ratingWeight = Math.max(0, (parseFloat(item.rating) - 6.5) * 11);
-          const popBonus = item.thumb ? Math.max(0, 6 - (item.rank / 250)) : 0;
-          const rawScore = 35 + genreWeight + eraWeight + ratingWeight + popBonus;
-          const totalScore = Math.min(99, Math.max(52, Math.round(rawScore)));
+          const eraWeight = eraMatchesSeed ? 16 : Math.max(2, 16 - (eraDiff * 0.55));
+
+          // 3. Auteur / Universe Synergy Bonus
+          let auteurBonus = 0;
+          let auteurName = '';
+          for (const u of CINEMATIC_AUTEUR_UNIVERSE) {
+            const hasSeed = selected.some(s => u.titles.includes(s.title));
+            const hasCandidate = u.titles.includes(item.title);
+            if (hasSeed && hasCandidate) {
+              auteurBonus = 10;
+              auteurName = u.name;
+              break;
+            }
+          }
+
+          // 4. Critical Bayesian Standard (IMDb Rating & Rank Weighting)
+          const rate = parseFloat(item.rating) || 7.0;
+          const ratingWeight = Math.min(18, Math.max(2, (rate - 6.5) * 7.5));
+          const popBonus = item.thumb ? Math.max(0, 4 - (item.rank / 350)) : 0;
+
+          const rawScore = 15 + genreWeight + eraWeight + auteurBonus + ratingWeight + popBonus;
 
           const reasons = [];
-          if (genreCounts[item.genre]) reasons.push(`Matches your ${item.genre} picks (${Math.round(genreRatio * 100)}% affinity)`);
-          if (eraDiff <= 7) reasons.push(`Fits your ${Math.floor(item.year / 10) * 10}s era sweet spot`);
-          reasons.push(`★ ${item.rating} on ${item.platformName}`);
+          if (auteurName) {
+            reasons.push(`Shares DNA with ${auteurName}`);
+          } else if (maxAffinity >= 0.95) {
+            reasons.push(`Direct ${item.genre} synergy with "${bestSeed ? bestSeed.title : 'seeds'}"`);
+          } else if (maxAffinity >= 0.75) {
+            reasons.push(`${Math.round(blendedAffinity * 100)}% cross-genre resonance`);
+          }
+          if (eraMatchesSeed) {
+            reasons.push(`Native to the ${itemCluster.name}`);
+          } else if (eraDiff <= 6) {
+            reasons.push(`Matches your ${Math.floor(item.year / 10) * 10}s sweet spot`);
+          }
+          reasons.push(`★ ${item.rating} critical consensus`);
 
-          return { item, score: totalScore, rawScore, reason: reasons.slice(0, 2).join(' · ') };
+          return { item, score: 70, rawScore, reason: reasons.slice(0, 2).join(' · ') };
         })
+        .filter(Boolean)
         .sort((a, b) => (b.rawScore - a.rawScore) || (parseFloat(b.item.rating) - parseFloat(a.item.rating)));
+
+      // Stricter Monotonic Calibration: strictly at most ONE pick at 98%/99%, and distinct descending scores
+      let prevAssigned = 100;
+      candidates.forEach((cand, rank) => {
+        if (rank === 0) {
+          cand.score = cand.rawScore >= 90 ? 98 : Math.min(96, Math.max(86, Math.round(cand.rawScore * 0.95)));
+          prevAssigned = cand.score;
+        } else {
+          const rankCap = Math.max(55, 93 - (rank - 1) * 5);
+          const rawCalculated = Math.round(cand.rawScore * 0.90);
+          const assigned = Math.min(prevAssigned - (rank <= 3 ? 3 : 1), Math.min(rankCap, rawCalculated));
+          cand.score = Math.max(52, assigned);
+          prevAssigned = cand.score;
+        }
+      });
 
       rankedRecommendations = candidates;
       recBatchOffset = 0;
@@ -16274,7 +16369,7 @@ Odd Taxi|2021|87
               <img src="${poster}" data-title="${item.title.replace(/"/g, '&quot;')}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-16 h-24 sm:w-20 sm:h-28 object-cover rounded-xl shrink-0 border border-white/10" />
               <div class="min-w-0 flex-1 space-y-1">
                 <div class="flex items-center justify-between gap-1">
-                  <span class="px-2 py-0.5 rounded-md bg-brand-gold/20 text-brand-gold text-[10px] font-extrabold border border-brand-gold/30">Pick #${idx + 1} · ${score}%</span>
+                  <span class="px-2 py-0.5 rounded-md bg-brand-gold/20 text-brand-gold text-[10px] font-extrabold border border-brand-gold/30">Match #${recBatchOffset + idx + 1} · ${score}% Fit</span>
                 </div>
                 <h4 class="font-bold text-white text-sm group-hover:text-brand-gold transition-colors line-clamp-1">${item.cleanName || item.title}</h4>
                 <div class="text-xs text-gray-400">${item.genre} · ${item.year} · ★ ${item.rating}</div>
@@ -16343,22 +16438,36 @@ Odd Taxi|2021|87
       const mObjs = m.map(t => globalDatabase[t]).filter(Boolean);
       const fObjs = f.map(t => globalDatabase[t]).filter(Boolean);
 
-      const matchScore = Math.min(35, exactMatches.length * 15);
-      const mGenres = getTopProperties(mObjs, 'genre', 3);
-      const fGenres = getTopProperties(fObjs, 'genre', 3);
-      const sharedGenres = mGenres.filter(g => fGenres.includes(g));
-      const genreScore = Math.min(35, sharedGenres.length * 14 + 7);
+      // 1. Direct overlap score (max 30)
+      const matchScore = Math.min(30, exactMatches.length * 12 + 6);
 
+      // 2. Cross-genre harmonic matrix (max 35)
+      let totalGenreSynergy = 0;
+      let comparisons = 0;
+      mObjs.forEach(mo => {
+        fObjs.forEach(fo => {
+          const row = GENRE_HARMONY_MAP[mo.genre];
+          const aff = row ? (row[fo.genre] || (mo.genre === fo.genre ? 1.0 : 0.40)) : (mo.genre === fo.genre ? 1.0 : 0.40);
+          totalGenreSynergy += aff;
+          comparisons++;
+        });
+      });
+      const avgCrossSynergy = comparisons > 0 ? (totalGenreSynergy / comparisons) : 0.5;
+      const genreScore = Math.min(35, Math.max(12, Math.round(avgCrossSynergy * 35)));
+
+      // 3. Era & Decade Harmony (max 20)
       const mAvgYear = mObjs.reduce((s, o) => s + o.year, 0) / mObjs.length;
       const fAvgYear = fObjs.reduce((s, o) => s + o.year, 0) / fObjs.length;
       const yearDiff = Math.abs(mAvgYear - fAvgYear);
-      const eraScore = Math.max(0, Math.round(15 - (yearDiff * 0.5)));
+      const eraScore = Math.max(8, Math.round(20 - (yearDiff * 0.4)));
 
+      // 4. Critical Standard & Tone Vibe (max 15)
       const mAvgRate = mObjs.reduce((s, o) => s + parseFloat(o.rating), 0) / mObjs.length;
       const fAvgRate = fObjs.reduce((s, o) => s + parseFloat(o.rating), 0) / fObjs.length;
-      const vibeScore = Math.abs(mAvgRate - fAvgRate) <= 0.4 ? 15 : 8;
+      const rateDiff = Math.abs(mAvgRate - fAvgRate);
+      const vibeScore = Math.max(6, Math.round(15 - (rateDiff * 10)));
 
-      const total = Math.min(100, matchScore + genreScore + eraScore + vibeScore);
+      const total = Math.min(99, Math.max(56, matchScore + genreScore + eraScore + vibeScore));
 
       scoreEl.textContent = `${total}%`;
       const circleSvg = document.getElementById('compatCircleSvg');
@@ -16366,15 +16475,20 @@ Odd Taxi|2021|87
         const offset = Math.max(0, 264 - (264 * total / 100));
         circleSvg.style.strokeDashoffset = offset;
       }
-      if (total >= 80) msgEl.textContent = "🎬 Cinematic Soulmates!";
-      else if (total >= 60) msgEl.textContent = "🍿 Great Co-Watching Crew";
+      if (total >= 85) msgEl.textContent = "🎬 Cinematic Soulmates!";
+      else if (total >= 70) msgEl.textContent = "🍿 Great Co-Watching Crew";
+      else if (total >= 60) msgEl.textContent = "✨ Complementary Visionaries";
       else msgEl.textContent = "⚡ Opposites Attract (Expect Lively Debates)";
+
+      const mGenres = getTopProperties(mObjs, 'genre', 3);
+      const fGenres = getTopProperties(fObjs, 'genre', 3);
+      const sharedGenres = mGenres.filter(g => fGenres.includes(g));
 
       const metrics = [
         {
           label: "Direct Title Overlap",
           pts: `+${matchScore}%`,
-          pct: Math.round((matchScore / 35) * 100),
+          pct: Math.round((matchScore / 30) * 100),
           desc: exactMatches.length ? `You both picked ${exactMatches.join(', ')}.` : "No identical titles, meaning fresh discoveries for both of you!"
         },
         {
@@ -16386,7 +16500,7 @@ Odd Taxi|2021|87
         {
           label: "Era & Decade Sync",
           pts: `+${eraScore}%`,
-          pct: Math.round((eraScore / 15) * 100),
+          pct: Math.round((eraScore / 20) * 100),
           desc: `Average release years: ${Math.round(mAvgYear)} vs ${Math.round(fAvgYear)} (${Math.round(yearDiff)} yrs apart).`
         },
         {
@@ -16410,21 +16524,37 @@ Odd Taxi|2021|87
         </li>
       `).join('');
 
-      const targetGenres = sharedGenres.length ? sharedGenres : [mGenres[0] || "Drama", fGenres[0] || "Action"];
+      // Pareto-Optimal Co-Watching Pick: finds the single best film that unites both taste vectors
       const midYear = Math.round((mAvgYear + fAvgYear) / 2);
-      const jointPool = [...movies, ...tvShows].filter(item =>
+      const coPool = [...movies, ...tvShows].filter(item =>
         item.thumb &&
-        targetGenres.includes(item.genre) &&
         !m.includes(item.title) &&
         !f.includes(item.title) &&
         !watchedTitles.includes(item.title)
       );
-      jointPool.sort((a, b) => {
-        const sa = parseFloat(a.rating) * 10 - Math.abs(a.year - midYear) * 0.35;
-        const sb = parseFloat(b.rating) * 10 - Math.abs(b.year - midYear) * 0.35;
-        return sb - sa;
+
+      coPool.sort((a, b) => {
+        const getScore = it => {
+          let mAff = 0, fAff = 0;
+          mObjs.forEach(o => {
+            const row = GENRE_HARMONY_MAP[o.genre];
+            const aff = row ? (row[it.genre] || (o.genre === it.genre ? 1.0 : 0.4)) : (o.genre === it.genre ? 1.0 : 0.4);
+            if (aff > mAff) mAff = aff;
+          });
+          fObjs.forEach(o => {
+            const row = GENRE_HARMONY_MAP[o.genre];
+            const aff = row ? (row[it.genre] || (o.genre === it.genre ? 1.0 : 0.4)) : (o.genre === it.genre ? 1.0 : 0.4);
+            if (aff > fAff) fAff = aff;
+          });
+          const harmonicMean = (2 * mAff * fAff) / (mAff + fAff + 0.001);
+          const rateVal = parseFloat(it.rating) || 7.0;
+          const eraClose = Math.max(0, 10 - Math.abs(it.year - midYear) * 0.3);
+          return (harmonicMean * 40) + (rateVal * 5) + eraClose;
+        };
+        return getScore(b) - getScore(a);
       });
-      const jointCandidate = jointPool[0] || movies[0];
+
+      const jointCandidate = coPool[0] || movies[0];
       const escJ = jointCandidate.title.replace(/'/g, "\\'");
 
       jointEl.innerHTML = `

@@ -936,7 +936,19 @@
       var d = (el.getAttribute('onclick') || '').match(/openDeciderTool\('(\w+)'\)/); if (!d) return; key = 'play'; tool = d[1];
     } else if ((el = t.closest('#userProfileBtn'))) {
       key = 'profile';
-    } else if ((el = t.closest('.brass-astrolabe-plate, #headerBackHomeBtn, .leave-tab-btn, .back-corner-mark'))) {
+    } else if ((el = t.closest('.brass-astrolabe-plate, #headerBrandPlate, #headerBackHomeBtn, .leave, .leave-tab-btn, .back-corner-mark'))) {
+      if (el.id === 'uniBack' || el.closest('#uniView')) {
+        return;
+      }
+      if (el.closest('#tab-music')) {
+        e.preventDefault(); e.stopPropagation();
+        if (typeof window.returnFromMusic === 'function') {
+          window.returnFromMusic();
+        } else {
+          window.returnToOpeningPage();
+        }
+        return;
+      }
       e.preventDefault(); e.stopPropagation(); window.returnToOpeningPage(); return;
     } else return;
     e.preventDefault(); e.stopPropagation();
@@ -949,12 +961,21 @@
       bloom(disc, function () { if (window.initMusicVault) { try { window.initMusicVault(); } catch (_) {} } window.switchTab('music'); });
     };
     window.closeMusicToVinyl = function () {
-      if (typeof closeFullscreen === 'function' && isOpen()) {
-        try { closeFullscreen(); } catch (_) {}
-      } else {
-        window.returnToOpeningPage();
+      try {
+        if (window.Motion && typeof window.Motion.isOpen === 'function' && window.Motion.isOpen()) {
+          window.Motion.closeFullscreen();
+        }
+      } catch (_) {}
+      if (typeof window.switchTab === 'function') {
+        window.switchTab('discover');
       }
+      setTimeout(function () {
+        var showcase = document.getElementById('homeVinylShowcase');
+        if (showcase) showcase.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (typeof window.updateHomeVinylPlayer === 'function') window.updateHomeVinylPlayer();
+      }, 50);
     };
+    window.returnFromMusic = window.closeMusicToVinyl;
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install); else install();
 })();

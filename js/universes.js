@@ -460,17 +460,17 @@
     $('uniGrid').innerHTML=U.map((u,ui)=>{
       const n=u.N.length,w=u.N.filter((_,i)=>isSeen(u,i)).length;
       const filmCnt=u.N.filter(nd=>nd[5]==='movie').length,showCnt=u.N.filter(nd=>nd[5]==='show').length;
-      return `<div class="rounded-2xl p-5 border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between gap-4" style="background:linear-gradient(160deg,${u.c}25,#0b0d14 75%)">
+      return `<div class="rounded-2xl p-5 border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between gap-4 h-full min-h-[170px]" style="background:linear-gradient(160deg,${u.c}25,#0b0d14 75%)">
         <div class="flex items-start justify-between gap-3">
-          <div>
-            <div class="text-base font-display font-extrabold text-white leading-snug">${esc(u.n)}</div>
+          <div class="min-w-0 flex-1">
+            <div class="text-base font-display font-extrabold text-white leading-snug truncate" title="${esc(u.n)}">${esc(u.n)}</div>
             <div class="text-xs text-gray-400 mt-1">${filmCnt} film${filmCnt===1?'':'s'}${showCnt?` · ${showCnt} series`:''}</div>
           </div>
           <div class="relative shrink-0">${ring(w/n,u.c)}<span class="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-white">${w}/${n}</span></div>
         </div>
-        <div class="pt-2 border-t border-white/10 flex items-center justify-between">
-          <span class="text-xs text-gray-400">Start: <strong class="text-gray-200">${esc(u.start)}</strong></span>
-          <button data-u="${ui}" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black font-bold text-xs text-white transition-all">
+        <div class="pt-3 mt-auto border-t border-white/10 flex items-center justify-between gap-3 h-10">
+          <span class="text-xs text-gray-400 truncate min-w-0 flex-1">Start: <strong class="text-gray-200">${esc(u.start)}</strong></span>
+          <button data-u="${ui}" class="px-3.5 py-1.5 h-8 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-black font-bold text-xs text-white transition-all shrink-0 whitespace-nowrap min-w-[110px] text-center shadow-sm">
             Show Titles →
           </button>
         </div>
@@ -537,7 +537,12 @@
       <div class="glass-card rounded-2xl border border-white/10 p-4 sm:p-5 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
           <div class="flex items-center gap-3">
-            <button id="uniBack" class="back-corner-mark" title="Back" aria-label="Back"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h6a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-6" /><circle cx="8" cy="6" r="2" fill="currentColor" stroke="none" /><path d="M5 11l3-2.5 3.5 1.5M8 12.5v4.5l-3 4m3-4l3 4" /></svg></button>
+            <button id="uniBack" type="button" class="leave round" title="Exit Universe · Return to Universes" aria-label="Exit Universe">
+              <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
             <div>
               <h2 class="text-xl sm:text-2xl font-display font-extrabold text-white">${esc(u.n)}</h2>
               <div class="text-xs text-gray-400 mt-0.5">${totalW} of ${u.N.length} watched · ${S.length} titles</div>
@@ -613,7 +618,14 @@
   };
 
   $('uniView').onclick=e=>{
-    if(e.target.closest('#uniBack')){$('uniView').classList.add('hidden');$('uniGrid').classList.remove('hidden');grid();return;}
+    if(e.target.closest('#uniBack')){
+      e.preventDefault();
+      e.stopPropagation();
+      $('uniView').classList.add('hidden');
+      $('uniGrid').classList.remove('hidden');
+      grid();
+      return;
+    }
     if(e.target.closest('#uniWishAll')){
       const S=seq(cur);let added=0;
       const wt = window.watchedTitles || (typeof watchedTitles !== 'undefined' ? watchedTitles : []);

@@ -3,7 +3,16 @@
 // ======================================================
 (function () {
   const $ = id => document.getElementById(id);
-  const ls = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+  const ls = {
+    get(k, d) {
+      try {
+        const v = localStorage.getItem(k);
+        if (v === null) return d;
+        try { return JSON.parse(v); } catch (_) { return v; }
+      } catch (e) { return d; }
+    },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
 
   // ---------- move existing blocks to their new homes ----------
   const rec = $('recSection');
@@ -15,7 +24,7 @@
   // ---------- navigation ----------
   const GROUPS = {
     discover: { first: 'discover', subs: [] },
-    browse: { first: 'movies', subs: [['movies', 'Movies', 'fa-clapperboard'], ['shows', 'Shows', 'fa-tv'], ['universes', 'Universes', 'fa-globe'], ['categories', 'Genres', 'fa-layer-group']] },
+    browse: { first: 'movies', subs: [['movies', 'Films', 'fa-clapperboard'], ['shows', 'Shows', 'fa-tv'], ['universes', 'Universes', 'fa-globe'], ['categories', 'Genres', 'fa-layer-group']] },
     music: { first: 'music', subs: [] },
     decide: { first: 'play', subs: [] },
     space: { first: 'hub', subs: [
@@ -58,7 +67,7 @@
       if (window.selectProfileTool) window.selectProfileTool('taste');
     }
     if (key === 'browse') key = 'movies';
-    if (key === 'decide') key = 'play';
+    if (key === 'decide' || key === 'mood' || key === 'duel' || key === 'match' || key === 'ricochet' || key === 'marathon' || key === 'compat') key = 'play';
     if (!PANE_GROUP[key]) key = 'discover';
     const g = PANE_GROUP[key];
 
@@ -117,31 +126,56 @@
     }
 
     // Spring Window Transition Animation (.portal-glade-in)
-    Object.keys(PANE_GROUP).forEach(k => {
-      const pane = $('tab-' + k); if (!pane) return;
-      if (k === key) { 
-        pane.classList.remove('hidden', 'fade-in', 'portal-glade-in'); 
-        void pane.offsetWidth; 
-        pane.classList.add('portal-glade-in'); 
+    const activePaneId = 'tab-' + key;
+    const currentActivePane = document.querySelector('.tab-pane:not(.hidden)');
+    const isSameTab = currentActivePane && currentActivePane.id === activePaneId;
+
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+      if (pane.id === activePaneId) {
+        pane.classList.remove('hidden', 'fade-in');
+        pane.style.display = '';
+        pane.style.visibility = '';
+        pane.style.opacity = '';
+        pane.style.pointerEvents = '';
+        if (!isSameTab) {
+          pane.classList.remove('portal-glade-in');
+          void pane.offsetWidth;
+          pane.classList.add('portal-glade-in');
+        }
       } else {
         pane.classList.add('hidden');
+        pane.classList.remove('portal-glade-in');
+        pane.style.display = 'none';
+        pane.style.visibility = '';
+        pane.style.opacity = '';
       }
     });
+    if (key === 'discover' && !isSameTab && typeof kick === 'function') kick();
     Object.keys(GROUPS).forEach(k => {
       const n = $('nav-' + k); 
       if (n) {
         n.classList.toggle('active', k === g);
       }
     });
-    const sn = $('subNav'), subs = GROUPS[g].subs;
+    const isBrowse = (g === 'browse');
+    const sn = $('subNav'), subs = (GROUPS[g] && GROUPS[g].subs) ? GROUPS[g].subs : [];
     if (sn) {
-      sn.innerHTML = subs.map(([k, l, ic]) => `<button class="sub-pill ${k === key ? 'on' : ''}" onclick="switchTab('${k}')"><i class="fa-solid ${ic}"></i>${l}</button>`).join('');
-      sn.classList.toggle('hidden', !subs.length); sn.classList.toggle('flex', !!subs.length);
+      if (isBrowse && subs.length) {
+        sn.innerHTML = subs.map(([k, l, ic]) => `<button class="sub-pill ${k === key ? 'on' : ''}" onclick="switchTab('${k}')"><i class="fa-solid ${ic}"></i>${l}</button>`).join('');
+        sn.classList.remove('hidden');
+        sn.classList.add('flex');
+        sn.style.display = 'flex';
+      } else {
+        sn.classList.add('hidden');
+        sn.classList.remove('flex');
+        sn.style.display = 'none';
+      }
     }
     const bRow = $('browseNavRow');
     if (bRow) {
-      bRow.classList.toggle('hidden', g !== 'browse');
-      bRow.classList.toggle('flex', g === 'browse');
+      bRow.classList.toggle('hidden', !isBrowse);
+      bRow.classList.toggle('flex', isBrowse);
+      bRow.style.display = isBrowse ? 'flex' : 'none';
     }
     const bFilter = $('browseFilterOptionWrap');
     const mFilterBtn = $('moviesFilterToggleBtn');
@@ -150,13 +184,41 @@
       const isFilterable = (key === 'movies' || key === 'shows');
       bFilter.classList.toggle('hidden', !isFilterable);
       bFilter.classList.toggle('flex', isFilterable);
+      bFilter.style.display = isFilterable ? 'flex' : 'none';
       if (mFilterBtn) {
         mFilterBtn.classList.toggle('hidden', key !== 'movies');
         mFilterBtn.classList.toggle('flex', key === 'movies');
+        mFilterBtn.style.display = key === 'movies' ? 'flex' : 'none';
       }
       if (sFilterBtn) {
         sFilterBtn.classList.toggle('hidden', key !== 'shows');
         sFilterBtn.classList.toggle('flex', key === 'shows');
+        sFilterBtn.style.display = key === 'shows' ? 'flex' : 'none';
+      }
+    }
+    // Clean up filter grids when leaving movies or shows
+    const mfg = $('moviesFilterGrid');
+    if (mfg && key !== 'movies') {
+      mfg.classList.add('hidden');
+      mfg.style.display = 'none';
+      const mc = $('moviesFilterChevron');
+      if (mc) mc.style.transform = 'rotate(0deg)';
+      const mb = $('moviesFilterToggleBtn');
+      if (mb) {
+        mb.classList.remove('border-brand-gold/60', 'bg-brand-gold/15', 'text-white');
+        mb.classList.add('text-gray-200', 'bg-white/5');
+      }
+    }
+    const sfg = $('showsFilterGrid');
+    if (sfg && key !== 'shows') {
+      sfg.classList.add('hidden');
+      sfg.style.display = 'none';
+      const sc = $('showsFilterChevron');
+      if (sc) sc.style.transform = 'rotate(0deg)';
+      const sb = $('showsFilterToggleBtn');
+      if (sb) {
+        sb.classList.remove('border-brand-gold/60', 'bg-brand-gold/15', 'text-white');
+        sb.classList.add('text-gray-200', 'bg-white/5');
       }
     }
     document.querySelectorAll('.mnav-btn').forEach(btn => {
@@ -178,7 +240,7 @@
       star.classList.toggle('active', active);
     });
     if (key === 'discover') {
-      if (window.renderDiscoverTab) setTimeout(window.renderDiscoverTab, 40);
+      if (!isSameTab && window.renderDiscoverTab) setTimeout(window.renderDiscoverTab, 40);
       if (window.updateHomeVinylPlayer) setTimeout(window.updateHomeVinylPlayer, 60);
     }
     if (key === 'movies' && window.filterAndRenderMovies && (!window._moviesRendered || window._moviesDirty)) {
@@ -310,11 +372,20 @@
   };
 
   // Return from Music Lounge back to Home Page with Vinyl in view
-  window.closeMusicToVinyl = function() {
-    if (window.Motion && window.Motion.isOpen && window.Motion.isOpen()) {
-      window.Motion.closeFullscreen();
-      return;
+  window.returnFromMusic = function() {
+    if (window.Motion && typeof window.Motion.isOpen === 'function' && window.Motion.isOpen()) {
+      try { window.Motion.closeFullscreen(); } catch (_) {}
     }
+    const bRow = $('browseNavRow');
+    if (bRow) { bRow.classList.add('hidden'); bRow.classList.remove('flex'); bRow.style.display = 'none'; }
+    const bSearch = $('browseSearch');
+    if (bSearch) { bSearch.classList.add('hidden'); bSearch.style.display = 'none'; }
+    const sn = $('subNav');
+    if (sn) { sn.classList.add('hidden'); sn.classList.remove('flex'); sn.style.display = 'none'; }
+    const bFilter = $('browseFilterOptionWrap');
+    if (bFilter) { bFilter.classList.add('hidden'); bFilter.classList.remove('flex'); bFilter.style.display = 'none'; }
+    if ($('moviesFilterGrid')) { $('moviesFilterGrid').classList.add('hidden'); $('moviesFilterGrid').style.display = 'none'; }
+    if ($('showsFilterGrid')) { $('showsFilterGrid').classList.add('hidden'); $('showsFilterGrid').style.display = 'none'; }
     window.switchTab('discover');
     setTimeout(() => {
       const showcase = document.getElementById('homeVinylShowcase');
@@ -322,15 +393,18 @@
         showcase.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
-    }, 120);
+    }, 60);
   };
+  window.closeMusicToVinyl = window.returnFromMusic;
 
   // Return to Opening View from any sub-view or modal
   window.returnToOpeningPage = function(targetId) {
+    const discoverTab = document.getElementById('tab-discover');
+    const isAlreadyOnDiscover = discoverTab && !discoverTab.classList.contains('hidden') && discoverTab.style.display !== 'none';
+
     if (typeof window.closeFullscreen === 'function' && window.Motion && typeof window.Motion.isOpen === 'function' && window.Motion.isOpen()) {
       try { window.closeFullscreen(); } catch (_) {}
     }
-    let closedAnyOverlay = false;
     const modal = document.getElementById('detailModal');
     if (modal && !modal.classList.contains('hidden')) {
       if (typeof window.closeDetailModal === 'function') {
@@ -339,7 +413,6 @@
         modal.classList.add('hidden');
         modal.classList.remove('flex');
       }
-      closedAnyOverlay = true;
     }
     const golden = document.getElementById('goldenTicketModal');
     if (golden && !golden.classList.contains('hidden')) {
@@ -348,7 +421,6 @@
       } else {
         golden.classList.add('hidden');
       }
-      closedAnyOverlay = true;
     }
     const surprise = document.getElementById('surpriseModal');
     if (surprise && !surprise.classList.contains('hidden')) {
@@ -357,7 +429,6 @@
       } else {
         surprise.classList.add('hidden');
       }
-      closedAnyOverlay = true;
     }
     const pal = document.getElementById('palette');
     if (pal && !pal.classList.contains('hidden')) {
@@ -365,22 +436,50 @@
         try { window.closePalette(); } catch (_) {}
       } else {
         pal.classList.add('hidden');
+        pal.classList.remove('flex');
       }
-      closedAnyOverlay = true;
     }
     const vibe = document.getElementById('vibePanel');
     if (vibe && !vibe.classList.contains('hidden')) {
       vibe.classList.add('hidden');
-      closedAnyOverlay = true;
     }
     const pop = document.getElementById('profileStatsPopover');
     if (pop && !pop.classList.contains('hidden')) {
       pop.classList.add('hidden');
-      closedAnyOverlay = true;
     }
-    if (closedAnyOverlay && !targetId) {
-      return; // Closed the open overlay/modal without losing current tab!
+    const bRow = $('browseNavRow');
+    if (bRow) { bRow.classList.add('hidden'); bRow.classList.remove('flex'); bRow.style.display = 'none'; }
+    const bSearch = $('browseSearch');
+    if (bSearch) { bSearch.classList.add('hidden'); bSearch.style.display = 'none'; }
+    const sn = $('subNav');
+    if (sn) { sn.classList.add('hidden'); sn.classList.remove('flex'); sn.style.display = 'none'; }
+    const bFilter = $('browseFilterOptionWrap');
+    if (bFilter) { bFilter.classList.add('hidden'); bFilter.classList.remove('flex'); bFilter.style.display = 'none'; }
+    const mfg = $('moviesFilterGrid');
+    if (mfg) { mfg.classList.add('hidden'); mfg.style.display = 'none'; }
+    const sfg = $('showsFilterGrid');
+    if (sfg) { sfg.classList.add('hidden'); sfg.style.display = 'none'; }
+    const mc = $('moviesFilterChevron');
+    if (mc) mc.style.transform = 'rotate(0deg)';
+    const sc = $('showsFilterChevron');
+    if (sc) sc.style.transform = 'rotate(0deg)';
+    const mb = $('moviesFilterToggleBtn');
+    if (mb) {
+      mb.classList.remove('border-brand-gold/60', 'bg-brand-gold/15', 'text-white');
+      mb.classList.add('text-gray-200', 'bg-white/5');
     }
+    const sb = $('showsFilterToggleBtn');
+    if (sb) {
+      sb.classList.remove('border-brand-gold/60', 'bg-brand-gold/15', 'text-white');
+      sb.classList.add('text-gray-200', 'bg-white/5');
+    }
+
+    // If already on the Discover tab and not scrolling to a specific target, smoothly scroll to top without glitching
+    if (isAlreadyOnDiscover && !targetId) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     window.switchTab('discover');
     if (targetId) {
       setTimeout(() => {
@@ -641,16 +740,30 @@
     }
   }, { passive: true });
 
-  window.triggerOmniSearch = function() {
-    switchTab('browse');
-    setTimeout(() => {
-      const inp = document.getElementById('searchMovies') || document.getElementById('searchShows') || document.getElementById('bsInput');
-      if (inp) {
-        inp.focus();
-        inp.select();
-        showToast('Vibe Search active', 'fa-magnifying-glass', 'text-brand-gold');
+  window.openPalette = function() {
+    const p = document.getElementById('palette');
+    if (!p) return;
+    p.classList.remove('hidden');
+    p.classList.add('flex');
+    const input = document.getElementById('palInput');
+    if (input) {
+      input.value = '';
+      if (typeof window.palSearch === 'function') {
+        window.palSearch('');
       }
-    }, 60);
+      setTimeout(() => input.focus(), 30);
+    }
+  };
+
+  window.closePalette = function() {
+    const p = document.getElementById('palette');
+    if (!p) return;
+    p.classList.add('hidden');
+    p.classList.remove('flex');
+  };
+
+  window.triggerOmniSearch = function() {
+    window.openPalette();
   };
 
   window.addEventListener('keydown', (e) => {
@@ -712,11 +825,11 @@
   const MOOD = { 'Sci-Fi': 'curiosity', Drama: 'melancholy', Crime: 'suspicion', Thriller: 'tension', Horror: 'dread', Fantasy: 'wonder', Comedy: 'sunshine', Romance: 'longing', Action: 'adrenaline', Animation: 'whimsy', Western: 'frontier grit', War: 'valor', Documentary: 'discovery' };
   const AUTO = { 'Sci-Fi': 'space', Drama: 'noir', Crime: 'noir', Thriller: 'neon', Horror: 'blood', Fantasy: 'aurora', Comedy: 'clear', Romance: 'golden', Action: 'neon', Animation: 'aurora', Western: 'golden', War: 'noir', Documentary: 'clear' };
   const SHIFT = { 'Sci-Fi': 'Romance', Drama: 'Comedy', Crime: 'Comedy', Thriller: 'Animation', Horror: 'Comedy', Fantasy: 'Action', Comedy: 'Drama', Romance: 'Sci-Fi', Action: 'Fantasy', Animation: 'Drama', Western: 'Sci-Fi', War: 'Comedy', Documentary: 'Fantasy' };
-  let pin = ls.get('cs_theme_v2', 'space');            // 'auto' or a theme id
-  if (pin === 'dawn') pin = 'space';
+  let pin = ls.get('cs_theme_v2', 'blood');            // 'auto' or a theme id
+  if (!THEMES[pin] || pin === 'dawn') pin = 'blood';
   const themeMode = 'dark'; // Strictly dark mode permanent
   let reduce = ls.get('cs_reduce', false); // Calm Mode Off by default, visual effects active
-  let current = 'space', forecast = null;
+  let current = pin, forecast = null;
 
   // forecast from the ~10 most recent actions (watched, wishlist, favourites)
   function readActions() {
@@ -760,8 +873,18 @@
     scrollTimeout = setTimeout(() => { isScrolling = false; }, 120);
   }, { passive: true });
 
+  function isDiscoverActive() {
+    const d = $('tab-discover');
+    return d && !d.classList.contains('hidden');
+  }
+
   function frame(now) {
     raf = 0; if (reduce || mode === 'none' || document.hidden) { cx.clearRect(0, 0, W, H); return; }
+    // Only run canvas FX on the main discover tab or during flight transition to completely eradicate lag on Music, Deciders, and Library
+    if (!flightActive && !isDiscoverActive()) {
+      cx.clearRect(0, 0, W, H);
+      return;
+    }
     // Pause canvas updates during active scrolling to guarantee smooth 60fps scrolling
     if (isScrolling && !flightActive) {
       raf = requestAnimationFrame(frame);
@@ -830,9 +953,9 @@
         p.y -= .5 + p.s * .8; p.x += Math.sin(tt * .8 + p.ph) * .6;
         if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
         if (p.x < 0) p.x = W; else if (p.x > W) p.x = 0;
-        cx.fillStyle = `rgba(${p.s > .8 ? '251,146,60' : '239,68,68'},.55)`; cx.shadowColor = '#ef4444'; cx.shadowBlur = 8; cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.28); cx.fill(); cx.shadowBlur = 0;
+        cx.fillStyle = p.s > .8 ? 'rgba(251,146,60,.55)' : 'rgba(239,68,68,.55)'; cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.28); cx.fill();
       }
-      else if (mode === 'neon') { p.x += Math.sin(tt * .5 + p.ph) * .4; p.y += Math.cos(tt * .4 + p.ph) * .3; const c = p.ph > 3.1 ? '232,121,249' : '34,211,238'; cx.fillStyle = `rgba(${c},.55)`; cx.shadowColor = `rgb(${c})`; cx.shadowBlur = 12; cx.fillRect(p.x, p.y, p.r * 1.6, p.r * 1.6); cx.shadowBlur = 0; }
+      else if (mode === 'neon') { p.x += Math.sin(tt * .5 + p.ph) * .4; p.y += Math.cos(tt * .4 + p.ph) * .3; const c = p.ph > 3.1 ? '232,121,249' : '34,211,238'; cx.fillStyle = `rgba(${c},.55)`; cx.fillRect(p.x, p.y, p.r * 1.6, p.r * 1.6); }
       else if (mode === 'dust') {
         p.y -= .22 * p.s; p.x += Math.sin(tt * .5 + p.ph) * .35;
         if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
@@ -855,18 +978,18 @@
   }
 
   function apply(id) {
-    if (!THEMES[id] || id === 'dawn') id = 'space';
+    if (!THEMES[id] || id === 'dawn') id = 'blood';
     current = id; const t = THEMES[id];
     
     // Strictly Dark Mode only
     document.documentElement.setAttribute('data-mode', 'dark');
-    document.documentElement.className = 'dark bg-[#03050a]';
-    document.documentElement.style.backgroundColor = '#03050a';
+    document.documentElement.className = 'dark';
+    document.documentElement.style.backgroundColor = 'var(--bg, #0c0203)';
     document.documentElement.style.colorScheme = 'dark';
     document.body.setAttribute('data-mode', 'dark');
     document.body.classList.remove('mode-light');
     document.body.classList.add('mode-dark');
-    document.body.style.backgroundColor = 'var(--bg, #03050a)';
+    document.body.style.backgroundColor = 'var(--bg, #0c0203)';
     document.body.style.backgroundImage = 'var(--bgimg)';
     document.body.style.color = 'var(--text-main, #f3f4f6)';
     
@@ -894,7 +1017,7 @@
   function refresh() {
     forecast = makeForecast();
     let paletteToApply = (pin === 'auto' ? forecast.theme : pin);
-    if (!THEMES[paletteToApply] || paletteToApply === 'dawn') paletteToApply = 'space';
+    if (!THEMES[paletteToApply] || paletteToApply === 'dawn') paletteToApply = 'blood';
     apply(paletteToApply);
     const t = $('wxText'); if (t) t.textContent = forecast.text;
     const k = $('wxKicker'); if (k) k.textContent = 'Atmosphere · ' + (THEMES[current] ? THEMES[current].n : 'Cosmic');
@@ -1112,6 +1235,7 @@
     if ($('browseSearch')) {
       const isBrowse = BROWSE.includes(k);
       $('browseSearch').classList.toggle('hidden', !isBrowse);
+      $('browseSearch').style.display = isBrowse ? '' : 'none';
     }
   };
   drawChips();

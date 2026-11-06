@@ -1,6 +1,6 @@
-﻿  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  #subNav {
+  #subNav:not(.hidden) {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -9,8 +9,22 @@
     padding-bottom: 4px;
     gap: 0.4rem;
     max-width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
   }
   #subNav::-webkit-scrollbar { display: none; }
+  #browseNavRow:not(.hidden) {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  #browseFilterOptionWrap:not(.hidden) {
+    display: flex !important;
+    align-items: center;
+    flex-shrink: 0;
+  }
   /* Explicit Dark Theme Select & Option Styling */
   select.dark-select, #tab-movies select, #tab-shows select, #tab-music select, #tab-marathon select, #tab-web select {
     background-color: #0d111a !important;

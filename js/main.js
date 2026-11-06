@@ -613,25 +613,26 @@
       }
 
       // -------------------------------------------------------------
-      // STAGE 4: Movies (Top 12 Fixed Curation - Kept Loaded In)
+      // STAGE 4: Movies (Top 12 Fixed Curation - No Slider / Sized to Fit)
       // -------------------------------------------------------------
       else if (obStep === 4) {
         const picked = new Set(obProfile.favMoviesSeed || []);
 
         vp.innerHTML = `
-          <div class="ob-step-enter space-y-4 max-w-4xl mx-auto w-full py-1 text-center">
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 sm:gap-3 max-h-[54vh] overflow-y-auto pr-1 text-left">
+          <div class="ob-step-enter max-w-4xl mx-auto w-full py-1 text-center">
+            <!-- 12 Films formatted in 2 rows of 6 without vertical slider -->
+            <div class="grid grid-cols-4 sm:grid-cols-6 gap-2 sm:gap-2.5 py-1 text-left">
               ${FIXED_OB_FILMS.map(m => {
                 const isSel = picked.has(m.title);
                 const src = resolvePoster(m, 'movie');
-                return `<div data-obmovie="${esc(m.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer rounded-xl bg-black/40 border ${isSel ? 'border-brand-gold bg-brand-gold/10' : 'border-white/10 hover:border-white/25'} transition-all">
+                return `<div data-obmovie="${esc(m.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1 flex flex-col gap-1 cursor-pointer rounded-xl bg-black/40 border ${isSel ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10 scale-[1.02]' : 'border-white/10 hover:border-white/25'} transition-all">
                   <div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
                     <img src="${src}" data-title="${esc(m.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-full h-full object-cover rounded-md" alt="">
-                    <div class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
+                    <div class="absolute top-1 right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
                   </div>
                   <div class="px-0.5">
-                    <div class="text-[11px] font-bold text-white truncate">${esc(m.title)}</div>
-                    <div class="text-[10px] text-slate-400">${m.year} · ★ ${m.rating}</div>
+                    <div class="text-[10px] sm:text-[11px] font-bold text-white truncate">${esc(m.title)}</div>
+                    <div class="text-[9px] sm:text-[10px] text-slate-400">${m.year} · ★ ${m.rating}</div>
                   </div>
                 </div>`;
               }).join('')}
@@ -653,25 +654,26 @@
       }
 
       // -------------------------------------------------------------
-      // STAGE 5: Shows (Top 12 Fixed Curation - Kept Loaded In)
+      // STAGE 5: Shows (Top 12 Fixed Curation - No Slider / Sized to Fit)
       // -------------------------------------------------------------
       else if (obStep === 5) {
         const picked = new Set(obProfile.favShowsSeed || []);
 
         vp.innerHTML = `
-          <div class="ob-step-enter space-y-4 max-w-4xl mx-auto w-full py-1 text-center">
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2.5 sm:gap-3 max-h-[54vh] overflow-y-auto pr-1 text-left">
+          <div class="ob-step-enter max-w-4xl mx-auto w-full py-1 text-center">
+            <!-- 12 Shows formatted in 2 rows of 6 without vertical slider -->
+            <div class="grid grid-cols-4 sm:grid-cols-6 gap-2 sm:gap-2.5 py-1 text-left">
               ${FIXED_OB_SHOWS.map(s => {
                 const isSel = picked.has(s.title);
                 const src = resolvePoster(s, 'show');
-                return `<div data-obshow="${esc(s.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1.5 flex flex-col gap-1.5 cursor-pointer rounded-xl bg-black/40 border ${isSel ? 'border-brand-gold bg-brand-gold/10' : 'border-white/10 hover:border-white/25'} transition-all">
+                return `<div data-obshow="${esc(s.title)}" class="ob-poster-card ${isSel ? 'selected' : ''} p-1 flex flex-col gap-1 cursor-pointer rounded-xl bg-black/40 border ${isSel ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10 scale-[1.02]' : 'border-white/10 hover:border-white/25'} transition-all">
                   <div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-black/60">
                     <img src="${src}" data-title="${esc(s.title)}" onerror="window.handlePosterFallback(this);" class="lazy-poster w-full h-full object-cover rounded-md" alt="">
-                    <div class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
+                    <div class="absolute top-1 right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${isSel ? 'bg-brand-gold text-black shadow' : 'bg-black/70 text-white/70 border border-white/20'}">${isSel ? '✓' : '+'}</div>
                   </div>
                   <div class="px-0.5">
-                    <div class="text-[11px] font-bold text-white truncate">${esc(s.title)}</div>
-                    <div class="text-[10px] text-slate-400">${s.year} · ★ ${s.rating}</div>
+                    <div class="text-[10px] sm:text-[11px] font-bold text-white truncate">${esc(s.title)}</div>
+                    <div class="text-[9px] sm:text-[10px] text-slate-400">${s.year} · ★ ${s.rating}</div>
                   </div>
                 </div>`;
               }).join('')}
@@ -693,164 +695,181 @@
       }
 
       // -------------------------------------------------------------
-      // STAGE 6: Deciders (Site Overview - Categorization, Micro-Interactions, Taste Sampling)
+      // STAGE 6: Deciders (Interactive Live Decider Demonstration)
       // -------------------------------------------------------------
       else if (obStep === 6) {
-        const socialDeciders = [
-          { name: "The Duel", icon: "fa-crosshairs", color: "text-amber-400", border: "hover:border-amber-400/60", how: "1v1 knockout bracket — vote between two films until one champion remains." },
-          { name: "Matchmaker", icon: "fa-heart", color: "text-rose-400", border: "hover:border-rose-400/60", how: "Combines tastes between viewers or genres to find mutual watchlist hits." }
+        if (!window.obDeciderDemoMode) window.obDeciderDemoMode = 'duel';
+        if (!window.obDuelWinner) window.obDuelWinner = null;
+        if (!window.obSelectedMoodDemo) window.obSelectedMoodDemo = 'cosmic';
+
+        const deciderModes = [
+          { id: 'duel', name: '1v1 Duel', icon: 'fa-crosshairs', color: 'text-amber-400', badge: 'bg-amber-400/20 text-amber-300 border-amber-400/40' },
+          { id: 'roulette', name: 'Roulette', icon: 'fa-dice', color: 'text-purple-400', badge: 'bg-purple-400/20 text-purple-300 border-purple-400/40' },
+          { id: 'mood', name: 'Mood Dial', icon: 'fa-compass-drafting', color: 'text-sky-400', badge: 'bg-sky-400/20 text-sky-300 border-sky-400/40' },
+          { id: 'matchmaker', name: 'Matchmaker', icon: 'fa-heart', color: 'text-rose-400', badge: 'bg-rose-400/20 text-rose-300 border-rose-400/40' }
         ];
 
-        const soloDeciders = [
-          { name: "Mood Dial", icon: "fa-compass-drafting", color: "text-sky-400", border: "hover:border-sky-400/60", how: "Tune your immediate emotional atmosphere for targeted resonance." },
-          { name: "Ricochet", icon: "fa-arrows-split-up-and-left", color: "text-cyan-400", border: "hover:border-cyan-400/60", how: "Chain-reaction roulette — each pick ricochets into connected hidden gems." },
-          { name: "Constellation", icon: "fa-atom", color: "text-purple-400", border: "hover:border-purple-400/60", how: "Plots your taste in a 3D galaxy cluster to reveal neighboring stars." },
-          { name: "The Vault", icon: "fa-vault", color: "text-emerald-400", border: "hover:border-emerald-400/60", how: "Unlocks rare, unstreamed, and cult cinema archives by decade and genre." }
-        ];
+        let demoHtml = '';
 
-        if (!window.obSelectedTasteSample) window.obSelectedTasteSample = 'adrenaline';
+        if (window.obDeciderDemoMode === 'duel') {
+          const w = window.obDuelWinner;
+          demoHtml = `
+            <div class="space-y-3">
+              <div class="text-xs text-slate-300 text-center font-medium">1v1 Knockout Arena · Tap a movie to crown tonight's champion</div>
+              <div class="grid grid-cols-2 gap-3 max-w-md mx-auto items-center relative">
+                <!-- Movie 1: Inception -->
+                <div data-duelpick="Inception" class="cursor-pointer group p-3 rounded-2xl border transition-all text-center flex flex-col items-center gap-2 ${w === 'Inception' ? 'border-brand-gold bg-brand-gold/20 shadow-xl shadow-amber-500/20 ring-2 ring-brand-gold' : 'border-white/10 bg-black/50 hover:border-amber-400/50 hover:bg-white/5'}">
+                  <div class="relative w-full aspect-[2/3] max-h-40 rounded-xl overflow-hidden border border-white/10">
+                    <img src="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg" alt="Inception" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                    ${w === 'Inception' ? '<div class="absolute inset-0 bg-brand-gold/30 flex items-center justify-center"><i class="fa-solid fa-crown text-3xl text-amber-300 drop-shadow"></i></div>' : ''}
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-white truncate">Inception</div>
+                    <div class="text-[10px] text-slate-400">Sci-Fi · 2010 · ★ 8.8</div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${w === 'Inception' ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-300 group-hover:bg-amber-400/20 group-hover:text-amber-300'}">
+                    ${w === 'Inception' ? '👑 Champion' : 'Vote Pick'}
+                  </span>
+                </div>
 
-        const TASTE_SAMPLES = {
-          adrenaline: {
-            title: "The Duel",
-            icon: "fa-crosshairs",
-            color: "text-amber-400",
-            bg: "bg-amber-400/10 border-amber-400/40",
-            sample: "Top Gun: Maverick vs Mad Max: Fury Road",
-            sub: "Live 1v1 bracket round active · Vote to decide the champion"
-          },
-          mindbending: {
-            title: "Constellation",
-            icon: "fa-atom",
-            color: "text-purple-400",
-            bg: "bg-purple-400/10 border-purple-400/40",
-            sample: "Inception ↔ Interstellar ↔ Tenet",
-            sub: "3D Galaxy node cluster · Spacetime cinematic web connected"
-          },
-          cozy: {
-            title: "Mood Dial",
-            icon: "fa-compass-drafting",
-            color: "text-sky-400",
-            bg: "bg-sky-400/10 border-sky-400/40",
-            sample: "Spirited Away & Paddington 2",
-            sub: "Atmosphere dial tuned to Warm Hearth & Gentle Wonder"
-          }
-        };
+                <!-- Center VS Badge -->
+                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-[#120a1f] border border-amber-400/50 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.5)] pointer-events-none">
+                  <span class="text-xs font-display font-black text-amber-300">VS</span>
+                </div>
 
-        const activeTaste = TASTE_SAMPLES[window.obSelectedTasteSample] || TASTE_SAMPLES.adrenaline;
+                <!-- Movie 2: The Dark Knight -->
+                <div data-duelpick="The Dark Knight" class="cursor-pointer group p-3 rounded-2xl border transition-all text-center flex flex-col items-center gap-2 ${w === 'The Dark Knight' ? 'border-brand-gold bg-brand-gold/20 shadow-xl shadow-amber-500/20 ring-2 ring-brand-gold' : 'border-white/10 bg-black/50 hover:border-amber-400/50 hover:bg-white/5'}">
+                  <div class="relative w-full aspect-[2/3] max-h-40 rounded-xl overflow-hidden border border-white/10">
+                    <img src="https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg" alt="The Dark Knight" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                    ${w === 'The Dark Knight' ? '<div class="absolute inset-0 bg-brand-gold/30 flex items-center justify-center"><i class="fa-solid fa-crown text-3xl text-amber-300 drop-shadow"></i></div>' : ''}
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-white truncate">The Dark Knight</div>
+                    <div class="text-[10px] text-slate-400">Action · 2008 · ★ 9.0</div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${w === 'The Dark Knight' ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-300 group-hover:bg-amber-400/20 group-hover:text-amber-300'}">
+                    ${w === 'The Dark Knight' ? '👑 Champion' : 'Vote Pick'}
+                  </span>
+                </div>
+              </div>
+            </div>`;
+        } else if (window.obDeciderDemoMode === 'roulette') {
+          const winner = window.obRouletteDemoWinner || { title: "Interstellar", year: 2014, genre: "Sci-Fi", rating: "8.7", thumb: "https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SX300.jpg" };
+          const isSpinning = !!window.obRouletteIsSpinning;
+          demoHtml = `
+            <div class="space-y-3 max-w-md mx-auto">
+              <div class="text-xs text-slate-300 text-center font-medium">Cinema Roulette · Tap spin to randomly flash & land on tonight's film</div>
+              <div class="p-4 rounded-2xl bg-black/60 border border-purple-500/40 shadow-xl flex items-center gap-3.5 text-left">
+                <div class="relative w-16 h-24 sm:w-20 sm:h-28 rounded-xl overflow-hidden bg-black shrink-0 border border-purple-400/50 shadow">
+                  <img src="${winner.thumb}" alt="${winner.title}" class="w-full h-full object-cover ${isSpinning ? 'opacity-40 animate-pulse' : 'opacity-100'}">
+                  ${isSpinning ? '<div class="absolute inset-0 flex items-center justify-center"><i class="fa-solid fa-dice text-2xl text-purple-300 animate-spin"></i></div>' : ''}
+                </div>
+                <div class="flex-1 min-w-0 space-y-1">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${isSpinning ? 'bg-purple-500/30 text-purple-300 animate-pulse' : 'bg-brand-gold text-black'}">
+                    ${isSpinning ? 'Spinning...' : 'Roulette Pick'}
+                  </span>
+                  <h4 class="text-sm sm:text-base font-bold text-white truncate">${winner.title}</h4>
+                  <div class="text-xs text-slate-400">${winner.genre} · ${winner.year} · ★ ${winner.rating}</div>
+                  <button type="button" onclick="spinObRouletteDemo()" ${isSpinning ? 'disabled' : ''} class="mt-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-extrabold text-xs shadow flex items-center gap-1.5 transition-all active:scale-95">
+                    <i class="fa-solid fa-dice"></i> ${isSpinning ? 'Rolling...' : 'Spin Roulette'}
+                  </button>
+                </div>
+              </div>
+            </div>`;
+        } else if (window.obDeciderDemoMode === 'mood') {
+          const mood = window.obSelectedMoodDemo;
+          const moodPicks = {
+            cosmic: { label: "Mind-Bending & Cosmic", icon: "🌌", items: ["Interstellar (★ 8.7)", "Arrival (★ 7.9)", "Blade Runner 2049 (★ 8.0)"] },
+            adrenaline: { label: "High Adrenaline", icon: "⚡", items: ["Top Gun: Maverick (★ 8.3)", "Mad Max: Fury Road (★ 8.1)", "John Wick: Chapter 4 (★ 7.7)"] },
+            cozy: { label: "Warm & Heartfelt", icon: "☕", items: ["Spirited Away (★ 8.6)", "Paddington 2 (★ 7.8)", "Amélie (★ 8.3)"] }
+          };
+          const curMood = moodPicks[mood] || moodPicks.cosmic;
+          demoHtml = `
+            <div class="space-y-3 max-w-lg mx-auto">
+              <div class="flex items-center justify-center gap-2">
+                <button type="button" data-mooddemo="cosmic" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${mood === 'cosmic' ? 'border-sky-400 bg-sky-400/20 text-sky-200' : 'border-white/10 bg-white/5 text-slate-400'}">🌌 Mind-Bending</button>
+                <button type="button" data-mooddemo="adrenaline" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${mood === 'adrenaline' ? 'border-amber-400 bg-amber-400/20 text-amber-200' : 'border-white/10 bg-white/5 text-slate-400'}">⚡ Adrenaline</button>
+                <button type="button" data-mooddemo="cozy" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${mood === 'cozy' ? 'border-rose-400 bg-rose-400/20 text-rose-200' : 'border-white/10 bg-white/5 text-slate-400'}">☕ Cozy</button>
+              </div>
+              <div class="p-4 rounded-2xl bg-black/50 border border-sky-400/30 text-left space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-white flex items-center gap-1.5">${curMood.icon} ${curMood.label}</span>
+                  <span class="text-[10px] font-mono text-sky-400 bg-sky-400/10 px-2 py-0.5 rounded border border-sky-400/30">Calibrated</span>
+                </div>
+                <div class="space-y-1.5 pt-1">
+                  ${curMood.items.map(t => `<div class="p-2 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between text-xs text-slate-200"><span>${t}</span><i class="fa-solid fa-play text-[10px] text-sky-400"></i></div>`).join('')}
+                </div>
+              </div>
+            </div>`;
+        } else if (window.obDeciderDemoMode === 'matchmaker') {
+          demoHtml = `
+            <div class="space-y-3 max-w-lg mx-auto text-left">
+              <div class="p-4 rounded-2xl bg-black/50 border border-rose-400/30 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-heart text-rose-400"></i> Joint Taste Matchmaker</span>
+                  <span class="text-[11px] font-bold font-mono text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded-md border border-rose-400/40">94% Synergy</span>
+                </div>
+                <p class="text-[11px] text-slate-300">Blends two tastes and watchlists to calculate joint cinematic synergy with zero compromises.</p>
+                <div class="p-2.5 rounded-xl bg-gradient-to-r from-rose-500/15 via-purple-500/10 to-amber-500/15 border border-white/10 flex items-center justify-between text-xs">
+                  <div><span class="text-slate-400 text-[10px] uppercase font-bold block">Perfect Joint Pick</span><b class="text-white">The Batman (2022)</b> · ★ 7.8</div>
+                  <span class="px-2 py-1 rounded-md bg-rose-500 text-white font-extrabold text-[10px]">Zero Arguments</span>
+                </div>
+              </div>
+            </div>`;
+        }
 
         vp.innerHTML = `
-          <div class="ob-step-enter max-w-4xl mx-auto w-full space-y-4 py-1 text-center">
+          <div class="ob-step-enter max-w-2xl mx-auto w-full space-y-3 py-1 text-center">
             <!-- Central & Cooler Deciders Title -->
             <div class="flex items-center justify-center gap-2.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 animate-pulse shadow-[0_0_12px_#f59e0b]"></span>
+              <span class="w-3 h-3 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 animate-pulse shadow-[0_0_12px_#f59e0b]"></span>
               <h2 class="text-xl sm:text-2xl font-display font-black uppercase tracking-[0.22em] bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(245,158,11,0.35)]">
                 Deciders
               </h2>
             </div>
+            <p class="text-xs text-slate-400 max-w-md mx-auto">Instant interactive engines for nights when you can't choose what to watch.</p>
 
-            <!-- Decision-Type Categorization -->
-            <div class="space-y-3.5 text-left max-h-[46vh] overflow-y-auto pr-1">
-              <!-- Category 1: Social & Duo -->
-              <div class="space-y-2">
-                <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-rose-400/90 pl-1">
-                  <i class="fa-solid fa-users text-[11px]"></i>
-                  <span>Social &amp; Duo Decision</span>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  ${socialDeciders.map(d => `
-                    <div class="group p-3.5 rounded-2xl bg-black/45 border border-white/10 ${d.border} hover:bg-white/5 transition-all flex flex-col gap-2 cursor-pointer relative overflow-hidden">
-                      <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2.5">
-                          <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center ${d.color} shrink-0 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid ${d.icon} text-xs"></i>
-                          </div>
-                          <div class="text-sm font-bold text-white truncate">${esc(d.name)}</div>
-                        </div>
-                        <span class="text-[9px] font-mono text-slate-400 group-hover:text-amber-300 px-1.5 py-0.5 rounded bg-white/5 border border-white/10 transition-colors">Preview</span>
-                      </div>
-                      <div class="text-[11px] text-slate-300/80 leading-relaxed">${esc(d.how)}</div>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-
-              <!-- Category 2: Solo Exploration -->
-              <div class="space-y-2 pt-1">
-                <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-cyan-400/90 pl-1">
-                  <i class="fa-solid fa-compass text-[11px]"></i>
-                  <span>Solo Exploration &amp; Mood</span>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
-                  ${soloDeciders.map(d => `
-                    <div class="group p-3.5 rounded-2xl bg-black/45 border border-white/10 ${d.border} hover:bg-white/5 transition-all flex flex-col gap-2 cursor-pointer relative overflow-hidden">
-                      <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                          <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center ${d.color} shrink-0 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid ${d.icon} text-xs"></i>
-                          </div>
-                          <div class="text-xs font-bold text-white truncate">${esc(d.name)}</div>
-                        </div>
-                        <span class="text-[8px] font-mono text-slate-400 group-hover:text-cyan-300 px-1 py-0.5 rounded bg-white/5 border border-white/10 transition-colors">Solo</span>
-                      </div>
-                      <div class="text-[10px] text-slate-300/80 leading-relaxed">${esc(d.how)}</div>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
+            <!-- 4-Chip Interactive Mode Switcher -->
+            <div class="grid grid-cols-4 gap-2 pt-1 max-w-md mx-auto">
+              ${deciderModes.map(m => {
+                const active = window.obDeciderDemoMode === m.id;
+                return `
+                  <button type="button" data-decidermode="${m.id}" class="py-2 px-1 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${active ? m.badge + ' shadow-lg scale-105 font-black' : 'border-white/10 bg-black/40 text-slate-400 hover:text-white hover:bg-white/5 font-semibold text-xs'}">
+                    <i class="fa-solid ${m.icon} text-sm"></i>
+                    <span class="text-[11px] truncate">${m.name}</span>
+                  </button>
+                `;
+              }).join('')}
             </div>
 
-            <!-- Interactive 1-tap Taste Sample at Bottom -->
-            <div class="pt-2 border-t border-white/10 space-y-2.5">
-              <div class="flex items-center justify-center gap-2">
-                <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Taste Sample:</span>
-                <div class="flex items-center gap-1.5">
-                  <button type="button" data-taste="adrenaline" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all ${window.obSelectedTasteSample === 'adrenaline' ? 'border-amber-400 bg-amber-400/20 text-amber-300' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'}">
-                    ⚡ Adrenaline
-                  </button>
-                  <button type="button" data-taste="mindbending" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all ${window.obSelectedTasteSample === 'mindbending' ? 'border-purple-400 bg-purple-400/20 text-purple-300' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'}">
-                    🌀 Mind-Bending
-                  </button>
-                  <button type="button" data-taste="cozy" class="px-2.5 py-1 rounded-lg text-xs font-bold border transition-all ${window.obSelectedTasteSample === 'cozy' ? 'border-sky-400 bg-sky-400/20 text-sky-300' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'}">
-                    ☕ Cozy
-                  </button>
-                </div>
-              </div>
-
-              <!-- Live Sample Decider Match Output -->
-              <div class="p-3 rounded-xl border ${activeTaste.bg} flex items-center justify-between gap-3 text-left transition-all">
-                <div class="flex items-center gap-3 min-w-0">
-                  <div class="w-8 h-8 rounded-lg bg-black/40 border border-white/10 flex items-center justify-center ${activeTaste.color} shrink-0">
-                    <i class="fa-solid ${activeTaste.icon} text-sm"></i>
-                  </div>
-                  <div class="min-w-0">
-                    <div class="text-xs font-bold text-white flex items-center gap-1.5 truncate">
-                      <span>${activeTaste.title}:</span>
-                      <span class="${activeTaste.color} font-mono">${activeTaste.sample}</span>
-                    </div>
-                    <div class="text-[10px] text-slate-400 truncate">${activeTaste.sub}</div>
-                  </div>
-                </div>
-                <span class="text-[10px] font-bold text-slate-400 bg-black/40 px-2 py-1 rounded-md border border-white/10 shrink-0">1-Tap Live</span>
-              </div>
+            <!-- Live Interactive Demonstration Stage -->
+            <div class="pt-2">
+              ${demoHtml}
             </div>
           </div>`;
 
-        vp.querySelectorAll('[data-taste]').forEach(btn => {
+        // Switch Decider Mode
+        vp.querySelectorAll('[data-decidermode]').forEach(btn => {
           btn.onclick = () => {
-            window.obSelectedTasteSample = btn.dataset.taste;
+            window.obDeciderDemoMode = btn.dataset.decidermode;
+            renderObStep();
+          };
+        });
+
+        // Duel Pick Handlers
+        vp.querySelectorAll('[data-duelpick]').forEach(card => {
+          card.onclick = () => {
+            window.obDuelWinner = card.dataset.duelpick;
             try {
               const AudioCtx = window.AudioContext || window.webkitAudioContext;
               if (AudioCtx) {
                 const ctx = new AudioCtx();
-                if (ctx.state === 'suspended') ctx.resume();
                 const osc = ctx.createOscillator();
                 const g = ctx.createGain();
-                osc.type = 'sine';
-                const f = btn.dataset.taste === 'adrenaline' ? 660 : (btn.dataset.taste === 'mindbending' ? 520 : 440);
-                osc.frequency.setValueAtTime(f, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(f * 1.5, ctx.currentTime + 0.15);
-                g.gain.setValueAtTime(0.08, ctx.currentTime);
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.18);
+                g.gain.setValueAtTime(0.12, ctx.currentTime);
                 g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
                 osc.connect(g);
                 g.connect(ctx.destination);
@@ -861,6 +880,53 @@
             renderObStep();
           };
         });
+
+        // Mood Demo Handlers
+        vp.querySelectorAll('[data-mooddemo]').forEach(btn => {
+          btn.onclick = () => {
+            window.obSelectedMoodDemo = btn.dataset.mooddemo;
+            renderObStep();
+          };
+        });
+
+        // Roulette Interactive Demo Spinner
+        window.spinObRouletteDemo = function() {
+          if (window.obRouletteIsSpinning) return;
+          window.obRouletteIsSpinning = true;
+          renderObStep();
+          try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+              const ctx = new AudioCtx();
+              const osc = ctx.createOscillator();
+              const g = ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(440, ctx.currentTime);
+              osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3);
+              g.gain.setValueAtTime(0.08, ctx.currentTime);
+              g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+              osc.connect(g);
+              g.connect(ctx.destination);
+              osc.start();
+              osc.stop(ctx.currentTime + 0.35);
+            }
+          } catch (_) {}
+          const pool = [
+            { title: "Interstellar", year: 2014, genre: "Sci-Fi", rating: "8.7", thumb: "https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SX300.jpg" },
+            { title: "The Dark Knight", year: 2008, genre: "Action", rating: "9.0", thumb: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg" },
+            { title: "Spirited Away", year: 2001, genre: "Animation", rating: "8.6", thumb: "https://m.media-amazon.com/images/M/MV5BNTEyNmEwOWUtYzkyOC00ZTQ4LTllZmUtMjk0Y2Y5ZWU3Y2ExXkEyXkFqcGc@._V1_SX300.jpg" },
+            { title: "Dune: Part Two", year: 2024, genre: "Sci-Fi", rating: "8.6", thumb: "https://m.media-amazon.com/images/M/MV5BN2QyZGUgkNjMtODcxMS00NDExLWIwZjQtNmNkYzMyNTQ1NWU3XkEyXkFqcGc@._V1_SX300.jpg" },
+            { title: "Blade Runner 2049", year: 2017, genre: "Sci-Fi", rating: "8.0", thumb: "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_SX300.jpg" }
+          ];
+          setTimeout(() => {
+            const currentTitle = window.obRouletteDemoWinner ? window.obRouletteDemoWinner.title : '';
+            const remaining = pool.filter(p => p.title !== currentTitle);
+            window.obRouletteDemoWinner = remaining[Math.floor(Math.random() * remaining.length)];
+            window.obRouletteIsSpinning = false;
+            renderObStep();
+            showToast(`Roulette landed on ${window.obRouletteDemoWinner.title}!`, "fa-dice", "text-purple-300");
+          }, 450);
+        };
       }
 
       // -------------------------------------------------------------
@@ -876,12 +942,12 @@
               <!-- Animated Ripple effect from click cue -->
               <div class="absolute inset-1 rounded-full border border-purple-400/40 vinyl-click-ripple pointer-events-none"></div>
 
-              <!-- Turntable Vinyl Disc matching #homeVinylShowcase -->
-              <div id="obTurntableDisc" class="vinyl-record-disc m-hover-scale w-32 h-32 sm:w-36 sm:h-36 rounded-full relative flex items-center justify-center shadow-2xl transition-transform" style="animation-duration: 4s;">
+              <!-- Turntable Vinyl Disc matching #homeVinylShowcase (Prominent & Large) -->
+              <div id="obTurntableDisc" class="vinyl-record-disc m-hover-scale w-40 h-40 sm:w-48 sm:h-48 rounded-full relative flex items-center justify-center shadow-2xl transition-transform" style="animation-duration: 4s;">
                 <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
                 <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
-                <div class="vinyl-center-album absolute w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-purple-400/80 flex items-center justify-center shadow-inner overflow-hidden">
-                  <i class="fa-solid fa-record-vinyl text-purple-300 text-base sm:text-lg"></i>
+                <div class="vinyl-center-album absolute w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-purple-400/80 flex items-center justify-center shadow-inner overflow-hidden">
+                  <i class="fa-solid fa-record-vinyl text-purple-300 text-xl sm:text-2xl"></i>
                 </div>
               </div>
 
@@ -892,7 +958,7 @@
                 <div class="tone-arm-head"></div>
               </div>
 
-              <span class="text-sm sm:text-base font-display font-black tracking-widest text-purple-300 uppercase mt-2.5 transition-colors">MUSIC</span>
+              <span class="text-base sm:text-lg font-display font-black tracking-widest text-purple-300 uppercase mt-3 transition-colors">MUSIC</span>
 
               <!-- Animated Mouse Cursor Clicking Demonstration -->
               <div class="absolute bottom-6 -right-6 pointer-events-none flex items-center gap-2 animate-mouse-click z-20">
@@ -932,30 +998,34 @@
       // -------------------------------------------------------------
       else if (obStep === 8) {
         if (!obProfile.settings) obProfile.settings = {};
-        const currentTheme = document.body.getAttribute('data-theme') || obProfile.settings.theme || 'space';
+        const currentTheme = document.body.getAttribute('data-theme') || obProfile.settings.theme || 'blood';
 
         const styleAccents = [
+          ['blood', 'Crimson Eclipse', '#ef4444', 'Red Embers (Default)'],
           ['space', 'Deep Cosmos', '#38bdf8', 'Starlight Cyan'],
           ['clear', 'Summit Gold', '#F5C518', 'Classic Gold'],
+          ['amethyst', 'Royal Amethyst', '#c084fc', 'Electric Purple'],
+          ['emerald', 'Imperial Jade', '#10b981', 'Emerald Mint'],
+          ['rose', 'Sunset Rose', '#f43f5e', 'Coral Crimson'],
+          ['solar', 'Solar Flare', '#f97316', 'Tangerine Neon'],
           ['noir', 'Noir Rain', '#94a3b8', 'Slate Charcoal'],
           ['neon', 'Cyber Cyan', '#06b6d4', 'Electric Pulse'],
           ['aurora', 'Aurora Emerald', '#34d399', 'Northern Glow'],
           ['golden', 'Amber Horizon', '#ff9f1c', 'Warm Sunburst'],
-          ['blood', 'Crimson Eclipse', '#ef4444', 'Red Embers'],
           ['velvet', 'Velvet Nebula', '#a855f7', 'Cosmic Violet']
         ];
 
         vp.innerHTML = `
-          <div class="ob-step-enter max-w-3xl mx-auto w-full py-3 text-center space-y-4">
-            <!-- Selection of Style Accents Only -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+          <div class="ob-step-enter max-w-4xl mx-auto w-full py-2 text-center space-y-3">
+            <!-- Selection of Style Accents Only (12 Options) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 text-left max-h-[52vh] overflow-y-auto pr-1">
               ${styleAccents.map(([id, name, color, desc]) => {
                 const isSel = currentTheme === id;
                 return `
-                  <button type="button" data-obtheme="${id}" class="p-3.5 sm:p-4 rounded-2xl border flex flex-col justify-between gap-3 transition-all ${isSel ? 'border-brand-gold bg-brand-gold/15 ring-2 ring-brand-gold/40 shadow-xl scale-[1.02]' : 'border-white/10 bg-black/45 hover:bg-white/5 hover:border-white/20'}">
+                  <button type="button" data-obtheme="${id}" class="p-3 sm:p-3.5 rounded-2xl border flex flex-col justify-between gap-2.5 transition-all ${isSel ? 'border-brand-gold bg-brand-gold/15 ring-2 ring-brand-gold/40 shadow-xl scale-[1.02]' : 'border-white/10 bg-black/45 hover:bg-white/5 hover:border-white/20'}">
                     <div class="flex items-center justify-between">
-                      <div class="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center shadow-lg shrink-0" style="background:${color}"></div>
-                      <div class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
+                      <div class="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center shadow-lg shrink-0" style="background:${color}"></div>
+                      <div class="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
                         ${isSel ? '✓' : ''}
                       </div>
                     </div>
@@ -1184,6 +1254,7 @@
       if ($('musicTotalPlaylistsCount')) $('musicTotalPlaylistsCount').textContent = musicPlaylists.length;
       if ($('musicFavCountBadge')) $('musicFavCountBadge').textContent = songFavs.length;
       if ($('musicAdFreeCountBadge')) $('musicAdFreeCountBadge').textContent = songAdFree.length;
+      if (window.updateCustomPlaylistsCount) window.updateCustomPlaylistsCount();
 
       // Populate Playlist Dropdown
       const plSel = $('musicFilterPlaylist');
@@ -1347,6 +1418,46 @@
         return true;
       });
 
+      // Individual track popularity weight calculated per single track (metadata & unique track hash)
+      function getTrackPopularityWeight(song) {
+        if (!song) return 10;
+        let weight = 22;
+        const artist = (song.a || '').toLowerCase();
+        const title = (song.t || '').toLowerCase();
+        // High-streaming artist footprint
+        const starArtists = [
+          'arijit singh', 'shreya ghoshal', 'diljit dosanjh', 'ar rahman', 'the weeknd',
+          'taylor swift', 'drake', 'eminem', 'coldplay', 'billie eilish', 'bruno mars',
+          'ed sheeran', 'dua lipa', 'badshah', 'hanumankind', 'atif aslam', 'sonu nigam',
+          'pritam', 'sachin-jigar', 'vishal & sheykhar', 'anuv jain', 'karan aujla', 'jubin nautiyal'
+        ];
+        if (starArtists.some(star => artist.includes(star) || title.includes(star))) {
+          weight += 38;
+        }
+        if (/title track|theme|anthem|remix|official|feat|ft\./i.test(title)) {
+          weight += 14;
+        }
+        // Unique deterministic footprint per track ID so every single track has its own distinct baseline
+        const id = song.id || '';
+        let hash = 0;
+        for (let i = 0; i < id.length; i++) {
+          hash = (hash * 31 + id.charCodeAt(i)) & 0xffffffff;
+        }
+        weight += Math.abs(hash % 40);
+        return Math.max(10, weight);
+      }
+
+      // Weighted random assortment: Popularity increases probability of higher rank, but results are organically assorted
+      if (resetPage || !musicFiltered.length || typeof musicFiltered[0]._assortScore === 'undefined') {
+        musicFiltered.forEach(s => {
+          const w = getTrackPopularityWeight(s);
+          const r = Math.max(0.0001, Math.random());
+          // Efraimidis-Spirakis stochastic key R^(1/W): higher weight -> higher expected key value
+          s._assortScore = Math.pow(r, 1 / w);
+        });
+      }
+      musicFiltered.sort((a, b) => (b._assortScore || 0) - (a._assortScore || 0));
+
       $('musicShowingCount').textContent = musicFiltered.length.toLocaleString();
       $('musicCurPageLbl').textContent = musicPage;
       const totalPages = Math.max(1, Math.ceil(musicFiltered.length / MUSIC_PAGE_SIZE));
@@ -1385,10 +1496,11 @@
                 <span>·</span>
                 <span class="px-1.5 py-0.2 rounded bg-purple-500/10 border border-purple-500/25 text-[10px] text-purple-300 font-mono">${s.l === 'hi' ? 'Hindi' : 'English'}</span>
                 <span>·</span>
-                <span class="text-[10px] text-gray-500 truncate max-w-[130px] font-mono">${esc(plName)}</span>
+                <span class="text-[10px] text-gray-500 truncate max-w-[110px] font-mono">${esc(plName)}</span>
               </div>
             </div>
             <div class="flex items-center gap-1 shrink-0">
+              <button type="button" onclick="openAddToCustomPlaylistModal('${s.id}')" title="Add to Custom Playlist" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-500/20 text-gray-300 hover:text-purple-200 flex items-center justify-center text-xs transition-colors"><svg class="w-3.5 h-3.5 text-purple-300 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmAddTrackPlaylistIcon"></use></svg></button>
               <button type="button" onclick="playNextSongById('${s.id}')" title="Play Next in Orbit" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-500/20 text-gray-300 hover:text-purple-200 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-arrow-turn-down"></i></button>
               <button type="button" onclick="queueSongById('${s.id}')" title="Queue Satellite" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-500 hover:text-white text-gray-300 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-plus"></i></button>
               <button type="button" onclick="toggleSongFav('${s.id}')" title="Favorite Starlight Track" class="w-8 h-8 rounded-lg ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-heart"></i></button>
@@ -2425,6 +2537,443 @@
       m.classList.remove('flex');
     };
 
+    // ==========================================
+    // CUSTOM PLAYLIST SUITE (MUSIC LOUNGE)
+    // ==========================================
+    let currentAddToTrackId = null;
+
+    window.updateCustomPlaylistsCount = function() {
+      const badge = $('musicCustomPlaylistsCountBadge');
+      if (badge) badge.textContent = customSongLists.length;
+    };
+
+    window.openMusicCustomPlaylistsModal = function() {
+      ensureMusicLoaded();
+      const modal = $('musicCustomPlaylistsModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      renderMusicCustomPlaylistsList();
+    };
+
+    window.closeMusicCustomPlaylistsModal = function() {
+      const modal = $('musicCustomPlaylistsModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    };
+
+    function getPlaylistArtworkCover(pl, size = 'md') {
+      const tracks = (pl.tracks || []).slice(0, 4);
+      const dim = size === 'sm' ? 'w-10 h-10' : 'w-14 h-14 sm:w-16 sm:h-16';
+      if (tracks.length >= 4) {
+        return `
+          <div class="${dim} rounded-xl overflow-hidden grid grid-cols-2 grid-rows-2 shrink-0 border border-purple-500/35 bg-black/80 shadow-md ring-1 ring-white/10 group-hover:scale-105 transition-transform duration-300">
+            ${tracks.map(tid => `<img src="https://i.ytimg.com/vi/${tid}/default.jpg" class="w-full h-full object-cover" alt="">`).join('')}
+          </div>`;
+      } else if (tracks.length >= 1) {
+        return `
+          <div class="relative ${dim} rounded-xl overflow-hidden shrink-0 border border-purple-500/35 bg-black/80 shadow-md ring-1 ring-white/10 group-hover:scale-105 transition-transform duration-300">
+            <img src="https://i.ytimg.com/vi/${tracks[0]}/mqdefault.jpg" class="w-full h-full object-cover" alt="">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-1">
+              <span class="text-[9px] font-mono font-black text-purple-300">★ MIX</span>
+            </div>
+          </div>`;
+      } else {
+        return `
+          <div class="${dim} rounded-xl bg-gradient-to-br from-purple-900/40 via-purple-950/30 to-black border border-purple-500/30 flex items-center justify-center shrink-0 shadow-md ring-1 ring-white/5">
+            <svg class="w-6 h-6 text-purple-400/80" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmCustomPlaylistIcon"></use></svg>
+          </div>`;
+      }
+    }
+
+    function renderMusicCustomPlaylistsList() {
+      const container = $('customPlaylistsModalList');
+      if (!container) return;
+      window.updateCustomPlaylistsCount();
+
+      if (!customSongLists.length) {
+        container.innerHTML = `
+          <div class="p-8 text-center text-gray-400 space-y-2">
+            <i class="fa-solid fa-music text-3xl text-purple-400/40"></i>
+            <div class="text-sm font-semibold text-white">No custom playlists yet</div>
+            <div class="text-xs text-gray-400">Type a name above to create your first mixtape!</div>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = customSongLists.map((pl) => {
+        const count = (pl.tracks || []).length;
+        const escName = esc(pl.name);
+        const mins = Math.max(1, Math.round(count * 3.4));
+        const durStr = count > 0 ? `~${mins} min` : 'Empty';
+        const coverHtml = getPlaylistArtworkCover(pl, 'md');
+
+        return `
+          <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-[#0d0f1a] via-[#101424] to-black border border-purple-500/25 hover:border-purple-400/60 shadow-lg hover:shadow-[0_0_20px_rgba(192,132,252,0.18)] transition-all flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 group">
+            <div class="flex items-center gap-3.5 min-w-0 flex-1">
+              ${coverHtml}
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse shrink-0"></span>
+                  <h4 class="font-display font-bold text-sm sm:text-base text-white group-hover:text-purple-300 transition-colors truncate">${escName}</h4>
+                </div>
+                <div class="text-xs text-gray-400 mt-1 flex items-center gap-2 font-mono">
+                  <span class="px-1.5 py-0.5 rounded bg-purple-500/15 border border-purple-500/20 text-purple-300 text-[10px] font-bold">${count} track${count === 1 ? '' : 's'}</span>
+                  <span>·</span>
+                  <span class="text-purple-200/70 text-[11px]">${durStr}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+              <button type="button" onclick="playCustomPlaylistById('${pl.id}', false)" title="Play from start" class="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer">
+                <i class="fa-solid fa-play text-[10px]"></i> <span>Play</span>
+              </button>
+              <button type="button" onclick="playCustomPlaylistById('${pl.id}', true)" title="Shuffle playlist" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-purple-200 border border-purple-500/20 text-xs transition-all active:scale-95 cursor-pointer">
+                <i class="fa-solid fa-shuffle text-[11px]"></i>
+              </button>
+              <button type="button" onclick="viewCustomPlaylistTracks('${pl.id}')" title="Inspect & reorder tracks" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-purple-500/20 text-gray-300 hover:text-white border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                <i class="fa-solid fa-list-ul text-[11px] text-purple-300"></i> <span>Tracks</span>
+              </button>
+              <button type="button" onclick="deleteMusicCustomPlaylist('${pl.id}')" title="Delete playlist" class="w-8 h-8 rounded-xl bg-red-600/10 hover:bg-red-600/30 text-red-400 hover:text-red-200 flex items-center justify-center text-xs transition-all cursor-pointer">
+                <i class="fa-solid fa-trash text-[11px]"></i>
+              </button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    window.createMusicCustomPlaylist = function() {
+      const input = $('newCustomPlaylistInput');
+      const name = (input && input.value ? input.value.trim() : '') || 'My Mixtape';
+      const newPl = {
+        id: 'sl_' + Date.now(),
+        name,
+        tracks: []
+      };
+      customSongLists.unshift(newPl);
+      saveLS('cs_song_lists', customSongLists);
+      if (input) input.value = '';
+      renderMusicCustomPlaylistsList();
+      window.updateCustomPlaylistsCount();
+      showToast(`Created playlist "${name}"`, 'fa-circle-check', 'text-brand-gold');
+    };
+
+    window.deleteMusicCustomPlaylist = function(id) {
+      const pl = customSongLists.find(p => p.id === id);
+      if (!pl) return;
+      if (!confirm(`Are you sure you want to delete "${pl.name}"?`)) return;
+      customSongLists = customSongLists.filter(p => p.id !== id);
+      saveLS('cs_song_lists', customSongLists);
+      renderMusicCustomPlaylistsList();
+      window.updateCustomPlaylistsCount();
+      showToast(`Deleted "${pl.name}"`, 'fa-trash', 'text-rose-400');
+    };
+
+    window.playCustomPlaylistById = function(id, shuffle = false) {
+      ensureMusicLoaded();
+      const pl = customSongLists.find(p => p.id === id);
+      if (!pl || !pl.tracks || !pl.tracks.length) {
+        showToast("Playlist is empty! Add songs using the + button on tracks.", "fa-circle-exclamation", "text-amber-400");
+        return;
+      }
+      let tracks = pl.tracks.map(tid => musicCatalog.find(s => s.id === tid)).filter(Boolean);
+      if (!tracks.length) {
+        showToast("Songs could not be loaded.", "fa-triangle-exclamation", "text-rose-400");
+        return;
+      }
+      if (shuffle) {
+        tracks = tracks.slice().sort(() => 0.5 - Math.random());
+      }
+      musicQueue = tracks;
+      musicQueueIdx = 0;
+      startTrackFromQueue();
+      closeMusicCustomPlaylistsModal();
+      showToast(`${shuffle ? 'Shuffling' : 'Playing'} "${pl.name}" (${tracks.length} tracks)`, 'fa-play', 'text-brand-gold');
+    };
+
+    let activeViewingPlaylistId = null;
+    window.viewCustomPlaylistTracks = function(id) {
+      activeViewingPlaylistId = id;
+      const pl = customSongLists.find(p => p.id === id);
+      if (!pl) return;
+
+      const modal = $('musicPlaylistTracksModal');
+      const titleEl = $('playlistTracksModalTitle');
+      const countEl = $('playlistTracksModalCount');
+      const playAllBtn = $('playlistTracksPlayAllBtn');
+
+      if (titleEl) titleEl.textContent = pl.name;
+      if (countEl) countEl.textContent = `${(pl.tracks || []).length} tracks`;
+      if (playAllBtn) {
+        playAllBtn.onclick = () => {
+          window.playCustomPlaylistById(pl.id, false);
+          closeMusicPlaylistTracksModal();
+        };
+      }
+
+      const searchInput = $('playlistTrackSearchInput');
+      if (searchInput) searchInput.value = '';
+      const searchRes = $('playlistTrackSearchResults');
+      if (searchRes) {
+        searchRes.classList.add('hidden');
+        searchRes.innerHTML = '';
+      }
+
+      renderPlaylistTracksModalContent(pl);
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+
+    function renderPlaylistTracksModalContent(pl) {
+      const listEl = $('playlistTracksModalList');
+      if (!listEl) return;
+      const tracks = (pl.tracks || []).map(tid => musicCatalog.find(s => s.id === tid)).filter(Boolean);
+
+      if (!tracks.length) {
+        listEl.innerHTML = `<div class="py-8 text-center text-gray-400 text-xs font-mono">This playlist is currently empty. Add tracks using the + button on any song card!</div>`;
+        return;
+      }
+
+      listEl.innerHTML = tracks.map((s, idx) => `
+        <div class="p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between gap-3 group">
+          <div class="flex items-center gap-3 min-w-0">
+            <div onclick="playSongById('${s.id}')" class="relative w-12 h-10 rounded-lg overflow-hidden bg-black shrink-0 cursor-pointer border border-purple-500/30">
+              <img src="https://i.ytimg.com/vi/${s.id}/mqdefault.jpg" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <i class="fa-solid fa-play text-white text-[10px]"></i>
+              </div>
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="text-xs font-bold text-white truncate">${idx + 1}. ${esc(s.t)}</div>
+              <div class="text-[11px] text-purple-300 truncate">${esc(s.a)}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <!-- Order Controls (Move Up/Down) -->
+            <button type="button" onclick="moveTrackInCustomPlaylist('${pl.id}', ${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="Move Up" class="w-7 h-7 rounded-lg bg-white/5 ${idx === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white/15 text-gray-300 hover:text-white'} flex items-center justify-center text-xs transition-colors">
+              <i class="fa-solid fa-chevron-up text-[10px]"></i>
+            </button>
+            <button type="button" onclick="moveTrackInCustomPlaylist('${pl.id}', ${idx}, 1)" ${idx === tracks.length - 1 ? 'disabled' : ''} title="Move Down" class="w-7 h-7 rounded-lg bg-white/5 ${idx === tracks.length - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white/15 text-gray-300 hover:text-white'} flex items-center justify-center text-xs transition-colors">
+              <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </button>
+            <button type="button" onclick="playSongById('${s.id}')" title="Play track" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-purple-600 text-gray-300 hover:text-white flex items-center justify-center text-xs transition-colors">
+              <i class="fa-solid fa-play text-[10px]"></i>
+            </button>
+            <button type="button" onclick="removeTrackFromCustomPlaylist('${pl.id}', '${s.id}')" title="Remove track from playlist" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-red-600/30 text-gray-400 hover:text-red-300 flex items-center justify-center text-xs transition-colors">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.moveTrackInCustomPlaylist = function(plId, fromIdx, delta) {
+      const pl = customSongLists.find(p => p.id === plId);
+      if (!pl || !pl.tracks) return;
+      const toIdx = fromIdx + delta;
+      if (toIdx < 0 || toIdx >= pl.tracks.length) return;
+      const moved = pl.tracks.splice(fromIdx, 1)[0];
+      pl.tracks.splice(toIdx, 0, moved);
+      saveLS('cs_song_lists', customSongLists);
+      renderPlaylistTracksModalContent(pl);
+    };
+
+    window.searchCatalogForPlaylist = function(q) {
+      const resultsEl = $('playlistTrackSearchResults');
+      if (!resultsEl) return;
+      const trimmed = (q || '').trim().toLowerCase();
+      if (!trimmed || trimmed.length < 2) {
+        resultsEl.classList.add('hidden');
+        resultsEl.innerHTML = '';
+        return;
+      }
+      ensureMusicLoaded();
+      const pl = customSongLists.find(p => p.id === activeViewingPlaylistId);
+      const curTracks = pl ? (pl.tracks || []) : [];
+      const matches = musicCatalog.filter(s => {
+        return (s.t && s.t.toLowerCase().includes(trimmed)) || (s.a && s.a.toLowerCase().includes(trimmed));
+      }).slice(0, 5);
+
+      if (!matches.length) {
+        resultsEl.classList.remove('hidden');
+        resultsEl.innerHTML = `<div class="p-2 text-center text-xs text-gray-400">No matching songs found in catalog.</div>`;
+        return;
+      }
+
+      resultsEl.classList.remove('hidden');
+      resultsEl.innerHTML = matches.map(s => {
+        const inPl = curTracks.includes(s.id);
+        return `
+          <div class="p-2 rounded-lg bg-black/60 border border-white/5 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <img src="https://i.ytimg.com/vi/${s.id}/default.jpg" class="w-8 h-6 object-cover rounded shrink-0">
+              <div class="min-w-0">
+                <div class="text-xs font-bold text-white truncate">${esc(s.t)}</div>
+                <div class="text-[10px] text-purple-300 truncate">${esc(s.a)}</div>
+              </div>
+            </div>
+            <button type="button" onclick="addTrackDirectlyToPlaylist('${activeViewingPlaylistId}', '${s.id}')" ${inPl ? 'disabled' : ''} class="px-2.5 py-1 rounded text-[11px] font-bold ${inPl ? 'bg-purple-900/40 text-purple-300' : 'bg-purple-600 hover:bg-purple-500 text-white'} transition-all shrink-0">
+              ${inPl ? '<i class="fa-solid fa-check"></i> Added' : '<i class="fa-solid fa-plus"></i> Add'}
+            </button>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.addTrackDirectlyToPlaylist = function(plId, trackId) {
+      const pl = customSongLists.find(p => p.id === plId);
+      if (!pl) return;
+      if (!pl.tracks) pl.tracks = [];
+      if (!pl.tracks.includes(trackId)) {
+        pl.tracks.push(trackId);
+        saveLS('cs_song_lists', customSongLists);
+        renderPlaylistTracksModalContent(pl);
+        const countEl = $('playlistTracksModalCount');
+        if (countEl) countEl.textContent = `${pl.tracks.length} tracks`;
+        renderMusicCustomPlaylistsList();
+        window.updateCustomPlaylistsCount();
+        const input = $('playlistTrackSearchInput');
+        if (input && input.value) {
+          window.searchCatalogForPlaylist(input.value);
+        }
+        showToast("Added track to playlist", "fa-circle-check", "text-brand-gold");
+      }
+    };
+
+    window.addCurrentPlayingSongToPlaylist = function() {
+      ensureMusicLoaded();
+      const curTrack = (musicQueue && musicQueueIdx >= 0 && musicQueue[musicQueueIdx]) 
+        ? musicQueue[musicQueueIdx] 
+        : ((musicCatalog && musicCatalog[0]) || null);
+      if (!curTrack || !curTrack.id) {
+        showToast("No active track currently loaded", "fa-circle-exclamation", "text-amber-400");
+        return;
+      }
+      openAddToCustomPlaylistModal(curTrack.id);
+    };
+
+    window.closeMusicPlaylistTracksModal = function() {
+      const modal = $('musicPlaylistTracksModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      activeViewingPlaylistId = null;
+    };
+
+    window.removeTrackFromCustomPlaylist = function(plId, trackId) {
+      const pl = customSongLists.find(p => p.id === plId);
+      if (!pl) return;
+      pl.tracks = (pl.tracks || []).filter(id => id !== trackId);
+      saveLS('cs_song_lists', customSongLists);
+      renderPlaylistTracksModalContent(pl);
+      const countEl = $('playlistTracksModalCount');
+      if (countEl) countEl.textContent = `${pl.tracks.length} tracks`;
+      renderMusicCustomPlaylistsList();
+      showToast("Removed track from playlist", "fa-trash", "text-amber-400");
+    };
+
+    window.openAddToCustomPlaylistModal = function(trackId) {
+      ensureMusicLoaded();
+      currentAddToTrackId = trackId;
+      const song = musicCatalog.find(s => s.id === trackId);
+      if (!song) return;
+
+      const modal = $('addToPlaylistModal');
+      const banner = $('addToPlaylistTrackBanner');
+      if (banner) {
+        banner.innerHTML = `
+          <img src="https://i.ytimg.com/vi/${song.id}/mqdefault.jpg" class="w-14 h-11 object-cover rounded-xl shrink-0 border border-purple-500/30">
+          <div class="min-w-0 flex-1">
+            <h4 class="text-xs font-bold text-white truncate">${esc(song.t)}</h4>
+            <div class="text-[11px] text-purple-300 truncate">${esc(song.a)}</div>
+          </div>
+        `;
+      }
+      renderAddToPlaylistOptions();
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+
+    function renderAddToPlaylistOptions() {
+      const container = $('addToPlaylistOptionsList');
+      if (!container || !currentAddToTrackId) return;
+
+      if (!customSongLists.length) {
+        container.innerHTML = `<div class="py-4 text-center text-gray-400 text-xs">No playlists yet. Create one above!</div>`;
+        return;
+      }
+
+      container.innerHTML = customSongLists.map(pl => {
+        const has = (pl.tracks || []).includes(currentAddToTrackId);
+        const coverHtml = getPlaylistArtworkCover(pl, 'sm');
+        return `
+          <button type="button" onclick="toggleTrackInPlaylist('${pl.id}', '${currentAddToTrackId}')" class="w-full p-2.5 rounded-2xl border ${has ? 'border-purple-400 bg-purple-950/40 text-purple-200 shadow-[0_0_15px_rgba(192,132,252,0.2)]' : 'border-white/10 bg-white/5 text-gray-200 hover:border-purple-400/50 hover:bg-white/10'} flex items-center justify-between gap-3 transition-all cursor-pointer">
+            <div class="flex items-center gap-3 min-w-0">
+              ${coverHtml}
+              <div class="min-w-0 text-left">
+                <span class="font-bold text-xs truncate block text-white">${esc(pl.name)}</span>
+                <span class="text-[10px] text-gray-400 font-mono">${(pl.tracks || []).length} tracks</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-xl transition-all ${has ? 'bg-purple-600 text-white shadow-md' : 'bg-white/10 text-gray-300 hover:text-white'}">
+              ${has ? '✓ Added' : '+ Add'}
+            </span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    window.toggleTrackInPlaylist = function(plId, trackId) {
+      const pl = customSongLists.find(p => p.id === plId);
+      if (!pl) return;
+      if (!pl.tracks) pl.tracks = [];
+      const idx = pl.tracks.indexOf(trackId);
+      if (idx >= 0) {
+        pl.tracks.splice(idx, 1);
+        showToast(`Removed from "${pl.name}"`, 'fa-circle-xmark', 'text-amber-400');
+      } else {
+        pl.tracks.push(trackId);
+        showToast(`Added to "${pl.name}"`, 'fa-circle-check', 'text-brand-gold');
+      }
+      saveLS('cs_song_lists', customSongLists);
+      renderAddToPlaylistOptions();
+      window.updateCustomPlaylistsCount();
+    };
+
+    window.quickCreateAndAddTrack = function() {
+      const input = $('quickAddPlaylistInput');
+      const name = (input && input.value ? input.value.trim() : '') || 'New Playlist';
+      if (!currentAddToTrackId) return;
+
+      const newPl = {
+        id: 'sl_' + Date.now(),
+        name,
+        tracks: [currentAddToTrackId]
+      };
+      customSongLists.unshift(newPl);
+      saveLS('cs_song_lists', customSongLists);
+      if (input) input.value = '';
+      renderAddToPlaylistOptions();
+      window.updateCustomPlaylistsCount();
+      showToast(`Created "${name}" & added track`, 'fa-circle-check', 'text-brand-gold');
+    };
+
+    window.closeAddToCustomPlaylistModal = function() {
+      const modal = $('addToPlaylistModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      currentAddToTrackId = null;
+    };
+
     function copySharePayload(payloadObj) {
       const code = btoa(unescape(encodeURIComponent(JSON.stringify(payloadObj))));
       const shareUrl = `${location.origin}${location.pathname}#share=${code}`;
@@ -2505,29 +3054,41 @@
     window.PEAK_SUPABASE_ANON_KEY = window.PEAK_SUPABASE_ANON_KEY || '';
 
     const PROFILE_THEMES_LIST = [
-      ['space', 'Deep Cosmos', '#38bdf8', 'Starlight'],
-      ['clear', 'Summit Gold', '#F5C518', 'Pure Crisp'],
-      ['noir', 'Noir Rain', '#94a3b8', 'Rainfalls'],
-      ['neon', 'Cyber Cyan', '#06b6d4', 'Neon Pulse'],
-      ['aurora', 'Aurora Emerald', '#34d399', 'Northern Ribbons'],
-      ['golden', 'Amber Horizon', '#ff9f1c', 'Warm Dust'],
-      ['blood', 'Crimson Eclipse', '#ef4444', 'Rising Embers'],
-      ['velvet', 'Velvet Nebula', '#a855f7', 'Cosmic Violet'],
-      ['sakura', 'Rose Quartz', '#f472b6', 'Soft Blossom'],
-      ['frost', 'Arctic Glacier', '#7dd3fc', 'Ice Crystal'],
-      ['solar', 'Solar Flare', '#fb923c', 'Sunburst'],
-      ['obsidian', 'Obsidian Stealth', '#64748b', 'Zero Glare']
+      ['blood', 'Crimson Eclipse', '#ef4444', 'Red Embers (Default)'],
+      ['space', 'Deep Cosmos', '#38bdf8', 'Starlight Cyan'],
+      ['clear', 'Summit Gold', '#F5C518', 'Classic Gold'],
+      ['amethyst', 'Royal Amethyst', '#c084fc', 'Electric Purple'],
+      ['emerald', 'Imperial Jade', '#10b981', 'Emerald Mint'],
+      ['rose', 'Sunset Rose', '#f43f5e', 'Coral Crimson'],
+      ['solar', 'Solar Flare', '#f97316', 'Tangerine Neon'],
+      ['noir', 'Noir Rain', '#94a3b8', 'Slate Charcoal'],
+      ['neon', 'Cyber Cyan', '#06b6d4', 'Electric Pulse'],
+      ['aurora', 'Aurora Emerald', '#34d399', 'Northern Glow'],
+      ['golden', 'Amber Horizon', '#ff9f1c', 'Warm Sunburst'],
+      ['velvet', 'Velvet Nebula', '#a855f7', 'Cosmic Violet']
     ];
     let showAllAtmosphereThemes = false;
 
     window.toggleCatalogFilterPanel = function(kind) {
-      const grid = $(kind === 'shows' ? 'showsFilterGrid' : 'moviesFilterGrid');
-      const chev = $(kind === 'shows' ? 'showsFilterChevron' : 'moviesFilterChevron');
+      const isShows = (kind === 'shows');
+      const grid = $(isShows ? 'showsFilterGrid' : 'moviesFilterGrid');
+      const chev = $(isShows ? 'showsFilterChevron' : 'moviesFilterChevron');
+      const btn = $(isShows ? 'showsFilterToggleBtn' : 'moviesFilterToggleBtn');
       if (!grid) return;
       const isHidden = grid.classList.toggle('hidden');
+      grid.style.display = isHidden ? 'none' : 'grid';
       if (chev) chev.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+      if (btn) {
+        if (!isHidden) {
+          btn.classList.add('border-brand-gold/60', 'bg-brand-gold/15', 'text-white');
+          btn.classList.remove('text-gray-200', 'bg-white/5');
+        } else {
+          btn.classList.remove('border-brand-gold/60', 'bg-brand-gold/15', 'text-white');
+          btn.classList.add('text-gray-200', 'bg-white/5');
+        }
+      }
       if (!isHidden) {
-        const inp = $(kind === 'shows' ? 'searchShows' : 'searchMovies');
+        const inp = $(isShows ? 'searchShows' : 'searchMovies');
         if (inp) setTimeout(() => inp.focus(), 40);
       }
     };
@@ -2638,7 +3199,7 @@
         </button>`;
       };
 
-      const fitThemes = PROFILE_THEMES_LIST.slice(0, 8);
+      const fitThemes = PROFILE_THEMES_LIST.slice(0, 12);
       const grid = $('profileThemeSwatchGrid');
       if (grid) grid.innerHTML = fitThemes.map(buildThemeCard).join('');
       const hubGrid = $('hubQuickThemeSwatches');

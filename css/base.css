@@ -1,12 +1,12 @@
     :root { 
-      --gold: 245 197 24; 
-      --gold-hex: #F5C518; 
-      --bg: #03050a; 
-      --bgimg: radial-gradient(ellipse at 50% 0%, rgba(245,197,24,.06), transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(15,23,42,.6), transparent 50%);
-      --card-bg: rgba(14, 18, 30, 0.78);
-      --card-gradient: linear-gradient(135deg, rgba(16, 20, 36, 0.85) 0%, rgba(9, 12, 22, 0.95) 100%);
-      --card-border: rgba(255, 255, 255, 0.1);
-      --surface-elevated: rgba(10, 14, 25, 0.7);
+      --gold: 239 68 68; 
+      --gold-hex: #ef4444; 
+      --bg: #0c0203; 
+      --bgimg: radial-gradient(ellipse at 50% 0%, rgba(239,68,68,.14), transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(20,5,8,.7), transparent 50%);
+      --card-bg: rgba(22, 8, 10, 0.82);
+      --card-gradient: linear-gradient(135deg, rgba(30, 8, 10, 0.88) 0%, rgba(14, 4, 6, 0.96) 100%);
+      --card-border: rgba(239, 68, 68, 0.25);
+      --surface-elevated: rgba(30, 8, 10, 0.75);
       --text-main: #f3f4f6;
       --text-muted: #94a3b8;
     }
@@ -81,6 +81,24 @@
       --card-gradient: linear-gradient(135deg, rgba(14, 16, 20, 0.88) 0%, rgba(6, 8, 10, 0.96) 100%);
       --card-border: rgba(100, 116, 139, 0.3);
       --surface-elevated: rgba(14, 16, 20, 0.75);
+    }
+    [data-theme="amethyst"], [data-palette="amethyst"] { 
+      --gold: 192 132 252; --gold-hex: #c084fc; --bg: #090312; --bgimg: radial-gradient(ellipse at 70% 0%, rgba(192,132,252,.25), transparent 55%), radial-gradient(ellipse at 15% 80%, rgba(168,85,247,.15), transparent 50%); 
+      --card-gradient: linear-gradient(135deg, rgba(26, 12, 38, 0.88) 0%, rgba(12, 5, 20, 0.96) 100%);
+      --card-border: rgba(192, 132, 252, 0.3);
+      --surface-elevated: rgba(26, 12, 38, 0.75);
+    }
+    [data-theme="emerald"], [data-palette="emerald"] { 
+      --gold: 16 185 129; --gold-hex: #10b981; --bg: #020906; --bgimg: radial-gradient(ellipse at 50% 0%, rgba(16,185,129,.22), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(5,150,105,.14), transparent 50%); 
+      --card-gradient: linear-gradient(135deg, rgba(6, 28, 20, 0.88) 0%, rgba(3, 14, 10, 0.96) 100%);
+      --card-border: rgba(16, 185, 129, 0.3);
+      --surface-elevated: rgba(6, 28, 20, 0.75);
+    }
+    [data-theme="rose"], [data-palette="rose"] { 
+      --gold: 244 63 94; --gold-hex: #f43f5e; --bg: #0c0205; --bgimg: radial-gradient(ellipse at 60% 0%, rgba(244,63,94,.25), transparent 55%), radial-gradient(ellipse at 10% 85%, rgba(225,29,72,.14), transparent 50%); 
+      --card-gradient: linear-gradient(135deg, rgba(32, 8, 14, 0.88) 0%, rgba(16, 4, 8, 0.96) 100%);
+      --card-border: rgba(244, 63, 94, 0.3);
+      --surface-elevated: rgba(32, 8, 14, 0.75);
     }
 
     /* ==========================================================================
@@ -1962,19 +1980,27 @@
 
 
     /* Single Screen Deciders Page Container */
-    .deciders-page-screen {
-      height: calc(100vh - 120px);
-      max-height: calc(100vh - 120px);
-      overflow: hidden;
+    .deciders-page-screen:not(.hidden) {
+      min-height: calc(100vh - 120px);
+      overflow: visible;
       display: flex;
       flex-direction: column;
     }
     @media (max-width: 768px) {
-      .deciders-page-screen {
+      .deciders-page-screen:not(.hidden) {
         height: auto;
         max-height: none;
         overflow: visible;
       }
+    }
+    .deciders-page-screen.hidden,
+    .tab-pane.hidden,
+    #tab-play.hidden,
+    #browseNavRow.hidden,
+    #browseSearch.hidden,
+    #subNav.hidden,
+    #browseFilterOptionWrap.hidden {
+      display: none !important;
     }
     .deciders-tools-rail {
       width: 56px;
@@ -2454,11 +2480,11 @@ html, body {
     overflow-x: hidden;
   }
   
-  /* Compact and touch-friendly header search */
+  /* Spacious and touch-friendly header search */
   .header-search-bar {
-    font-size: 11px;
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
+    font-size: 13px;
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
   }
 
   /* Deciders Rail in Horizontal Mode */
