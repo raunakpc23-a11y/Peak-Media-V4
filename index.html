@@ -359,7 +359,7 @@
 
         <!-- Peak Media Brand Icon (Scaled prominent, bold and balanced) -->
         <div id="headerBrandPlate" class="cursor-pointer shrink-0 flex items-center transition-transform hover:scale-105 active:scale-95" onclick="returnToOpeningPage()" title="Peak Media">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-8.5 sm:h-10 md:h-11 w-auto drop-shadow-md" fill="none">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="55 35 700 390" class="h-8 sm:h-10 md:h-11 w-auto drop-shadow-md" fill="none">
             <defs>
               <linearGradient id="hdrGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#F0F9FF"/>
@@ -1055,16 +1055,22 @@
           <!-- STAGE 2: ROULETTE -->
           <div id="stage-roulette" class="decider-stage-panel hidden space-y-4">
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl text-center space-y-4">
-              <h2 class="text-lg font-bold text-white flex items-center justify-center gap-2">
-                <i class="fa-solid fa-dice text-yellow-400"></i> Cinema Roulette
-              </h2>
+              <div class="flex items-center justify-center gap-2">
+                <svg class="decider-mark w-8 h-8" viewBox="0 0 64 64" aria-hidden="true"><use href="#decRoulette"></use></svg>
+                <h2 class="text-lg font-bold text-white">Cinema Roulette</h2>
+              </div>
               <p class="text-xs text-gray-300 max-w-md mx-auto">Let the wheels of cinema fortune choose your next masterwork.</p>
-              <div class="py-4">
-                <button type="button" onclick="if(window.spinSurpriseWheel) window.spinSurpriseWheel();" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-extrabold text-sm shadow-xl hover:scale-105 active:scale-95 transition-all">
-                  Spin the Wheel
+              <div class="py-2 flex items-center justify-center gap-3">
+                <button type="button" id="deciderTopSpinBtn" onclick="if(window.spinSurpriseWheel) window.spinSurpriseWheel();" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black font-extrabold text-sm shadow-[0_0_20px_rgba(245,197,24,0.35)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                  <i class="fa-solid fa-dice text-base"></i> <span>Spin the Wheel</span>
                 </button>
               </div>
-              <div id="rouletteInlineWinner" class="min-h-[160px] flex items-center justify-center"></div>
+              <div id="rouletteInlineWinner" class="min-h-[160px] flex items-center justify-center">
+                <div class="flex flex-col items-center justify-center text-center p-4 rounded-2xl bg-white/5 border border-white/10 max-w-md w-full">
+                  <svg class="w-12 h-12 mb-2 text-brand-gold drop-shadow-[0_0_12px_rgba(245,197,24,0.4)]" viewBox="0 0 64 64"><use href="#decRoulette"></use></svg>
+                  <div class="text-xs text-gray-300 font-medium">Tap &ldquo;Spin the Wheel&rdquo; to roll cinema fortune</div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1506,15 +1512,22 @@
           <!-- STAGE 9: RICOCHET -->
           <div id="stage-ricochet" class="decider-stage-panel hidden space-y-4">
             <div class="theme-card-bg rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4">
-              <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                  <svg class="decider-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#decRicochet"></use></svg> Mood Ricochet
-                </h2>
-                <div class="flex items-center gap-2 flex-wrap">
-                  <button type="button" onclick="if(window.openVaultGroup) window.openVaultGroup('older');" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-500/40 transition-all" title="Older Group Vault">Older Vault</button>
-                  <button type="button" onclick="if(window.openVaultGroup) window.openVaultGroup('younger');" class="px-3 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 font-bold text-xs border border-cyan-500/40 transition-all" title="Younger Group Vault">Younger Vault</button>
-                  <button type="button" id="rcShuffle" onclick="if(window.rcShuffle) window.rcShuffle();" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs border border-white/15">Shuffle</button>
-                  <button type="button" id="rcLaunch" onclick="if(window.rcLaunch) window.rcLaunch();" class="px-4 py-1.5 rounded-xl bg-cyan-400 text-black font-extrabold text-xs shadow hover:scale-105 active:scale-95 transition-all">
+              <!-- Fixed Top Control Panel for Ricochet -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-white/10 pb-3">
+                <div class="flex items-center justify-between">
+                  <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <svg class="decider-mark w-7 h-7" viewBox="0 0 64 64" aria-hidden="true"><use href="#decRicochet"></use></svg> <span>Ricochet</span>
+                  </h2>
+                  <!-- Prominent Mobile Launch Trigger -->
+                  <button type="button" onclick="if(window.rcLaunch) window.rcLaunch();" class="sm:hidden px-4 py-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-black font-extrabold text-xs shadow-[0_0_15px_rgba(6,182,212,0.5)] active:scale-95 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-play text-[10px]"></i> Launch
+                  </button>
+                </div>
+                <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5">
+                  <button type="button" onclick="if(window.openVaultGroup) window.openVaultGroup('older');" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-500/40 transition-all shrink-0" title="Older Group Vault">Older Vault</button>
+                  <button type="button" onclick="if(window.openVaultGroup) window.openVaultGroup('younger');" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 font-bold text-xs border border-cyan-500/40 transition-all shrink-0" title="Younger Group Vault">Younger Vault</button>
+                  <button type="button" id="rcShuffle" onclick="if(window.rcShuffle) window.rcShuffle();" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs border border-white/15 shrink-0" title="Shuffle Layout">Shuffle</button>
+                  <button type="button" id="rcLaunch" onclick="if(window.rcLaunch) window.rcLaunch();" class="hidden sm:inline-flex px-4 py-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-black font-extrabold text-xs shadow hover:scale-105 active:scale-95 transition-all shrink-0">
                     Launch
                   </button>
                 </div>
@@ -1628,43 +1641,43 @@
     <!-- TAB: MUSIC (THE LISTENING DISH) -->
     <section id="tab-music" class="tab-pane hidden fade-in space-y-4 sm:space-y-6">
       
-      <!-- MUSIC LOUNGE & SOUNDTRACK VAULT HERO (Compact Slim Header) -->
-      <div data-content class="relative rounded-2xl overflow-hidden p-2.5 sm:p-3.5 shadow-xl border border-purple-500/35 bg-gradient-to-br from-[#120a1f] via-[#090b14] to-[#04060b]">
-        <div class="relative z-10 flex items-center justify-between gap-3">
-          <!-- Back to Home + Lounge Title -->
-          <div class="flex items-center gap-2.5 min-w-0">
-            <button type="button" onclick="returnFromMusic()" title="Leave tab · Return to Home" class="leave round leave-tab-btn shrink-0" aria-label="Leave this tab and return home">
-              <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+      <!-- MUSIC HERO (Streamlined Single-Row Header fitting all controls cleanly on mobile & desktop) -->
+      <div data-content class="relative rounded-2xl overflow-hidden p-2 sm:p-3.5 shadow-xl border border-purple-500/35 bg-gradient-to-br from-[#120a1f] via-[#090b14] to-[#04060b]">
+        <div class="relative z-10 flex items-center justify-between gap-1.5 sm:gap-3">
+          <!-- Back to Home + Music Title -->
+          <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+            <button type="button" onclick="returnFromMusic()" title="Leave tab · Return to Home" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center shrink-0 active:scale-95 transition-all" aria-label="Leave this tab and return home">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            <div class="relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-purple-950/70 border border-purple-400/60 flex items-center justify-center shrink-0 shadow-[0_0_18px_rgba(192,132,252,0.45)]">
-              <i class="fa-solid fa-record-vinyl text-xl sm:text-2xl text-purple-300"></i>
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-950/70 border border-purple-400/60 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(192,132,252,0.35)]">
+              <i class="fa-solid fa-record-vinyl text-base sm:text-xl text-purple-300"></i>
             </div>
-            <div class="min-w-0">
-              <div class="text-[9px] font-black uppercase tracking-widest text-purple-300 font-mono flex items-center gap-1.5">
-                <span>Soundtracks &amp; Music</span>
-              </div>
-              <h1 class="text-base sm:text-lg font-display font-extrabold text-white tracking-tight flex items-center gap-2">
-                Music Lounge
-              </h1>
-            </div>
+            <h1 class="text-base sm:text-lg font-display font-extrabold text-white tracking-tight truncate">
+              Music
+            </h1>
           </div>
 
-          <!-- Quick Controls: Shuffle, Playlists, Resume, Stop -->
-          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
-              <i class="fa-solid fa-shuffle text-purple-300 text-xs"></i> <span>Shuffle</span>
+          <!-- Quick Controls: Shuffle, Playlists, Resume, Stop (All Compact & Fitting in One Row) -->
+          <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+            <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="h-8 sm:h-auto px-2 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
+              <i class="fa-solid fa-shuffle text-purple-300 text-xs"></i> <span class="hidden sm:inline">Shuffle</span>
             </button>
-            <button type="button" onclick="openMusicCustomPlaylistsModal()" id="mHeaderPlaylistsBtn" title="Custom Playlists" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
-              <svg class="w-4 h-4 text-purple-300 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmCustomPlaylistIcon"></use></svg>
-              <span>Playlists</span> (<span id="musicCustomPlaylistsCountBadge">1</span>)
+            <button type="button" onclick="openMusicCustomPlaylistsModal()" id="mHeaderPlaylistsBtn" title="Custom Playlists" class="h-8 sm:h-auto px-2 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1 shadow transition-all active:scale-95">
+              <i class="fa-solid fa-list-ul text-purple-300 text-xs"></i>
+              <span class="hidden sm:inline">Playlists</span>
+              <span class="text-[10px] font-mono font-bold text-purple-300 ml-0.5" id="musicCustomPlaylistsCountBadge">1</span>
             </button>
-            <button type="button" id="musicResumeBtn" data-pulse onclick="musicResumeLast()" title="Resume Last Track" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center gap-1.5 shadow transition-all active:scale-95">
-              <i class="fa-solid fa-play text-[11px]"></i> <span>Resume</span>
+            <button type="button" id="musicResumeBtn" data-pulse onclick="musicResumeLast()" title="Resume Last Track" class="h-8 sm:h-auto px-2 sm:px-3 py-1.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center justify-center gap-1 shadow transition-all active:scale-95">
+              <i class="fa-solid fa-play text-[11px]"></i> <span class="hidden sm:inline">Resume</span>
             </button>
             <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Stop Audio" aria-label="Stop Music Player" class="w-8 h-8 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
+              <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+          </div>
+        </div>
               <i class="fa-solid fa-xmark text-xs"></i>
             </button>
           </div>
@@ -1783,11 +1796,6 @@
         </div>
 
         <div class="flex items-center gap-2">
-          <!-- Spine View as one small icon -->
-          <button type="button" id="toggleLibrarySpineViewBtn" onclick="toggleLibrarySpineView()" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-brand-gold transition-all" title="Spine View" aria-label="Spine View">
-            <i class="fa-solid fa-bars-staggered text-xs"></i>
-          </button>
-
           <!-- Back up and Restore -->
           <div class="relative shrink-0">
             <button type="button" id="hubOverflowMenuBtn" onclick="toggleHubOverflowMenu()" class="brass-backup-chest text-xs" title="Back up and Restore" aria-label="Back up and Restore">
@@ -1819,23 +1827,23 @@
         <div id="hubDnaEmptyState"></div>
       </div>
 
-      <!-- Library Deck Layout: Side Button Rail + Right Stage Viewport -->
+      <!-- Library Deck Layout: Simple Static Navigation Buttons + Right Stage Viewport -->
       <div class="flex-1 min-h-0 flex flex-col md:flex-row gap-4">
-        <!-- Left Side Navigation Column (Preventing mid-word breaks with whitespace-nowrap and smooth overflow) -->
-        <div class="w-full md:w-56 shrink-0 flex flex-row md:flex-col gap-2 p-1.5 bg-black/40 border border-white/10 rounded-2xl md:self-start overflow-x-auto scrollbar-none" id="profileToolsRail" role="tablist" aria-label="Library Sections">
-          <button type="button" onclick="selectProfileTool('account')" id="profileRailBtn-account" class="profile-nav-btn active flex-initial md:flex-initial flex items-center justify-center md:justify-start gap-2 px-3.5 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap shrink-0 transition-all" title="Profile" aria-label="Profile">
+        <!-- Navigation Buttons: Clean 2x2 grid on phone, 4-across on tablet, column on desktop (No horizontal slider) -->
+        <div class="w-full md:w-56 shrink-0 grid grid-cols-2 sm:grid-cols-4 md:flex md:flex-col gap-2 p-1.5 bg-black/40 border border-white/10 rounded-2xl md:self-start" id="profileToolsRail" role="tablist" aria-label="Library Sections">
+          <button type="button" onclick="selectProfileTool('account')" id="profileRailBtn-account" class="profile-nav-btn active flex items-center justify-center md:justify-start gap-2 px-3 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Profile" aria-label="Profile">
             <i class="fa-solid fa-user text-cyan-400"></i>
             <span>Profile</span>
           </button>
-          <button type="button" onclick="selectProfileTool('shelves')" id="profileRailBtn-shelves" class="profile-nav-btn flex-initial md:flex-initial flex items-center justify-center md:justify-start gap-2 px-3.5 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap shrink-0 transition-all" title="Shelves" aria-label="Shelves">
+          <button type="button" onclick="selectProfileTool('shelves')" id="profileRailBtn-shelves" class="profile-nav-btn flex items-center justify-center md:justify-start gap-2 px-3 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Shelves" aria-label="Shelves">
             <i class="fa-solid fa-layer-group text-brand-gold"></i>
             <span>Shelves</span>
           </button>
-          <button type="button" onclick="selectProfileTool('top3')" id="profileRailBtn-top3" class="profile-nav-btn flex-initial md:flex-initial flex items-center justify-center md:justify-start gap-2 px-3.5 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap shrink-0 transition-all" title="Top 3 Passes" aria-label="Top 3 Passes">
+          <button type="button" onclick="selectProfileTool('top3')" id="profileRailBtn-top3" class="profile-nav-btn flex items-center justify-center md:justify-start gap-2 px-3 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Top 3 Passes" aria-label="Top 3 Passes">
             <i class="fa-solid fa-crown text-amber-400"></i>
             <span>Top 3 Passes</span>
           </button>
-          <button type="button" onclick="selectProfileTool('taste')" id="profileRailBtn-taste" class="profile-nav-btn flex-initial md:flex-initial flex items-center justify-center md:justify-start gap-2 px-3.5 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap shrink-0 transition-all" title="Taste DNA" aria-label="Taste DNA">
+          <button type="button" onclick="selectProfileTool('taste')" id="profileRailBtn-taste" class="profile-nav-btn flex items-center justify-center md:justify-start gap-2 px-3 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all" title="Taste DNA" aria-label="Taste DNA">
             <i class="fa-solid fa-circle-nodes text-purple-400"></i>
             <span>Taste DNA</span>
           </button>
@@ -2184,12 +2192,20 @@
     </div>
   </div>
 
-  <div id="palette" class="fixed inset-0 z-[60] hidden items-start justify-center p-4 pt-20 sm:pt-28 bg-black/90 backdrop-blur-md" onclick="if(event.target.id==='palette')closePalette()">
+  <div id="palette" class="fixed inset-0 z-[60] hidden items-start justify-center p-3 sm:p-4 pt-16 sm:pt-28 bg-black/90 backdrop-blur-md" onclick="if(event.target.id==='palette')closePalette()">
     <div class="bg-[#0c101c] w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl animate-fadeIn border border-white/25">
       <div class="flex items-center gap-3 px-4 bg-[#080b13] border-b border-white/10">
         <i class="fa-solid fa-magnifying-glass text-brand-gold"></i>
-        <input id="palInput" oninput="palSearch(this.value)" placeholder="Search any of 2,700+ movies or TV series..." class="flex-1 bg-transparent py-4 text-sm text-white placeholder-gray-400 focus:outline-none">
+        <input id="palInput" oninput="palSearch(this.value)" placeholder="Search any of 2,700+ movies or TV series..." class="flex-1 bg-transparent py-3.5 sm:py-4 text-sm text-white placeholder-gray-400 focus:outline-none">
         <kbd class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-gray-300">ESC</kbd>
+      </div>
+      <!-- Mobile Encapsulated Sub-Filters: Home, Films, Shows, Universes, Dramas -->
+      <div id="palSubFilterRow" class="flex sm:hidden items-center justify-between px-3 py-2 bg-[#070a12] border-b border-white/10 gap-1.5 overflow-x-auto scrollbar-none text-[11px]">
+        <button type="button" onclick="setPalSearchScope('home')" id="palScope-home" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-bold text-center bg-brand-gold text-black transition-all">Home</button>
+        <button type="button" onclick="setPalSearchScope('films')" id="palScope-films" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all">Films</button>
+        <button type="button" onclick="setPalSearchScope('shows')" id="palScope-shows" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all">Shows</button>
+        <button type="button" onclick="setPalSearchScope('universes')" id="palScope-universes" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all">Universes</button>
+        <button type="button" onclick="setPalSearchScope('dramas')" id="palScope-dramas" class="pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all">Dramas</button>
       </div>
       <div id="palList" class="max-h-80 overflow-y-auto divide-y divide-white/10 bg-[#0c101c]"></div>
     </div>
@@ -2298,26 +2314,22 @@
     </div>
   </div>
 
-  <!-- MOBILE BOTTOM DOCK (Sticky Phone Navigation with Active Feedback & Safe-Area Padding) -->
+  <!-- MOBILE BOTTOM DOCK (Sticky 4-Button Phone Navigation: Home, Deciders, Music, Library with Colorful Custom Glyphs) -->
   <nav id="mobileBottomNav" class="md:hidden fixed inset-x-0 bottom-0 z-40 bg-[#070b14]/95 backdrop-blur-xl border-t border-white/10 px-2 py-1.5 flex items-center justify-around shadow-[0_-10px_25px_rgba(0,0,0,0.7)]" style="padding-bottom: max(0.375rem, env(safe-area-inset-bottom));" role="navigation" aria-label="Mobile Navigation">
-    <button type="button" onclick="switchTab('discover')" data-mnav="discover" class="mnav-btn flex-1 min-h-[46px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[10px] sm:text-[11px] whitespace-nowrap transition-colors text-brand-gold font-bold bg-brand-gold/10" aria-label="Home">
-      <i class="fa-solid fa-house text-sm"></i>
+    <button type="button" onclick="switchTab('discover')" data-mnav="discover" class="mnav-btn flex-1 min-h-[46px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[10px] sm:text-[11px] whitespace-nowrap transition-colors text-amber-400 font-bold bg-amber-400/10" aria-label="Home">
+      <i class="fa-solid fa-house text-sm text-amber-400"></i>
       <span class="whitespace-nowrap">Home</span>
     </button>
-    <button type="button" onclick="switchTab('movies')" data-mnav="browse" class="mnav-btn flex-1 min-h-[46px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[10px] sm:text-[11px] whitespace-nowrap transition-colors text-gray-400 font-semibold" aria-label="Films">
-      <i class="fa-solid fa-clapperboard text-sm"></i>
-      <span class="whitespace-nowrap">Films</span>
-    </button>
     <button type="button" onclick="switchTab('play')" data-mnav="decide" class="mnav-btn flex-1 min-h-[46px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[10px] sm:text-[11px] whitespace-nowrap transition-colors text-gray-400 font-semibold" aria-label="Deciders">
-      <i class="fa-solid fa-dice-d20 text-sm"></i>
+      <i class="fa-solid fa-dice-d20 text-sm text-purple-400"></i>
       <span class="whitespace-nowrap">Deciders</span>
     </button>
     <button type="button" onclick="switchTab('music')" data-mnav="music" class="mnav-btn flex-1 min-h-[46px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[10px] sm:text-[11px] whitespace-nowrap transition-colors text-gray-400 font-semibold" aria-label="Music">
-      <i class="fa-solid fa-compact-disc text-sm"></i>
+      <i class="fa-solid fa-compact-disc text-sm text-rose-400"></i>
       <span class="whitespace-nowrap">Music</span>
     </button>
     <button type="button" onclick="switchTab('profile')" data-mnav="profile" class="mnav-btn flex-1 min-h-[46px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[10px] sm:text-[11px] whitespace-nowrap transition-colors text-gray-400 font-semibold" aria-label="Library">
-      <i class="fa-solid fa-bookmark text-sm"></i>
+      <i class="fa-solid fa-bookmark text-sm text-emerald-400"></i>
       <span class="whitespace-nowrap">Library</span>
     </button>
   </nav>

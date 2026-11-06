@@ -68,6 +68,24 @@
       padding-left: 0.65rem !important;
       padding-right: 0.65rem !important;
     }
+    /* Guaranteed Peak Media Logo Visibility & Aspect Ratio on Phone Screens */
+    #headerBrandPlate {
+      display: flex !important;
+      align-items: center !important;
+      flex-shrink: 0 !important;
+      min-width: 68px !important;
+      cursor: pointer !important;
+    }
+    #headerBrandPlate svg {
+      height: 2.1rem !important;
+      width: auto !important;
+      max-width: 130px !important;
+      display: block !important;
+    }
+    #headerSearchBarContainer {
+      min-width: 0 !important;
+      flex: 1 1 auto !important;
+    }
     main {
       padding-left: 0.75rem !important;
       padding-right: 0.75rem !important;
@@ -135,7 +153,34 @@
       width: auto !important;
     }
     #toastContainer {
-      bottom: calc(4.4rem + env(safe-area-inset-bottom, 0px)) !important;
+      top: calc(4.2rem + env(safe-area-inset-top, 0px)) !important;
+      bottom: auto !important;
+    }
+    /* Deciders Rail in Mobile Single-Line Mode: All Logos Smaller, No Carousel or Slider */
+    .deciders-tools-rail {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-around !important;
+      gap: 0.15rem !important;
+      padding: 0.25rem 0.1rem !important;
+      width: 100% !important;
+      overflow-x: hidden !important;
+      border-right: none !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      flex-wrap: nowrap !important;
+    }
+    .deciders-tools-rail .decider-glyph-btn {
+      flex: 1 1 0% !important;
+      min-width: 0 !important;
+      max-width: 36px !important;
+      height: 36px !important;
+      padding: 0.2rem !important;
+      margin: 0 !important;
+    }
+    .deciders-tools-rail .decider-mark {
+      width: 100% !important;
+      height: 100% !important;
     }
     #tab-movies h1, #tab-shows h1, #tab-categories h1, #tab-universes h1,
     #tab-duel h1, #tab-match h1, #tab-ricochet h1, #tab-marathon h1, #tab-compat h1, #tab-admin h2, #tab-admin h3 {

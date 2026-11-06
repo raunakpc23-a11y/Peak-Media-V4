@@ -221,9 +221,17 @@
         sb.classList.add('text-gray-200', 'bg-white/5');
       }
     }
+    const MNAV_COLORS = {
+      discover: 'text-amber-400 font-bold bg-amber-400/15 border-amber-400/50 shadow-[0_0_12px_rgba(251,191,36,0.25)]',
+      decide: 'text-purple-400 font-bold bg-purple-500/15 border-purple-400/50 shadow-[0_0_12px_rgba(168,85,247,0.25)]',
+      music: 'text-rose-400 font-bold bg-rose-500/15 border-rose-400/50 shadow-[0_0_12px_rgba(244,63,94,0.25)]',
+      profile: 'text-emerald-400 font-bold bg-emerald-500/15 border-emerald-400/50 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
+    };
     document.querySelectorAll('.mnav-btn').forEach(btn => {
-      const active = btn.dataset.mnav === g;
-      btn.className = 'mnav-btn flex-1 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] transition-colors ' + (active ? 'text-brand-gold font-bold bg-brand-gold/10' : 'text-gray-400 font-semibold');
+      const mtype = btn.dataset.mnav;
+      const active = mtype === g;
+      const activeCls = MNAV_COLORS[mtype] || 'text-brand-gold font-bold bg-brand-gold/10';
+      btn.className = 'mnav-btn flex-1 min-h-[46px] flex flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] transition-all border border-transparent ' + (active ? activeCls : 'text-gray-400 font-semibold hover:text-gray-200');
     });
     document.querySelectorAll('.nav-header-pill').forEach(pill => {
       const dest = pill.dataset.dest;
@@ -259,6 +267,8 @@
     if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
     if (key === 'music' && window.initMusicVault) window.initMusicVault();
     if (key === 'profile' || key === 'hub') {
+      // Ensure Library/Shelves immediately loads on the very first click
+      if (window.selectProfileTool) window.selectProfileTool(window._currentProfileTool || 'shelves');
       if (window.renderShelves) window.renderShelves();
       if (window.refreshDNA) window.refreshDNA();
       if (window.renderCustomListsTab) window.renderCustomListsTab();
@@ -570,6 +580,7 @@
 
   window.selectProfileTool = function(tool) {
     if (!tool || tool === 'collection') tool = 'account';
+    window._currentProfileTool = tool;
     const tools = ['account', 'shelves', 'top3', 'taste'];
     tools.forEach(t => {
       const btn = document.getElementById('profileRailBtn-' + t);
@@ -740,11 +751,65 @@
     }
   }, { passive: true });
 
+  window._palScope = 'home';
+  window.setPalSearchScope = function(scope) {
+    window._palScope = scope || 'home';
+    const scopes = ['home', 'films', 'shows', 'universes', 'dramas'];
+    scopes.forEach(s => {
+      const el = document.getElementById('palScope-' + s);
+      if (el) {
+        if (s === window._palScope) {
+          el.className = 'pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-bold text-center bg-brand-gold text-black transition-all';
+        } else {
+          el.className = 'pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all';
+        }
+      }
+    });
+
+    const palInput = document.getElementById('palInput');
+    const val = palInput ? palInput.value.trim() : '';
+
+    if (!val) {
+      if (scope === 'home') {
+        window.closePalette();
+        window.switchTab('discover');
+      } else if (scope === 'films') {
+        window.closePalette();
+        window.switchTab('movies');
+      } else if (scope === 'shows') {
+        window.closePalette();
+        window.switchTab('shows');
+      } else if (scope === 'universes') {
+        window.closePalette();
+        window.switchTab('universes');
+      } else if (scope === 'dramas') {
+        window.closePalette();
+        window.switchTab('categories');
+        if (window.openGenreFilter) window.openGenreFilter('Drama');
+      }
+      return;
+    }
+
+    if (typeof window.palSearch === 'function') {
+      window.palSearch(val);
+    }
+  };
+
   window.openPalette = function() {
     const p = document.getElementById('palette');
     if (!p) return;
     p.classList.remove('hidden');
     p.classList.add('flex');
+    window._palScope = 'home';
+    const scopes = ['home', 'films', 'shows', 'universes', 'dramas'];
+    scopes.forEach(s => {
+      const el = document.getElementById('palScope-' + s);
+      if (el) {
+        el.className = (s === 'home')
+          ? 'pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-bold text-center bg-brand-gold text-black transition-all'
+          : 'pal-scope-chip flex-1 py-1.5 px-2 rounded-lg font-semibold text-center bg-white/5 text-gray-300 hover:text-white transition-all';
+      }
+    });
     const input = document.getElementById('palInput');
     if (input) {
       input.value = '';

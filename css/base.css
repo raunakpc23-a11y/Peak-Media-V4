@@ -2487,22 +2487,26 @@ html, body {
     padding-bottom: 0.65rem;
   }
 
-  /* Deciders Rail in Horizontal Mode */
+  /* Deciders Rail in Horizontal Single-Line Mode: No Carousel/Slider */
   .deciders-tools-rail {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.65rem;
-    padding: 0.5rem 0.25rem;
-    overflow-x: auto;
+    justify-content: space-around;
+    gap: 0.15rem;
+    padding: 0.25rem 0.1rem;
+    overflow-x: hidden;
     width: 100%;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     border-right: none;
+    flex-wrap: nowrap;
   }
   .deciders-tools-rail .decider-glyph-btn {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
+    flex: 1 1 0%;
+    min-width: 0;
+    max-width: 36px;
+    height: 36px;
+    padding: 0.2rem;
   }
 
   /* Modals as bottom-sheets with comfortable scrolling */

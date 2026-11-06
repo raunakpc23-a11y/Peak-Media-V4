@@ -1382,15 +1382,10 @@
       }
     };
 
-    // Collector's Velvet Spine View Toggle
+    // Standard Library View permanently maintained
     window.toggleLibrarySpineView = function() {
-      window.libraryViewMode = window.libraryViewMode === 'spine' ? 'chart' : 'spine';
-      const lbl = $('libraryViewModeLabel');
-      if (lbl) lbl.textContent = window.libraryViewMode === 'spine' ? 'Chart View' : 'Spine View';
+      window.libraryViewMode = 'cover';
       if (typeof renderShelves === 'function') renderShelves();
-      else if (window.renderHubShelves) window.renderHubShelves();
-      else if (window.updateHubUI) window.updateHubUI();
-      showToast(window.libraryViewMode === 'spine' ? 'Collector Velvet Spine View Activated' : 'Star Chart Surface Activated', 'fa-bars-staggered', 'text-brand-gold');
     };
 
     function filterAndRenderMusic(resetPage = true) {
@@ -2325,23 +2320,29 @@
 
       // 1. Score Movies & Shows
       const mediaHits = [];
+      const scope = window._palScope || 'home';
       for (const t of allTitles) {
         const item = globalDatabase[t];
         if (!item) continue;
+        if (scope === 'films' && item.type !== 'movie') continue;
+        if (scope === 'shows' && item.type !== 'show') continue;
+        if (scope === 'dramas' && !String(item.genre || '').includes('Drama')) continue;
         const sc = Math.max(fuzzyMatchScore(item.cleanName || item.title, q), fuzzyMatchScore(item.genre + ' ' + item.year, q));
         if (sc > 0) mediaHits.push({ item, sc: sc + parseFloat(item.rating) });
       }
       mediaHits.sort((a, b) => b.sc - a.sc);
-      const topMedia = mediaHits.slice(0, 6);
+      const topMedia = mediaHits.slice(0, 8);
 
-      // 2. Score Songs
+      // 2. Score Songs (Only shown when browsing all/home)
       const songHits = [];
-      for (const s of (musicCatalog || [])) {
-        const sc = Math.max(fuzzyMatchScore(s.t, q), fuzzyMatchScore(s.a, q));
-        if (sc > 0) songHits.push({ s, sc });
-        if (songHits.length >= 40 && sc < 60) break;
+      if (scope === 'home') {
+        for (const s of (musicCatalog || [])) {
+          const sc = Math.max(fuzzyMatchScore(s.t, q), fuzzyMatchScore(s.a, q));
+          if (sc > 0) songHits.push({ s, sc });
+          if (songHits.length >= 40 && sc < 60) break;
+        }
+        songHits.sort((a, b) => b.sc - a.sc);
       }
-      songHits.sort((a, b) => b.sc - a.sc);
       const topSongs = songHits.slice(0, 5);
 
       if (!topMedia.length && !topSongs.length) {

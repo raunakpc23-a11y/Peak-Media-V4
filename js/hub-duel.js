@@ -57,12 +57,10 @@
     // ======================================================
     let lastPt = [innerWidth / 2, innerHeight / 2], landed = null;
     document.addEventListener('pointerdown', e => { lastPt = [e.clientX, e.clientY]; }, true);
-    window.libraryViewMode = localStorage.getItem('cs_lib_view_mode') || 'cover';
+    // Layout Option: Standard cover view permanently enabled per user request
+    window.libraryViewMode = 'cover';
     window.toggleLibrarySpineView = function() {
-      window.libraryViewMode = window.libraryViewMode === 'spine' ? 'cover' : 'spine';
-      localStorage.setItem('cs_lib_view_mode', window.libraryViewMode);
-      const lbl = document.getElementById('libraryViewModeLabel');
-      if (lbl) lbl.textContent = window.libraryViewMode === 'spine' ? 'Cover View' : 'Spine View';
+      window.libraryViewMode = 'cover';
       renderShelves();
     };
 
@@ -71,25 +69,19 @@
     function shelfCard(t, shelf) {
       const it = globalDatabase[t]; if (!it) return '';
       const cls = landed === shelf + '|' + t ? ' land' : '';
-      const isSpine = window.libraryViewMode === 'spine';
-      if (isSpine) {
-        return `<div class="spine-card${cls}" data-t="${esc(t)}" data-shelf="${shelf}" title="${esc(it.cleanName || t)} (${it.year}) ★ ${it.rating}" onclick="openDetailModal('${esc(t)}')"><div class="spine-title">${esc(it.cleanName || it.title)}</div><div class="spine-rating">★${it.rating}</div></div>`;
-      }
       const shelfVisualClass = shelf === 'wish' ? 'hub-card-wish' : (shelf === 'fav' ? 'hub-card-fav' : 'hub-card-watched');
       return `<div class="hub-card ${shelfVisualClass}${cls}" data-t="${esc(t)}" data-shelf="${shelf}" title="${esc(t)}"><img class="lazy-poster" data-title="${esc(t)}" src="${poster(it)}" onerror="window.handlePosterFallback(this);" draggable="false" alt=""><span class="hc-r">★ ${it.rating}</span><button class="hc-x" title="Remove"><i class="fa-solid fa-xmark"></i></button><div class="hc-n">${esc(it.cleanName)}</div></div>`;
     }
     function renderShelves() {
-      const isSpine = window.libraryViewMode === 'spine';
       ['watched', 'wish', 'fav'].forEach(s => {
         const el = $('shelf-' + s), list = shelfList(s);
-        if (isSpine) {
-          el.className = 'spine-view-grid';
-        } else {
+        if (el) {
           el.className = 'hub-shelf flex gap-3 overflow-x-auto pb-4 pt-1 snap-x';
+          el.innerHTML = list.length ? list.map(t => shelfCard(t, s)).join('') : '<div class="text-xs text-gray-500 py-8 w-full text-center">Empty celestial zone · Plot stars to view them here</div>';
+          attachThumbObservers(el);
         }
-        el.innerHTML = list.length ? list.map(t => shelfCard(t, s)).join('') : '<div class="text-xs text-gray-500 py-8 w-full text-center">Empty celestial zone · Plot stars to view them here</div>';
-        $('shelfCnt-' + s).textContent = list.length;
-        attachThumbObservers(el);
+        const cntEl = $('shelfCnt-' + s);
+        if (cntEl) cntEl.textContent = list.length;
       });
       landed = null;
       renderReel(); renderBadges(); renderStreak();
