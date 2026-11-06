@@ -2631,17 +2631,49 @@
       if (!container) return;
       window.updateCustomPlaylistsCount();
 
-      if (!customSongLists.length) {
-        container.innerHTML = `
-          <div class="p-8 text-center text-gray-400 space-y-2">
-            <i class="fa-solid fa-music text-3xl text-purple-400/40"></i>
-            <div class="text-sm font-semibold text-white">No custom playlists yet</div>
-            <div class="text-xs text-gray-400">Type a name above to create your first mixtape!</div>
-          </div>`;
-        return;
-      }
+      // 1. Inbuilt Favorites System Playlist Card
+      const favCount = songFavs.length;
+      const favMins = Math.max(1, Math.round(favCount * 3.4));
+      const favDurStr = favCount > 0 ? `~${favMins} min` : 'Empty';
+      const favCoverHtml = `
+        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-br from-rose-600 via-pink-600 to-rose-950 border border-rose-400/40 flex items-center justify-center text-white text-xl shadow-[0_0_18px_rgba(244,63,94,0.35)] shrink-0 group-hover:scale-105 transition-transform">
+          <i class="fa-solid fa-heart"></i>
+        </div>`;
 
-      container.innerHTML = customSongLists.map((pl) => {
+      const favCardHtml = `
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-rose-950/30 via-[#160a1a] to-black border border-rose-500/35 hover:border-rose-400/70 shadow-lg hover:shadow-[0_0_20px_rgba(244,63,94,0.22)] transition-all flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 group">
+          <div class="flex items-center gap-3.5 min-w-0 flex-1">
+            ${favCoverHtml}
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse shrink-0"></span>
+                <h4 class="font-display font-bold text-sm sm:text-base text-white group-hover:text-rose-300 transition-colors truncate flex items-center gap-1.5">
+                  <span>Favorites</span>
+                  <span class="px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 text-[10px] font-mono font-bold">Inbuilt</span>
+                </h4>
+              </div>
+              <div class="text-xs text-gray-400 mt-1 flex items-center gap-2 font-mono">
+                <span class="px-1.5 py-0.5 rounded bg-rose-500/15 border border-rose-500/25 text-rose-300 text-[10px] font-bold">${favCount} track${favCount === 1 ? '' : 's'}</span>
+                <span>·</span>
+                <span class="text-rose-200/70 text-[11px]">${favDurStr}</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+            <button type="button" onclick="playCustomPlaylistById('inbuilt_favorites', false)" title="Play favorites" class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer">
+              <i class="fa-solid fa-play text-[10px]"></i> <span>Play</span>
+            </button>
+            <button type="button" onclick="playCustomPlaylistById('inbuilt_favorites', true)" title="Shuffle favorites" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-rose-200 border border-rose-500/20 text-xs transition-all active:scale-95 cursor-pointer">
+              <i class="fa-solid fa-shuffle text-[11px]"></i>
+            </button>
+            <button type="button" onclick="viewCustomPlaylistTracks('inbuilt_favorites')" title="Inspect favorites" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/20 text-gray-300 hover:text-white border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+              <i class="fa-solid fa-list-ul text-[11px] text-rose-300"></i> <span>Tracks</span>
+            </button>
+          </div>
+        </div>`;
+
+      // 2. User Custom Playlists
+      const customCardsHtml = customSongLists.map((pl) => {
         const count = (pl.tracks || []).length;
         const escName = esc(pl.name);
         const mins = Math.max(1, Math.round(count * 3.4));
@@ -2680,6 +2712,8 @@
             </div>
           </div>`;
       }).join('');
+
+      container.innerHTML = favCardHtml + customCardsHtml;
     }
 
     window.createMusicCustomPlaylist = function() {
@@ -2699,6 +2733,7 @@
     };
 
     window.deleteMusicCustomPlaylist = function(id) {
+      if (id === 'inbuilt_favorites') return;
       const pl = customSongLists.find(p => p.id === id);
       if (!pl) return;
       if (!confirm(`Are you sure you want to delete "${pl.name}"?`)) return;
@@ -2711,9 +2746,11 @@
 
     window.playCustomPlaylistById = function(id, shuffle = false) {
       ensureMusicLoaded();
-      const pl = customSongLists.find(p => p.id === id);
+      const pl = (id === 'inbuilt_favorites') 
+        ? { id: 'inbuilt_favorites', name: 'Favorites', tracks: songFavs }
+        : customSongLists.find(p => p.id === id);
       if (!pl || !pl.tracks || !pl.tracks.length) {
-        showToast("Playlist is empty! Add songs using the + button on tracks.", "fa-circle-exclamation", "text-amber-400");
+        showToast(id === 'inbuilt_favorites' ? "Your Favorites playlist is empty! Tap heart on any song." : "Playlist is empty! Add songs using the + button on tracks.", "fa-circle-exclamation", "text-amber-400");
         return;
       }
       let tracks = pl.tracks.map(tid => musicCatalog.find(s => s.id === tid)).filter(Boolean);
@@ -2734,7 +2771,9 @@
     let activeViewingPlaylistId = null;
     window.viewCustomPlaylistTracks = function(id) {
       activeViewingPlaylistId = id;
-      const pl = customSongLists.find(p => p.id === id);
+      const pl = (id === 'inbuilt_favorites') 
+        ? { id: 'inbuilt_favorites', name: 'Favorites (Inbuilt)', tracks: songFavs }
+        : customSongLists.find(p => p.id === id);
       if (!pl) return;
 
       const modal = $('musicPlaylistTracksModal');
@@ -2904,6 +2943,18 @@
     };
 
     window.removeTrackFromCustomPlaylist = function(plId, trackId) {
+      if (plId === 'inbuilt_favorites') {
+        if (songFavs.includes(trackId)) {
+          toggleSongFav(trackId);
+        }
+        const pl = { id: 'inbuilt_favorites', name: 'Favorites (Inbuilt)', tracks: songFavs };
+        renderPlaylistTracksModalContent(pl);
+        const countEl = $('playlistTracksModalCount');
+        if (countEl) countEl.textContent = `${songFavs.length} tracks`;
+        renderMusicCustomPlaylistsList();
+        showToast("Removed track from Favorites", "fa-heart-crack", "text-amber-400");
+        return;
+      }
       const pl = customSongLists.find(p => p.id === plId);
       if (!pl) return;
       pl.tracks = (pl.tracks || []).filter(id => id !== trackId);
@@ -2943,12 +2994,28 @@
       const container = $('addToPlaylistOptionsList');
       if (!container || !currentAddToTrackId) return;
 
-      if (!customSongLists.length) {
-        container.innerHTML = `<div class="py-4 text-center text-gray-400 text-xs">No playlists yet. Create one above!</div>`;
-        return;
-      }
+      const isFav = songFavs.includes(currentAddToTrackId);
+      const favOptionHtml = `
+        <button type="button" onclick="toggleSongFav('${currentAddToTrackId}'); renderAddToPlaylistOptions(); if(window.updateCustomPlaylistsCount) window.updateCustomPlaylistsCount();" class="w-full p-2.5 rounded-2xl border ${isFav ? 'border-rose-400 bg-rose-950/40 text-rose-200 shadow-[0_0_15px_rgba(244,63,94,0.3)]' : 'border-white/10 bg-white/5 text-gray-200 hover:border-rose-400/50 hover:bg-white/10'} flex items-center justify-between gap-3 transition-all cursor-pointer">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-600 via-pink-600 to-rose-950 border border-rose-400/30 flex items-center justify-center text-white text-base shadow shrink-0">
+              <i class="fa-solid fa-heart"></i>
+            </div>
+            <div class="min-w-0 text-left">
+              <span class="font-bold text-xs truncate block text-white flex items-center gap-1.5">
+                <span>Favorites</span>
+                <span class="px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 text-[9px] uppercase font-mono">Inbuilt</span>
+              </span>
+              <span class="text-[10px] text-gray-400 font-mono">${songFavs.length} tracks</span>
+            </div>
+          </div>
+          <span class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-xl transition-all ${isFav ? 'bg-rose-500 text-white shadow-md' : 'bg-white/10 text-gray-300 hover:text-white'}">
+            ${isFav ? '✓ In Favs' : '+ Add'}
+          </span>
+        </button>
+      `;
 
-      container.innerHTML = customSongLists.map(pl => {
+      const customOptionsHtml = customSongLists.map(pl => {
         const has = (pl.tracks || []).includes(currentAddToTrackId);
         const coverHtml = getPlaylistArtworkCover(pl, 'sm');
         return `
@@ -2966,6 +3033,8 @@
           </button>
         `;
       }).join('');
+
+      container.innerHTML = favOptionHtml + customOptionsHtml;
     }
 
     window.toggleTrackInPlaylist = function(plId, trackId) {
