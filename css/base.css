@@ -1566,6 +1566,23 @@
     .eq-9 { animation-delay: 0.3s !important; }
     .eq-10 { animation-delay: 0.45s !important; }
 
+    /* Taste Constellation Web Fullscreen Mode */
+    #cxWrap.cx-fullscreen-active {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      z-index: 99999 !important;
+      border-radius: 0 !important;
+      border: none !important;
+      margin: 0 !important;
+      background: radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%) !important;
+    }
+    #cxWrap.cx-fullscreen-active #cxFsExitBtn {
+      display: flex !important;
+    }
+
     /* The Deciders Ribbon & Pills */
     .decider-pill {
       display: inline-flex;

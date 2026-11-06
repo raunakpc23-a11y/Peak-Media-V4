@@ -2061,6 +2061,9 @@
                     <button id="cxFit" title="Fit constellation to view" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 transition-all flex items-center gap-1">
                       <i class="fa-solid fa-arrows-to-dot text-brand-gold"></i> <span class="hidden sm:inline">Fit</span>
                     </button>
+                    <button id="cxFullscreen" onclick="toggleConstellationFullscreen()" title="Toggle Fullscreen" aria-label="Toggle Fullscreen constellation" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-brand-gold hover:text-white transition-all flex items-center gap-1">
+                      <i class="fa-solid fa-expand" id="cxFsIcon"></i> <span class="hidden sm:inline" id="cxFsLabel">Fullscreen</span>
+                    </button>
                     <button id="cxReset" title="Reset node positions" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-400 hover:text-white transition-all">
                       <i class="fa-solid fa-rotate-left"></i>
                     </button>
@@ -2075,10 +2078,16 @@
                 <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
                 <div id="cxLegend" class="absolute top-2.5 left-2.5 flex flex-wrap gap-x-2.5 gap-y-1 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
                 
+                <!-- Fullscreen Overlay Exit Button -->
+                <button id="cxFsExitBtn" onclick="toggleConstellationFullscreen()" aria-label="Exit fullscreen" class="hidden absolute top-3 left-3 z-30 px-3 py-1.5 rounded-xl bg-black/85 hover:bg-black text-white text-xs font-bold border border-white/20 items-center gap-1.5 backdrop-blur-md shadow-2xl transition-all cursor-pointer">
+                  <i class="fa-solid fa-compress text-brand-gold"></i> <span>Exit Fullscreen</span>
+                </button>
+
                 <!-- Zoom Buttons Overlay -->
                 <div class="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
                   <button id="cxZin" aria-label="Zoom in constellation" title="Zoom in" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus"></i></button>
                   <button id="cxZout" aria-label="Zoom out constellation" title="Zoom out" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus"></i></button>
+                  <button onclick="toggleConstellationFullscreen()" aria-label="Toggle Fullscreen" title="Toggle Fullscreen" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-expand"></i></button>
                 </div>
 
                 <div id="cxPanel" class="hidden absolute bottom-2.5 left-2.5 w-[min(300px,calc(100%-1.5rem))] glass-card rounded-xl p-3 shadow-2xl text-xs z-10"></div>
