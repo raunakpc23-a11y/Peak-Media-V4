@@ -1641,44 +1641,44 @@
     <!-- TAB: MUSIC (THE LISTENING DISH) -->
     <section id="tab-music" class="tab-pane hidden fade-in space-y-4 sm:space-y-6">
       
-      <!-- MUSIC HERO (Streamlined Single-Row Header fitting all controls cleanly on mobile & desktop) -->
-      <div data-content class="relative rounded-2xl overflow-hidden p-2 sm:p-3.5 shadow-xl border border-purple-500/35 bg-gradient-to-br from-[#120a1f] via-[#090b14] to-[#04060b]">
-        <div class="relative z-10 flex items-center justify-between gap-1.5 sm:gap-3">
-          <!-- Back to Home + Music Title -->
-          <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-            <button type="button" onclick="returnFromMusic()" title="Leave tab · Return to Home" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center shrink-0 active:scale-95 transition-all" aria-label="Leave this tab and return home">
+      <!-- MUSIC HERO (Streamlined Centralized Header with Proportioned Controls & Uppercase Title) -->
+      <div data-content class="relative rounded-2xl overflow-hidden p-2.5 sm:p-3.5 shadow-xl border border-purple-500/35 bg-gradient-to-br from-[#120a1f] via-[#090b14] to-[#04060b]">
+        <div class="relative z-10 flex items-center justify-between gap-2 sm:gap-3">
+          <!-- Left: Leave Tab Button -->
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" onclick="returnFromMusic()" title="Leave tab · Return to Home" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center shrink-0 active:scale-95 transition-all" aria-label="Leave this tab and return home">
               <svg class="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-950/70 border border-purple-400/60 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(192,132,252,0.35)]">
-              <i class="fa-solid fa-record-vinyl text-base sm:text-xl text-purple-300"></i>
+          </div>
+
+          <!-- Center: Centralized Vinyl Emblem & Uppercase Title -->
+          <div class="flex items-center justify-center gap-2 min-w-0 flex-1">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-950/70 border border-purple-400/60 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(192,132,252,0.35)]">
+              <i class="fa-solid fa-record-vinyl text-base sm:text-lg text-purple-300"></i>
             </div>
-            <h1 class="text-base sm:text-lg font-display font-extrabold text-white tracking-tight truncate">
-              Music
+            <h1 class="text-sm sm:text-lg font-display font-black tracking-widest text-white uppercase truncate">
+              MUSIC
             </h1>
           </div>
 
-          <!-- Quick Controls: Shuffle, Playlists, Resume, Stop (All Compact & Fitting in One Row) -->
-          <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-            <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="h-8 sm:h-auto px-2 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
+          <!-- Right: Quick Controls: Shuffle, Playlists, Resume, Stop (Comfortably Sized & Distinct) -->
+          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="h-9 px-2.5 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
               <i class="fa-solid fa-shuffle text-purple-300 text-xs"></i> <span class="hidden sm:inline">Shuffle</span>
             </button>
-            <button type="button" onclick="openMusicCustomPlaylistsModal()" id="mHeaderPlaylistsBtn" title="Custom Playlists" class="h-8 sm:h-auto px-2 sm:px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1 shadow transition-all active:scale-95">
-              <i class="fa-solid fa-list-ul text-purple-300 text-xs"></i>
+            <button type="button" onclick="openMusicCustomPlaylistsModal()" id="mHeaderPlaylistsBtn" title="Custom Playlists" class="h-9 px-2.5 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
+              <i class="fa-solid fa-list text-purple-300 text-xs"></i>
               <span class="hidden sm:inline">Playlists</span>
-              <span class="text-[10px] font-mono font-bold text-purple-300 ml-0.5" id="musicCustomPlaylistsCountBadge">1</span>
+              <span class="text-[10px] font-mono font-bold text-purple-300 bg-purple-900/60 px-1 rounded" id="musicCustomPlaylistsCountBadge">1</span>
             </button>
-            <button type="button" id="musicResumeBtn" data-pulse onclick="musicResumeLast()" title="Resume Last Track" class="h-8 sm:h-auto px-2 sm:px-3 py-1.5 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center justify-center gap-1 shadow transition-all active:scale-95">
+            <button type="button" id="musicResumeBtn" data-pulse onclick="musicResumeLast()" title="Resume Last Track" class="h-9 px-2.5 sm:px-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center justify-center gap-1 shadow transition-all active:scale-95">
               <i class="fa-solid fa-play text-[11px]"></i> <span class="hidden sm:inline">Resume</span>
             </button>
-            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Stop Audio" aria-label="Stop Music Player" class="w-8 h-8 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
-              <i class="fa-solid fa-xmark text-xs"></i>
-            </button>
-          </div>
-        </div>
-              <i class="fa-solid fa-xmark text-xs"></i>
+            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Stop Audio" aria-label="Stop Music Player" class="w-9 h-9 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
+              <i class="fa-solid fa-xmark text-sm font-bold"></i>
             </button>
           </div>
         </div>

@@ -281,6 +281,7 @@
         else emptyEl.classList.add('hidden');
       }
     }
+    if (window.syncInstallButtonPosition) window.syncInstallButtonPosition();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

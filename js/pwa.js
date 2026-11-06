@@ -33,50 +33,54 @@
   // ── 2. Install Prompt ───────────────────────────────────────
   let deferredPrompt = null;
 
-  // Inject a floating "Install App" button into the DOM
+  // Inject a compact floating "Install App" button into the DOM (Home tab only)
   const btn = document.createElement('button');
   btn.id = 'pwaInstallBtn';
   btn.setAttribute('aria-label', 'Install Peak Media as an app');
   btn.innerHTML =
-    '<i class="fa-solid fa-circle-arrow-down" style="font-size:1rem"></i>' +
-    '<span>Install App</span>';
+    '<i class="fa-solid fa-circle-arrow-down" style="font-size:0.8rem"></i>' +
+    '<span>Install</span>';
   btn.style.cssText = [
     'position:fixed',
     'right:1rem',
-    'bottom:5.5rem',          /* above mobile bottom-nav */
+    'bottom:5rem',
     'z-index:55',
-    'display:none',           /* hidden until browser fires beforeinstallprompt */
+    'display:none',
     'align-items:center',
-    'gap:0.45rem',
-    'padding:0.55rem 1.1rem',
+    'gap:0.35rem',
+    'padding:0.35rem 0.75rem',
     'border-radius:9999px',
-    'font-size:0.8125rem',
+    'font-size:0.72rem',
     'font-weight:800',
     'letter-spacing:0.02em',
     'color:#000',
-    'background:var(--gold-hex)',
+    'background:var(--gold-hex, #F5C518)',
     'border:none',
     'cursor:pointer',
-    'box-shadow:0 6px 28px rgb(var(--gold)/.55)',
-    'transition:transform .18s, box-shadow .18s',
+    'box-shadow:0 4px 18px rgba(0,0,0,0.5)',
+    'transition:transform .18s, box-shadow .18s, opacity .18s',
   ].join(';');
 
   // Hover / active feel
   btn.addEventListener('mouseenter', function () {
-    btn.style.transform = 'scale(1.07)';
-    btn.style.boxShadow = '0 8px 36px rgb(var(--gold)/.7)';
+    btn.style.transform = 'scale(1.05)';
+    btn.style.boxShadow = '0 6px 24px rgba(245,197,24,0.6)';
   });
   btn.addEventListener('mouseleave', function () {
     btn.style.transform = '';
-    btn.style.boxShadow = '0 6px 28px rgb(var(--gold)/.55)';
+    btn.style.boxShadow = '0 4px 18px rgba(0,0,0,0.5)';
   });
 
   document.body.appendChild(btn);
 
-  // Coordinated Floating Install Button Positioning (Defect 1)
-  // Elevates button above persistent audio player bar & suppresses completely during modal dialogs
+  // Coordinated Floating Install Button Positioning
+  // Strictly only visible on Home page (tab-discover) and suppressed everywhere else
   function positionBtn() {
     if (!deferredPrompt && btn.style.display === 'none') return;
+
+    // Check if user is currently on the homepage (tab-discover)
+    const discoverPane = document.getElementById('tab-discover');
+    const isHome = discoverPane && !discoverPane.classList.contains('hidden') && discoverPane.style.display !== 'none';
 
     // Check if any full-screen modal or overlay is open
     const detailModal = document.getElementById('detailModal');
@@ -88,11 +92,13 @@
                         (surpriseModal && !surpriseModal.classList.contains('hidden')) ||
                         (onboardingOverlay && !onboardingOverlay.classList.contains('hidden'));
 
-    if (isModalOpen) {
+    if (!isHome || isModalOpen) {
       btn.style.opacity = '0';
       btn.style.pointerEvents = 'none';
+      btn.style.display = 'none';
       return;
     } else {
+      btn.style.display = 'flex';
       btn.style.opacity = '1';
       btn.style.pointerEvents = 'auto';
     }
@@ -102,10 +108,9 @@
     const isPlayerActive = miniPlayer && !miniPlayer.classList.contains('hidden');
 
     if (window.innerWidth >= 768) {
-      btn.style.bottom = isPlayerActive ? '5.5rem' : '1.5rem';
+      btn.style.bottom = isPlayerActive ? '5.2rem' : '1.5rem';
     } else {
-      // Mobile: lift above bottom-nav + persistent audio player controls (136px / 8.5rem)
-      btn.style.bottom = isPlayerActive ? '8.8rem' : '5rem';
+      btn.style.bottom = isPlayerActive ? '8.4rem' : '4.8rem';
     }
   }
 

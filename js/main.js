@@ -1439,6 +1439,12 @@
           hash = (hash * 31 + id.charCodeAt(i)) & 0xffffffff;
         }
         weight += Math.abs(hash % 40);
+
+        // Language balancing: 3x preference for English tracks to prevent Hindi catalog from dominating
+        if (song.l === 'en' || song.l !== 'hi') {
+          weight *= 3.0;
+        }
+
         return Math.max(10, weight);
       }
 
