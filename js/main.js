@@ -2526,9 +2526,13 @@
     };
 
     window.deleteCustomMediaList = function(idx) {
-      customMediaLists.splice(idx, 1);
-      saveLS('cs_custom_lists', customMediaLists);
-      window.renderCustomListsTab();
+      if (window.openDeletePlaylistConfirmModal) {
+        window.openDeletePlaylistConfirmModal('media', idx);
+      } else {
+        customMediaLists.splice(idx, 1);
+        saveLS('cs_custom_lists', customMediaLists);
+        window.renderCustomListsTab();
+      }
     };
 
     window.openCreateSongPlaylistModal = function() {
@@ -2731,16 +2735,79 @@
       showToast(`Created playlist "${name}"`, 'fa-circle-check', 'text-brand-gold');
     };
 
+    let pendingDeletePlaylistTarget = null;
+
+    window.openDeletePlaylistConfirmModal = function(typeOrId, optIdx) {
+      let type = 'music';
+      let targetId = typeOrId;
+      if (typeOrId === 'media') {
+        type = 'media';
+        targetId = optIdx;
+      }
+
+      if (type === 'music') {
+        if (targetId === 'inbuilt_favorites') return;
+        const pl = customSongLists.find(p => p.id === targetId);
+        if (!pl) return;
+        pendingDeletePlaylistTarget = { type: 'music', id: targetId, name: pl.name, count: (pl.tracks || []).length };
+      } else if (type === 'media') {
+        const lst = customMediaLists[targetId];
+        if (!lst) return;
+        pendingDeletePlaylistTarget = { type: 'media', idx: targetId, name: lst.name, count: (lst.items || []).length };
+      }
+
+      if (!pendingDeletePlaylistTarget) return;
+
+      const modal = $('deletePlaylistConfirmModal');
+      const nameEl = $('delPlaylistModalTargetName');
+      const countEl = $('delPlaylistModalTrackCount');
+      if (nameEl) nameEl.textContent = `"${pendingDeletePlaylistTarget.name}"`;
+      if (countEl) countEl.textContent = `${pendingDeletePlaylistTarget.count} ${pendingDeletePlaylistTarget.type === 'music' ? 'songs' : 'titles'}`;
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+
+    window.closeDeletePlaylistConfirmModal = function() {
+      pendingDeletePlaylistTarget = null;
+      const modal = $('deletePlaylistConfirmModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    };
+
+    window.confirmDeleteMusicPlaylist = function() {
+      if (!pendingDeletePlaylistTarget) return;
+      const target = pendingDeletePlaylistTarget;
+
+      if (target.type === 'music') {
+        const id = target.id;
+        const name = target.name || 'Playlist';
+        customSongLists = customSongLists.filter(p => p.id !== id);
+        saveLS('cs_song_lists', customSongLists);
+        renderMusicCustomPlaylistsList();
+        if (window.updateCustomPlaylistsCount) window.updateCustomPlaylistsCount();
+
+        if (activeViewingPlaylistId === id) {
+          window.closeMusicPlaylistTracksModal();
+        }
+        window.closeDeletePlaylistConfirmModal();
+        showToast(`Deleted "${name}"`, 'fa-trash', 'text-rose-400');
+      } else if (target.type === 'media') {
+        const idx = target.idx;
+        const name = target.name || 'List';
+        customMediaLists.splice(idx, 1);
+        saveLS('cs_custom_lists', customMediaLists);
+        if (window.renderCustomListsTab) window.renderCustomListsTab();
+        window.closeDeletePlaylistConfirmModal();
+        showToast(`Deleted "${name}"`, 'fa-trash', 'text-rose-400');
+      }
+    };
+
     window.deleteMusicCustomPlaylist = function(id) {
-      if (id === 'inbuilt_favorites') return;
-      const pl = customSongLists.find(p => p.id === id);
-      if (!pl) return;
-      if (!confirm(`Are you sure you want to delete "${pl.name}"?`)) return;
-      customSongLists = customSongLists.filter(p => p.id !== id);
-      saveLS('cs_song_lists', customSongLists);
-      renderMusicCustomPlaylistsList();
-      window.updateCustomPlaylistsCount();
-      showToast(`Deleted "${pl.name}"`, 'fa-trash', 'text-rose-400');
+      window.openDeletePlaylistConfirmModal('music', id);
     };
 
     window.playCustomPlaylistById = function(id, shuffle = false) {

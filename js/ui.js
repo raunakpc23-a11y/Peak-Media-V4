@@ -1306,6 +1306,11 @@
   // Esc closes any open takeover or modal, or returns to Home
   window.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
+      const delConfirmModal = document.getElementById('deletePlaylistConfirmModal');
+      if (delConfirmModal && !delConfirmModal.classList.contains('hidden')) {
+        if (window.closeDeletePlaylistConfirmModal) window.closeDeletePlaylistConfirmModal();
+        return;
+      }
       const detailModal = document.getElementById('detailModal');
       if (detailModal && !detailModal.classList.contains('hidden')) {
         if (window.closeDetailModal) window.closeDetailModal();
