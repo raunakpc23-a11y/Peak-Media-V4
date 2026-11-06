@@ -1223,9 +1223,9 @@
     let musicViewMode = 'all';
     let musicSelectedArtist = 'All';
     let songFavs = getLS('cs_song_favs', []);
-    let songAdFree = getLS('cs_song_adfree', ['lY2yjAdbvdQ', '2Vv-BfVoq4g', 'BddP6PYo2gs', 'T94PHkuydcw', 'ElZfdU54Cp8']);
+    let songAdFree = getLS('cs_song_adfree', ['34Na4j8AVgA', '2Vv-BfVoq4g', 'BddP6PYo2gs', 'T94PHkuydcw', 'ElZfdU54Cp8']);
     let customSongLists = getLS('cs_song_lists', [
-      { id: 'sl_1', name: 'Late Night Drive', tracks: ['lY2yjAdbvdQ', '2Vv-BfVoq4g', 'BddP6PYo2gs', 'T94PHkuydcw'] }
+      { id: 'sl_1', name: 'Late Night Drive', tracks: ['34Na4j8AVgA', '2Vv-BfVoq4g', 'BddP6PYo2gs', 'T94PHkuydcw'] }
     ]);
     let musicQueue = [];
     let musicQueueIdx = -1;
@@ -1486,7 +1486,19 @@
       const slice = musicFiltered.slice((musicPage - 1) * MUSIC_PAGE_SIZE, musicPage * MUSIC_PAGE_SIZE);
       const container = $('musicTracksContainer');
       if (!slice.length) {
-        container.innerHTML = `<div class="col-span-full py-12 text-center text-purple-200/60 text-sm font-mono">No celestial radio signals matched your frequency. <button type="button" onclick="resetMusicFilters()" class="text-brand-gold underline ml-1 font-bold">Reset scale</button></div>`;
+        if (musicViewMode === 'favs') {
+          container.innerHTML = `
+            <div class="col-span-full py-12 text-center space-y-3">
+              <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 text-2xl shadow-[0_0_20px_rgba(244,63,94,0.3)]">
+                <i class="fa-solid fa-heart"></i>
+              </div>
+              <h3 class="text-base font-bold text-white">Your Favorites Playlist is Empty</h3>
+              <p class="text-xs text-gray-400 max-w-sm mx-auto">Tap the heart on any song card to add it to your Favorites inbuilt playlist!</p>
+              <button type="button" onclick="setMusicViewMode('all')" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow transition-all cursor-pointer">Explore All Songs</button>
+            </div>`;
+        } else {
+          container.innerHTML = `<div class="col-span-full py-12 text-center text-purple-200/60 text-sm font-mono">No celestial radio signals matched your frequency. <button type="button" onclick="resetMusicFilters()" class="text-brand-gold underline ml-1 font-bold">Reset scale</button></div>`;
+        }
         $('musicPagination').innerHTML = '';
         return;
       }
@@ -1746,12 +1758,13 @@
       const playText = $('homeVinylPlayText');
       const statusBadge = $('homeVinylStatusBadge');
 
-      const defaultSong = { id: 'lY2yjAdbvdQ', t: 'Shawn Mendes - Treat You Better', a: 'Shawn Mendes', l: 'en', m: 'Romantic & Melody' };
+      const cleaner = window.cleanTrackTitle || (x => x);
+      const defaultSong = { id: '34Na4j8AVgA', t: 'Starboy', a: 'The Weeknd', l: 'en', m: 'Pop & Hits' };
       const s = (musicQueue && musicQueueIdx >= 0 && musicQueue[musicQueueIdx]) ? musicQueue[musicQueueIdx] : ((musicCatalog && musicCatalog[0]) || defaultSong);
       if (s) {
         if (thumb) thumb.src = `https://i.ytimg.com/vi/${s.id}/mqdefault.jpg`;
-        if (title) title.textContent = s.t;
-        if (artist) artist.textContent = `${s.a} · ${s.l === 'hi' ? 'Hindi' : 'English'} · ${s.m || 'Curated Sound'}`;
+        if (title) title.textContent = cleaner(s.t || s.rawTitle, s.a);
+        if (artist) artist.textContent = `${s.a} (${s.l === 'hi' ? 'Hindi' : 'English'})`;
       }
 
       if (disc) {
@@ -2569,7 +2582,7 @@
 
     window.updateCustomPlaylistsCount = function() {
       const badge = $('musicCustomPlaylistsCountBadge');
-      if (badge) badge.textContent = customSongLists.length;
+      if (badge) badge.textContent = customSongLists.length + 1; // Includes inbuilt Favorites playlist
     };
 
     window.openMusicCustomPlaylistsModal = function() {

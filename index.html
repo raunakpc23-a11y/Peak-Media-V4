@@ -631,24 +631,15 @@
             <div class="flex-1 min-w-0 flex flex-col justify-between gap-1.5">
               <div class="min-w-0 cursor-pointer" onclick="openMusicFromVinyl()">
                 <h3 id="homeVinylTitle" class="text-xs sm:text-sm font-bold text-white tracking-tight truncate hover:text-purple-300 transition-colors">
-                  Starboy (Official Theme)
+                  Starboy
                 </h3>
                 <p id="homeVinylArtist" class="text-[10px] text-purple-200/70 truncate mt-0.5">
-                  The Weeknd · Pop &amp; Hits
+                  The Weeknd (English)
                 </p>
               </div>
 
-              <!-- Equalizer & Audio Controls -->
+              <!-- Audio Controls (No 6 dots) -->
               <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-0.5 h-3 cursor-pointer" onclick="openMusicFromVinyl()">
-                  <span class="eq-bar eq-1"></span>
-                  <span class="eq-bar eq-2"></span>
-                  <span class="eq-bar eq-3"></span>
-                  <span class="eq-bar eq-4"></span>
-                  <span class="eq-bar eq-5"></span>
-                  <span class="eq-bar eq-6"></span>
-                </div>
-
                 <div class="flex items-center gap-2.5">
                   <button type="button" id="homeVinylPlayBtn" onclick="toggleHomeVinylPlayback(event)" class="text-brand-gold hover:text-yellow-300 hover:scale-110 active:scale-95 transition-all flex items-center gap-1 focus:outline-none" title="Play / Pause Track">
                     <i id="homeVinylPlayIcon" class="fa-solid fa-play text-sm"></i>
