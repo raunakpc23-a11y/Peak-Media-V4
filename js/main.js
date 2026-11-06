@@ -2431,8 +2431,8 @@
 
     window.renderCustomListsTab = function() {
       ensureMusicLoaded();
-      $('currWatchingCount').textContent = currWatchingTitles.length;
-      $('watchLaterListCount').textContent = wishlistTitles.length;
+      if ($('currWatchingCount')) $('currWatchingCount').textContent = currWatchingTitles.length;
+      if ($('watchLaterListCount')) $('watchLaterListCount').textContent = wishlistTitles.length;
       const cwBox = $('currWatchingList');
       if (cwBox) {
         cwBox.innerHTML = currWatchingTitles.length
