@@ -1241,7 +1241,12 @@
       try {
         const parsed = typeof window.PEAK_SONGS_DATA === 'object' ? window.PEAK_SONGS_DATA : JSON.parse(window.PEAK_SONGS_LAZY_JSON || '{"playlists":[],"songs":[]}');
         musicPlaylists = parsed.playlists || [];
-        musicCatalog = parsed.songs || [];
+        const rawSongs = parsed.songs || [];
+        const cleaner = window.cleanTrackTitle || (x => x);
+        musicCatalog = rawSongs.map(s => {
+          s.t = cleaner(s.t || s.rawTitle, s.a);
+          return s;
+        });
       } catch (e) {
         musicPlaylists = [];
         musicCatalog = [];

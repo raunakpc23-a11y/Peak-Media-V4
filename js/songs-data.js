@@ -5,36 +5,66 @@
   function cleanTrackTitle(title, artist) {
     if (!title) return '';
     let t = String(title).trim();
-    
-    // 1. If pipe separated: e.g. "O Sajni Re | Arijit Singh | Ram Sampath" -> "O Sajni Re"
-    if (t.includes(' | ')) {
-      const parts = t.split(' | ').map(p => p.trim()).filter(Boolean);
-      if (parts.length > 1) {
-        if (artist && parts[0].toLowerCase() === artist.toLowerCase()) {
+
+    // 1. Remove leading format tags like 'Video: ', 'Full Video: ', 'LYRICAL: ', 'Lyrical | '
+    t = t.replace(/^(?:video|full\s*video|lyrical|audio|official\s*video|official\s*music\s*video|hd\s*video)\s*[:|–—\-]\s*/i, '');
+
+    // 2. Remove leading all-caps prefix like 'ROCKSTAR: '
+    t = t.replace(/^[A-Z0-9\s&]{3,20}\s*:\s*(?=[A-Za-z0-9])/i, '');
+
+    // 3. Strip all bracketed/parenthetical metadata anywhere in the string:
+    // e.g. (Official Music Video), (Official Video), [Official Audio], (Lyric), (Lyrics), (Lyrical), (Explicit), (Clean), (Audio), (Full Video Song), (Visualizer)
+    t = t.replace(/\s*[([](?:Official\s*(?:Music\s*)?(?:Video|Audio|Song|Track|Lyrical|Lyrics|HD\s*Video)?|Full\s*Video(?:\s*Song)?|Full\s*Song|Lyrics?\s*(?:Video)?|Audio(?:\s*Song)?|Visualizer|HD|4K|Explicit|Clean|Lyric|Lyrical|PURPOSE\s*:\s*The\s*Movement|Live(?:\s*At\s*[^)\]]+)?|from\s*[^)\]]+|Remastered(?:\s*\d+)?|Slowed(?:\s*\+\s*reverb)?)[)\]]/gi, '');
+
+    // 4. Strip features: 'ft. ...', 'feat. ...', 'featuring ...' (both inside or outside parentheses/brackets)
+    t = t.replace(/\s*[([]?\s*(?:ft\.?|feat\.?|featuring)\s+[^)\]]+[)\]]?/gi, '');
+
+    // 5. Pipe separation: e.g. 'O Sajni Re | Arijit Singh | Ram Sampath' -> take first segment
+    if (t.includes('|')) {
+      const parts = t.split('|').map(p => p.trim()).filter(Boolean);
+      if (/^(?:lyrical|video|audio|full\s*song)$/i.test(parts[0]) && parts[1]) {
+        t = parts[1];
+      } else if (artist && parts[0].toLowerCase() === artist.toLowerCase() && parts[1]) {
+        t = parts[1];
+      } else {
+        t = parts[0];
+      }
+    }
+
+    // 6. Dash separation:
+    if (t.includes(' - ') || t.includes(' – ') || t.includes(' — ')) {
+      const parts = t.split(/\s*[-–—]\s*/).map(p => p.trim()).filter(Boolean);
+      if (parts.length >= 2) {
+        const p0 = parts[0].toLowerCase();
+        const art = (artist || '').toLowerCase();
+        if (art && (art.includes(p0) || p0.includes(art))) {
+          // 'Artist - Song' -> take rest
           t = parts.slice(1).join(' - ');
         } else {
-          t = parts[0];
+          // If right side is a movie/promo tag
+          if (/^(?:bhediya|animal|jawan|pathaan|fighter|stree\s*2|war|sultan|dangal|brahmastra|kabir\s*singh|laila\s*majnu|official|full\s*video|lyrical|video)/i.test(parts[1])) {
+            t = parts[0];
+          } else if (parts[0].length <= 22 && !/(?:video|remix|feat|ft)/i.test(parts[0])) {
+            // If first part is artist
+            t = parts.slice(1).join(' - ');
+          }
         }
       }
     }
-    
-    // 2. If artist prefix with dash: e.g. "Arijit Singh - O Sajni Re"
+
+    // 7. Strip leading artist name if still prepended: 'Arijit Singh - Song'
     if (artist && t.toLowerCase().startsWith(artist.toLowerCase())) {
-      t = t.slice(artist.length).replace(/^[\s\-:|–—]+/, '').trim();
+      t = t.slice(artist.length).replace(/^[\s\-–—|:]+/, '').trim();
     }
-    
-    // 3. General pattern "Artist - Song" where left side matches artist or partial artist
-    const dashMatch = t.match(/^([^-–—|:]+)\s*[-–—|:]\s*(.+)$/);
-    if (dashMatch && artist) {
-      const p1 = dashMatch[1].trim().toLowerCase();
-      const art = artist.toLowerCase();
-      if (art.includes(p1) || p1.includes(art)) {
-        t = dashMatch[2].trim();
-      }
-    }
-    
-    // 4. Clean superfluous video/audio labels
-    t = t.replace(/\s*[([{\-–|]\s*(?:Official\s*(?:Music\s*)?(?:Video|Audio|Song|Track|Lyrical|Lyrics)?|Full\s*Video|Full\s*Song|Lyrics\s*Video|HD|4K|Audio\s*Song|Visualizer)\s*[)\]}]?/gi, '').trim();
+
+    // 8. Strip trailing phrases like ' Full Video', ' Video Song', ' Song with Lyrics', ' Cover Song', ' Full Song'
+    t = t.replace(/\s+(?:Full\s*Video(?:\s*Song)?|Video\s*Song|Song\s*with\s*Lyrics|Full\s*Song|Cover\s*Song|Lyrical)\b/gi, '');
+
+    // 9. Strip movie names that follow in the same segment like 'Om Shanti Om', 'Jab We Met' if preceded by spaces
+    t = t.replace(/\s+(?:Om\s*Shanti\s*Om|Jab\s*We\s*Met|M\.S\.\s*DHONI|Kabir\s*Singh|Bhool\s*Bhulaiyaa\s*2)\b.*$/i, '');
+
+    // 10. Strip lingering empty brackets and trailing delimiters
+    t = t.replace(/\s*\(\s*\)/g, '').replace(/\s*\[\s*\]/g, '').replace(/[\s\-–—|:]+$/, '').trim();
 
     return t || title;
   }
@@ -66,5 +96,6 @@
     enumerable: true,
     get: getSongsData
   });
+  window.cleanTrackTitle = cleanTrackTitle;
   window.PEAK_SONGS_LAZY_JSON = null;
 })();
