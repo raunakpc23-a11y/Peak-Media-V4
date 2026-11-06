@@ -749,7 +749,7 @@
     var origSelectDeciderTool = window.selectDeciderTool;
     window.selectDeciderTool = function (tool) {
       if (!tool || tool === 'mood') tool = 'roulette';
-      var curActiveStage = document.querySelector('.decider-stage-panel:not(.hidden)');
+      var curActiveStage = document.querySelector('#decidersStageViewport .decider-stage-panel:not(.hidden)');
       var targetStage = document.getElementById('stage-' + tool) || document.getElementById('stage-roulette');
 
       // Update glyph button states
@@ -762,7 +762,7 @@
       if (curActiveStage && targetStage && curActiveStage !== targetStage) {
         swap(curActiveStage, targetStage);
       } else if (targetStage) {
-        document.querySelectorAll('.decider-stage-panel').forEach(function (p) { p.classList.add('hidden'); });
+        document.querySelectorAll('#decidersStageViewport .decider-stage-panel').forEach(function (p) { p.classList.add('hidden'); });
         targetStage.classList.remove('hidden');
       }
 

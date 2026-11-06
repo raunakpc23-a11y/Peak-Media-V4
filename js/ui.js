@@ -535,12 +535,12 @@
     if (railBtn) railBtn.classList.add('active');
 
     // 2. Smoothly swap stage panels or fall back to immediate toggle
-    const curActiveStage = document.querySelector('.decider-stage-panel:not(.hidden)');
+    const curActiveStage = document.querySelector('#decidersStageViewport .decider-stage-panel:not(.hidden)');
     const targetStage = document.getElementById('stage-' + tool) || document.getElementById('stage-roulette');
     if (window.Motion && window.Motion.swap && curActiveStage && targetStage && curActiveStage !== targetStage) {
       window.Motion.swap(curActiveStage, targetStage);
     } else {
-      document.querySelectorAll('.decider-stage-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('#decidersStageViewport .decider-stage-panel').forEach(p => p.classList.add('hidden'));
       if (targetStage) {
         targetStage.classList.remove('hidden');
       }
