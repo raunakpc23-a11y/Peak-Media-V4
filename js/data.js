@@ -13202,6 +13202,11 @@ Odd Taxi|2021|87
       'The Empire Strikes Back': 'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
       'Star Wars Episode V': 'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
 
+      // --- Harakiri (1962) Verified Official Keyart ---
+      'movie:Harakiri': 'https://upload.wikimedia.org/wikipedia/en/f/fd/Harakiri_Poster.jpg',
+      'show:Harakiri': 'https://upload.wikimedia.org/wikipedia/en/f/fd/Harakiri_Poster.jpg',
+      'Harakiri': 'https://upload.wikimedia.org/wikipedia/en/f/fd/Harakiri_Poster.jpg',
+
       // --- TV Series & Miniseries (100% Accurate Verified TVMaze Original Keyart) ---
       'show:24': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2330.jpg',
       'movie:24': 'https://static.tvmaze.com/uploads/images/original_untouched/0/2330.jpg',
@@ -13840,7 +13845,7 @@ Odd Taxi|2021|87
       'movie:Full Metal Jacket': 'https://upload.wikimedia.org/wikipedia/en/9/99/Full_Metal_Jacket_poster.jpg',
       'movie:Scarface': 'https://upload.wikimedia.org/wikipedia/en/7/79/Scarface_-_1983_film.jpg',
       'movie:Ran': 'https://upload.wikimedia.org/wikipedia/en/5/58/Ran_poster.jpg',
-      'movie:Harakiri': 'https://upload.wikimedia.org/wikipedia/en/a/a2/Harakiri_poster.jpg',
+      'movie:Harakiri': 'https://upload.wikimedia.org/wikipedia/en/f/fd/Harakiri_Poster.jpg',
       'movie:Seven Samurai': 'https://upload.wikimedia.org/wikipedia/en/c/c8/Seven_Samurai_Poster.png',
       'movie:High and Low': 'https://upload.wikimedia.org/wikipedia/en/d/d3/High_and_Low_poster.jpg',
       'movie:Yojimbo': 'https://upload.wikimedia.org/wikipedia/en/b/bc/Yojimbo_1961.jpg',
