@@ -201,21 +201,7 @@
       width: 100% !important;
     }
 
-    /* Taste Constellation Web Fullscreen Mode */
-    #cxWrap.cx-fullscreen-active {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      max-height: 100vh !important;
-      z-index: 99999 !important;
-      border-radius: 0 !important;
-      margin: 0 !important;
-      border: none !important;
-    }
-    #cxWrap.cx-fullscreen-active #cxFsExitBtn {
-      display: flex !important;
-    }
+
     #tab-movies h1, #tab-shows h1, #tab-categories h1, #tab-universes h1,
     #tab-duel h1, #tab-match h1, #tab-ricochet h1, #tab-marathon h1, #tab-compat h1, #tab-admin h2, #tab-admin h3 {
       font-size: 1.35rem !important;

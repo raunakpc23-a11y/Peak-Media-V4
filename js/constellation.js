@@ -66,7 +66,28 @@
         scored.push({ c, score: sum / Math.sqrt(seedItems.length) + pop, per });
       }
       scored.sort((a, b) => b.score - a.score);
-      const ghosts = scored.slice(0, GH);
+      // Balanced genre diversity formula: cap recommendations per genre so no single category dominates
+      const ghosts = [];
+      const genreCounts = {};
+      const maxPerGenre = 2; // Maximum 2 suggestions per genre for rich, balanced diversity
+      for (const item of scored) {
+        const g = (item.c && item.c.genre) || 'Other';
+        genreCounts[g] = genreCounts[g] || 0;
+        if (genreCounts[g] < maxPerGenre) {
+          ghosts.push(item);
+          genreCounts[g]++;
+          if (ghosts.length >= GH) break;
+        }
+      }
+      // Fill any remaining slots up to GH from next best scoring items
+      if (ghosts.length < GH) {
+        for (const item of scored) {
+          if (!ghosts.includes(item)) {
+            ghosts.push(item);
+            if (ghosts.length >= GH) break;
+          }
+        }
+      }
 
       const nodes = [], by = {}, links = [], lk = new Set();
       const mk = (item, kind, extra) => {

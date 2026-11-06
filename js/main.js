@@ -1435,15 +1435,18 @@
         let weight = 22;
         const artist = (song.a || '').toLowerCase();
         const title = (song.t || '').toLowerCase();
-        // High-streaming artist footprint
+        // High-streaming artist and global anthem footprint
         const starArtists = [
           'arijit singh', 'shreya ghoshal', 'diljit dosanjh', 'ar rahman', 'the weeknd',
           'taylor swift', 'drake', 'eminem', 'coldplay', 'billie eilish', 'bruno mars',
           'ed sheeran', 'dua lipa', 'badshah', 'hanumankind', 'atif aslam', 'sonu nigam',
-          'pritam', 'sachin-jigar', 'vishal & sheykhar', 'anuv jain', 'karan aujla', 'jubin nautiyal'
+          'pritam', 'sachin-jigar', 'vishal & sheykhar', 'anuv jain', 'karan aujla', 'jubin nautiyal',
+          'post malone', 'travis scott', 'kendrick lamar', 'ariana grande', 'justin bieber',
+          'sza', 'sabrina carpenter', 'olivia rodrigo', 'sidhu moose wala', 'charlie puth',
+          'alan walker', 'shawn mendes', 'maroon 5', 'imagine dragons', 'queen'
         ];
         if (starArtists.some(star => artist.includes(star) || title.includes(star))) {
-          weight += 38;
+          weight += 55;
         }
         if (/title track|theme|anthem|remix|official|feat|ft\./i.test(title)) {
           weight += 14;
@@ -1507,20 +1510,17 @@
               </div>
             </div>
             <div onclick="playSongById('${s.id}')" class="min-w-0 flex-1 cursor-pointer">
-              <div class="text-xs sm:text-sm font-bold text-white group-hover:text-purple-300 truncate">${globalIdx}. ${esc(s.t)}</div>
-              <div class="flex flex-wrap items-center gap-1.5 text-[11px] text-gray-400 mt-0.5">
-                <span class="font-semibold text-purple-200/90">${esc(s.a)}</span>
-                <span>·</span>
-                <span class="px-1.5 py-0.2 rounded bg-purple-500/10 border border-purple-500/25 text-[10px] text-purple-300 font-mono">${s.l === 'hi' ? 'Hindi' : 'English'}</span>
-                <span>·</span>
-                <span class="text-[10px] text-gray-500 truncate max-w-[110px] font-mono">${esc(plName)}</span>
+              <div class="text-sm sm:text-base font-bold text-white group-hover:text-purple-300 truncate leading-snug">${esc(s.t)}</div>
+              <div class="flex items-center gap-2 mt-0.5 min-w-0">
+                <span class="text-xs sm:text-[13px] font-semibold text-purple-200/90 truncate">${esc(s.a)}</span>
+                <span class="px-1.5 py-0.2 rounded bg-purple-500/15 border border-purple-500/30 text-[10px] text-purple-300 font-mono shrink-0">${s.l === 'hi' ? 'Hindi' : 'English'}</span>
               </div>
             </div>
             <div class="flex items-center gap-1 shrink-0">
-              <button type="button" onclick="openAddToCustomPlaylistModal('${s.id}')" title="Add to Custom Playlist" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-500/20 text-gray-300 hover:text-purple-200 flex items-center justify-center text-xs transition-colors"><svg class="w-3.5 h-3.5 text-purple-300 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmAddTrackPlaylistIcon"></use></svg></button>
-              <button type="button" onclick="playNextSongById('${s.id}')" title="Play Next in Orbit" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-500/20 text-gray-300 hover:text-purple-200 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-arrow-turn-down"></i></button>
-              <button type="button" onclick="queueSongById('${s.id}')" title="Queue Satellite" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-500 hover:text-white text-gray-300 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-plus"></i></button>
-              <button type="button" onclick="toggleSongFav('${s.id}')" title="Favorite Starlight Track" class="w-8 h-8 rounded-lg ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-heart"></i></button>
+              <button type="button" onclick="openAddToCustomPlaylistModal('${s.id}')" title="Add to Custom Playlist" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 hover:bg-purple-500/20 text-gray-300 hover:text-purple-200 flex items-center justify-center text-xs transition-colors"><svg class="w-3.5 h-3.5 text-purple-300 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmAddTrackPlaylistIcon"></use></svg></button>
+              <button type="button" onclick="playNextSongById('${s.id}')" title="Play Next in Orbit" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 hover:bg-purple-500/20 text-gray-300 hover:text-purple-200 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-arrow-turn-down text-[11px]"></i></button>
+              <button type="button" onclick="queueSongById('${s.id}')" title="Queue Satellite" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 hover:bg-purple-500 hover:text-white text-gray-300 flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-plus text-[11px]"></i></button>
+              <button type="button" onclick="toggleSongFav('${s.id}')" title="Favorite Starlight Track" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-heart text-[11px]"></i></button>
             </div>
           </div>`;
       }).join('');

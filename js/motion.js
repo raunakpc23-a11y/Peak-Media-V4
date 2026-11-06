@@ -748,15 +748,15 @@
     // 2. The Deciders Tool Swapper
     var origSelectDeciderTool = window.selectDeciderTool;
     window.selectDeciderTool = function (tool) {
-      if (!tool) tool = 'mood';
+      if (!tool || tool === 'mood') tool = 'roulette';
       var curActiveStage = document.querySelector('.decider-stage-panel:not(.hidden)');
-      var targetStage = document.getElementById('stage-' + tool);
+      var targetStage = document.getElementById('stage-' + tool) || document.getElementById('stage-roulette');
 
       // Update glyph button states
       document.querySelectorAll('.deciders-tools-rail .decider-glyph-btn').forEach(function (btn) {
         btn.classList.remove('active');
       });
-      var railBtn = document.getElementById('deciderRailBtn-' + tool);
+      var railBtn = document.getElementById('deciderRailBtn-' + tool) || document.getElementById('deciderRailBtn-roulette');
       if (railBtn) railBtn.classList.add('active');
 
       if (curActiveStage && targetStage && curActiveStage !== targetStage) {
@@ -767,11 +767,8 @@
       }
 
       // Run tool-specific initializers from existing codebase
-      if (tool === 'mood') {
+      if (tool === 'roulette' || tool === 'mood') {
         if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 40);
-      } else if (tool === 'roulette') {
-        if (window.spinSurpriseWheel) window.spinSurpriseWheel();
-        else if (window.spinMoodDialRoulette) window.spinMoodDialRoulette();
       } else if (tool === 'swipe') {
         if (window.initSwipeStage) window.initSwipeStage();
       } else if (tool === 'duel') {

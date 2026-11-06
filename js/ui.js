@@ -524,19 +524,19 @@
     window.returnToOpeningPage('homeProfileVaultCard');
   };
 
-  // The Deciders Tool Switcher (Left rail 10-glyph switcher + viewport stage panels)
+  // The Deciders Tool Switcher (Left rail 8-glyph switcher + viewport stage panels)
   window.selectDeciderTool = function(tool) {
-    if (!tool) tool = 'mood';
+    if (!tool || tool === 'mood') tool = 'roulette';
     // 1. Update rail glyph buttons
     document.querySelectorAll('.deciders-tools-rail .decider-glyph-btn').forEach(btn => {
       btn.classList.remove('active');
     });
-    const railBtn = document.getElementById('deciderRailBtn-' + tool);
+    const railBtn = document.getElementById('deciderRailBtn-' + tool) || document.getElementById('deciderRailBtn-roulette');
     if (railBtn) railBtn.classList.add('active');
 
     // 2. Smoothly swap stage panels or fall back to immediate toggle
     const curActiveStage = document.querySelector('.decider-stage-panel:not(.hidden)');
-    const targetStage = document.getElementById('stage-' + tool);
+    const targetStage = document.getElementById('stage-' + tool) || document.getElementById('stage-roulette');
     if (window.Motion && window.Motion.swap && curActiveStage && targetStage && curActiveStage !== targetStage) {
       window.Motion.swap(curActiveStage, targetStage);
     } else {
@@ -547,11 +547,8 @@
     }
 
     // 3. Tool specific initializers
-    if (tool === 'mood') {
+    if (tool === 'roulette' || tool === 'mood') {
       if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 40);
-    } else if (tool === 'roulette') {
-      if (window.initCinemaRouletteStage) window.initCinemaRouletteStage();
-      else if (window.runCinemaRouletteSpin) window.runCinemaRouletteSpin();
     } else if (tool === 'swipe') {
       if (window.initSwipeStage) window.initSwipeStage();
     } else if (tool === 'duel') {
