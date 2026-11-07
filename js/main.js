@@ -4381,6 +4381,16 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
       const cfg = getAdminSupaConfig();
       if (!cfg.url || !cfg.key) return;
 
+      // Initialize the official Supabase client instance if the CDN library is loaded
+      if (window.supabase && typeof window.supabase.createClient === 'function' && !window.supabaseClient) {
+        try {
+          window.supabaseClient = window.supabase.createClient(cfg.url, cfg.key);
+          console.log('%c[Supabase]%c Official SDK v2 successfully detected and initialized.', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
+        } catch (e) {
+          console.warn('[Supabase] Client initialization notice:', e.message);
+        }
+      }
+
       const deviceStr = getTelemetryDeviceString();
       const locStr = getTelemetryLocationString();
 
