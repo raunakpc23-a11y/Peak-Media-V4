@@ -3285,8 +3285,8 @@
     // Global Supabase Cloud Constants for GitHub Deployment:
     // Paste your Supabase Project URL and public Anon Key here once in index.html
     // (or use the "Copy GitHub Config" button in Admin) so ALL visitors automatically sync to your table!
-    window.PEAK_SUPABASE_URL = window.PEAK_SUPABASE_URL || '';
-    window.PEAK_SUPABASE_ANON_KEY = window.PEAK_SUPABASE_ANON_KEY || '';
+    window.PEAK_SUPABASE_URL = window.PEAK_SUPABASE_URL || 'https://mopcwypckzysfcqwrpnt.supabase.co';
+    window.PEAK_SUPABASE_ANON_KEY = window.PEAK_SUPABASE_ANON_KEY || 'sb_publishable_iS-vTMxwF1B5_1GdtlC7PA_LE98f-lo';
 
     const PROFILE_THEMES_LIST = [
       ['blood', 'Crimson Eclipse', '#ef4444', 'Red Embers (Default)'],
@@ -3967,9 +3967,11 @@
     }
     function getAdminSupaConfig() {
       const localCfg = getLS('cs_supabase_cfg', { url: '', key: '', passkey: 'peak2026' });
+      const rawUrl = (localCfg.url && !localCfg.url.includes('YOUR-PROJECT-ID')) ? localCfg.url : (window.PEAK_SUPABASE_URL || '');
+      const rawKey = (localCfg.key && !localCfg.key.includes('YOUR-ANON-KEY')) ? localCfg.key : (window.PEAK_SUPABASE_ANON_KEY || '');
       return {
-        url: normalizeSupabaseUrl(localCfg.url || window.PEAK_SUPABASE_URL || ''),
-        key: (localCfg.key || window.PEAK_SUPABASE_ANON_KEY || '').trim(),
+        url: normalizeSupabaseUrl(rawUrl),
+        key: rawKey.trim(),
         passkey: localCfg.passkey || 'peak2026'
       };
     }
@@ -4379,7 +4381,10 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
 
     window.initSupabaseVisitorSession = async function() {
       const cfg = getAdminSupaConfig();
-      if (!cfg.url || !cfg.key) return;
+      if (!cfg.url || !cfg.key) {
+        console.warn('[Supabase] No credentials configured. Ensure supabase-config.js has your Project URL and anon key.');
+        return;
+      }
 
       // Initialize the official Supabase client instance if the CDN library is loaded
       if (window.supabase && typeof window.supabase.createClient === 'function' && !window.supabaseClient) {
@@ -4389,6 +4394,8 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
         } catch (e) {
           console.warn('[Supabase] Client initialization notice:', e.message);
         }
+      } else if (!window.supabase) {
+        console.info('[Supabase] SDK CDN script not loaded yet (using direct REST client fallback).');
       }
 
       const deviceStr = getTelemetryDeviceString();
@@ -4416,8 +4423,14 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
               currentSessionId = data[0].id;
               sessionStorage.setItem('pm_supa_session_id', currentSessionId);
             }
+            console.log('%c[Supabase]%c Visitor session started & telemetry active (Session #' + (currentSessionId || 'OK') + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
+          } else {
+            const errBody = await res.text().catch(() => '');
+            console.warn('[Supabase] HTTP ' + res.status + ' syncing visitor session:', errBody);
           }
-        } catch (_) {}
+        } catch (err) {
+          console.warn('[Supabase] Network error connecting to database:', err.message);
+        }
       }
 
       if (!window._supaHeartbeatInterval) {
