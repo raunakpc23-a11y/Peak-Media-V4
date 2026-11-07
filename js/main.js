@@ -1224,9 +1224,8 @@
     let musicSelectedArtist = 'All';
     let songFavs = getLS('cs_song_favs', []);
     let songAdFree = getLS('cs_song_adfree', ['34Na4j8AVgA', '2Vv-BfVoq4g', 'BddP6PYo2gs', 'T94PHkuydcw', 'ElZfdU54Cp8']);
-    let customSongLists = getLS('cs_song_lists', [
-      { id: 'sl_1', name: 'Late Night Drive', tracks: ['34Na4j8AVgA', '2Vv-BfVoq4g', 'BddP6PYo2gs', 'T94PHkuydcw'] }
-    ]);
+    let customSongLists = getLS('cs_song_lists', []).filter(l => l && l.id !== 'sl_1' && l.name !== 'Late Night Drive');
+    saveLS('cs_song_lists', customSongLists);
     let musicQueue = [];
     let musicQueueIdx = -1;
     let musicShuffle = false;
@@ -2423,11 +2422,10 @@
     // ---------------------------------------------------------
     // 6. CUSTOM LISTS, PLAYLISTS & SERVERLESS URL SHARING (#share=...)
     // ---------------------------------------------------------
-    let currWatchingTitles = getLS('cs_watching', ['Breaking Bad', 'Arcane']).filter(t => globalDatabase[t]);
-    let customMediaLists = getLS('cs_custom_lists', [
-      { id: 'ml_1', name: 'Weekend Mind-Benders', items: ['Inception', 'Interstellar', 'Shutter Island', 'Dark'] },
-      { id: 'ml_2', name: 'All-Time Hindi Gems', items: ['3 Idiots', 'Tumbbad', 'Gangs of Wasseypur', '12th Fail'] }
-    ]);
+    let currWatchingTitles = getLS('cs_watching', []).filter(t => globalDatabase[t] && t !== 'Breaking Bad' && t !== 'Arcane');
+    saveLS('cs_watching', currWatchingTitles);
+    let customMediaLists = getLS('cs_custom_lists', []).filter(l => l && l.id !== 'ml_1' && l.id !== 'ml_2' && l.name !== 'Weekend Mind-Benders' && l.name !== 'All-Time Hindi Gems');
+    saveLS('cs_custom_lists', customMediaLists);
 
     window.renderCustomListsTab = function() {
       ensureMusicLoaded();
@@ -2443,7 +2441,7 @@
 
       const mlContainer = $('customMediaListsContainer');
       if (mlContainer) {
-        mlContainer.innerHTML = customMediaLists.map((lst, idx) => `
+        mlContainer.innerHTML = customMediaLists.length ? customMediaLists.map((lst, idx) => `
           <div class="glass-card rounded-2xl p-5 border border-white/10 space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -2458,12 +2456,12 @@
             <div class="flex flex-wrap gap-1.5">
               ${(lst.items || []).map(t => `<span onclick="openDetailModal('${t.replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded-lg bg-black/50 border border-white/10 text-xs text-gray-200 hover:border-brand-gold cursor-pointer">${esc(t)}</span>`).join('')}
             </div>
-          </div>`).join('');
+          </div>`).join('') : '<div class="text-xs text-gray-500 py-6 text-center border border-dashed border-white/10 rounded-2xl">No custom lists yet. Tap "+ New List" above to create one.</div>';
       }
 
       const slContainer = $('customSongListsContainer');
       if (slContainer) {
-        slContainer.innerHTML = customSongLists.map((pl, idx) => `
+        slContainer.innerHTML = customSongLists.length ? customSongLists.map((pl, idx) => `
           <div class="glass-card rounded-2xl p-5 border border-white/10 space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -2481,7 +2479,7 @@
                 return s ? `<div onclick="playSongById('${s.id}')" class="p-1.5 rounded hover:bg-white/5 cursor-pointer truncate"><i class="fa-solid fa-music text-brand-gold mr-1.5"></i>${esc(s.t)}</div>` : '';
               }).join('')}
             </div>
-          </div>`).join('');
+          </div>`).join('') : '<div class="text-xs text-gray-500 py-6 text-center border border-dashed border-white/10 rounded-2xl">No custom playlists yet. Tap "Playlists" above to create one.</div>';
       }
     };
 

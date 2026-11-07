@@ -46,13 +46,21 @@
       if (S.wish) wishlistTitles.forEach(t => { const i = globalDatabase[t]; if (i && !have.has(t)) { have.add(t); seedItems.push({ i, kind: 'wish', w: .7 }); } });
       S.explored.forEach(t => { const i = globalDatabase[t]; if (i && !have.has(t)) { have.add(t); seedItems.push({ i, kind: 'explored', w: .9 }); } });
 
-      if (!seedItems.length) {
-        const starter = ['Inception', 'The Dark Knight', 'Interstellar', 'Parasite', 'Breaking Bad'];
-        starter.forEach(t => { const i = globalDatabase[t]; if (i) seedItems.push({ i, kind: 'seed', w: 1 }); });
-      }
-
       const empty = !seedItems.length;
-      const emptyEl = document.getElementById('cxEmpty'); if (emptyEl) emptyEl.classList.add('hidden');
+      const emptyEl = document.getElementById('cxEmpty');
+      if (emptyEl) emptyEl.classList.toggle('hidden', !empty);
+
+      if (empty) {
+        S.nodes = [];
+        S.links = [];
+        S.by = {};
+        S.sel = null;
+        if (ctx) ctx.clearRect(0, 0, S.W || 400, S.H || 300);
+        legend();
+        sub(0, 0);
+        panel();
+        return;
+      }
 
       // ghost candidates scored against every seed
       const scored = [];
@@ -160,11 +168,16 @@
     }
 
     function fit() {
+      resize();
       if (!S.nodes.length) { S.k = 1; S.tx = S.ty = 0; return; }
       let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
       S.nodes.forEach(n => { x0 = Math.min(x0, n.x); x1 = Math.max(x1, n.x); y0 = Math.min(y0, n.y); y1 = Math.max(y1, n.y); });
-      const k = Math.max(.35, Math.min(1.5, Math.min(S.W / (x1 - x0 + 200), S.H / (y1 - y0 + 200))));
+      const spanX = Math.max(x1 - x0, 100);
+      const spanY = Math.max(y1 - y0, 100);
+      const pad = 140;
+      const k = Math.max(.35, Math.min(1.5, Math.min(Math.max(200, S.W - pad) / spanX, Math.max(200, S.H - pad) / spanY)));
       S.k = k; S.tx = -(x0 + x1) / 2 * k; S.ty = -(y0 + y1) / 2 * k;
+      run();
     }
     const sx = x => x * S.k + S.W / 2 + S.tx, sy = y => y * S.k + S.H / 2 + S.ty;
 
@@ -307,29 +320,25 @@
     function toggleConstellationFullscreen() {
       const wrap = document.getElementById('cxWrap');
       if (!wrap) return;
-      const isFs = wrap.classList.contains('cx-fullscreen-active') || document.fullscreenElement === wrap;
+      const isFs = wrap.classList.contains('cx-fullscreen-active');
       const fsIcon = document.getElementById('cxFsIcon');
       const fsLabel = document.getElementById('cxFsLabel');
       const exitBtn = document.getElementById('cxFsExitBtn');
 
       if (!isFs) {
-        // Enter fullscreen
+        // Enter fullscreen (Clean in-app fullscreen mode with custom notification)
         wrap.classList.add('cx-fullscreen-active');
-        if (wrap.requestFullscreen) {
-          wrap.requestFullscreen().catch(() => {});
-        } else if (wrap.webkitRequestFullscreen) {
-          wrap.webkitRequestFullscreen();
-        }
         if (fsIcon) { fsIcon.classList.remove('fa-expand'); fsIcon.classList.add('fa-compress'); }
         if (fsLabel) fsLabel.textContent = 'Exit';
         if (exitBtn) { exitBtn.classList.remove('hidden'); exitBtn.classList.add('flex'); }
+        if (window.showFullscreenNotice) {
+          window.showFullscreenNotice('Constellation Fullscreen · Exit button is located at the top right (or press Esc)');
+        }
       } else {
         // Exit fullscreen
         wrap.classList.remove('cx-fullscreen-active');
         if (document.fullscreenElement && document.exitFullscreen) {
           document.exitFullscreen().catch(() => {});
-        } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
         }
         if (fsIcon) { fsIcon.classList.remove('fa-compress'); fsIcon.classList.add('fa-expand'); }
         if (fsLabel) fsLabel.textContent = 'Fullscreen';
@@ -338,7 +347,11 @@
       setTimeout(() => {
         resize();
         fit();
-      }, 60);
+      }, 50);
+      setTimeout(() => {
+        resize();
+        fit();
+      }, 160);
     }
     window.toggleConstellationFullscreen = toggleConstellationFullscreen;
 
@@ -346,6 +359,16 @@
     if (fsBtn) fsBtn.onclick = toggleConstellationFullscreen;
     const fsExitBtn = document.getElementById('cxFsExitBtn');
     if (fsExitBtn) fsExitBtn.onclick = toggleConstellationFullscreen;
+
+    // Handle Esc key to cleanly exit constellation fullscreen
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        const wrap = document.getElementById('cxWrap');
+        if (wrap && wrap.classList.contains('cx-fullscreen-active')) {
+          toggleConstellationFullscreen();
+        }
+      }
+    });
 
     document.addEventListener('fullscreenchange', () => {
       const wrap = document.getElementById('cxWrap');

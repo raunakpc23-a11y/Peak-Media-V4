@@ -1370,8 +1370,23 @@
   }
 
   // -------------------------------------------------------------
-  // Global App Fullscreen Controller
+  // Global App Fullscreen Controller & Bespoke Notice Banner
   // -------------------------------------------------------------
+  let fsNoticeTimer = null;
+  window.showFullscreenNotice = function(msg) {
+    const el = document.getElementById('pmFullscreenNotice');
+    if (!el) return;
+    const txt = document.getElementById('pmFullscreenNoticeText');
+    if (txt && msg) txt.innerHTML = msg;
+    el.classList.remove('opacity-0', '-translate-y-6');
+    el.classList.add('opacity-100', 'translate-y-0');
+    if (fsNoticeTimer) clearTimeout(fsNoticeTimer);
+    fsNoticeTimer = setTimeout(() => {
+      el.classList.remove('opacity-100', 'translate-y-0');
+      el.classList.add('opacity-0', '-translate-y-6');
+    }, 3800);
+  };
+
   window.toggleAppFullscreen = function() {
     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
       if (document.documentElement.requestFullscreen) {
@@ -1390,13 +1405,17 @@
 
   document.addEventListener('fullscreenchange', () => {
     const icon = document.getElementById('appFsIcon');
-    if (!icon) return;
     if (document.fullscreenElement) {
-      icon.classList.remove('fa-expand');
-      icon.classList.add('fa-compress');
+      if (icon) {
+        icon.classList.remove('fa-expand');
+        icon.classList.add('fa-compress');
+      }
+      window.showFullscreenNotice('Fullscreen Active · Exit button is located at the top right (or press <strong>Esc</strong>)');
     } else {
-      icon.classList.remove('fa-compress');
-      icon.classList.add('fa-expand');
+      if (icon) {
+        icon.classList.remove('fa-compress');
+        icon.classList.add('fa-expand');
+      }
     }
   });
 

@@ -15277,7 +15277,7 @@ Odd Taxi|2021|87
             <h2 class="text-base sm:text-lg font-display font-bold text-white">${genre}</h2>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 sm:gap-4">
-            ${items.map(m => createCardHTML(m, true)).join('')}
+            ${items.map(m => createCardHTML(m, false)).join('')}
           </div>
         </div>`;
       attachThumbObservers(catList);
