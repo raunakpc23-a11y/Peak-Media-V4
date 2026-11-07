@@ -872,6 +872,21 @@
     }
   });
 
+  window.openPrivacyPolicyModal = function() {
+    const m = document.getElementById('privacyPolicyModal');
+    if (m) {
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+  };
+  window.closePrivacyPolicyModal = function() {
+    const m = document.getElementById('privacyPolicyModal');
+    if (m) {
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+  };
+
   switchTab('discover');
 
   // ---------- themes ----------

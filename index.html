@@ -71,6 +71,7 @@
   <link rel="stylesheet" href="css/base.css?v=5.1">
   <link rel="stylesheet" href="css/widgets.css?v=5.1">
   <link rel="stylesheet" href="css/responsive.css?v=5.1">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body data-theme="blood" data-mode="dark" class="mode-dark min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased bg-[#0c0203] text-slate-100" style="background-color: #0c0203; color: #f3f4f6;">
 
@@ -2595,6 +2596,8 @@
         <span>·</span>
         <a href="#play" onclick="switchTab('play')" class="hover:text-white transition-colors">Deciders</a>
         <span>·</span>
+        <button type="button" onclick="openPrivacyPolicyModal()" class="hover:text-white transition-colors cursor-pointer text-xs text-slate-400">Privacy Policy</button>
+        <span>·</span>
         <span>© 2026 Peak Media. All rights reserved.</span>
       </div>
     </div>
@@ -2713,7 +2716,45 @@
     </div>
   </div>
 
+  <!-- DISCRETE PRIVACY POLICY MODAL -->
+  <div id="privacyPolicyModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md items-center justify-center p-4">
+    <div class="relative w-full max-w-lg rounded-2xl theme-card-bg border border-white/15 p-6 shadow-2xl max-h-[85vh] overflow-y-auto space-y-4 text-left">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved text-brand-gold text-lg"></i>
+          <h2 class="text-base sm:text-lg font-bold text-white">Privacy &amp; Data Policy</h2>
+        </div>
+        <button type="button" onclick="closePrivacyPolicyModal()" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
 
+      <div class="text-xs text-gray-300 space-y-3 leading-relaxed">
+        <p>Peak Media values your privacy. We collect minimal, anonymized interaction metrics solely to maintain platform performance, fix playback issues, and improve curated movie, series, and music recommendations.</p>
+        
+        <div class="rounded-xl bg-black/40 border border-white/10 p-3 space-y-1.5 text-[11px]">
+          <div class="font-bold text-brand-gold uppercase tracking-wider text-[10px]">What We Record</div>
+          <ul class="list-disc list-inside space-y-1 text-gray-300">
+            <li><strong>Device Specifications:</strong> Viewport dimensions and platform for responsive UI tuning.</li>
+            <li><strong>General Region:</strong> Coarse timezone and locale for language and streaming availability.</li>
+            <li><strong>Session Duration:</strong> Heartbeat timestamps to gauge app engagement.</li>
+            <li><strong>Media Interactions:</strong> Movie, TV show, and music playback counts to rank trending vault titles.</li>
+            <li><strong>Library Activity:</strong> Watchlist and favorites updates stored securely under your account.</li>
+          </ul>
+        </div>
+
+        <p>All cloud storage is secured via <strong>Row Level Security (RLS)</strong> on Supabase. Your private library and interactions cannot be viewed or modified by third parties. We do not sell personal data or inject third-party advertising trackers.</p>
+      </div>
+
+      <div class="border-t border-white/10 pt-3 flex justify-end">
+        <button type="button" onclick="closePrivacyPolicyModal()" class="px-4 py-2 rounded-xl bg-brand-gold text-black font-bold text-xs hover:bg-yellow-400 transition-all">
+          Understood
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="supabase-config.js"></script>
   <script src="js/data.js?v=5.1"></script>
   <script src="js/constellation.js?v=5.1"></script>
   <script src="js/hub-duel.js?v=5.1"></script>

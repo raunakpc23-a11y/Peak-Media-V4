@@ -14,6 +14,7 @@ desktop.ini
 # Environment / local settings
 .env
 .env.local
+supabase-config.js
 
 # IDE and Editor directories
 .vscode/

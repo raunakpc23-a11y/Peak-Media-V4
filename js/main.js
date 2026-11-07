@@ -1640,6 +1640,9 @@
       $('musicMiniPlayer').classList.remove('hidden');
       isPlayingMusic = true;
       updateMiniPlayerUI();
+      if (window.logUserActivity) {
+        window.logUserActivity('song_play', s.id, s.t || s.rawTitle, { artist: s.a });
+      }
       if (ytReady && ytPlayer && ytPlayer.loadVideoById) {
         ytPlayer.loadVideoById(s.id);
       } else {
@@ -4351,6 +4354,112 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
         if (!silent) showToast('Could not read visitor_logs — run the Copy Supabase SQL script in Supabase SQL Editor.', 'fa-triangle-exclamation', 'text-rose-400');
       }
     };
+
+    // ---------------------------------------------------------
+    // 7-CORE TELEMETRY ENGINE (DEVICE, LOCATION, TIME, MOVIES, SHOWS, WATCHLIST, SONGS)
+    // ---------------------------------------------------------
+    let currentSessionId = sessionStorage.getItem('pm_supa_session_id') || null;
+    let sessionSeconds = parseInt(sessionStorage.getItem('pm_supa_time_spent') || '0', 10);
+
+    function getTelemetryDeviceString() {
+      const isMobile = window.innerWidth < 768 || /Mobi|Android|iPhone/i.test(navigator.userAgent);
+      const plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || 'Web';
+      return `${isMobile ? 'Mobile' : 'Desktop'} (${plat}, ${window.innerWidth}x${window.innerHeight})`;
+    }
+
+    function getTelemetryLocationString() {
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+        const lang = navigator.language || 'en';
+        return `${tz} [${lang}]`;
+      } catch (_) {
+        return 'Unknown Location';
+      }
+    }
+
+    window.initSupabaseVisitorSession = async function() {
+      const cfg = getAdminSupaConfig();
+      if (!cfg.url || !cfg.key) return;
+
+      const deviceStr = getTelemetryDeviceString();
+      const locStr = getTelemetryLocationString();
+
+      if (!currentSessionId) {
+        try {
+          const res = await fetch(cfg.url + '/rest/v1/visitor_sessions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': cfg.key,
+              'Authorization': 'Bearer ' + cfg.key,
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({
+              device: deviceStr,
+              location: locStr,
+              time_spent_seconds: sessionSeconds
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data[0] && data[0].id) {
+              currentSessionId = data[0].id;
+              sessionStorage.setItem('pm_supa_session_id', currentSessionId);
+            }
+          }
+        } catch (_) {}
+      }
+
+      if (!window._supaHeartbeatInterval) {
+        window._supaHeartbeatInterval = setInterval(async () => {
+          sessionSeconds += 45;
+          sessionStorage.setItem('pm_supa_time_spent', sessionSeconds);
+          if (!currentSessionId) return;
+          try {
+            await fetch(`${cfg.url}/rest/v1/visitor_sessions?id=eq.${currentSessionId}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': cfg.key,
+                'Authorization': 'Bearer ' + cfg.key,
+                'Prefer': 'return=minimal'
+              },
+              body: JSON.stringify({
+                time_spent_seconds: sessionSeconds,
+                last_active_at: new Date().toISOString()
+              })
+            });
+          } catch (_) {}
+        }, 45000);
+      }
+    };
+
+    window.logUserActivity = async function(actionType, itemId, itemTitle, extraMeta = {}) {
+      const cfg = getAdminSupaConfig();
+      if (!cfg.url || !cfg.key) return;
+      try {
+        await fetch(cfg.url + '/rest/v1/user_activity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': cfg.key,
+            'Authorization': 'Bearer ' + cfg.key,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            session_id: currentSessionId || undefined,
+            action_type: actionType,
+            item_id: String(itemId || itemTitle),
+            item_title: String(itemTitle || itemId),
+            extra_meta: extraMeta
+          })
+        });
+      } catch (_) {}
+    };
+
+    setTimeout(() => {
+      if (window.initSupabaseVisitorSession) window.initSupabaseVisitorSession();
+    }, 1500);
 
     window.exportAdminTelemetryJSON = function() {
       ensureMusicLoaded();

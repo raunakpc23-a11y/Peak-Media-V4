@@ -14341,6 +14341,9 @@ Odd Taxi|2021|87
     function toggleWishlist(title, event) {
       if (event) event.stopPropagation();
       const exists = wishlistTitles.includes(title);
+      if (window.logUserActivity) {
+        window.logUserActivity(exists ? 'watchlist_remove' : 'watchlist_add', title, title);
+      }
       if (exists) {
         wishlistTitles = wishlistTitles.filter(t => t !== title);
         showToast(`Removed "${title}" from Watchlist`, "fa-heart-crack", "text-gray-400", () => {
@@ -15544,6 +15547,10 @@ Odd Taxi|2021|87
     async function openDetailModal(title) {
       const item = globalDatabase[title];
       if (!item) return;
+      if (window.logUserActivity) {
+        const act = item.type === 'show' ? 'show_click' : 'movie_click';
+        window.logUserActivity(act, item.title, item.cleanName || item.title, { genre: item.genre, rating: item.rating, year: item.year });
+      }
       const modal = document.getElementById('detailModal');
       const content = document.getElementById('detailModalContent');
       const fallbackSvg = generateStylizedPosterDataURI(item);
