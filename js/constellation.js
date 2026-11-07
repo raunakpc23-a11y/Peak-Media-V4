@@ -315,34 +315,55 @@
     cv.addEventListener('wheel', e => { e.preventDefault(); const [px, py] = pos(e); zoom(e.deltaY < 0 ? 1.12 : .89, px, py); }, { passive: false });
     const zin = document.getElementById('cxZin'); if (zin) zin.onclick = () => zoom(1.25);
     const zout = document.getElementById('cxZout'); if (zout) zout.onclick = () => zoom(.8);
-    const fitBtn = document.getElementById('cxFit'); if (fitBtn) fitBtn.onclick = fit;
 
     function toggleConstellationFullscreen() {
       const wrap = document.getElementById('cxWrap');
       if (!wrap) return;
-      const isFs = wrap.classList.contains('cx-fullscreen-active');
+      const isFs = wrap.classList.contains('cx-fullscreen-active') || document.fullscreenElement === wrap;
       const fsIcon = document.getElementById('cxFsIcon');
       const fsLabel = document.getElementById('cxFsLabel');
       const exitBtn = document.getElementById('cxFsExitBtn');
+      const fsNotice = document.getElementById('cxFsNotice');
 
       if (!isFs) {
-        // Enter fullscreen (Clean in-app fullscreen mode with custom notification)
+        // Enter fullscreen
         wrap.classList.add('cx-fullscreen-active');
         if (fsIcon) { fsIcon.classList.remove('fa-expand'); fsIcon.classList.add('fa-compress'); }
         if (fsLabel) fsLabel.textContent = 'Exit';
         if (exitBtn) { exitBtn.classList.remove('hidden'); exitBtn.classList.add('flex'); }
+        if (wrap.requestFullscreen) {
+          wrap.requestFullscreen().catch(() => {});
+        } else if (wrap.webkitRequestFullscreen) {
+          wrap.webkitRequestFullscreen();
+        }
+        if (fsNotice) {
+          fsNotice.classList.remove('opacity-0', '-translate-y-4');
+          fsNotice.classList.add('opacity-100', 'translate-y-0');
+          setTimeout(() => {
+            if (fsNotice) {
+              fsNotice.classList.remove('opacity-100', 'translate-y-0');
+              fsNotice.classList.add('opacity-0', '-translate-y-4');
+            }
+          }, 3500);
+        }
         if (window.showFullscreenNotice) {
-          window.showFullscreenNotice('Constellation Fullscreen · Exit button is located at the top right (or press Esc)');
+          window.showFullscreenNotice('Constellation Fullscreen · Exit button is located at top right (or press Esc)');
         }
       } else {
         // Exit fullscreen
         wrap.classList.remove('cx-fullscreen-active');
         if (document.fullscreenElement && document.exitFullscreen) {
           document.exitFullscreen().catch(() => {});
+        } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
         }
         if (fsIcon) { fsIcon.classList.remove('fa-compress'); fsIcon.classList.add('fa-expand'); }
         if (fsLabel) fsLabel.textContent = 'Fullscreen';
         if (exitBtn) { exitBtn.classList.add('hidden'); exitBtn.classList.remove('flex'); }
+        if (fsNotice) {
+          fsNotice.classList.remove('opacity-100', 'translate-y-0');
+          fsNotice.classList.add('opacity-0', '-translate-y-4');
+        }
       }
       setTimeout(() => {
         resize();
@@ -374,6 +395,13 @@
       const wrap = document.getElementById('cxWrap');
       if (!wrap) return;
       if (!document.fullscreenElement && wrap.classList.contains('cx-fullscreen-active')) {
+        toggleConstellationFullscreen();
+      }
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+      const wrap = document.getElementById('cxWrap');
+      if (!wrap) return;
+      if (!document.webkitFullscreenElement && wrap.classList.contains('cx-fullscreen-active')) {
         toggleConstellationFullscreen();
       }
     });

@@ -264,7 +264,10 @@
       window.renderCategoriesTab();
     }
     if (key === 'web' && window.cxOpen) setTimeout(window.cxOpen, 30);
-    if (key === 'mood' && window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 30);
+    if (key === 'play' || key === 'decide' || key === 'mood') {
+      if (window.selectDeciderTool) window.selectDeciderTool('roulette');
+      if (window.initCinemaMoodDial) setTimeout(window.initCinemaMoodDial, 20);
+    }
     if (key === 'music' && window.initMusicVault) window.initMusicVault();
     if (key === 'profile' || key === 'hub') {
       // Ensure Library/Shelves immediately loads on the very first click
@@ -856,7 +859,8 @@
     if (customSection) customSection.classList.toggle('hidden', view !== 'all' && view !== 'custom');
   };
 
-  window.toggleHubOverflowMenu = function() {
+  window.toggleHubOverflowMenu = function(e) {
+    if (e && e.stopPropagation) e.stopPropagation();
     const m = document.getElementById('hubOverflowMenu');
     if (m) m.classList.toggle('hidden');
   };

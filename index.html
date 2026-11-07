@@ -1760,37 +1760,37 @@
     <!-- TAB: LIBRARY (INTEGRATED DECK: SHELVES, TOP 3 PASSES, PROFILE, TASTE DNA, COLLECTION) -->
     <section id="tab-profile" class="tab-pane hidden fade-in space-y-6">
       <!-- Library Header: Title + Spine View Icon + Back up and Restore -->
-      <div class="border-b border-white/10 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round leave-tab-btn" aria-label="Leave this tab and return home">
+      <div class="border-b border-white/10 pb-3 sm:pb-4 flex items-center justify-between gap-2.5">
+        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <button type="button" onclick="returnToOpeningPage()" title="Leave tab · Back to Home" class="leave round leave-tab-btn shrink-0" aria-label="Leave this tab and return home">
             <svg class="leave-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5" fill="none" stroke="url(#pm-cyan-violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M9 12h12M17 8l4 4-4 4" fill="none" stroke="url(#pm-cyan-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <h1 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight flex items-center gap-2.5">
-            <span id="hubAvatarBadge" class="w-8 h-8 rounded-xl bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center text-sm shadow-inner shrink-0"></span>
-            <i class="fa-solid fa-bookmark text-brand-gold text-xl sm:text-2xl"></i>
-            <span id="hubTitleText">Library</span>
+          <h1 class="text-xl sm:text-3xl font-display font-bold text-white tracking-tight flex items-center gap-2 truncate">
+            <span id="hubAvatarBadge" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center text-xs sm:text-sm shadow-inner shrink-0"></span>
+            <i class="fa-solid fa-bookmark text-brand-gold text-lg sm:text-2xl shrink-0"></i>
+            <span id="hubTitleText" class="truncate">Library</span>
           </h1>
         </div>
 
-        <div class="flex items-center gap-2">
-          <!-- Back up and Restore -->
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Back up and Restore (Compact & Single-Line on Mobile) -->
           <div class="relative shrink-0">
-            <button type="button" id="hubOverflowMenuBtn" onclick="toggleHubOverflowMenu()" class="brass-backup-chest text-xs" title="Back up and Restore" aria-label="Back up and Restore">
-              <i class="fa-solid fa-box-archive text-brand-gold text-sm"></i>
-              <span class="hidden sm:inline">Back up and Restore</span>
+            <button type="button" id="hubOverflowMenuBtn" onclick="toggleHubOverflowMenu(event)" class="brass-backup-chest text-xs px-2.5 sm:px-3 py-1.5 flex items-center gap-1.5 shadow-sm" title="Back up and Restore" aria-label="Back up and Restore">
+              <i class="fa-solid fa-box-archive text-brand-gold text-xs sm:text-sm"></i>
+              <span class="text-xs font-bold text-gray-200">Backup</span>
             </button>
-            <div id="hubOverflowMenu" class="hidden absolute right-0 top-11 z-30 w-52 rounded-2xl theme-card-bg border border-amber-500/35 shadow-2xl p-2 space-y-1 animate-fadeIn">
-              <button type="button" onclick="exportUserData(); toggleHubOverflowMenu();" class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
+            <div id="hubOverflowMenu" class="hidden absolute right-0 top-full mt-2 z-50 w-52 rounded-2xl theme-card-bg border border-amber-500/35 shadow-2xl p-2 space-y-1 animate-fadeIn">
+              <button type="button" onclick="exportUserData(); toggleHubOverflowMenu(event);" class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
                 <i class="fa-solid fa-download text-brand-gold w-4"></i> <span>Back up</span>
               </button>
               <label class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 cursor-pointer transition-colors">
                 <i class="fa-solid fa-upload text-cyan-400 w-4"></i> <span>Restore</span>
-                <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event); toggleHubOverflowMenu();">
+                <input type="file" accept=".json" class="hidden" aria-label="Import backup file" onchange="importUserData(event); toggleHubOverflowMenu(event);">
               </label>
-              <button type="button" onclick="openThemeEffectsModal(event); toggleHubOverflowMenu();" class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
+              <button type="button" onclick="openThemeEffectsModal(event); toggleHubOverflowMenu(event);" class="w-full px-3 py-2 rounded-xl text-left text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
                 <i class="fa-solid fa-palette text-purple-400 w-4"></i> <span>Style</span>
               </button>
             </div>
@@ -2058,9 +2058,6 @@
                     <button type="button" onclick="setTasteDnaFilter('wish')" id="tasteDnaFilter-wish" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">Watchlist</button>
                   </div>
                   <div class="flex items-center gap-1.5">
-                    <button id="cxFit" title="Fit constellation to view" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 transition-all flex items-center gap-1">
-                      <i class="fa-solid fa-arrows-to-dot text-brand-gold"></i> <span class="hidden sm:inline">Fit</span>
-                    </button>
                     <button id="cxFullscreen" onclick="toggleConstellationFullscreen()" title="Toggle Fullscreen" aria-label="Toggle Fullscreen constellation" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-brand-gold hover:text-white transition-all flex items-center gap-1">
                       <i class="fa-solid fa-expand" id="cxFsIcon"></i> <span class="hidden sm:inline" id="cxFsLabel">Fullscreen</span>
                     </button>
@@ -2077,6 +2074,13 @@
               <div id="cxWrap" class="relative rounded-2xl overflow-hidden border border-white/10 h-72 sm:h-96 w-full" style="background: radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%)">
                 <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
                 <div id="cxLegend" class="absolute top-2.5 left-2.5 flex flex-wrap gap-x-2.5 gap-y-1 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
+
+                <!-- In-Viewport Fullscreen Banner (Active during element fullscreen) -->
+                <div id="cxFsNotice" class="pointer-events-none fixed sm:absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 px-4 py-2 rounded-full bg-black/90 backdrop-blur-xl border border-brand-gold/50 shadow-2xl text-white text-xs font-semibold transition-all duration-300 opacity-0 -translate-y-4">
+                  <span class="w-2 h-2 rounded-full bg-brand-gold animate-ping"></span>
+                  <i class="fa-solid fa-expand text-brand-gold"></i>
+                  <span>Constellation Fullscreen · Exit button is located at top right (or press <strong>Esc</strong>)</span>
+                </div>
                 
                 <!-- Fullscreen Overlay Exit Button (Prominently placed at top-right of panel) -->
                 <button id="cxFsExitBtn" onclick="toggleConstellationFullscreen()" aria-label="Exit fullscreen" class="hidden absolute top-3 right-3 sm:top-4 sm:right-4 z-30 px-3.5 py-1.5 rounded-xl bg-black/90 hover:bg-black text-white text-xs font-bold border border-amber-400/40 items-center gap-1.5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.8)] transition-all cursor-pointer">

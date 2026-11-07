@@ -1242,7 +1242,9 @@
         musicPlaylists = parsed.playlists || [];
         const rawSongs = parsed.songs || [];
         const cleaner = window.cleanTrackTitle || (x => x);
-        musicCatalog = rawSongs.map(s => {
+        const dead = JSON.parse(localStorage.getItem('pm_dead_songs') || '[]');
+        const deadSet = new Set(dead);
+        musicCatalog = rawSongs.filter(s => !deadSet.has(s.id)).map(s => {
           s.t = cleaner(s.t || s.rawTitle, s.a);
           return s;
         });
@@ -1611,8 +1613,20 @@
             onError: e => {
               // Auto-skip on videos that block embedding (errors 100, 101, 150)
               const cur = musicQueue[musicQueueIdx];
-              showToast(`Video blocked embedding (${e.data}) - auto-skipping to next song`, 'fa-forward-fast', 'text-amber-400');
-              setTimeout(() => window.musicNext(), 900);
+              if (cur && cur.id) {
+                try {
+                  const dead = JSON.parse(localStorage.getItem('pm_dead_songs') || '[]');
+                  if (!dead.includes(cur.id)) {
+                    dead.push(cur.id);
+                    localStorage.setItem('pm_dead_songs', JSON.stringify(dead));
+                  }
+                  if (Array.isArray(musicCatalog)) {
+                    musicCatalog = musicCatalog.filter(track => track.id !== cur.id);
+                  }
+                } catch (_) {}
+              }
+              showToast(`Track unavailable (${e.data}) - auto-skipping to next song`, 'fa-forward-fast', 'text-amber-400');
+              setTimeout(() => window.musicNext(), 700);
             }
           }
         });
@@ -1624,7 +1638,6 @@
       if (!s) return;
       saveLS('cs_last_song', s.id);
       $('musicMiniPlayer').classList.remove('hidden');
-      $('musicVideoDock').classList.remove('hidden');
       isPlayingMusic = true;
       updateMiniPlayerUI();
       if (ytReady && ytPlayer && ytPlayer.loadVideoById) {
