@@ -2334,45 +2334,92 @@
     </button>
   </nav>
 
-  <!-- PERSISTENT MINI-PLAYER BAR (2-Row Mobile-First Layout so Zero Controls Are Ever Cut Off + Prominent Cut Button) -->
-  <div id="musicMiniPlayer" class="fixed inset-x-0 bottom-16 md:bottom-0 z-40 hidden glass-nav border-t border-brand-gold/35 px-2.5 sm:px-6 py-2 shadow-2xl">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-      <!-- Top Row on Mobile: Track Info + Primary Play/Skip + Prominent Cut Button -->
-      <div class="flex items-center justify-between gap-2 min-w-0 flex-1">
-        <div class="flex items-center gap-2.5 min-w-0 flex-1">
-          <img id="mpThumb" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%231f2937'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='16' fill='%239ca3af'>🎵</text></svg>" alt="Peak Music" class="w-10 h-10 rounded-xl object-cover border border-white/15 shrink-0 cursor-pointer" onclick="toggleMusicVideoDock()">
-          <div class="min-w-0 flex-1">
-            <div id="mpTitle" class="text-xs sm:text-sm font-bold text-white truncate cursor-pointer hover:text-brand-gold" onclick="switchTab('music')">Select a song to play</div>
-            <div id="mpArtist" class="text-[10px] sm:text-[11px] text-gray-400 truncate">Music Vault</div>
-          </div>
-        </div>
+  <!-- PERSISTENT SPOTIFY-INSPIRED AUDIO PLAYER BAR -->
+  <div id="musicMiniPlayer" class="fixed inset-x-0 bottom-16 md:bottom-0 z-40 hidden glass-nav border-t border-brand-gold/35 px-3 sm:px-6 py-2 shadow-2xl backdrop-blur-xl bg-[#0c0203]/95">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5">
 
-        <!-- Primary Transport + Unmistakable Cut Button (Always Visible on Phone & PC) -->
-        <div class="flex items-center gap-1 shrink-0">
-          <button type="button" onclick="musicPrev()" title="Previous Track" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-backward-step"></i></button>
-          <button type="button" onclick="musicTogglePlay()" id="mpPlayBtn" title="Play / Pause" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-gold text-black font-black flex items-center justify-center text-xs sm:text-sm shadow-md"><i class="fa-solid fa-play"></i></button>
-          <button type="button" onclick="musicNext()" title="Next Track" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-forward-step"></i></button>
-          <button type="button" onclick="closeMusicMiniPlayer()" title="Stop Music Player" aria-label="Stop Music Player" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600/25 hover:bg-red-600 text-red-400 hover:text-white border-2 border-red-500/70 flex items-center justify-center shadow-md shadow-red-600/25 transition-all active:scale-95">
-            <i class="fa-solid fa-xmark text-lg sm:text-xl font-black"></i>
+      <!-- LEFT: Track Metadata (Thumb, Title, Artist) -->
+      <div class="flex items-center gap-3 min-w-0 w-full md:w-1/4 shrink-0">
+        <img id="mpThumb" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%231f2937'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='16' fill='%239ca3af'>🎵</text></svg>" alt="Peak Music" class="w-11 h-11 rounded-xl object-cover border border-white/15 shrink-0 cursor-pointer shadow-md" onclick="toggleMusicVideoDock()" title="Click to view Video Dock">
+        <div class="min-w-0 flex-1">
+          <div id="mpTitle" class="text-xs sm:text-sm font-bold text-white truncate cursor-pointer hover:text-brand-gold transition-colors" onclick="switchTab('music')">Select a song to play</div>
+          <div id="mpArtist" class="text-[10px] sm:text-[11px] text-gray-400 truncate">Music Vault</div>
+        </div>
+      </div>
+
+      <!-- CENTER: Primary Transport Controls + Spotify/YT Music Scrub Bar (The Line) -->
+      <div class="flex flex-col items-center justify-center w-full md:w-2/4 max-w-xl gap-1">
+        <!-- Controls row -->
+        <div class="flex items-center justify-center gap-2 sm:gap-3">
+          <!-- Loop Button (Toggles Off -> All -> Single Track without annoying toasts) -->
+          <button type="button" onclick="musicToggleRepeat()" id="mpRepeatBtn" title="Loop Mode" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 flex items-center justify-center text-xs transition-colors">
+            <i class="fa-solid fa-repeat"></i>
+          </button>
+
+          <!-- Previous Track -->
+          <button type="button" onclick="musicPrev()" title="Previous Track (←)" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-xs active:scale-95 transition-all">
+            <i class="fa-solid fa-backward-step"></i>
+          </button>
+
+          <!-- Play / Pause -->
+          <button type="button" onclick="musicTogglePlay()" id="mpPlayBtn" title="Play / Pause (Spacebar)" class="w-10 h-10 rounded-full bg-brand-gold text-black font-black flex items-center justify-center text-sm shadow-lg shadow-brand-gold/25 hover:scale-105 active:scale-95 transition-all">
+            <i class="fa-solid fa-play ml-0.5"></i>
+          </button>
+
+          <!-- Next Track -->
+          <button type="button" onclick="musicNext()" title="Next Track (→)" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-xs active:scale-95 transition-all">
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+
+          <!-- Video Dock Toggle -->
+          <button type="button" onclick="toggleMusicVideoDock()" id="mpVideoBtn" title="Show / Hide Video Player" class="px-2 h-7 rounded-lg bg-white/10 hover:bg-white/15 text-[10px] sm:text-[11px] font-bold text-brand-gold flex items-center gap-1 transition-colors">
+            <i class="fa-solid fa-tv text-xs"></i><span class="hidden sm:inline">Video</span>
           </button>
         </div>
+
+        <!-- The Line: Interactive Scrub Bar & Time Counters -->
+        <div class="w-full flex items-center gap-2 text-[10px] sm:text-[11px] font-mono text-gray-400 select-none px-1">
+          <span id="mpCurrentTime" class="min-w-[32px] text-right">0:00</span>
+          <div class="relative flex-1 flex items-center h-4 group cursor-pointer">
+            <!-- Background Track -->
+            <div class="w-full h-1 bg-white/15 rounded-full overflow-hidden group-hover:h-1.5 transition-all">
+              <!-- Filled Progress -->
+              <div id="mpProgressFilled" class="h-full bg-gradient-to-r from-brand-gold to-amber-400 rounded-full w-0 transition-[width] duration-150"></div>
+            </div>
+            <!-- Range Slider Input -->
+            <input type="range" id="mpProgressBar" min="0" max="100" value="0" step="0.1" 
+                   oninput="window.onMusicScrubInput(this.value)" 
+                   onchange="window.onMusicScrubChange(this.value)"
+                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                   title="Seek position (Left / Right arrow)">
+          </div>
+          <span id="mpTotalTime" class="min-w-[32px]">0:00</span>
+        </div>
       </div>
 
-      <!-- Secondary Actions Row (Shuffle, Repeat, Fav, Video Dock, Queue, YouTube) -->
-      <div class="flex items-center justify-between sm:justify-end gap-1.5 border-t sm:border-t-0 border-white/10 pt-1.5 sm:pt-0 shrink-0">
-        <div class="flex items-center gap-1">
-          <button type="button" onclick="musicToggleShuffle()" id="mpShuffleBtn" title="Shuffle" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 flex items-center justify-center text-xs"><i class="fa-solid fa-shuffle"></i></button>
-          <button type="button" onclick="addCurrentPlayingSongToPlaylist()" id="mpAddPlaylistBtn" title="Add to Playlist" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-purple-300 hover:text-white flex items-center justify-center text-xs transition-colors"><svg class="w-4 h-4 text-purple-300" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmAddTrackPlaylistIcon"></use></svg></button>
-          <button type="button" onclick="musicToggleRepeat()" id="mpRepeatBtn" title="Repeat Mode" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 flex items-center justify-center text-xs"><i class="fa-solid fa-repeat"></i></button>
-          <button type="button" onclick="musicToggleCurrentFav()" id="mpFavBtn" title="Favorite Song" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center text-xs"><i class="fa-solid fa-heart"></i></button>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <button type="button" onclick="toggleMusicVideoDock()" id="mpVideoBtn" title="Show/Hide Official Video Player" class="px-2.5 h-8 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-bold text-brand-gold flex items-center gap-1"><i class="fa-solid fa-tv"></i><span>Video</span></button>
-          <button type="button" onclick="openMusicSleepModal()" id="mpSleepBtn" title="Sleep Timer" class="px-2.5 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 text-[11px] font-semibold flex items-center gap-1 transition-colors"><i class="fa-solid fa-moon text-indigo-400"></i><span id="mpSleepLbl">Sleep</span></button>
-          <button type="button" onclick="toggleMusicQueueDrawer()" title="Queue" class="px-2.5 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 text-[11px] font-semibold flex items-center gap-1"><i class="fa-solid fa-list-ol"></i><span>Queue</span></button>
-          <a id="mpYtLink" href="https://www.youtube.com" target="_blank" rel="noopener" title="Open on YouTube" class="w-8 h-8 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 flex items-center justify-center text-xs"><i class="fa-brands fa-youtube"></i></a>
-        </div>
+      <!-- RIGHT / FAR CORNER: Add to Playlist, Favorite, YouTube, and Stop/Close -->
+      <div class="flex items-center justify-end gap-1.5 w-full md:w-1/4 shrink-0">
+        <!-- Add to Playlist (Far Corner) -->
+        <button type="button" onclick="addCurrentPlayingSongToPlaylist()" id="mpAddPlaylistBtn" title="Add to Playlist" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-purple-300 hover:text-white flex items-center justify-center text-xs transition-colors">
+          <svg class="w-4 h-4 text-purple-300" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmAddTrackPlaylistIcon"></use></svg>
+        </button>
+
+        <!-- Favorite (Far Corner) -->
+        <button type="button" onclick="musicToggleCurrentFav()" id="mpFavBtn" title="Favorite Song" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center text-xs transition-colors">
+          <i class="fa-solid fa-heart"></i>
+        </button>
+
+        <!-- YouTube Link -->
+        <a id="mpYtLink" href="https://www.youtube.com" target="_blank" rel="noopener" title="Open on YouTube" class="w-8 h-8 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 flex items-center justify-center text-xs transition-colors">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+
+        <!-- Stop / Close Player -->
+        <button type="button" onclick="closeMusicMiniPlayer()" title="Stop Music Player" aria-label="Stop Music Player" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-red-600/25 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/70 flex items-center justify-center shadow-md shadow-red-600/25 transition-all active:scale-95 ml-1">
+          <i class="fa-solid fa-xmark text-sm font-black"></i>
+        </button>
       </div>
+
     </div>
   </div>
 

@@ -1730,7 +1730,21 @@
       const isFav = songFavs.includes(s.id);
       if ($('mpFavBtn')) $('mpFavBtn').className = `w-9 h-9 rounded-xl flex items-center justify-center text-xs ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10'}`;
       if ($('mpShuffleBtn')) $('mpShuffleBtn').className = `w-9 h-9 rounded-xl flex items-center justify-center text-xs ${musicShuffle ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-400'}`;
-      if ($('mpRepeatBtn')) $('mpRepeatBtn').className = `w-9 h-9 rounded-xl flex items-center justify-center text-xs ${musicRepeat !== 'off' ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-400'}`;
+      if ($('mpRepeatBtn')) {
+        if (musicRepeat === 'all') {
+          $('mpRepeatBtn').className = 'w-8 h-8 rounded-lg bg-brand-gold/20 border border-brand-gold/50 text-brand-gold flex items-center justify-center text-xs transition-colors';
+          $('mpRepeatBtn').innerHTML = '<i class="fa-solid fa-repeat"></i>';
+          $('mpRepeatBtn').title = 'Loop: All Tracks';
+        } else if (musicRepeat === 'one') {
+          $('mpRepeatBtn').className = 'w-8 h-8 rounded-lg bg-brand-gold text-black font-bold flex items-center justify-center text-xs transition-colors shadow-sm';
+          $('mpRepeatBtn').innerHTML = '<i class="fa-solid fa-repeat text-[10px]"></i><span class="text-[9px] font-black leading-none ml-0.5">1</span>';
+          $('mpRepeatBtn').title = 'Loop: Single Track';
+        } else {
+          $('mpRepeatBtn').className = 'w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 flex items-center justify-center text-xs transition-colors';
+          $('mpRepeatBtn').innerHTML = '<i class="fa-solid fa-repeat"></i>';
+          $('mpRepeatBtn').title = 'Loop: Off';
+        }
+      }
       if ($('mpYtLink')) $('mpYtLink').href = `https://www.youtube.com/watch?v=${s.id}`;
       if ($('ytDockExternalLink')) $('ytDockExternalLink').href = `https://www.youtube.com/watch?v=${s.id}`;
       if ($('musicQueueCountLbl')) $('musicQueueCountLbl').textContent = musicQueue.length;
@@ -1963,8 +1977,80 @@
     window.musicToggleRepeat = function() {
       musicRepeat = musicRepeat === 'off' ? 'all' : musicRepeat === 'all' ? 'one' : 'off';
       updateMiniPlayerUI();
-      showToast(`Repeat: ${musicRepeat.toUpperCase()}`, 'fa-repeat', 'text-brand-gold');
+      // Visual icon indicator on the button changes directly (no annoying toast popup)
     };
+
+    function formatTrackTime(seconds) {
+      const s = Math.floor(seconds || 0);
+      const m = Math.floor(s / 60);
+      const rem = s % 60;
+      return `${m}:${rem < 10 ? '0' : ''}${rem}`;
+    }
+
+    window.onMusicScrubInput = function(val) {
+      window._isUserScrubbing = true;
+      if (ytPlayer && typeof ytPlayer.getDuration === 'function') {
+        const dur = ytPlayer.getDuration() || 0;
+        const targetSec = (val / 100) * dur;
+        if ($('mpCurrentTime')) $('mpCurrentTime').textContent = formatTrackTime(targetSec);
+        if ($('mpProgressFilled')) $('mpProgressFilled').style.width = val + '%';
+      }
+    };
+
+    window.onMusicScrubChange = function(val) {
+      window._isUserScrubbing = false;
+      if (ytPlayer && typeof ytPlayer.getDuration === 'function' && typeof ytPlayer.seekTo === 'function') {
+        const dur = ytPlayer.getDuration() || 0;
+        const targetSec = (val / 100) * dur;
+        ytPlayer.seekTo(targetSec, true);
+      }
+    };
+
+    if (!window._musicProgressInterval) {
+      window._musicProgressInterval = setInterval(() => {
+        if (isPlayingMusic && ytPlayer && typeof ytPlayer.getCurrentTime === 'function' && typeof ytPlayer.getDuration === 'function') {
+          try {
+            const cur = ytPlayer.getCurrentTime() || 0;
+            const dur = ytPlayer.getDuration() || 0;
+            if (dur > 0 && !window._isUserScrubbing) {
+              const pct = (cur / dur) * 100;
+              if ($('mpProgressBar')) $('mpProgressBar').value = pct;
+              if ($('mpProgressFilled')) $('mpProgressFilled').style.width = pct + '%';
+              if ($('mpCurrentTime')) $('mpCurrentTime').textContent = formatTrackTime(cur);
+              if ($('mpTotalTime')) $('mpTotalTime').textContent = formatTrackTime(dur);
+            }
+          } catch (_) {}
+        }
+      }, 350);
+    }
+
+    // Desktop Media Hotkeys (Spacebar: Play/Pause, Left/Right: Seek 5s)
+    if (!window._musicHotkeysBound) {
+      window._musicHotkeysBound = true;
+      window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+        const mp = $('musicMiniPlayer');
+        if (!mp || mp.classList.contains('hidden')) return;
+
+        if (e.code === 'Space') {
+          e.preventDefault();
+          window.musicTogglePlay();
+        } else if (e.code === 'ArrowRight') {
+          if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function' && typeof ytPlayer.seekTo === 'function') {
+            e.preventDefault();
+            const cur = ytPlayer.getCurrentTime() || 0;
+            const dur = (typeof ytPlayer.getDuration === 'function' && ytPlayer.getDuration()) || 300;
+            ytPlayer.seekTo(Math.min(dur, cur + 5), true);
+          }
+        } else if (e.code === 'ArrowLeft') {
+          if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function' && typeof ytPlayer.seekTo === 'function') {
+            e.preventDefault();
+            const cur = ytPlayer.getCurrentTime() || 0;
+            ytPlayer.seekTo(Math.max(0, cur - 5), true);
+          }
+        }
+      });
+    }
 
     window.toggleSongFav = function(vid) {
       if (songFavs.includes(vid)) {
