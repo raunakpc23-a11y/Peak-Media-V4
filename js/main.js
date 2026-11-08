@@ -4448,6 +4448,27 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
       return sessionStorage.getItem('pm_geo_loc') || ((Intl.DateTimeFormat && Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Asia/Kolkata');
     }
 
+    function getLoyaltyCohortString() {
+      const visits = parseInt(localStorage.getItem('cs_visit_count') || '1', 10);
+      if (visits <= 1) return 'New Visitor (Visit #1)';
+      if (visits <= 4) return `Returning Visitor (Visit #${visits})`;
+      return `Power Cinephile (Visit #${visits})`;
+    }
+
+    function getScreenOrientationString() {
+      const isPortrait = window.matchMedia && window.matchMedia('(orientation: portrait)').matches;
+      const orient = isPortrait ? 'Portrait' : 'Landscape';
+      const fs = document.fullscreenElement ? 'Fullscreen' : 'Windowed';
+      return `${orient} · ${fs}`;
+    }
+
+    function getAppLaunchModeString() {
+      const isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+                           window.navigator.standalone === true ||
+                           document.referrer.includes('android-app://');
+      return isStandalone ? 'Installed PWA (App Icon)' : 'Browser Tab';
+    }
+
     window.initSupabaseVisitorSession = async function() {
       const cfg = getAdminSupaConfig();
       if (!cfg.url || !cfg.key) {
@@ -4473,8 +4494,14 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
       const visitorName = getTelemetryProfileName();
       const visitorId = getPersistentVisitorId();
       const istTimeStr = getISTTimestampString();
+      const cohortStr = getLoyaltyCohortString();
+      const orientStr = getScreenOrientationString();
+      const launchStr = getAppLaunchModeString();
 
       if (!currentSessionId) {
+        const visitCount = (parseInt(localStorage.getItem('cs_visit_count') || '0', 10)) + 1;
+        localStorage.setItem('cs_visit_count', visitCount);
+
         try {
           const res = await fetch(cfg.url + '/rest/v1/visitor_sessions', {
             method: 'POST',
@@ -4485,8 +4512,8 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
               'Prefer': 'return=representation'
             },
             body: JSON.stringify({
-              device: `${visitorName} · ${deviceStr}`,
-              location: locStr,
+              device: `${visitorName} · ${deviceStr} · ${launchStr}`,
+              location: `${locStr} · ${cohortStr} · ${orientStr}`,
               time_spent_seconds: sessionSeconds
             })
           });
@@ -4496,7 +4523,7 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
               currentSessionId = data[0].id;
               sessionStorage.setItem('pm_supa_session_id', currentSessionId);
             }
-            console.log('%c[Supabase]%c Visitor session started & telemetry active (Session #' + (currentSessionId || 'OK') + ' · ' + visitorName + ' · ' + istTimeStr + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
+            console.log('%c[Supabase]%c Visitor session started & telemetry active (Session #' + (currentSessionId || 'OK') + ' · ' + visitorName + ' · ' + istTimeStr + ' · ' + cohortStr + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
           } else {
             const errBody = await res.text().catch(() => '');
             console.warn('[Supabase] HTTP ' + res.status + ' syncing visitor session:', errBody);
@@ -4537,6 +4564,9 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
         const visitorName = getTelemetryProfileName();
         const visitorId = getPersistentVisitorId();
         const istTimeStr = getISTTimestampString();
+        const cohortStr = getLoyaltyCohortString();
+        const orientStr = getScreenOrientationString();
+        const launchStr = getAppLaunchModeString();
 
         await fetch(cfg.url + '/rest/v1/user_activity', {
           method: 'POST',
@@ -4555,7 +4585,10 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
               ...extraMeta,
               visitor_name: visitorName,
               visitor_id: visitorId,
-              ist_time: istTimeStr
+              ist_time: istTimeStr,
+              loyalty_cohort: cohortStr,
+              screen_orientation: orientStr,
+              app_launch_mode: launchStr
             }
           })
         });
