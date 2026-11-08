@@ -97,6 +97,14 @@
       headerRightControls.classList.toggle('hidden', isImmersiveDeck);
     }
 
+    // PiP Video Dock is strictly visible only while actively inside the Music tab
+    if (key !== 'music') {
+      const vDock = document.getElementById('musicVideoDock');
+      if (vDock && !vDock.classList.contains('hidden')) {
+        vDock.classList.add('hidden');
+      }
+    }
+
     if (key === 'discover') {
       if (headerBackBtn) {
         headerBackBtn.classList.add('hidden');
@@ -1389,21 +1397,10 @@
   }
 
   // -------------------------------------------------------------
-  // Global App Fullscreen Controller & Bespoke Notice Banner
+  // Global App Fullscreen Controller (Unobtrusive - Zero Distracting Banners)
   // -------------------------------------------------------------
-  let fsNoticeTimer = null;
   window.showFullscreenNotice = function(msg) {
-    const el = document.getElementById('pmFullscreenNotice');
-    if (!el) return;
-    const txt = document.getElementById('pmFullscreenNoticeText');
-    if (txt && msg) txt.innerHTML = msg;
-    el.classList.remove('opacity-0', '-translate-y-6');
-    el.classList.add('opacity-100', 'translate-y-0');
-    if (fsNoticeTimer) clearTimeout(fsNoticeTimer);
-    fsNoticeTimer = setTimeout(() => {
-      el.classList.remove('opacity-100', 'translate-y-0');
-      el.classList.add('opacity-0', '-translate-y-6');
-    }, 3800);
+    // Disabled intentionally to keep UI completely distraction-free
   };
 
   window.toggleAppFullscreen = function() {
@@ -1429,7 +1426,6 @@
         icon.classList.remove('fa-expand');
         icon.classList.add('fa-compress');
       }
-      window.showFullscreenNotice('Fullscreen Active · Exit button is located at the top right (or press <strong>Esc</strong>)');
     } else {
       if (icon) {
         icon.classList.remove('fa-compress');

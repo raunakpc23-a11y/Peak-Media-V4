@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v7.4-spotify-player';
+const CACHE_NAME = 'peak-media-v7.5-mobile-scrub-bar';
 const POSTER_CACHE = 'peak-media-posters-v1';
 
 // All local files to pre-cache the moment the SW installs

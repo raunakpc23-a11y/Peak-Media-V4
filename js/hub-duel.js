@@ -725,7 +725,7 @@
       if ($('cineSwipeArena')) $('cineSwipeArena').classList.remove('hidden');
 
       renderCineSwipeCard();
-      showToast('CineSwipe Ready! Swipe Right to save, Left to pass.', 'fa-film', 'text-brand-gold');
+      // Toast notice removed to keep transition clean and uncluttered
     }
 
     function renderCineSwipeCard() {

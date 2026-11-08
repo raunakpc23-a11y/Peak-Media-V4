@@ -1650,19 +1650,19 @@
           </div>
 
           <!-- Right: Quick Controls: Shuffle, Playlists, Resume, Stop (Comfortably Sized & Distinct) -->
-          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="h-9 px-2.5 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
+          <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+            <button type="button" onclick="musicPlayRandom()" title="Random Shuffle" class="h-8 sm:h-9 px-2 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
               <i class="fa-solid fa-shuffle text-purple-300 text-xs"></i> <span class="hidden sm:inline">Shuffle</span>
             </button>
-            <button type="button" onclick="openMusicCustomPlaylistsModal()" id="mHeaderPlaylistsBtn" title="Custom Playlists" class="h-9 px-2.5 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
+            <button type="button" onclick="openMusicCustomPlaylistsModal()" id="mHeaderPlaylistsBtn" title="Custom Playlists" class="h-8 sm:h-9 px-2 sm:px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
               <i class="fa-solid fa-list text-purple-300 text-xs"></i>
               <span class="hidden sm:inline">Playlists</span>
               <span class="text-[10px] font-mono font-bold text-purple-300 bg-purple-900/60 px-1 rounded" id="musicCustomPlaylistsCountBadge">1</span>
             </button>
-            <button type="button" id="musicResumeBtn" data-pulse onclick="musicResumeLast()" title="Resume Last Track" class="h-9 px-2.5 sm:px-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center justify-center gap-1 shadow transition-all active:scale-95">
+            <button type="button" id="musicResumeBtn" data-pulse onclick="musicResumeLast()" title="Resume Last Track" class="h-8 sm:h-9 px-2 sm:px-3 rounded-xl bg-brand-gold hover:opacity-95 text-black font-extrabold text-xs flex items-center justify-center gap-1 shadow transition-all active:scale-95">
               <i class="fa-solid fa-play text-[11px]"></i> <span class="hidden sm:inline">Resume</span>
             </button>
-            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Stop Audio" aria-label="Stop Music Player" class="w-9 h-9 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
+            <button type="button" id="musicHeaderCutBtn" onclick="closeMusicMiniPlayer()" title="Stop Audio" aria-label="Stop Music Player" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white flex items-center justify-center transition-all active:scale-95">
               <i class="fa-solid fa-xmark text-sm font-bold"></i>
             </button>
           </div>
@@ -1734,15 +1734,14 @@
         </div>
       </div>
 
-      <!-- Results Count & Queue Play Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-400 px-1 pt-1">
-        <div>Showing <strong id="musicShowingCount" class="text-white">0</strong> tracks<span id="musicCurPageLbl" class="hidden">1</span></div>
-        <div class="flex items-center gap-3">
-          <button type="button" onclick="musicPlayFilteredAll()" class="text-brand-gold hover:underline font-bold flex items-center gap-1"><i class="fa-solid fa-play text-xs"></i> Play Current List</button>
-          <span>·</span>
-          <button type="button" onclick="toggleMusicQueueDrawer()" class="text-gray-200 hover:text-brand-gold font-bold flex items-center gap-1"><i class="fa-solid fa-list-ol text-brand-gold text-xs"></i> Queue</button>
-          <span id="musicQueueCountLbl" class="hidden">0</span>
-        </div>
+      <!-- Compact Queue Bar (Clean, uncluttered, no redundant count label or Play Current List) -->
+      <div class="flex items-center justify-end gap-2 text-xs text-gray-400 px-1 pt-0.5">
+        <span id="musicShowingCount" class="hidden">0</span>
+        <span id="musicCurPageLbl" class="hidden">1</span>
+        <button type="button" onclick="toggleMusicQueueDrawer()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-gray-200 hover:text-brand-gold font-bold text-xs flex items-center gap-1.5 transition-colors">
+          <i class="fa-solid fa-list-ol text-brand-gold text-xs"></i> <span>Queue</span>
+        </button>
+        <span id="musicQueueCountLbl" class="hidden">0</span>
       </div>
 
       <!-- Paginated 50-Song Studio Grid -->
@@ -2334,103 +2333,90 @@
     </button>
   </nav>
 
-  <!-- PERSISTENT SPOTIFY-INSPIRED AUDIO PLAYER BAR -->
-  <div id="musicMiniPlayer" class="fixed inset-x-0 bottom-16 md:bottom-0 z-40 hidden glass-nav border-t border-brand-gold/35 px-3 sm:px-6 py-2 shadow-2xl backdrop-blur-xl bg-[#0c0203]/95">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5">
+  <!-- PERSISTENT SPOTIFY-INSPIRED AUDIO PLAYER BAR (Single-Row Mobile Layout + Integrated Top Divider Scrubber) -->
+  <div id="musicMiniPlayer" class="fixed inset-x-0 bottom-16 md:bottom-0 z-40 hidden glass-nav px-2.5 sm:px-6 py-2 shadow-2xl backdrop-blur-xl bg-[#0c0203]/95 border-t border-white/10 select-none">
+    
+    <!-- TOP DIVIDER SCRUB LINE (Moving gold/red progress bar directly on the top border) -->
+    <div class="absolute -top-[2px] inset-x-0 h-1 bg-white/10 group cursor-pointer overflow-visible z-10" title="Seek track">
+      <div id="mpProgressFilled" class="h-full bg-gradient-to-r from-brand-gold to-amber-400 relative transition-[width] duration-150" style="width: 0%;">
+        <div id="mpProgressDot" class="absolute -right-1.5 -top-1 w-3 h-3 rounded-full bg-brand-gold border-2 border-black shadow-md transition-transform scale-90 group-hover:scale-125"></div>
+      </div>
+      <input type="range" id="mpProgressBar" min="0" max="100" value="0" step="0.1" 
+             oninput="window.onMusicScrubInput(this.value)" 
+             onchange="window.onMusicScrubChange(this.value)"
+             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+             title="Seek position (Left / Right arrow)">
+    </div>
 
-      <!-- LEFT: Track Metadata (Thumb, Title, Artist) -->
-      <div class="flex items-center gap-3 min-w-0 w-full md:w-1/4 shrink-0">
-        <img id="mpThumb" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%231f2937'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='16' fill='%239ca3af'>🎵</text></svg>" alt="Peak Music" class="w-11 h-11 rounded-xl object-cover border border-white/15 shrink-0 cursor-pointer shadow-md" onclick="toggleMusicVideoDock()" title="Click to view Video Dock">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      <!-- LEFT: Track Metadata (Thumb, Title, Artist, Dwell Time) -->
+      <div class="flex items-center gap-2.5 min-w-0 flex-1 max-w-[200px] sm:max-w-xs md:max-w-sm">
+        <img id="mpThumb" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%231f2937'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='16' fill='%239ca3af'>🎵</text></svg>" alt="Peak Music" class="w-10 h-10 rounded-xl object-cover border border-white/15 shrink-0 cursor-pointer shadow-md" onclick="switchTab('music')" title="View in Music Vault">
         <div class="min-w-0 flex-1">
-          <div id="mpTitle" class="text-xs sm:text-sm font-bold text-white truncate cursor-pointer hover:text-brand-gold transition-colors" onclick="switchTab('music')">Select a song to play</div>
-          <div id="mpArtist" class="text-[10px] sm:text-[11px] text-gray-400 truncate">Music Vault</div>
-        </div>
-      </div>
-
-      <!-- CENTER: Primary Transport Controls + Spotify/YT Music Scrub Bar (The Line) -->
-      <div class="flex flex-col items-center justify-center w-full md:w-2/4 max-w-xl gap-1">
-        <!-- Controls row -->
-        <div class="flex items-center justify-center gap-2 sm:gap-3">
-          <!-- Loop Button (Toggles Off -> All -> Single Track without annoying toasts) -->
-          <button type="button" onclick="musicToggleRepeat()" id="mpRepeatBtn" title="Loop Mode" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 flex items-center justify-center text-xs transition-colors">
-            <i class="fa-solid fa-repeat"></i>
-          </button>
-
-          <!-- Previous Track -->
-          <button type="button" onclick="musicPrev()" title="Previous Track (←)" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-xs active:scale-95 transition-all">
-            <i class="fa-solid fa-backward-step"></i>
-          </button>
-
-          <!-- Play / Pause -->
-          <button type="button" onclick="musicTogglePlay()" id="mpPlayBtn" title="Play / Pause (Spacebar)" class="w-10 h-10 rounded-full bg-brand-gold text-black font-black flex items-center justify-center text-sm shadow-lg shadow-brand-gold/25 hover:scale-105 active:scale-95 transition-all">
-            <i class="fa-solid fa-play ml-0.5"></i>
-          </button>
-
-          <!-- Next Track -->
-          <button type="button" onclick="musicNext()" title="Next Track (→)" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-xs active:scale-95 transition-all">
-            <i class="fa-solid fa-forward-step"></i>
-          </button>
-
-          <!-- Video Dock Toggle -->
-          <button type="button" onclick="toggleMusicVideoDock()" id="mpVideoBtn" title="Show / Hide Video Player" class="px-2 h-7 rounded-lg bg-white/10 hover:bg-white/15 text-[10px] sm:text-[11px] font-bold text-brand-gold flex items-center gap-1 transition-colors">
-            <i class="fa-solid fa-tv text-xs"></i><span class="hidden sm:inline">Video</span>
-          </button>
-        </div>
-
-        <!-- The Line: Interactive Scrub Bar & Time Counters -->
-        <div class="w-full flex items-center gap-2 text-[10px] sm:text-[11px] font-mono text-gray-400 select-none px-1">
-          <span id="mpCurrentTime" class="min-w-[32px] text-right">0:00</span>
-          <div class="relative flex-1 flex items-center h-4 group cursor-pointer">
-            <!-- Background Track -->
-            <div class="w-full h-1 bg-white/15 rounded-full overflow-hidden group-hover:h-1.5 transition-all">
-              <!-- Filled Progress -->
-              <div id="mpProgressFilled" class="h-full bg-gradient-to-r from-brand-gold to-amber-400 rounded-full w-0 transition-[width] duration-150"></div>
-            </div>
-            <!-- Range Slider Input -->
-            <input type="range" id="mpProgressBar" min="0" max="100" value="0" step="0.1" 
-                   oninput="window.onMusicScrubInput(this.value)" 
-                   onchange="window.onMusicScrubChange(this.value)"
-                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
-                   title="Seek position (Left / Right arrow)">
+          <div id="mpTitle" class="text-xs sm:text-sm font-bold text-white truncate cursor-pointer hover:text-brand-gold transition-colors" onclick="switchTab('music')">Select a song</div>
+          <div class="flex items-center gap-1.5 text-[10px] text-gray-400 truncate">
+            <span id="mpArtist" class="truncate">Music Vault</span>
+            <span class="text-gray-600">·</span>
+            <span id="mpCurrentTime" class="font-mono text-gray-300">0:00</span>
+            <span class="text-gray-600">/</span>
+            <span id="mpTotalTime" class="font-mono text-gray-400">0:00</span>
           </div>
-          <span id="mpTotalTime" class="min-w-[32px]">0:00</span>
         </div>
       </div>
 
-      <!-- RIGHT / FAR CORNER: Add to Playlist, Favorite, YouTube, and Stop/Close -->
-      <div class="flex items-center justify-end gap-1.5 w-full md:w-1/4 shrink-0">
-        <!-- Add to Playlist (Far Corner) -->
-        <button type="button" onclick="addCurrentPlayingSongToPlaylist()" id="mpAddPlaylistBtn" title="Add to Playlist" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-purple-300 hover:text-white flex items-center justify-center text-xs transition-colors">
-          <svg class="w-4 h-4 text-purple-300" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmAddTrackPlaylistIcon"></use></svg>
+      <!-- RIGHT: Unified Single-Line Controls -->
+      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+        <!-- Loop Button -->
+        <button type="button" onclick="musicToggleRepeat()" id="mpRepeatBtn" title="Loop Mode" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 flex items-center justify-center text-xs transition-colors">
+          <i class="fa-solid fa-repeat"></i>
         </button>
 
-        <!-- Favorite (Far Corner) -->
-        <button type="button" onclick="musicToggleCurrentFav()" id="mpFavBtn" title="Favorite Song" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center text-xs transition-colors">
+        <!-- Previous Track -->
+        <button type="button" onclick="musicPrev()" title="Previous Track (←)" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-xs active:scale-95 transition-all">
+          <i class="fa-solid fa-backward-step"></i>
+        </button>
+
+        <!-- Play / Pause -->
+        <button type="button" onclick="musicTogglePlay()" id="mpPlayBtn" title="Play / Pause (Spacebar)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-brand-gold text-black font-black flex items-center justify-center text-xs sm:text-sm shadow-md shadow-brand-gold/25 hover:scale-105 active:scale-95 transition-all">
+          <i class="fa-solid fa-play ml-0.5"></i>
+        </button>
+
+        <!-- Next Track -->
+        <button type="button" onclick="musicNext()" title="Next Track (→)" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 text-white flex items-center justify-center text-xs active:scale-95 transition-all">
+          <i class="fa-solid fa-forward-step"></i>
+        </button>
+
+        <!-- Video Dock Toggle (Visible on desktop; on mobile accessed via thumb) -->
+        <button type="button" onclick="toggleMusicVideoDock()" id="mpVideoBtn" title="Show / Hide Video Player" class="hidden sm:flex px-2 h-7 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-bold text-brand-gold items-center gap-1 transition-colors">
+          <i class="fa-solid fa-tv text-xs"></i><span>Video</span>
+        </button>
+
+        <!-- Favorite Button -->
+        <button type="button" onclick="musicToggleCurrentFav()" id="mpFavBtn" title="Favorite Song" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center text-xs transition-colors">
           <i class="fa-solid fa-heart"></i>
         </button>
 
-        <!-- YouTube Link -->
-        <a id="mpYtLink" href="https://www.youtube.com" target="_blank" rel="noopener" title="Open on YouTube" class="w-8 h-8 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 flex items-center justify-center text-xs transition-colors">
+        <!-- Add to Playlist Button -->
+        <button type="button" onclick="addCurrentPlayingSongToPlaylist()" id="mpAddPlaylistBtn" title="Add to Playlist" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 hover:bg-white/10 text-purple-300 hover:text-white flex items-center justify-center text-xs transition-colors">
+          <svg class="w-3.5 h-3.5 text-purple-300" viewBox="0 0 24 24" aria-hidden="true"><use href="#pmAddTrackPlaylistIcon"></use></svg>
+        </button>
+
+        <!-- YouTube Link (Clean desktop shortcut) -->
+        <a id="mpYtLink" href="https://www.youtube.com" target="_blank" rel="noopener" title="Open on YouTube" class="hidden sm:flex w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 items-center justify-center text-xs transition-colors">
           <i class="fa-brands fa-youtube"></i>
         </a>
 
         <!-- Stop / Close Player -->
-        <button type="button" onclick="closeMusicMiniPlayer()" title="Stop Music Player" aria-label="Stop Music Player" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-red-600/25 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/70 flex items-center justify-center shadow-md shadow-red-600/25 transition-all active:scale-95 ml-1">
-          <i class="fa-solid fa-xmark text-sm font-black"></i>
+        <button type="button" onclick="closeMusicMiniPlayer()" title="Stop Music Player" aria-label="Stop Music Player" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-red-600/25 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/70 flex items-center justify-center shadow-md shadow-red-600/25 transition-all active:scale-95 ml-0.5">
+          <i class="fa-solid fa-xmark text-xs font-black"></i>
         </button>
       </div>
-
     </div>
   </div>
 
   <!-- Hidden background state holder for dock badge sync -->
   <div id="stationPlatesDock" class="hidden" aria-hidden="true">
     <span id="dockWishBadge"></span>
-  </div>
-
-  <!-- ORBITING MOON MINI-PLAYER (Satellite Audio Node) -->
-  <div id="orbitingMoonPlayer" onclick="switchTab('music')" class="orbiting-moon hidden" title="Listening Dish · Active Audio">
-    <img id="orbitingMoonThumb" src="https://i.ytimg.com/vi/dQw4w9WgXcQ/default.jpg" alt="" />
   </div>
 
   <!-- MODAL: ENGLISH VS HINDI SIDE-BY-SIDE COMPARE -->
@@ -2487,12 +2473,17 @@
         </button>
       </div>
 
-      <!-- Quick New Playlist Creation Form -->
+      <!-- Quick New Playlist & Import Options -->
       <div class="p-3.5 rounded-2xl bg-black/40 border border-white/10 flex flex-col sm:flex-row gap-2 shrink-0">
         <input type="text" id="newCustomPlaylistInput" placeholder="Name your playlist (e.g. Midnight Chill, Workout Beats)..." class="flex-1 px-3.5 py-2 rounded-xl bg-black/60 border border-purple-500/30 text-xs text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 font-mono">
-        <button type="button" onclick="createMusicCustomPlaylist()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg flex items-center justify-center gap-1.5 shrink-0 transition-all active:scale-95">
-          <i class="fa-solid fa-plus text-[11px]"></i> Create Playlist
-        </button>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button type="button" onclick="createMusicCustomPlaylist()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg flex items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fa-solid fa-plus text-[11px]"></i> Create
+          </button>
+          <button type="button" onclick="openImportPlaylistModal()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/15 border border-purple-400/30 text-purple-200 hover:text-white font-extrabold text-xs shadow flex items-center justify-center gap-1.5 transition-all active:scale-95" title="Import from text or YouTube links">
+            <i class="fa-solid fa-file-import text-[11px]"></i> Import
+          </button>
+        </div>
       </div>
 
       <!-- Playlists Container (Scrollable) -->
@@ -2599,6 +2590,34 @@
         <button type="button" id="delPlaylistModalConfirmBtn" onclick="confirmDeleteMusicPlaylist()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(225,29,72,0.4)] transition-all active:scale-95 cursor-pointer">
           <i class="fa-solid fa-trash text-xs"></i>
           <span>Delete Playlist</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: IMPORT PLAYLIST -->
+  <div id="musicImportPlaylistModal" class="fixed inset-0 z-[105] hidden items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn" onclick="if(event.target.id==='musicImportPlaylistModal')closeImportPlaylistModal()">
+    <div class="glass-card w-full max-w-md rounded-3xl border border-purple-500/40 bg-gradient-to-b from-[#140b20]/95 via-[#090b14]/98 to-black p-5 sm:p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-white/10">
+        <div class="flex items-center gap-2 text-white">
+          <i class="fa-solid fa-file-import text-purple-400"></i>
+          <h3 class="font-display font-bold text-base">Import Custom Playlist</h3>
+        </div>
+        <button type="button" onclick="closeImportPlaylistModal()" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">Playlist Name</label>
+          <input type="text" id="importPlaylistNameInput" placeholder="My Imported Playlist" class="w-full px-3 py-2 bg-black/60 border border-purple-500/30 rounded-xl text-white font-mono focus:outline-none focus:border-purple-400">
+        </div>
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">Paste Track IDs, URLs, or Song Titles (one per line):</label>
+          <textarea id="importPlaylistDataInput" rows="5" placeholder="e.g.&#10;https://www.youtube.com/watch?v=kJQP7kiw5Fk&#10;Kesariya&#10;Apna Bana Le&#10;dQw4w9WgXcQ" class="w-full p-3 bg-black/60 border border-purple-500/30 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-purple-400"></textarea>
+        </div>
+        <button type="button" onclick="executeImportPlaylist()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg transition-all active:scale-95 cursor-pointer">
+          Import &amp; Save Playlist
         </button>
       </div>
     </div>
