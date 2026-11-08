@@ -4363,20 +4363,89 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
     let currentSessionId = sessionStorage.getItem('pm_supa_session_id') || null;
     let sessionSeconds = parseInt(sessionStorage.getItem('pm_supa_time_spent') || '0', 10);
 
+    function getPersistentVisitorId() {
+      let vid = localStorage.getItem('pm_visitor_id');
+      if (!vid) {
+        vid = 'usr_' + Math.random().toString(36).substring(2, 9);
+        localStorage.setItem('pm_visitor_id', vid);
+      }
+      return vid;
+    }
+
+    function getTelemetryProfileName() {
+      try {
+        if (typeof obProfile !== 'undefined' && obProfile && obProfile.username) return obProfile.username.trim();
+        const stored = localStorage.getItem('cs_profile_username');
+        if (stored) return stored.trim();
+      } catch (_) {}
+      return 'Guest';
+    }
+
+    function getISTTimestampString() {
+      try {
+        return new Date().toLocaleString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        }) + ' IST';
+      } catch (_) {
+        return new Date().toISOString();
+      }
+    }
+
     function getTelemetryDeviceString() {
-      const isMobile = window.innerWidth < 768 || /Mobi|Android|iPhone/i.test(navigator.userAgent);
-      const plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || 'Web';
-      return `${isMobile ? 'Mobile' : 'Desktop'} (${plat}, ${window.innerWidth}x${window.innerHeight})`;
+      const ua = navigator.userAgent || '';
+      let os = 'Windows PC';
+      if (/Windows/i.test(ua)) os = 'Windows PC';
+      else if (/Macintosh|Mac OS X/i.test(ua)) os = 'macOS';
+      else if (/iPhone/i.test(ua)) os = 'iPhone';
+      else if (/iPad/i.test(ua)) os = 'iPad';
+      else if (/Android/i.test(ua)) {
+        const m = ua.match(/Android[^;]+;\s*([^;)]+)\)/i);
+        os = m && m[1] ? `Android (${m[1].trim()})` : 'Android Device';
+      } else if (/Linux/i.test(ua)) os = 'Linux';
+
+      let browser = 'Browser';
+      if (/Edg\//i.test(ua)) browser = 'Edge';
+      else if (/Chrome\//i.test(ua)) browser = 'Chrome';
+      else if (/Safari\//i.test(ua) && !/Chrome/i.test(ua)) browser = 'Safari';
+      else if (/Firefox\//i.test(ua)) browser = 'Firefox';
+
+      const isMobile = window.innerWidth < 768 || /Mobi|Android|iPhone/i.test(ua);
+      const res = `${window.innerWidth}x${window.innerHeight}`;
+      return `${os} · ${browser} · ${isMobile ? 'Mobile' : 'Desktop'} (${res})`;
+    }
+
+    async function getTelemetryLocationAsync() {
+      const cached = sessionStorage.getItem('pm_geo_loc');
+      if (cached) return cached;
+      const tz = (Intl.DateTimeFormat && Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Asia/Kolkata';
+      try {
+        // Fast, privacy-friendly IP-based city & state detection without GPS permissions
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 2500);
+        const res = await fetch('https://ipwho.is/', { signal: ctrl.signal }).catch(() => null);
+        clearTimeout(timer);
+        if (res && res.ok) {
+          const d = await res.json();
+          if (d.success && d.city && d.region) {
+            const resolved = `${d.city}, ${d.region} (${d.country || 'India'}) [${tz}]`;
+            sessionStorage.setItem('pm_geo_loc', resolved);
+            return resolved;
+          }
+        }
+      } catch (_) {}
+      const fallback = `${tz} [${navigator.language || 'en-IN'}]`;
+      return fallback;
     }
 
     function getTelemetryLocationString() {
-      try {
-        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-        const lang = navigator.language || 'en';
-        return `${tz} [${lang}]`;
-      } catch (_) {
-        return 'Unknown Location';
-      }
+      return sessionStorage.getItem('pm_geo_loc') || ((Intl.DateTimeFormat && Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Asia/Kolkata');
     }
 
     window.initSupabaseVisitorSession = async function() {
@@ -4398,8 +4467,12 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
         console.info('[Supabase] SDK CDN script not loaded yet (using direct REST client fallback).');
       }
 
+      // Fetch precise city/state asynchronously via IP
+      const locStr = await getTelemetryLocationAsync();
       const deviceStr = getTelemetryDeviceString();
-      const locStr = getTelemetryLocationString();
+      const visitorName = getTelemetryProfileName();
+      const visitorId = getPersistentVisitorId();
+      const istTimeStr = getISTTimestampString();
 
       if (!currentSessionId) {
         try {
@@ -4412,7 +4485,7 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
               'Prefer': 'return=representation'
             },
             body: JSON.stringify({
-              device: deviceStr,
+              device: `${visitorName} · ${deviceStr}`,
               location: locStr,
               time_spent_seconds: sessionSeconds
             })
@@ -4423,7 +4496,7 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
               currentSessionId = data[0].id;
               sessionStorage.setItem('pm_supa_session_id', currentSessionId);
             }
-            console.log('%c[Supabase]%c Visitor session started & telemetry active (Session #' + (currentSessionId || 'OK') + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
+            console.log('%c[Supabase]%c Visitor session started & telemetry active (Session #' + (currentSessionId || 'OK') + ' · ' + visitorName + ' · ' + istTimeStr + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
           } else {
             const errBody = await res.text().catch(() => '');
             console.warn('[Supabase] HTTP ' + res.status + ' syncing visitor session:', errBody);
@@ -4461,6 +4534,10 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
       const cfg = getAdminSupaConfig();
       if (!cfg.url || !cfg.key) return;
       try {
+        const visitorName = getTelemetryProfileName();
+        const visitorId = getPersistentVisitorId();
+        const istTimeStr = getISTTimestampString();
+
         await fetch(cfg.url + '/rest/v1/user_activity', {
           method: 'POST',
           headers: {
@@ -4474,7 +4551,12 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
             action_type: actionType,
             item_id: String(itemId || itemTitle),
             item_title: String(itemTitle || itemId),
-            extra_meta: extraMeta
+            extra_meta: {
+              ...extraMeta,
+              visitor_name: visitorName,
+              visitor_id: visitorId,
+              ist_time: istTimeStr
+            }
           })
         });
       } catch (_) {}
