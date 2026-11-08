@@ -1729,7 +1729,10 @@
       if ($('mpPlayBtn')) $('mpPlayBtn').innerHTML = `<i class="fa-solid ${isPlayingMusic ? 'fa-pause' : 'fa-play'}"></i>`;
       const isFav = songFavs.includes(s.id);
       if ($('mpFavBtn')) $('mpFavBtn').className = `w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-xs transition-colors ${isFav ? 'bg-rose-500 text-white shadow-sm' : 'bg-white/5 text-gray-300 hover:bg-white/10'}`;
+      if ($('mpFavBtnDesk')) $('mpFavBtnDesk').className = `hidden md:flex w-9 h-9 rounded-xl items-center justify-center text-sm transition-colors shrink-0 ${isFav ? 'bg-rose-500 text-white shadow-md' : 'bg-white/5 text-gray-300 hover:bg-white/10'}`;
+      if ($('mpPlayBtnDesk')) $('mpPlayBtnDesk').innerHTML = `<i class="fa-solid ${isPlayingMusic ? 'fa-pause' : 'fa-play'} ml-0.5"></i>`;
       if ($('mpShuffleBtn')) $('mpShuffleBtn').className = `w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-xs ${musicShuffle ? 'bg-brand-gold text-black' : 'bg-white/5 text-gray-400'}`;
+      if ($('mpShuffleBtnDesk')) $('mpShuffleBtnDesk').className = `w-9 h-9 rounded-xl flex items-center justify-center text-sm transition-colors ${musicShuffle ? 'bg-brand-gold text-black shadow-md' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`;
       if ($('mpRepeatBtn')) {
         if (musicRepeat === 'all') {
           $('mpRepeatBtn').className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-gold/20 border border-brand-gold/50 text-brand-gold flex items-center justify-center text-xs transition-colors';
@@ -1745,7 +1748,23 @@
           $('mpRepeatBtn').title = 'Loop: Off';
         }
       }
+      if ($('mpRepeatBtnDesk')) {
+        if (musicRepeat === 'all') {
+          $('mpRepeatBtnDesk').className = 'w-9 h-9 rounded-xl bg-brand-gold/20 border border-brand-gold/50 text-brand-gold flex items-center justify-center text-sm transition-colors';
+          $('mpRepeatBtnDesk').innerHTML = '<i class="fa-solid fa-repeat"></i>';
+          $('mpRepeatBtnDesk').title = 'Loop: All Tracks';
+        } else if (musicRepeat === 'one') {
+          $('mpRepeatBtnDesk').className = 'w-9 h-9 rounded-xl bg-brand-gold text-black font-bold flex items-center justify-center text-sm transition-colors shadow-md';
+          $('mpRepeatBtnDesk').innerHTML = '<i class="fa-solid fa-repeat text-xs"></i><span class="text-[10px] font-black leading-none ml-0.5">1</span>';
+          $('mpRepeatBtnDesk').title = 'Loop: Single Track';
+        } else {
+          $('mpRepeatBtnDesk').className = 'w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 flex items-center justify-center text-sm transition-colors';
+          $('mpRepeatBtnDesk').innerHTML = '<i class="fa-solid fa-repeat"></i>';
+          $('mpRepeatBtnDesk').title = 'Loop: Off';
+        }
+      }
       if ($('mpYtLink')) $('mpYtLink').href = `https://www.youtube.com/watch?v=${s.id}`;
+      if ($('musicHeaderYtBtn')) $('musicHeaderYtBtn').href = `https://www.youtube.com/watch?v=${s.id}`;
       if ($('ytDockExternalLink')) $('ytDockExternalLink').href = `https://www.youtube.com/watch?v=${s.id}`;
       if ($('musicQueueCountLbl')) $('musicQueueCountLbl').textContent = musicQueue.length;
 
@@ -1984,8 +2003,13 @@
       if (ytPlayer && typeof ytPlayer.getDuration === 'function') {
         const dur = ytPlayer.getDuration() || 0;
         const targetSec = (val / 100) * dur;
-        if ($('mpCurrentTime')) $('mpCurrentTime').textContent = formatTrackTime(targetSec);
+        const formatted = formatTrackTime(targetSec);
+        if ($('mpCurrentTime')) $('mpCurrentTime').textContent = formatted;
+        if ($('mpCurrentTimeDesk')) $('mpCurrentTimeDesk').textContent = formatted;
         if ($('mpProgressFilled')) $('mpProgressFilled').style.width = val + '%';
+        if ($('mpProgressFilledDesk')) $('mpProgressFilledDesk').style.width = val + '%';
+        if ($('mpProgressBar')) $('mpProgressBar').value = val;
+        if ($('mpProgressBarDesk')) $('mpProgressBarDesk').value = val;
       }
     };
 
@@ -2006,10 +2030,16 @@
             const dur = ytPlayer.getDuration() || 0;
             if (dur > 0 && !window._isUserScrubbing) {
               const pct = (cur / dur) * 100;
+              const curStr = formatTrackTime(cur);
+              const durStr = formatTrackTime(dur);
               if ($('mpProgressBar')) $('mpProgressBar').value = pct;
+              if ($('mpProgressBarDesk')) $('mpProgressBarDesk').value = pct;
               if ($('mpProgressFilled')) $('mpProgressFilled').style.width = pct + '%';
-              if ($('mpCurrentTime')) $('mpCurrentTime').textContent = formatTrackTime(cur);
-              if ($('mpTotalTime')) $('mpTotalTime').textContent = formatTrackTime(dur);
+              if ($('mpProgressFilledDesk')) $('mpProgressFilledDesk').style.width = pct + '%';
+              if ($('mpCurrentTime')) $('mpCurrentTime').textContent = curStr;
+              if ($('mpCurrentTimeDesk')) $('mpCurrentTimeDesk').textContent = curStr;
+              if ($('mpTotalTime')) $('mpTotalTime').textContent = durStr;
+              if ($('mpTotalTimeDesk')) $('mpTotalTimeDesk').textContent = durStr;
             }
           } catch (_) {}
         }
@@ -2856,30 +2886,64 @@
       }
     };
 
-    window.executeImportPlaylist = function() {
+    window.executeImportPlaylist = async function() {
       const nameInput = $('importPlaylistNameInput');
       const dataInput = $('importPlaylistDataInput');
-      const plName = (nameInput && nameInput.value ? nameInput.value.trim() : '') || 'Imported Mixtape';
+      let plName = (nameInput && nameInput.value ? nameInput.value.trim() : '') || 'Imported Mixtape';
       const rawText = dataInput && dataInput.value ? dataInput.value.trim() : '';
       if (!rawText) {
-        showToast('Please paste track IDs, URLs, or song titles', 'fa-triangle-exclamation', 'text-amber-400');
+        showToast('Please paste playlist URL, track IDs, or song titles', 'fa-triangle-exclamation', 'text-amber-400');
         return;
       }
 
       ensureMusicLoaded();
-      const lines = rawText.split(/[\r\n,]+/).map(s => s.trim()).filter(Boolean);
       const matchedIds = [];
 
+      // Check for direct YouTube Playlist link (list=PL... or list=RD...)
+      const plMatch = rawText.match(/list=([a-zA-Z0-9_-]+)/);
+      if (plMatch && plMatch[1]) {
+        const listId = plMatch[1];
+        showToast('Fetching YouTube Playlist tracks...', 'fa-circle-notch fa-spin', 'text-brand-gold');
+        try {
+          const ytUrl = 'https://www.youtube.com/playlist?list=' + listId;
+          let html = '';
+          try {
+            const resp = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(ytUrl)}`);
+            if (resp.ok) html = await resp.text();
+          } catch (_) {}
+          if (!html || !html.includes('videoId')) {
+            try {
+              const resp2 = await fetch(`https://corsproxy.io/?${encodeURIComponent(ytUrl)}`);
+              if (resp2.ok) html = await resp2.text();
+            } catch (_) {}
+          }
+          if (html && html.includes('videoId')) {
+            const extractedIds = [...html.matchAll(/"videoId":"([a-zA-Z0-9_-]{11})"/g)].map(m => m[1]);
+            const titleMatch = html.match(/"title":"([^"]+)"/) || html.match(/<title>(.*?) - YouTube<\/title>/);
+            if (titleMatch && titleMatch[1] && (!nameInput || !nameInput.value.trim())) {
+              plName = titleMatch[1].replace(/ - YouTube$/, '').trim();
+            }
+            extractedIds.forEach(id => {
+              if (!matchedIds.includes(id)) matchedIds.push(id);
+            });
+          }
+        } catch (e) {
+          console.warn('[Playlist Import] YouTube playlist fetch notice:', e);
+        }
+      }
+
+      // Also process individual lines, video URLs, and titles
+      const lines = rawText.split(/[\r\n,]+/).map(s => s.trim()).filter(Boolean);
       lines.forEach(line => {
         // 1. YouTube URL match
         const urlMatch = line.match(/(?:v=|\/embed\/|youtu\.be\/|\/v\/)([a-zA-Z0-9_-]{11})/);
         if (urlMatch && urlMatch[1]) {
-          matchedIds.push(urlMatch[1]);
+          if (!matchedIds.includes(urlMatch[1])) matchedIds.push(urlMatch[1]);
           return;
         }
         // 2. Direct 11-char YouTube ID
         if (/^[a-zA-Z0-9_-]{11}$/.test(line)) {
-          matchedIds.push(line);
+          if (!matchedIds.includes(line)) matchedIds.push(line);
           return;
         }
         // 3. Match against song catalog by title, movie, or artist
@@ -2899,7 +2963,7 @@
 
       const uniqueIds = Array.from(new Set(matchedIds));
       if (!uniqueIds.length) {
-        showToast('No matching songs found in library', 'fa-circle-xmark', 'text-rose-400');
+        showToast('No matching songs found in library or YouTube link', 'fa-circle-xmark', 'text-rose-400');
         return;
       }
 
