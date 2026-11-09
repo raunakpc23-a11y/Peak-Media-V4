@@ -141,7 +141,7 @@
     };
 
     const defaultProfile = {
-      username: 'Cinephile',
+      username: 'CinePhile',
       avatar: 'cinephile',
       favoriteGenre: 'Sci-Fi',
       secondaryGenres: ['Thriller', 'Drama'],
@@ -153,6 +153,10 @@
       favArtists: ['Arijit Singh', 'The Weeknd']
     };
     let obProfile = Object.assign({}, defaultProfile, getLS('cs_profile_v1', {}));
+    if (!obProfile.username || obProfile.username === 'Supabase Tester' || obProfile.username === 'Guest' || obProfile.username.toLowerCase() === 'cinephile') {
+      obProfile.username = 'CinePhile';
+      saveLS('cs_profile_v1', obProfile);
+    }
     if (!Array.isArray(obProfile.languages) || !obProfile.languages.length) {
       obProfile.languages = obProfile.language === 'English' ? ['English'] : obProfile.language === 'Hindi' ? ['Hindi'] : ['English', 'Hindi'];
     }
@@ -4764,11 +4768,12 @@ grant select, insert on public.user_activity to anon, authenticated;`;
             name = (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || (u.email ? u.email.split('@')[0] : '');
           }
         }
-        if (name && name.toLowerCase() !== 'guest') {
-          return `${name} (User ${userNum})`;
+        if (!name || name === 'Supabase Tester' || name.toLowerCase() === 'guest') {
+          name = 'CinePhile';
         }
+        return `${name} (User ${userNum})`;
       } catch (_) {}
-      return `User ${userNum}`;
+      return `CinePhile (User ${userNum})`;
     }
 
     function getISTTimestampString() {
