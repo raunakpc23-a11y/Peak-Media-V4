@@ -1677,7 +1677,10 @@
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <div class="relative flex-1 min-w-0">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-xs"></i>
-            <input type="text" id="musicSearchInput" placeholder="Search tracks, artists, OSTs..." class="w-full pl-8 pr-3 py-1.5 bg-black/70 border border-purple-500/30 rounded-xl text-xs text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 font-mono">
+            <input type="text" id="musicSearchInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search tracks, artists, OSTs..." class="w-full pl-8 pr-8 py-1.5 bg-black/70 border border-purple-500/30 rounded-xl text-xs text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 font-mono">
+            <button type="button" id="musicSearchClear" onclick="window.clearMusicSearch()" title="Clear search" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white flex items-center justify-center text-[10px] transition-all">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
           </div>
 
           <!-- 3 Compact Dropdowns: Balanced 3-column grid on mobile, flex on desktop (zero horizontal slider) -->
@@ -2040,6 +2043,72 @@
                     </div>
                     <div id="dnaCompat" class="text-sm text-gray-300 hidden"></div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Taste Constellation Web -->
+            <div id="constellationSection" class="glass-card rounded-3xl p-6 border border-white/10 space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                <div class="flex items-center gap-2.5">
+                  <i class="fa-solid fa-circle-nodes text-brand-gold text-lg"></i>
+                  <div>
+                    <h3 class="text-base sm:text-lg font-display font-extrabold text-white">Taste Constellation Web</h3>
+                    <p class="text-xs text-gray-400">Interactive stellar graph connecting your rated titles with undiscovered cinema stars.</p>
+                  </div>
+                </div>
+                <!-- Filters & Zoom -->
+                <div class="flex items-center gap-2 flex-wrap">
+                  <div class="flex items-center gap-1 p-1 rounded-xl bg-black/50 border border-white/10 text-xs font-semibold">
+                    <button type="button" onclick="setTasteDnaFilter('all')" id="tasteDnaFilter-all" class="px-2.5 py-1 rounded-lg bg-brand-gold text-black font-bold shadow transition-all">All</button>
+                    <button type="button" onclick="setTasteDnaFilter('movie')" id="tasteDnaFilter-movie" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">Movies</button>
+                    <button type="button" onclick="setTasteDnaFilter('show')" id="tasteDnaFilter-show" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">TV</button>
+                    <button type="button" onclick="setTasteDnaFilter('wish')" id="tasteDnaFilter-wish" class="px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all">Watchlist</button>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <button id="cxFullscreen" onclick="toggleConstellationFullscreen()" title="Toggle Fullscreen" aria-label="Toggle Fullscreen constellation" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-brand-gold hover:text-white transition-all flex items-center gap-1">
+                      <i class="fa-solid fa-expand" id="cxFsIcon"></i> <span class="hidden sm:inline" id="cxFsLabel">Fullscreen</span>
+                    </button>
+                    <button id="cxReset" title="Reset node positions" class="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-400 hover:text-white transition-all">
+                      <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="cxSub" class="text-xs text-gray-400"></div>
+
+              <!-- Constellation Canvas Viewport -->
+              <div id="cxWrap" class="relative rounded-2xl overflow-hidden border border-white/10 h-72 sm:h-96 w-full" style="background: radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%)">
+                <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
+                <div id="cxLegend" class="absolute top-2.5 left-2.5 flex flex-wrap gap-x-2.5 gap-y-1 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
+
+                <!-- In-Viewport Fullscreen Banner (Active during element fullscreen) -->
+                <div id="cxFsNotice" class="pointer-events-none fixed sm:absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 px-4 py-2 rounded-full bg-black/90 backdrop-blur-xl border border-brand-gold/50 shadow-2xl text-white text-xs font-semibold transition-all duration-300 opacity-0 -translate-y-4">
+                  <span class="w-2 h-2 rounded-full bg-brand-gold animate-ping"></span>
+                  <i class="fa-solid fa-expand text-brand-gold"></i>
+                  <span>Constellation Fullscreen · Exit button is located at top right (or press <strong>Esc</strong>)</span>
+                </div>
+                
+                <!-- Fullscreen Overlay Exit Button (Prominently placed at top-right of panel) -->
+                <button id="cxFsExitBtn" onclick="toggleConstellationFullscreen()" aria-label="Exit fullscreen" class="hidden absolute top-3 right-3 sm:top-4 sm:right-4 z-30 px-3.5 py-1.5 rounded-xl bg-black/90 hover:bg-black text-white text-xs font-bold border border-amber-400/40 items-center gap-1.5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.8)] transition-all cursor-pointer">
+                  <i class="fa-solid fa-compress text-brand-gold"></i> <span>Exit Fullscreen</span> <kbd class="hidden sm:inline text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-gray-300">ESC</kbd>
+                </button>
+
+                <!-- Zoom Buttons Overlay -->
+                <div class="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
+                  <button id="cxZin" aria-label="Zoom in constellation" title="Zoom in" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus"></i></button>
+                  <button id="cxZout" aria-label="Zoom out constellation" title="Zoom out" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus"></i></button>
+                  <button onclick="toggleConstellationFullscreen()" aria-label="Toggle Fullscreen" title="Toggle Fullscreen" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-expand"></i></button>
+                </div>
+
+                <div id="cxPanel" class="hidden absolute bottom-2.5 left-2.5 w-[min(300px,calc(100%-1.5rem))] glass-card rounded-xl p-3 shadow-2xl text-xs z-10"></div>
+
+                <div id="cxEmpty" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center bg-black/85 backdrop-blur-md">
+                  <i class="fa-solid fa-circle-nodes text-3xl text-gray-500 mb-2"></i>
+                  <p class="text-sm text-gray-300 font-bold">Your constellation is forming</p>
+                  <p class="text-xs text-gray-400 mt-1 mb-3">Mark titles watched to link stars across genres.</p>
+                  <button type="button" onclick="switchTab('movies')" class="px-3.5 py-1.5 rounded-xl bg-brand-gold text-black text-xs font-bold">Explore Films</button>
                 </div>
               </div>
             </div>
@@ -2763,6 +2832,7 @@
 
   <script src="supabase-config.js?v=5.4"></script>
   <script src="js/data.js?v=5.4"></script>
+  <script src="js/constellation.js?v=5.4"></script>
   <script src="js/hub-duel.js?v=5.4"></script>
   <script src="js/ui.js?v=5.4"></script>
   <script src="js/features.js?v=5.4"></script>

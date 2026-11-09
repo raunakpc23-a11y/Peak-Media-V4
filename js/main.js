@@ -1347,8 +1347,20 @@
       filterAndRenderMusic(true);
       if (window.initMusicVault) window.initMusicVault();
     };
+    window.clearMusicSearch = function() {
+      const input = $('musicSearchInput');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      const clearBtn = $('musicSearchClear');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      filterAndRenderMusic(true);
+    };
+
     window.resetMusicFilters = function() {
       if ($('musicSearchInput')) $('musicSearchInput').value = '';
+      if ($('musicSearchClear')) $('musicSearchClear').classList.add('hidden');
       if ($('musicFilterLang')) $('musicFilterLang').value = 'all';
       if ($('musicFilterPlaylist')) $('musicFilterPlaylist').value = 'all';
       if ($('musicFilterMood')) $('musicFilterMood').value = 'all';
@@ -1497,7 +1509,7 @@
               <button type="button" onclick="setMusicViewMode('all')" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow transition-all cursor-pointer">Explore All Songs</button>
             </div>`;
         } else {
-          container.innerHTML = `<div class="col-span-full py-12 text-center text-purple-200/60 text-sm font-mono">No celestial radio signals matched your frequency. <button type="button" onclick="resetMusicFilters()" class="text-brand-gold underline ml-1 font-bold">Reset scale</button></div>`;
+          container.innerHTML = `<div class="col-span-full py-12 text-center text-purple-200/60 text-sm font-mono">No tracks found matching your search. <button type="button" onclick="resetMusicFilters()" class="text-brand-gold underline ml-1 font-bold">Clear filters</button></div>`;
         }
         $('musicPagination').innerHTML = '';
         return;
@@ -1546,7 +1558,28 @@
 
     ['musicSearchInput', 'musicFilterLang', 'musicFilterPlaylist', 'musicFilterMood', 'musicFilterEra'].forEach(id => {
       const el = $(id);
-      if (el) el.addEventListener(id === 'musicSearchInput' ? 'input' : 'change', () => filterAndRenderMusic(true));
+      if (!el) return;
+      if (id === 'musicSearchInput') {
+        el.addEventListener('input', () => {
+          const clearBtn = $('musicSearchClear');
+          if (clearBtn) {
+            if (el.value.trim().length > 0) clearBtn.classList.remove('hidden');
+            else clearBtn.classList.add('hidden');
+          }
+          filterAndRenderMusic(true);
+        });
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            window.clearMusicSearch();
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            el.blur();
+          }
+        });
+      } else {
+        el.addEventListener('change', () => filterAndRenderMusic(true));
+      }
     });
 
     // Official YouTube IFrame Player Loader (Single Visible Instance)

@@ -1,0 +1,442 @@
+  // ==========================================
+  // TASTE CONSTELLATION — force-directed taste web (canvas)
+  // ==========================================
+  (function () {
+    const cv = document.getElementById('cxCanvas');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const S = { nodes: [], links: [], by: {}, explored: new Set(), k: 1, tx: 0, ty: 0, alpha: 1, sel: null, hover: null, drag: null, pan: null, moved: 0, W: 0, H: 0, dpr: 1, loop: false, type: 'all', wish: true, built: false };
+    const GH = 26, MAXSEED = 36;
+    const stars = Array.from({ length: 90 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + .3, p: Math.random() * 6 }));
+    const vis = () => {
+      const prof = document.getElementById('tab-profile');
+      if (prof && !prof.classList.contains('hidden')) {
+        const tasteStage = document.getElementById('profileStage-taste');
+        return tasteStage && !tasteStage.classList.contains('hidden');
+      }
+      const hub = document.getElementById('tab-hub');
+      if (hub && !hub.classList.contains('hidden')) return true;
+      const web = document.getElementById('tab-web');
+      return web && !web.classList.contains('hidden');
+    };
+    const fkey = i => i.cleanName.split(':')[0].toLowerCase().replace(/^the /, '').trim();
+    const th = g => genreThemes[g] || genreThemes.Drama;
+    const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${n >> 8 & 255},${n & 255},${a})`; };
+    const stars5 = t => (myRatings && myRatings[t]) || 0;
+
+    function aff(a, b) {
+      let s = 0;
+      const targetGenre = (window.oppOn && window.oppOn() && window.oppGenre) ? window.oppGenre(a.genre) : a.genre;
+      if (targetGenre === b.genre) s += 3;
+      const dy = Math.abs(a.year - b.year); s += dy <= 4 ? 2 : dy <= 10 ? 1 : 0;
+      if (Math.abs(a.rating - b.rating) <= 0.6) s += 1;
+      if (a.type === b.type) s += 1;
+      const ka = fkey(a), kb = fkey(b);
+      if (ka === kb || (ka.length >= 5 && kb.length >= 5 && (ka.startsWith(kb) || kb.startsWith(ka)))) s += 4;
+      return s;
+    }
+
+    function build(keep) {
+      const old = S.by, prevSel = S.sel && S.sel.t;
+      const seedItems = [];
+      const watched = watchedTitles.map(t => globalDatabase[t]).filter(Boolean)
+        .sort((a, b) => (stars5(b.title) - stars5(a.title)) || (b.rating - a.rating)).slice(0, MAXSEED);
+      watched.forEach(i => seedItems.push({ i, kind: 'seed', w: .6 + .2 * (stars5(i.title) || 3) }));
+      const have = new Set(seedItems.map(s => s.i.title));
+      if (S.wish) wishlistTitles.forEach(t => { const i = globalDatabase[t]; if (i && !have.has(t)) { have.add(t); seedItems.push({ i, kind: 'wish', w: .7 }); } });
+      S.explored.forEach(t => { const i = globalDatabase[t]; if (i && !have.has(t)) { have.add(t); seedItems.push({ i, kind: 'explored', w: .9 }); } });
+
+      const empty = !seedItems.length;
+      const emptyEl = document.getElementById('cxEmpty');
+      if (emptyEl) emptyEl.classList.toggle('hidden', !empty);
+
+      if (empty) {
+        S.nodes = [];
+        S.links = [];
+        S.by = {};
+        S.sel = null;
+        if (ctx) ctx.clearRect(0, 0, S.W || 400, S.H || 300);
+        legend();
+        sub(0, 0);
+        panel();
+        return;
+      }
+
+      // ghost candidates scored against every seed
+      const scored = [];
+      if (!empty) for (const t of allTitles) {
+        if (have.has(t) || watchedTitles.includes(t)) continue;
+        const c = globalDatabase[t];
+        if (S.type !== 'all' && c.type !== S.type) continue;
+        let sum = 0; const per = [];
+        for (const s of seedItems) { const a = aff(s.i, c) * s.w; sum += a; per.push([s.i.title, a]); }
+        const pop = (c.thumb ? 2 : 0) + (1 - Math.min(c.rank, 1500) / 1500) * 2; // popularity beats raw rating
+        scored.push({ c, score: sum / Math.sqrt(seedItems.length) + pop, per });
+      }
+      scored.sort((a, b) => b.score - a.score);
+      // Balanced genre diversity formula: cap recommendations per genre so no single category dominates
+      const ghosts = [];
+      const genreCounts = {};
+      const maxPerGenre = 2; // Maximum 2 suggestions per genre for rich, balanced diversity
+      for (const item of scored) {
+        const g = (item.c && item.c.genre) || 'Other';
+        genreCounts[g] = genreCounts[g] || 0;
+        if (genreCounts[g] < maxPerGenre) {
+          ghosts.push(item);
+          genreCounts[g]++;
+          if (ghosts.length >= GH) break;
+        }
+      }
+      // Fill any remaining slots up to GH from next best scoring items
+      if (ghosts.length < GH) {
+        for (const item of scored) {
+          if (!ghosts.includes(item)) {
+            ghosts.push(item);
+            if (ghosts.length >= GH) break;
+          }
+        }
+      }
+
+      const nodes = [], by = {}, links = [], lk = new Set();
+      const mk = (item, kind, extra) => {
+        const o = old[item.title];
+        const n = { t: item.title, item, kind, x: o ? o.x : 0, y: o ? o.y : 0, vx: 0, vy: 0, fresh: !o, ...extra };
+        const st = stars5(item.title);
+        n.r = kind === 'ghost' ? 5 + Math.min(4, (extra.score || 0) / 6) : 7 + (st ? st * 1.6 : (item.rating - 5) * 1.4);
+        nodes.push(n); by[item.title] = n; return n;
+      };
+      seedItems.forEach(s => mk(s.i, s.kind, {}));
+      ghosts.forEach(g => mk(g.c, 'ghost', { score: g.score, per: g.per }));
+      const link = (a, b, w) => { const k = a < b ? a + '|' + b : b + '|' + a; if (a === b || lk.has(k)) return; lk.add(k); links.push({ a: by[a], b: by[b], w }); };
+      ghosts.forEach(g => g.per.sort((x, y) => y[1] - x[1]).slice(0, 2).forEach(([t, v]) => { if (v > 2) link(g.c.title, t, v); }));
+      seedItems.forEach(s => {
+        let best = null, bv = 0;
+        seedItems.forEach(o => { if (o !== s) { const v = aff(s.i, o.i); if (v > bv) { bv = v; best = o; } } });
+        if (best && bv >= 5) link(s.i.title, best.i.title, bv);
+      });
+      // keep graph connected-ish: orphan seeds hook to the nearest-affinity seed
+      seedItems.forEach(s => { if (!links.some(l => l.a === by[s.i.title] || l.b === by[s.i.title]) && seedItems.length > 1) { const o = seedItems.find(x => x !== s); if (o) link(s.i.title, o.i.title, 1); } });
+
+      // initial positions: new nodes start next to a linked neighbour (or on a genre ring)
+      const gl = Object.keys(genreThemes);
+      nodes.forEach(n => {
+        if (!n.fresh) return;
+        const nb = links.map(l => l.a === n ? l.b : l.b === n ? l.a : null).find(o => o && !o.fresh);
+        if (nb) { n.x = nb.x + (Math.random() - .5) * 60; n.y = nb.y + (Math.random() - .5) * 60; }
+        else { const a = (gl.indexOf(n.item.genre) / gl.length) * 6.283 + Math.random() * .6; const rr = 120 + Math.random() * 120; n.x = Math.cos(a) * rr; n.y = Math.sin(a) * rr; }
+      });
+      S.nodes = nodes; S.by = by; S.links = links; S.sel = prevSel && by[prevSel] || null;
+      S.alpha = 1;
+      for (let i = 0; i < (keep ? 70 : 220); i++) step();
+      if (!keep || !S.built) fit();
+      S.built = true;
+      legend(); sub(seedItems.length, ghosts.length); panel();
+    }
+
+    const anchor = g => { const gl = Object.keys(genreThemes), a = gl.indexOf(g) / gl.length * 6.283; return [Math.cos(a) * 230, Math.sin(a) * 230]; };
+    function step() {
+      const N = S.nodes, a = S.alpha;
+      for (let i = 0; i < N.length; i++) {
+        const p = N[i];
+        for (let j = i + 1; j < N.length; j++) {
+          const q = N[j];
+          let dx = p.x - q.x, dy = p.y - q.y, d2 = dx * dx + dy * dy + 40;
+          if (d2 > 120000) continue;
+          const f = 7200 * a / d2, d = Math.sqrt(d2) || 1;
+          const fx = dx / d * f, fy = dy / d * f;
+          p.vx += fx; p.vy += fy; q.vx -= fx; q.vy -= fy;
+
+          // Collision separation radius: accounts for node radius + text bounding box footprint
+          const minDistance = p.r + q.r + 52;
+          if (d < minDistance) {
+            const overlap = (minDistance - d) / d * 0.45 * a;
+            const ox = dx * overlap, oy = dy * overlap;
+            p.vx += ox; p.vy += oy;
+            q.vx -= ox; q.vy -= oy;
+          }
+        }
+        const [ax, ay] = anchor(p.item.genre), k = p.kind === 'ghost' ? .004 : .009;
+        p.vx += (ax - p.x) * k * a - p.x * .004 * a; p.vy += (ay - p.y) * k * a - p.y * .004 * a;
+      }
+      for (const l of S.links) {
+        const dx = l.b.x - l.a.x, dy = l.b.y - l.a.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
+        const rest = (l.a.kind === 'ghost' || l.b.kind === 'ghost') ? 115 : 160, f = (d - rest) * .02 * a;
+        l.a.vx += dx / d * f; l.a.vy += dy / d * f; l.b.vx -= dx / d * f; l.b.vy -= dy / d * f;
+      }
+      for (const n of N) { if (n === S.drag) { n.vx = n.vy = 0; continue; } n.vx *= .82; n.vy *= .82; n.x += n.vx; n.y += n.vy; }
+      S.alpha = Math.max(0, a * .985 - .0005);
+    }
+
+    function fit() {
+      resize();
+      if (!S.nodes.length) { S.k = 1; S.tx = S.ty = 0; return; }
+      let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+      S.nodes.forEach(n => { x0 = Math.min(x0, n.x); x1 = Math.max(x1, n.x); y0 = Math.min(y0, n.y); y1 = Math.max(y1, n.y); });
+      const spanX = Math.max(x1 - x0, 100);
+      const spanY = Math.max(y1 - y0, 100);
+      const pad = 140;
+      const k = Math.max(.35, Math.min(1.5, Math.min(Math.max(200, S.W - pad) / spanX, Math.max(200, S.H - pad) / spanY)));
+      S.k = k; S.tx = -(x0 + x1) / 2 * k; S.ty = -(y0 + y1) / 2 * k;
+      run();
+    }
+    const sx = x => x * S.k + S.W / 2 + S.tx, sy = y => y * S.k + S.H / 2 + S.ty;
+
+    function draw(ts) {
+      if (!vis()) { S.loop = false; return; }
+      if (S.alpha > .004) step();
+      const { W, H } = S, t = ts / 1000;
+      ctx.setTransform(S.dpr, 0, 0, S.dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      stars.forEach(s => { ctx.globalAlpha = .25 + .35 * Math.sin(t * .8 + s.p) ** 2; ctx.fillStyle = '#cbd5e1'; ctx.fillRect(s.x * W, s.y * H, s.r, s.r); });
+      ctx.globalAlpha = 1;
+      const focus = S.hover || S.sel;
+      for (const l of S.links) {
+        const hot = focus && (l.a === focus || l.b === focus), c = th((l.a.kind !== 'ghost' ? l.a : l.b).item.genre).accent;
+        ctx.strokeStyle = rgba(c, hot ? .85 : .22); ctx.lineWidth = hot ? 1.8 : 1;
+        ctx.setLineDash(l.a.kind === 'ghost' || l.b.kind === 'ghost' ? [4, 4] : []);
+        ctx.beginPath(); ctx.moveTo(sx(l.a.x), sy(l.a.y)); ctx.lineTo(sx(l.b.x), sy(l.b.y)); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+      const top = new Set(S.nodes.filter(n => n.kind === 'ghost').sort((a, b) => b.score - a.score).slice(0, 5));
+      const placedLabels = [];
+      for (const n of S.nodes) {
+        const x = sx(n.x), y = sy(n.y), r = n.r * Math.min(1.4, Math.max(.7, S.k)), ac = th(n.item.genre).accent, ghost = n.kind === 'ghost';
+        if (x < -40 || y < -40 || x > W + 40 || y > H + 40) continue;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r * (ghost ? 3 : 4));
+        g.addColorStop(0, rgba(ac, ghost ? .35 : .6)); g.addColorStop(1, rgba(ac, 0));
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * (ghost ? 3 : 4), 0, 6.283); ctx.fill();
+        if (ghost && top.has(n)) { const p = (((t * .7 + n.x * .013) % 1) + 1) % 1; ctx.strokeStyle = rgba(ac, .5 * (1 - p)); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, r + p * 16, 0, 6.283); ctx.stroke(); }
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283);
+        ctx.fillStyle = ghost ? '#0c1020' : ac; ctx.fill();
+        ctx.lineWidth = n === S.sel ? 3 : 1.6; ctx.strokeStyle = n === S.sel ? '#fff' : n.kind === 'wish' ? '#fb7185' : n.kind === 'explored' ? '#F5C518' : rgba(ac, ghost ? .95 : .5); ctx.stroke();
+        const showLbl = n === focus || (!ghost && S.k > .65) || (ghost && S.k > 1.25);
+        if (showLbl) {
+          const name = n.item.cleanName.length > 22 ? n.item.cleanName.slice(0, 21) + '…' : n.item.cleanName;
+          ctx.font = '700 11px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          const tw = ctx.measureText(name).width;
+
+          // Dynamic alternate label placement and collision avoidance against previously placed labels
+          let lblY = y + r + 14;
+          let box = { x1: x - tw / 2 - 6, x2: x + tw / 2 + 6, y1: lblY - 11, y2: lblY + 3 };
+          const collides = placedLabels.some(b => !(box.x2 < b.x1 || box.x1 > b.x2 || box.y2 < b.y1 || box.y1 > b.y2));
+          if (collides) {
+            lblY = y - r - 8;
+            box = { x1: x - tw / 2 - 6, x2: x + tw / 2 + 6, y1: lblY - 11, y2: lblY + 3 };
+          }
+          placedLabels.push(box);
+
+          // Rich halo contrast for pristine readability
+          ctx.lineWidth = 4.5;
+          ctx.strokeStyle = 'rgba(5,7,12,0.95)';
+          ctx.strokeText(name, x, lblY);
+          ctx.fillStyle = ghost ? '#cbd5e1' : '#ffffff';
+          ctx.fillText(name, x, lblY);
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+    function run() { if (!S.loop) { S.loop = true; requestAnimationFrame(draw); } }
+
+    function resize() {
+      const w = document.getElementById('cxWrap') || cv.parentElement;
+      if (!w || !w.clientWidth) return;
+      S.dpr = Math.min(2, window.devicePixelRatio || 1);
+      S.W = w.clientWidth;
+      S.H = w.clientHeight || 300;
+      cv.width = S.W * S.dpr;
+      cv.height = S.H * S.dpr;
+    }
+    function legend() {
+      const used = [...new Set(S.nodes.map(n => n.item.genre))];
+      document.getElementById('cxLegend').innerHTML = used.map(g => `<span class="flex items-center gap-1"><i class="inline-block w-2 h-2 rounded-full" style="background:${th(g).accent}"></i>${g}</span>`).join('') +
+        '<span class="flex items-center gap-1"><i class="inline-block w-2 h-2 rounded-full border border-gray-400"></i>suggested</span>';
+    }
+    function sub(s, g) {
+      const el = document.getElementById('cxSub');
+      if (el) el.textContent = s ? `${s} titles in your web · ${g} suggestions ranked by how many of your picks they connect to (popular first).` : 'Your watched titles form a web. Glowing outer nodes are what to watch next.';
+    }
+
+    function panel() {
+      const el = document.getElementById('cxPanel'), n = S.sel;
+      if (!n) { el.classList.add('hidden'); return; }
+      const it = n.item, ghost = n.kind === 'ghost';
+      const why = ghost ? (n.per || []).slice().sort((a, b) => b[1] - a[1]).filter(p => p[1] > 2).slice(0, 2).map(p => p[0]) : [];
+      const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+      const isW = wishlistTitles.includes(it.title), isS = watchedTitles.includes(it.title);
+      el.innerHTML = `<div class="flex gap-3"><img id="cxImg" class="w-16 h-24 rounded-lg object-cover shrink-0" src="${posterCache[it.type + ':' + it.title] || generateStylizedPosterDataURI(it)}" alt="">
+        <div class="min-w-0 flex-1"><div class="text-[10px] font-bold uppercase tracking-wider" style="color:${th(it.genre).accent}">${it.genre} · ${it.type === 'show' ? 'TV' : 'Movie'}</div>
+        <div class="font-bold text-white text-sm leading-tight line-clamp-2">${esc(it.cleanName)}</div>
+        <div class="text-xs text-gray-400 mt-0.5"><i class="fa-solid fa-star text-brand-gold text-[9px]"></i> ${it.rating} · ${it.year} · ${it.platformName}</div>
+        <div class="text-[11px] text-gray-400 mt-1 line-clamp-2">${ghost ? (why.length ? 'Because you like ' + esc(why.join(' & ')) : 'Fits your overall taste') : n.kind === 'wish' ? 'On your watchlist' : n.kind === 'explored' ? 'Explored branch' : 'You watched this'}</div></div>
+        <button id="cxX" class="text-gray-500 hover:text-white self-start"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="flex flex-wrap gap-1.5 mt-2.5 text-[11px] font-semibold">
+          ${ghost ? '<button id="cxExp" class="px-2.5 py-1.5 rounded-lg bg-brand-gold text-black"><i class="fa-solid fa-diagram-project mr-1"></i>Explore from here</button>' : ''}
+          <button id="cxW" class="px-2.5 py-1.5 rounded-lg ${isW ? 'bg-rose-500 text-white' : 'bg-white/10 text-gray-200'}"><i class="fa-solid fa-heart mr-1"></i>${isW ? 'Listed' : 'Watchlist'}</button>
+          <button id="cxS" class="px-2.5 py-1.5 rounded-lg ${isS ? 'bg-emerald-500 text-black' : 'bg-white/10 text-gray-200'}"><i class="fa-solid fa-check mr-1"></i>${isS ? 'Watched' : 'Mark watched'}</button>
+          <button id="cxD" class="px-2.5 py-1.5 rounded-lg bg-white/10 text-gray-200">Details</button></div>`;
+      el.classList.remove('hidden');
+      const $ = id => el.querySelector('#' + id);
+      $('cxX').onclick = () => { S.sel = null; panel(); };
+      $('cxW').onclick = e => toggleWishlist(it.title, e);
+      $('cxS').onclick = e => toggleWatched(it.title, e);
+      $('cxD').onclick = () => openDetailModal(it.title);
+      if ($('cxExp')) $('cxExp').onclick = () => { S.explored.add(it.title); build(true); S.sel = S.by[it.title] || null; panel(); showToast(`Grew the web around "${it.cleanName}"`, 'fa-circle-nodes'); };
+      if (it.thumb) fetchPoster(it).then(u => { const im = $('cxImg'); if (u && im && S.sel === n) im.src = u; });
+    }
+
+    // ---- interaction ----
+    const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    const world = (px, py) => [(px - S.W / 2 - S.tx) / S.k, (py - S.H / 2 - S.ty) / S.k];
+    function pick(px, py) {
+      const [x, y] = world(px, py); let best = null, bd = 1e9;
+      for (const n of S.nodes) { const d = Math.hypot(n.x - x, n.y - y); if (d < n.r + 8 / S.k && d < bd) { bd = d; best = n; } }
+      return best;
+    }
+    cv.addEventListener('pointerdown', e => {
+      cv.setPointerCapture(e.pointerId); const [px, py] = pos(e), n = pick(px, py); S.moved = 0;
+      if (n) S.drag = n; else S.pan = { x: e.clientX, y: e.clientY, tx: S.tx, ty: S.ty };
+    });
+    cv.addEventListener('pointermove', e => {
+      const [px, py] = pos(e);
+      if (S.drag) { const [wx, wy] = world(px, py); S.drag.x = wx; S.drag.y = wy; S.moved++; S.alpha = Math.max(S.alpha, .25); }
+      else if (S.pan) { S.tx = S.pan.tx + e.clientX - S.pan.x; S.ty = S.pan.ty + e.clientY - S.pan.y; S.moved += 2; }
+      else { S.hover = pick(px, py); cv.style.cursor = S.hover ? 'pointer' : 'grab'; }
+    });
+    cv.addEventListener('pointerup', () => {
+      if (S.drag && S.moved < 4) { S.sel = S.drag; panel(); }
+      else if (S.pan && S.moved < 4) { S.sel = null; panel(); }
+      S.drag = null; S.pan = null;
+    });
+    cv.addEventListener('pointerleave', () => { S.hover = null; });
+    function zoom(f, px = S.W / 2, py = S.H / 2) {
+      const [wx, wy] = world(px, py), k = Math.max(.3, Math.min(3, S.k * f));
+      S.k = k; S.tx = px - S.W / 2 - wx * k; S.ty = py - S.H / 2 - wy * k;
+    }
+    cv.addEventListener('wheel', e => { e.preventDefault(); const [px, py] = pos(e); zoom(e.deltaY < 0 ? 1.12 : .89, px, py); }, { passive: false });
+    const zin = document.getElementById('cxZin'); if (zin) zin.onclick = () => zoom(1.25);
+    const zout = document.getElementById('cxZout'); if (zout) zout.onclick = () => zoom(.8);
+
+    function toggleConstellationFullscreen() {
+      const wrap = document.getElementById('cxWrap');
+      if (!wrap) return;
+      const isFs = wrap.classList.contains('cx-fullscreen-active') || document.fullscreenElement === wrap;
+      const fsIcon = document.getElementById('cxFsIcon');
+      const fsLabel = document.getElementById('cxFsLabel');
+      const exitBtn = document.getElementById('cxFsExitBtn');
+      const fsNotice = document.getElementById('cxFsNotice');
+
+      if (!isFs) {
+        // Enter fullscreen
+        wrap.classList.add('cx-fullscreen-active');
+        if (fsIcon) { fsIcon.classList.remove('fa-expand'); fsIcon.classList.add('fa-compress'); }
+        if (fsLabel) fsLabel.textContent = 'Exit';
+        if (exitBtn) { exitBtn.classList.remove('hidden'); exitBtn.classList.add('flex'); }
+        if (wrap.requestFullscreen) {
+          wrap.requestFullscreen().catch(() => {});
+        } else if (wrap.webkitRequestFullscreen) {
+          wrap.webkitRequestFullscreen();
+        }
+        if (fsNotice) {
+          fsNotice.classList.remove('opacity-0', '-translate-y-4');
+          fsNotice.classList.add('opacity-100', 'translate-y-0');
+          setTimeout(() => {
+            if (fsNotice) {
+              fsNotice.classList.remove('opacity-100', 'translate-y-0');
+              fsNotice.classList.add('opacity-0', '-translate-y-4');
+            }
+          }, 3500);
+        }
+        if (window.showFullscreenNotice) {
+          window.showFullscreenNotice('Constellation Fullscreen · Exit button is located at top right (or press Esc)');
+        }
+      } else {
+        // Exit fullscreen
+        wrap.classList.remove('cx-fullscreen-active');
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        if (fsIcon) { fsIcon.classList.remove('fa-compress'); fsIcon.classList.add('fa-expand'); }
+        if (fsLabel) fsLabel.textContent = 'Fullscreen';
+        if (exitBtn) { exitBtn.classList.add('hidden'); exitBtn.classList.remove('flex'); }
+        if (fsNotice) {
+          fsNotice.classList.remove('opacity-100', 'translate-y-0');
+          fsNotice.classList.add('opacity-0', '-translate-y-4');
+        }
+      }
+      setTimeout(() => {
+        resize();
+        fit();
+      }, 50);
+      setTimeout(() => {
+        resize();
+        fit();
+      }, 160);
+    }
+    window.toggleConstellationFullscreen = toggleConstellationFullscreen;
+
+    const fsBtn = document.getElementById('cxFullscreen');
+    if (fsBtn) fsBtn.onclick = toggleConstellationFullscreen;
+    const fsExitBtn = document.getElementById('cxFsExitBtn');
+    if (fsExitBtn) fsExitBtn.onclick = toggleConstellationFullscreen;
+
+    // Handle Esc key to cleanly exit constellation fullscreen
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        const wrap = document.getElementById('cxWrap');
+        if (wrap && wrap.classList.contains('cx-fullscreen-active')) {
+          toggleConstellationFullscreen();
+        }
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      const wrap = document.getElementById('cxWrap');
+      if (!wrap) return;
+      if (!document.fullscreenElement && wrap.classList.contains('cx-fullscreen-active')) {
+        toggleConstellationFullscreen();
+      }
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+      const wrap = document.getElementById('cxWrap');
+      if (!wrap) return;
+      if (!document.webkitFullscreenElement && wrap.classList.contains('cx-fullscreen-active')) {
+        toggleConstellationFullscreen();
+      }
+    });
+
+    const typeSel = document.getElementById('cxType'); if (typeSel) typeSel.onchange = e => { S.type = e.target.value; build(true); };
+    const wishChk = document.getElementById('cxWish'); if (wishChk) wishChk.onchange = e => { S.wish = e.target.checked; build(true); };
+    const resetBtn = document.getElementById('cxReset'); if (resetBtn) resetBtn.onclick = () => { S.explored.clear(); S.by = {}; S.sel = null; S.built = false; build(false); };
+    window.addEventListener('resize', () => { if (vis()) resize(); });
+
+    window.setTasteDnaFilter = function(filterMode) {
+      document.querySelectorAll('[id^="tasteDnaFilter-"]').forEach(btn => {
+        btn.className = 'px-2.5 py-1 rounded-lg text-gray-300 hover:text-white transition-all';
+      });
+      const activeBtn = document.getElementById('tasteDnaFilter-' + filterMode);
+      if (activeBtn) activeBtn.className = 'px-2.5 py-1 rounded-lg bg-brand-gold text-black font-bold shadow transition-all';
+
+      if (filterMode === 'all') {
+        S.type = 'all';
+        S.wish = true;
+      } else if (filterMode === 'movie') {
+        S.type = 'movie';
+        S.wish = false;
+      } else if (filterMode === 'show') {
+        S.type = 'show';
+        S.wish = false;
+      } else if (filterMode === 'wish') {
+        S.type = 'all';
+        S.wish = true;
+      }
+      build(true);
+      fit();
+    };
+
+    window.cxOpen = function () { resize(); if (!S.built) build(false); else if (S.dirty) { S.dirty = false; build(true); } else fit(); run(); };
+    // keep the web in sync when the watched list / watchlist / ratings change without wiping node positions
+    const baseUpdate = updateAllCountersAndViews;
+    updateAllCountersAndViews = function () { baseUpdate.apply(this, arguments); if (S.built && vis()) { build(true); } else if (S.built) { S.dirty = true; } };
+  })();
