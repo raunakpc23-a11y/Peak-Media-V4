@@ -4465,39 +4465,98 @@ window.PEAK_SUPABASE_ANON_KEY = '${cfg.key || 'YOUR-PUBLIC-ANON-KEY'}';`;
       }
     };
     window.copySupabaseSetupSQL = function() {
-      const sql = `-- Run this in your Supabase SQL Editor (fixes RLS & missing columns so ALL visitors sync):
+      const sql = `-- Run this in your Supabase SQL Editor:
+-- Resolves NULL user IDs, assigns constant stick numbers (User 1, 2, 3), and filters 0-second sessions
+
+create table if not exists public.visitor_sessions (
+  id bigint generated always as identity primary key,
+  user_id integer not null default 1,
+  user_num integer not null default 1,
+  visitor_id text not null default '1',
+  visitor_name text not null default 'Guest',
+  device text,
+  location text,
+  time_spent_seconds integer not null default 1,
+  created_at timestamptz default now(),
+  last_active_at timestamptz default now()
+);
+
 create table if not exists public.visitor_logs (
   id bigint generated always as identity primary key,
+  user_id integer not null default 1,
+  user_num integer not null default 1,
   visitor_name text not null default 'Guest',
   device_type text,
   lang_pref text,
   visit_count int default 1,
   watchlist_count int default 0,
   watched_count int default 0,
+  time_spent_seconds integer default 1,
   visited_at timestamptz default now()
 );
+
+create table if not exists public.user_activity (
+  id bigint generated always as identity primary key,
+  user_id integer not null default 1,
+  user_num integer not null default 1,
+  session_id bigint,
+  action_type text not null,
+  item_id text,
+  item_title text,
+  extra_meta jsonb,
+  created_at timestamptz default now()
+);
+
+-- View that strictly excludes 0-second / blank visits
+create or replace view public.active_viewers as
+select * from public.visitor_sessions
+where time_spent_seconds > 0;
+
+alter table public.visitor_sessions enable row level security;
 alter table public.visitor_logs enable row level security;
-drop policy if exists "Allow anonymous inserts" on public.visitor_logs;
-drop policy if exists "Allow anonymous reads" on public.visitor_logs;
-create policy "Allow anonymous inserts" on public.visitor_logs for insert to anon, authenticated with check (true);
-create policy "Allow anonymous reads" on public.visitor_logs for select to anon, authenticated using (true);
+alter table public.user_activity enable row level security;
+
+drop policy if exists "Allow all inserts" on public.visitor_sessions;
+drop policy if exists "Allow all reads" on public.visitor_sessions;
+drop policy if exists "Allow all updates" on public.visitor_sessions;
+create policy "Allow all inserts" on public.visitor_sessions for insert to anon, authenticated with check (true);
+create policy "Allow all reads" on public.visitor_sessions for select to anon, authenticated using (true);
+create policy "Allow all updates" on public.visitor_sessions for update to anon, authenticated using (true);
+
+drop policy if exists "Allow all inserts" on public.visitor_logs;
+drop policy if exists "Allow all reads" on public.visitor_logs;
+create policy "Allow all inserts" on public.visitor_logs for insert to anon, authenticated with check (true);
+create policy "Allow all reads" on public.visitor_logs for select to anon, authenticated using (true);
+
+drop policy if exists "Allow all inserts" on public.user_activity;
+drop policy if exists "Allow all reads" on public.user_activity;
+create policy "Allow all inserts" on public.user_activity for insert to anon, authenticated with check (true);
+create policy "Allow all reads" on public.user_activity for select to anon, authenticated using (true);
+
 grant usage on schema public to anon, authenticated;
-grant select, insert on public.visitor_logs to anon, authenticated;`;
+grant select, insert, update on public.visitor_sessions to anon, authenticated;
+grant select, insert on public.visitor_logs to anon, authenticated;
+grant select, insert on public.user_activity to anon, authenticated;`;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(sql).then(() => showToast('Copied complete Supabase SQL & RLS script!', 'fa-copy', 'text-emerald-400')).catch(() => {});
+        navigator.clipboard.writeText(sql).then(() => showToast('Copied upgraded Supabase SQL schema!', 'fa-copy', 'text-emerald-400')).catch(() => {});
       }
     };
     window.simulateAdminVisitorPing = async function(silent = false) {
       const visits = (getLS('cs_visit_count', 0) || 0) + 1;
       saveLS('cs_visit_count', visits);
       const cfg = getAdminSupaConfig();
+      const userNum = (typeof getPersistentUserNumber === 'function') ? getPersistentUserNumber() : 1;
+      const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : (obProfile.username || 'Guest');
       const record = {
-        visitor_name: (obProfile.username || 'Guest') + ' [' + (obProfile.favoriteGenre || 'Sci-Fi') + ']',
+        user_id: userNum,
+        user_num: userNum,
+        visitor_name: visitorName,
         device_type: (window.innerWidth < 768 ? 'Mobile' : 'Desktop') + ' (' + window.innerWidth + 'px)',
         lang_pref: obProfile.language || 'All',
         visit_count: visits,
         watchlist_count: wishlistTitles.length,
-        watched_count: watchedTitles.length
+        watched_count: watchedTitles.length,
+        time_spent_seconds: Math.max(1, (typeof sessionSeconds !== 'undefined' ? sessionSeconds : 1))
       };
       const pill = $('adminCloudStatusPill');
       if (cfg.url && cfg.key) {
@@ -4620,20 +4679,16 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
     function getPersistentUserNumber() {
       let num = localStorage.getItem('pm_user_seq_num');
       if (!num) {
-        num = String(Math.floor(1000 + Math.random() * 9000));
+        const hasHistory = localStorage.getItem('cs_profile_username') || localStorage.getItem('cs_watched') || localStorage.getItem('cs_wishlist');
+        num = hasHistory ? '1' : String(Math.floor(2 + Math.random() * 8));
         localStorage.setItem('pm_user_seq_num', num);
       }
-      return num;
+      return parseInt(num, 10);
     }
 
     function getPersistentVisitorId() {
       const userNum = getPersistentUserNumber();
-      let vid = localStorage.getItem('pm_visitor_id');
-      if (!vid) {
-        vid = 'usr_' + userNum;
-        localStorage.setItem('pm_visitor_id', vid);
-      }
-      return vid;
+      return `usr_${userNum}`;
     }
 
     function getTelemetryProfileName() {
@@ -4647,7 +4702,6 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
           const stored = localStorage.getItem('cs_profile_username');
           if (stored) name = stored.trim();
         }
-        // Direct link to Supabase authenticated user account if signed in
         if (!name && window.supabaseClient && window.supabaseClient.auth) {
           const u = typeof window.supabaseClient.auth.user === 'function' ? window.supabaseClient.auth.user() : null;
           if (u) {
@@ -4655,10 +4709,10 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
           }
         }
         if (name && name.toLowerCase() !== 'guest') {
-          return `${name} (#${userNum})`;
+          return `${name} (User ${userNum})`;
         }
       } catch (_) {}
-      return `Guest (#${userNum})`;
+      return `Guest (User ${userNum})`;
     }
 
     function getISTTimestampString() {
@@ -4791,6 +4845,10 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
                 'Prefer': 'return=representation'
               },
               body: JSON.stringify({
+                user_id: getPersistentUserNumber(),
+                user_num: getPersistentUserNumber(),
+                visitor_id: String(getPersistentUserNumber()),
+                visitor_name: visitorName,
                 device: `${visitorName} · ${deviceStr} · ${launchStr}`,
                 location: `${locStr} · ${cohortStr} · ${orientStr}`,
                 time_spent_seconds: sessionSeconds
@@ -4854,16 +4912,19 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
             'Prefer': 'return=minimal'
           },
           body: JSON.stringify({
+            user_id: getPersistentUserNumber(),
+            user_num: getPersistentUserNumber(),
             session_id: currentSessionId || undefined,
             action_type: actionType,
             item_id: String(itemId || itemTitle),
             item_title: String(itemTitle || itemId),
             extra_meta: {
               ...extraMeta,
+              user_id: getPersistentUserNumber(),
               visitor_name: visitorName,
-              visitor_id: visitorId,
+              visitor_id: String(getPersistentUserNumber()),
               ist_time: istTimeStr,
-              loyalty_cohort: cohortStr,
+              visit_count: cohortStr,
               screen_orientation: orientStr,
               app_launch_mode: launchStr
             }
