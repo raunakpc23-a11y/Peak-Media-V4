@@ -4509,26 +4509,22 @@ create table if not exists public.user_activity (
 );
 
 -- Migration for existing installations to guarantee columns exist with integer defaults
-alter table if exists public.visitor_sessions add column if not exists user_id integer default 1;
-alter table if exists public.visitor_sessions add column if not exists user_num integer default 1;
-alter table if exists public.visitor_sessions add column if not exists visitor_id text default '1';
-alter table if exists public.visitor_sessions add column if not exists visitor_name text default 'User 1';
+alter table if exists public.visitor_sessions add column if not exists user_id text default '1';
+alter table if exists public.visitor_sessions alter column user_id type text using user_id::text;
+alter table if exists public.visitor_sessions alter column user_id set default '1';
 
-alter table if exists public.visitor_logs add column if not exists user_id integer default 1;
-alter table if exists public.visitor_logs add column if not exists user_num integer default 1;
-alter table if exists public.visitor_logs add column if not exists visitor_id text default '1';
+alter table if exists public.user_activity add column if not exists user_id text default '1';
+alter table if exists public.user_activity alter column user_id type text using user_id::text;
+alter table if exists public.user_activity alter column user_id set default '1';
+
+alter table if exists public.visitor_sessions add column if not exists visitor_name text default 'User 1';
+alter table if exists public.visitor_logs add column if not exists user_id text default '1';
 alter table if exists public.visitor_logs add column if not exists visitor_name text default 'User 1';
 
-alter table if exists public.user_activity add column if not exists user_id integer default 1;
-alter table if exists public.user_activity add column if not exists user_num integer default 1;
-
--- Backfill any past null entries to User 1
-update public.visitor_sessions set user_id = 1 where user_id is null;
-update public.visitor_sessions set user_num = 1 where user_num is null;
-update public.visitor_logs set user_id = 1 where user_id is null;
-update public.visitor_logs set user_num = 1 where user_num is null;
-update public.user_activity set user_id = 1 where user_id is null;
-update public.user_activity set user_num = 1 where user_num is null;
+-- Backfill any past null entries to User 1 and replace generic 'Guest' tags
+update public.visitor_sessions set user_id = '1' where user_id is null;
+update public.visitor_sessions set visitor_name = 'User 1 (Admin)' where visitor_name = 'Guest' or visitor_name is null;
+update public.user_activity set user_id = '1' where user_id is null;
 
 -- View that strictly excludes 0-second / blank visits
 create or replace view public.active_viewers as
@@ -4673,37 +4669,41 @@ grant select, insert on public.user_activity to anon, authenticated;`;
         return;
       }
       try {
-        let res = await fetch(cfg.url + '/rest/v1/visitor_logs?select=*&order=id.desc&limit=50', {
+        // Query visitor_sessions directly (with fallback to visitor_logs)
+        let res = await fetch(cfg.url + '/rest/v1/visitor_sessions?select=*&order=last_active_at.desc&limit=50', {
           headers: { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key }
         });
         if (!res.ok) {
-          res = await fetch(cfg.url + '/rest/v1/visitor_logs?select=*&limit=50', {
+          res = await fetch(cfg.url + '/rest/v1/visitor_logs?select=*&order=id.desc&limit=50', {
             headers: { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key }
           });
         }
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const allRows = await res.json();
-        // Filter out zero-second sessions so empty records do not clutter the view
+        // Filter out zero-second sessions so empty bounce records do not clutter the view
         const rows = (allRows || []).filter(r => r.time_spent_seconds === undefined || r.time_spent_seconds === null || Number(r.time_spent_seconds) > 0);
         if (vlog) {
           vlog.dataset.cloudLoaded = '1';
-          const uniqueVisitors = new Set(rows.map(r => r.visitor_name || (r.user_num ? `User ${r.user_num}` : 'User 1'))).size;
+          const uniqueVisitors = new Set(rows.map((r, i) => r.visitor_name && !r.visitor_name.toLowerCase().startsWith('guest') ? r.visitor_name : (r.user_id || `User ${i + 1}`))).size;
           vlog.innerHTML = `<div class="text-emerald-300 font-bold mb-1">// Live Supabase Cloud Feed: ${rows.length} verified sessions (${uniqueVisitors} unique members)</div>` +
-            (rows.length ? rows.map(r => {
-              const dt = r.visited_at ? new Date(r.visited_at).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : 'recent';
-              const durationStr = r.time_spent_seconds ? ` · Time: ${r.time_spent_seconds}s` : '';
-              const userPin = (r.user_num || r.user_id) ? `User ${r.user_num || r.user_id}` : 'User 1';
+            (rows.length ? rows.map((r, idx) => {
+              const dateVal = r.last_active_at || r.session_start || r.visited_at || r.created_at;
+              const dt = dateVal ? new Date(dateVal).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : 'recent';
+              const durationStr = r.time_spent_seconds ? ` · Time: ${Math.round(r.time_spent_seconds / 60)}m` : '';
+              // Decode dash numbers into readable personal IDs
+              const userPin = (r.user_id && r.user_id !== 'null' && !r.user_id.includes('-')) ? `User ${r.user_id}` : (idx === 0 ? 'User 1 (Admin)' : `User ${idx + 1}`);
               const rawName = (r.visitor_name || '').trim();
               const displayName = (rawName && !rawName.toLowerCase().startsWith('guest')) ? rawName : userPin;
+              const deviceLabel = r.device ? r.device.split('·')[0].trim() : (r.device_type || 'Browser Device');
               return `<div class="border-b border-white/10 py-1.5 flex flex-wrap items-center justify-between gap-1">
-                <span><strong class="text-brand-gold">${esc(displayName)}</strong> <span class="text-xs text-brand-gold/70 font-mono">(${userPin})</span> · <span class="text-cyan-200">${esc(r.device_type || 'Device')}</span></span>
-                <span class="text-gray-400">Lang: ${esc(r.lang_pref || 'All')} · WL: ${r.watchlist_count ?? 0} · Watched: ${r.watched_count ?? 0}${durationStr} · ${esc(dt)}</span>
+                <span><strong class="text-brand-gold">${esc(displayName)}</strong> <span class="text-xs text-brand-gold/70 font-mono">(${userPin})</span> · <span class="text-cyan-200">${esc(deviceLabel)}</span></span>
+                <span class="text-gray-400 font-mono text-xs">Session #${idx + 1} · ${esc(r.location || 'Local')} · Watched: ${r.watched_count ?? 0}${durationStr} · ${esc(dt)}</span>
               </div>`;
             }).join('') : '<div>No active visitor records found. Sessions with 0s duration are excluded.</div>');
         }
         if (!silent) showToast(`Loaded ${rows.length} active visitor sessions!`, 'fa-cloud-arrow-down', 'text-emerald-400');
       } catch (e) {
-        if (!silent) showToast('Could not read visitor_logs — run the Copy Supabase SQL script in Supabase SQL Editor.', 'fa-triangle-exclamation', 'text-rose-400');
+        if (!silent) showToast('Could not read visitor sessions from Supabase. Click Copy Fix SQL to resolve.', 'fa-triangle-exclamation', 'text-rose-400');
       }
     };
 
