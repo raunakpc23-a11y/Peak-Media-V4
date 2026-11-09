@@ -4544,8 +4544,9 @@ update public.user_activity set user_id = '1' where user_id is null;
 update public.user_activity set user_num = 1 where user_num is null;
 update public.user_activity set visitor_name = 'User 1 (Admin)' where visitor_name = 'Guest' or visitor_name is null;
 
--- 6. Active viewers view (filters out instant bounces under 5 seconds)
-create or replace view public.active_viewers as
+-- 6. Active viewers view (security_invoker = true satisfies Supabase Security Linter & enforces RLS)
+create or replace view public.active_viewers
+with (security_invoker = true) as
 select * from public.visitor_sessions
 where time_spent_seconds >= 5;
 
