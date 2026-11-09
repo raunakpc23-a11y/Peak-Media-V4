@@ -4466,9 +4466,33 @@ window.PEAK_SUPABASE_ANON_KEY = '${cfg.key || 'YOUR-PUBLIC-ANON-KEY'}';`;
     };
     window.copySupabaseSetupSQL = function() {
       const sql = `-- Run this in your Supabase SQL Editor:
--- Resolves 0A000 policy lock, alters user_id to text, backfills nulls, and configures active_viewers view
+-- Resolves 0A000 policy lock & foreign key constraint type incompatibility (text vs uuid)
 
--- 1. Drop ALL existing policies on these tables to prevent error 0A000 ("cannot alter type of a column used in a policy definition")
+-- 1. Drop ALL foreign keys referencing user_id so text user IDs (User 1, User 2) don't conflict with auth.users uuid
+do $$
+declare
+  fk record;
+begin
+  for fk in (
+    select tc.table_name, tc.constraint_name
+    from information_schema.table_constraints tc
+    join information_schema.key_column_usage kcu
+      on tc.constraint_name = kcu.constraint_name
+      and tc.table_schema = kcu.table_schema
+    where tc.constraint_type = 'FOREIGN KEY'
+      and tc.table_schema = 'public'
+      and kcu.column_name = 'user_id'
+  ) loop
+    execute format('alter table public.%I drop constraint if exists %I cascade', fk.table_name, fk.constraint_name);
+  end loop;
+end $$;
+
+-- Explicit drops as fallback
+alter table if exists public.visitor_sessions drop constraint if exists visitor_sessions_user_id_fkey;
+alter table if exists public.visitor_sessions drop constraint if exists visitor_session_user_id_fkey;
+alter table if exists public.user_activity drop constraint if exists user_activity_user_id_fkey;
+
+-- 2. Drop ALL existing policies to prevent error 0A000 ("cannot alter type of a column used in a policy definition")
 do $$
 declare
   pol record;
@@ -4483,7 +4507,7 @@ begin
   end loop;
 end $$;
 
--- 2. Alter user_id from UUID to TEXT on existing tables (now succeeds since policies are detached)
+-- 3. Alter user_id from UUID to TEXT on existing tables (now succeeds without constraint or policy locks)
 alter table if exists public.visitor_sessions alter column user_id type text using user_id::text;
 alter table if exists public.visitor_sessions alter column user_id set default '1';
 
@@ -4495,7 +4519,7 @@ alter table if exists public.user_activity add column if not exists visitor_name
 alter table if exists public.visitor_sessions add column if not exists user_num integer default 1;
 alter table if exists public.user_activity add column if not exists user_num integer default 1;
 
--- 3. Ensure visitor_logs table exists
+-- 4. Ensure visitor_logs table exists
 create table if not exists public.visitor_logs (
   id bigint generated always as identity primary key,
   user_id text not null default '1',
@@ -4511,7 +4535,7 @@ create table if not exists public.visitor_logs (
   visited_at timestamptz default now()
 );
 
--- 4. Backfill existing null rows to User 1 and replace generic 'Guest' tags
+-- 5. Backfill existing null rows to User 1 and replace generic 'Guest' tags
 update public.visitor_sessions set user_id = '1' where user_id is null;
 update public.visitor_sessions set user_num = 1 where user_num is null;
 update public.visitor_sessions set visitor_name = 'User 1 (Admin)' where visitor_name = 'Guest' or visitor_name is null;
@@ -4520,12 +4544,12 @@ update public.user_activity set user_id = '1' where user_id is null;
 update public.user_activity set user_num = 1 where user_num is null;
 update public.user_activity set visitor_name = 'User 1 (Admin)' where visitor_name = 'Guest' or visitor_name is null;
 
--- 5. Active viewers view (filters out instant bounces under 5 seconds)
+-- 6. Active viewers view (filters out instant bounces under 5 seconds)
 create or replace view public.active_viewers as
 select * from public.visitor_sessions
 where time_spent_seconds >= 5;
 
--- 6. Enable RLS and re-attach clean open policies
+-- 7. Enable RLS and re-attach clean open policies
 alter table public.visitor_sessions enable row level security;
 alter table public.visitor_logs enable row level security;
 alter table public.user_activity enable row level security;
