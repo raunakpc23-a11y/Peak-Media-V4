@@ -4523,56 +4523,71 @@ alter table if exists public.user_activity add column if not exists visitor_name
 alter table if exists public.visitor_sessions add column if not exists user_num integer default 1;
 alter table if exists public.user_activity add column if not exists user_num integer default 1;
 
--- 4. Ensure visitor_logs table exists
-create table if not exists public.visitor_logs (
-  id bigint generated always as identity primary key,
-  user_id text not null default '1',
-  user_num integer not null default 1,
-  visitor_id text not null default '1',
-  visitor_name text not null default 'User 1',
-  device_type text,
-  lang_pref text,
-  visit_count int default 1,
-  watchlist_count int default 0,
-  watched_count int default 0,
-  time_spent_seconds integer default 5,
-  visited_at timestamptz default now()
+-- 4. Table 1: Consolidated User Metrics & Directory (visitor_logs)
+-- Recreated so user_id is the primary key and repeat visits increment metrics rather than adding duplicate rows
+drop table if exists public.visitor_logs cascade;
+
+create table public.visitor_logs (
+  user_id text primary key default 'User 1',
+  visitor_name text not null default 'CinePhile',
+  lang_pref text default 'All',
+  visit_count integer default 1,
+  watchlist_count integer default 0,
+  watched_count integer default 0,
+  time_spent_total integer default 5,
+  location text default 'Delhi, Delhi (India)',
+  last_active_at timestamptz default now()
 );
 
--- 5. Backfill existing null rows to User 1 and replace generic 'Guest' tags
-update public.visitor_sessions set user_id = '1' where user_id is null;
-update public.visitor_sessions set user_num = 1 where user_num is null;
-update public.visitor_sessions set visitor_name = 'User 1 (Admin)' where visitor_name = 'Guest' or visitor_name is null;
+-- 5. Underlying Session Telemetry Table (visitor_sessions)
+create table if not exists public.visitor_sessions (
+  id uuid default gen_random_uuid() primary key,
+  user_id text default 'User 1',
+  user_num integer default 1,
+  visitor_name text default 'CinePhile',
+  device text,
+  location text default 'Delhi, Delhi (India)',
+  time_spent_seconds integer default 5,
+  session_start timestamptz default now(),
+  last_active_at timestamptz default now()
+);
 
-update public.user_activity set user_id = '1' where user_id is null;
-update public.user_activity set user_num = 1 where user_num is null;
-update public.user_activity set visitor_name = 'User 1 (Admin)' where visitor_name = 'Guest' or visitor_name is null;
+update public.visitor_sessions set user_id = coalesce(user_id, 'User 1');
+update public.visitor_sessions set visitor_name = 'CinePhile' where visitor_name = 'Guest' or visitor_name is null;
 
--- 6. Active viewers view (security_invoker = true satisfies Supabase Security Linter & enforces RLS)
-create or replace view public.active_viewers
+-- 6. Table 2 / View: Individual Session Details in IST (visitor_sessions_ist)
+-- Security: security_invoker = true enforces caller RLS and clears Supabase Security Advisor warnings
+drop view if exists public.visitor_sessions_ist cascade;
+drop table if exists public.visitor_sessions_ist cascade;
+
+create view public.visitor_sessions_ist
 with (security_invoker = true) as
-select * from public.visitor_sessions
-where time_spent_seconds >= 5;
+select
+  row_number() over (order by coalesce(vs.last_active_at, vs.session_start, now()) desc) as "ID",
+  coalesce(vs.user_id, concat('User ', vs.user_num)) as "User",
+  coalesce(vs.visitor_name, 'CinePhile') as "Visitor Name",
+  regexp_replace(split_part(vs.location, ' [', 1), '\s*·.*$', '') as "Location",
+  to_char(coalesce(vs.session_start, vs.last_active_at, now()) at time zone 'Asia/Kolkata', 'DD Mon YYYY, hh:MI:SS AM IST') as "Session Started (IST)",
+  to_char(coalesce(vs.last_active_at, vs.session_start, now()) at time zone 'Asia/Kolkata', 'DD Mon YYYY, hh:MI:SS AM IST') as "Last Active (IST)",
+  concat(floor(coalesce(vs.time_spent_seconds, 0) / 60), 'm ', mod(coalesce(vs.time_spent_seconds, 0), 60), 's') as "Time Spent",
+  coalesce(vs.device, 'Browser Device') as "Device & Hardware"
+from public.visitor_sessions vs
+where coalesce(vs.time_spent_seconds, 0) >= 5;
 
 -- 7. Enable RLS and re-attach clean open policies
 alter table public.visitor_sessions enable row level security;
 alter table public.visitor_logs enable row level security;
-alter table public.user_activity enable row level security;
 
-create policy "Allow all inserts" on public.visitor_sessions for insert to anon, authenticated with check (true);
-create policy "Allow all reads" on public.visitor_sessions for select to anon, authenticated using (true);
-create policy "Allow all updates" on public.visitor_sessions for update to anon, authenticated using (true);
-
-create policy "Allow all inserts" on public.visitor_logs for insert to anon, authenticated with check (true);
-create policy "Allow all reads" on public.visitor_logs for select to anon, authenticated using (true);
-
-create policy "Allow all inserts" on public.user_activity for insert to anon, authenticated with check (true);
-create policy "Allow all reads" on public.user_activity for select to anon, authenticated using (true);
+create policy "Allow all operations" on public.visitor_sessions for all to anon, authenticated using (true) with check (true);
+create policy "Allow all operations" on public.visitor_logs for all to anon, authenticated using (true) with check (true);
 
 grant usage on schema public to anon, authenticated;
-grant select, insert, update on public.visitor_sessions to anon, authenticated;
-grant select, insert on public.visitor_logs to anon, authenticated;
-grant select, insert on public.user_activity to anon, authenticated;`;
+grant select, insert, update, delete on public.visitor_sessions to anon, authenticated;
+grant select, insert, update, delete on public.visitor_logs to anon, authenticated;
+grant select on public.visitor_sessions_ist to anon, authenticated;
+
+-- Optional Clean-Up (Only run if you want to remove the unused 3rd table):
+-- drop table if exists public.user_activity cascade;`;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(sql).then(() => showToast('Copied upgraded Supabase SQL schema!', 'fa-copy', 'text-emerald-400')).catch(() => {});
       }
@@ -4582,18 +4597,18 @@ grant select, insert on public.user_activity to anon, authenticated;`;
       saveLS('cs_visit_count', visits);
       const cfg = getAdminSupaConfig();
       const userNum = (typeof getPersistentUserNumber === 'function') ? getPersistentUserNumber() : 1;
-      const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : `User ${userNum}`;
+      const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : `CinePhile`;
+      const locStr = (typeof getTelemetryLocationAsync === 'function') ? await getTelemetryLocationAsync() : 'Delhi, Delhi (India)';
       const record = {
-        user_id: userNum,
-        user_num: userNum,
-        visitor_id: String(userNum),
+        user_id: `User ${userNum}`,
         visitor_name: visitorName,
-        device_type: (window.innerWidth < 768 ? 'Mobile' : 'Desktop') + ' (' + window.innerWidth + 'px)',
         lang_pref: obProfile.language || 'All',
         visit_count: visits,
         watchlist_count: wishlistTitles.length,
         watched_count: watchedTitles.length,
-        time_spent_seconds: Math.max(1, (typeof sessionSeconds !== 'undefined' ? sessionSeconds : 1))
+        time_spent_total: Math.max(5, (typeof sessionSeconds !== 'undefined' ? sessionSeconds : 5)),
+        location: locStr,
+        last_active_at: new Date().toISOString()
       };
       const pill = $('adminCloudStatusPill');
       if (cfg.url && cfg.key) {
@@ -4604,65 +4619,16 @@ grant select, insert on public.user_activity to anon, authenticated;`;
               'Content-Type': 'application/json',
               'apikey': cfg.key,
               'Authorization': 'Bearer ' + cfg.key,
-              'Prefer': 'return=minimal'
+              'Prefer': 'resolution=merge-duplicates'
             },
             body: JSON.stringify(record)
           });
-          if (!res.ok) {
-            // Stage 2 Fallback: include user_id & user_num with visitor_name and device_type
-            res = await fetch(cfg.url + '/rest/v1/visitor_logs', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': cfg.key,
-                'Authorization': 'Bearer ' + cfg.key,
-                'Prefer': 'return=minimal'
-              },
-              body: JSON.stringify({
-                user_id: userNum,
-                user_num: userNum,
-                visitor_id: String(userNum),
-                visitor_name: record.visitor_name,
-                device_type: record.device_type
-              })
-            });
-          }
-          if (!res.ok) {
-            // Stage 3 Fallback: visitor_name & user_num
-            res = await fetch(cfg.url + '/rest/v1/visitor_logs', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': cfg.key,
-                'Authorization': 'Bearer ' + cfg.key,
-                'Prefer': 'return=minimal'
-              },
-              body: JSON.stringify({
-                user_id: userNum,
-                user_num: userNum,
-                visitor_name: record.visitor_name
-              })
-            });
-          }
-          if (!res.ok) {
-            // Stage 4 Fallback: visitor_name only (if table is restricted to base text columns)
-            res = await fetch(cfg.url + '/rest/v1/visitor_logs', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': cfg.key,
-                'Authorization': 'Bearer ' + cfg.key,
-                'Prefer': 'return=minimal'
-              },
-              body: JSON.stringify({ visitor_name: record.visitor_name })
-            });
-          }
           if (res.ok) {
             if (pill) {
               pill.textContent = '✓ Synced to Supabase (' + new Date().toLocaleTimeString() + ')';
               pill.className = 'px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/40 text-[10px] text-emerald-300 font-bold';
             }
-            if (!silent) showToast('Synced visitor check-in to Supabase!', 'fa-cloud-arrow-up', 'text-emerald-400');
+            if (!silent) showToast('Synced user profile to Supabase visitor_logs!', 'fa-cloud-arrow-up', 'text-emerald-400');
           } else {
             if (!silent) showToast('Supabase HTTP ' + res.status + ' — click Copy Supabase SQL & run in SQL Editor', 'fa-triangle-exclamation', 'text-amber-400');
           }
@@ -4686,35 +4652,44 @@ grant select, insert on public.user_activity to anon, authenticated;`;
         return;
       }
       try {
-        // Query visitor_sessions directly (with fallback to visitor_logs)
-        let res = await fetch(cfg.url + '/rest/v1/visitor_sessions?select=*&order=last_active_at.desc&limit=50', {
+        // Query visitor_sessions_ist view directly (with fallback to visitor_sessions & visitor_logs)
+        let res = await fetch(cfg.url + '/rest/v1/visitor_sessions_ist?select=*&limit=50', {
           headers: { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key }
         });
         if (!res.ok) {
-          res = await fetch(cfg.url + '/rest/v1/visitor_logs?select=*&order=id.desc&limit=50', {
+          res = await fetch(cfg.url + '/rest/v1/visitor_sessions?select=*&order=last_active_at.desc&limit=50', {
+            headers: { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key }
+          });
+        }
+        if (!res.ok) {
+          res = await fetch(cfg.url + '/rest/v1/visitor_logs?select=*&limit=50', {
             headers: { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key }
           });
         }
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const allRows = await res.json();
-        // Filter out zero-second sessions so empty bounce records do not clutter the view
-        const rows = (allRows || []).filter(r => r.time_spent_seconds === undefined || r.time_spent_seconds === null || Number(r.time_spent_seconds) > 0);
+        const rows = (allRows || []).filter(r => {
+          if (r.time_spent_seconds !== undefined && r.time_spent_seconds !== null) return Number(r.time_spent_seconds) > 0;
+          return true;
+        });
         if (vlog) {
           vlog.dataset.cloudLoaded = '1';
-          const uniqueVisitors = new Set(rows.map((r, i) => r.visitor_name && !r.visitor_name.toLowerCase().startsWith('guest') ? r.visitor_name : (r.user_id || `User ${i + 1}`))).size;
-          vlog.innerHTML = `<div class="text-emerald-300 font-bold mb-1">// Live Supabase Cloud Feed: ${rows.length} verified sessions (${uniqueVisitors} unique members)</div>` +
+          const uniqueVisitors = new Set(rows.map((r, i) => {
+            const n = r['Visitor Name'] || r.visitor_name;
+            return n && !n.toLowerCase().startsWith('guest') ? n : (r['User'] || r.user_id || `User ${i + 1}`);
+          })).size;
+          vlog.innerHTML = `<div class="text-emerald-300 font-bold mb-1">// Live Supabase Cloud Feed (IST): ${rows.length} verified sessions (${uniqueVisitors} unique members)</div>` +
             (rows.length ? rows.map((r, idx) => {
-              const dateVal = r.last_active_at || r.session_start || r.visited_at || r.created_at;
-              const dt = dateVal ? new Date(dateVal).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : 'recent';
-              const durationStr = r.time_spent_seconds ? ` · Time: ${Math.round(r.time_spent_seconds / 60)}m` : '';
-              // Decode dash numbers into readable personal IDs
-              const userPin = (r.user_id && r.user_id !== 'null' && !r.user_id.includes('-')) ? `User ${r.user_id}` : (idx === 0 ? 'User 1 (Admin)' : `User ${idx + 1}`);
-              const rawName = (r.visitor_name || '').trim();
+              const userPin = r['User'] || (r.user_id && !String(r.user_id).includes('-') ? `User ${r.user_id}` : `User ${idx + 1}`);
+              const rawName = (r['Visitor Name'] || r.visitor_name || '').trim();
               const displayName = (rawName && !rawName.toLowerCase().startsWith('guest')) ? rawName : userPin;
-              const deviceLabel = r.device ? r.device.split('·')[0].trim() : (r.device_type || 'Browser Device');
+              const loc = r['Location'] || r.location || 'Delhi, Delhi (India)';
+              const timeSpent = r['Time Spent'] || (r.time_spent_seconds ? `${Math.round(r.time_spent_seconds / 60)}m` : '5s');
+              const sessionTime = r['Last Active (IST)'] || r['Session Started (IST)'] || (r.last_active_at ? new Date(r.last_active_at).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : 'recent');
+              const hw = r['Device & Hardware'] || (r.device ? r.device.split('·')[0].trim() : (r.device_type || 'Browser Device'));
               return `<div class="border-b border-white/10 py-1.5 flex flex-wrap items-center justify-between gap-1">
-                <span><strong class="text-brand-gold">${esc(displayName)}</strong> <span class="text-xs text-brand-gold/70 font-mono">(${userPin})</span> · <span class="text-cyan-200">${esc(deviceLabel)}</span></span>
-                <span class="text-gray-400 font-mono text-xs">Session #${idx + 1} · ${esc(r.location || 'Local')} · Watched: ${r.watched_count ?? 0}${durationStr} · ${esc(dt)}</span>
+                <span><strong class="text-brand-gold">${esc(displayName)}</strong> <span class="text-xs text-brand-gold/70 font-mono">(${esc(userPin)})</span> · <span class="text-cyan-200">${esc(hw)}</span></span>
+                <span class="text-gray-400 font-mono text-xs">Session #${r['ID'] || idx + 1} · ${esc(loc)} · Spent: ${esc(timeSpent)} · <span class="text-emerald-300/80">${esc(sessionTime)}</span></span>
               </div>`;
             }).join('') : '<div>No active visitor records found. Sessions with 0s duration are excluded.</div>');
         }
@@ -4897,6 +4872,7 @@ grant select, insert on public.user_activity to anon, authenticated;`;
           sessionStorage.setItem('pm_supa_time_spent', sessionSeconds);
 
           try {
+            const userSeqId = `User ${getPersistentUserNumber()}`;
             const res = await fetch(cfg.url + '/rest/v1/visitor_sessions', {
               method: 'POST',
               headers: {
@@ -4906,12 +4882,11 @@ grant select, insert on public.user_activity to anon, authenticated;`;
                 'Prefer': 'return=representation'
               },
               body: JSON.stringify({
-                user_id: getPersistentUserNumber(),
+                user_id: userSeqId,
                 user_num: getPersistentUserNumber(),
-                visitor_id: String(getPersistentUserNumber()),
                 visitor_name: visitorName,
-                device: `${visitorName} · ${deviceStr} · ${launchStr}`,
-                location: `${locStr} · ${cohortStr} · ${orientStr}`,
+                device: deviceStr,
+                location: locStr,
                 time_spent_seconds: sessionSeconds
               })
             });
@@ -4921,7 +4896,30 @@ grant select, insert on public.user_activity to anon, authenticated;`;
                 currentSessionId = data[0].id;
                 sessionStorage.setItem('pm_supa_session_id', currentSessionId);
               }
-              console.log('%c[Supabase]%c Visitor session recorded (#' + (currentSessionId || 'OK') + ' · ' + visitorName + ' · ' + istTimeStr + ' · ' + cohortStr + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
+              // Upsert consolidated user profile in visitor_logs (increment / record user metrics)
+              try {
+                fetch(cfg.url + '/rest/v1/visitor_logs', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': cfg.key,
+                    'Authorization': 'Bearer ' + cfg.key,
+                    'Prefer': 'resolution=merge-duplicates'
+                  },
+                  body: JSON.stringify({
+                    user_id: userSeqId,
+                    visitor_name: visitorName,
+                    lang_pref: obProfile.language || 'All',
+                    visit_count: visitCount,
+                    watchlist_count: wishlistTitles.length,
+                    watched_count: watchedTitles.length,
+                    time_spent_total: sessionSeconds,
+                    location: locStr,
+                    last_active_at: new Date().toISOString()
+                  })
+                }).catch(() => {});
+              } catch (_) {}
+              console.log('%c[Supabase]%c Visitor session recorded (#' + (currentSessionId || 'OK') + ' · ' + visitorName + ' · ' + istTimeStr + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
             }
           } catch (err) {
             console.warn('[Supabase] Telemetry notice:', err.message);
@@ -4948,6 +4946,22 @@ grant select, insert on public.user_activity to anon, authenticated;`;
                 last_active_at: new Date().toISOString()
               })
             });
+            // Also refresh cumulative time in visitor_logs
+            try {
+              fetch(cfg.url + `/rest/v1/visitor_logs?user_id=eq.User%20${getPersistentUserNumber()}`, {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'apikey': cfg.key,
+                  'Authorization': 'Bearer ' + cfg.key,
+                  'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                  time_spent_total: sessionSeconds,
+                  last_active_at: new Date().toISOString()
+                })
+              }).catch(() => {});
+            } catch (_) {}
           } catch (_) {}
         }, 45000);
       }
