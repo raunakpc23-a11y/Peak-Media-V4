@@ -4496,7 +4496,30 @@ alter table if exists public.visitor_sessions drop constraint if exists visitor_
 alter table if exists public.visitor_sessions drop constraint if exists visitor_session_user_id_fkey;
 alter table if exists public.user_activity drop constraint if exists user_activity_user_id_fkey;
 
--- 2. Drop ALL existing policies to prevent error 0A000 ("cannot alter type of a column used in a policy definition")
+-- 2. Drop ANY views depending on visitor_sessions FIRST with CASCADE
+-- This eliminates the error: "cannot alter type of a column used by a rule"
+drop view if exists public.active_viewers cascade;
+drop view if exists public.visitor_sessions_ist cascade;
+
+-- Dynamically drop any remaining views attached to visitor_sessions
+do $$
+declare
+  v record;
+begin
+  for v in (
+    select distinct c.relname as view_name
+    from pg_depend d
+    join pg_rewrite r on r.oid = d.objid
+    join pg_class c on c.oid = r.ev_class
+    join pg_class dep on dep.oid = d.refobjid
+    where c.relkind = 'v'
+      and dep.relname in ('visitor_sessions', 'visitor_logs', 'user_activity')
+  ) loop
+    execute format('drop view if exists public.%I cascade', v.view_name);
+  end loop;
+end $$;
+
+-- 3. Drop ALL existing policies to prevent error 0A000
 do $$
 declare
   pol record;
@@ -4511,19 +4534,34 @@ begin
   end loop;
 end $$;
 
--- 3. Alter user_id from UUID to TEXT on existing tables (now succeeds without constraint or policy locks)
-alter table if exists public.visitor_sessions alter column user_id type text using user_id::text;
-alter table if exists public.visitor_sessions alter column user_id set default '1';
+-- 4. Alter user_id from UUID to TEXT conditionally (only if not already text)
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns 
+    where table_schema = 'public' and table_name = 'visitor_sessions' 
+      and column_name = 'user_id' and data_type != 'text'
+  ) then
+    alter table public.visitor_sessions alter column user_id type text using user_id::text;
+  end if;
+  if exists (
+    select 1 from information_schema.columns 
+    where table_schema = 'public' and table_name = 'user_activity' 
+      and column_name = 'user_id' and data_type != 'text'
+  ) then
+    alter table public.user_activity alter column user_id type text using user_id::text;
+  end if;
+end $$;
 
-alter table if exists public.user_activity alter column user_id type text using user_id::text;
-alter table if exists public.user_activity alter column user_id set default '1';
+alter table if exists public.visitor_sessions alter column user_id set default 'User 1';
+alter table if exists public.user_activity alter column user_id set default 'User 1';
 
-alter table if exists public.visitor_sessions add column if not exists visitor_name text default 'User 1';
-alter table if exists public.user_activity add column if not exists visitor_name text default 'User 1';
+alter table if exists public.visitor_sessions add column if not exists visitor_name text default 'CinePhile';
+alter table if exists public.user_activity add column if not exists visitor_name text default 'CinePhile';
 alter table if exists public.visitor_sessions add column if not exists user_num integer default 1;
 alter table if exists public.user_activity add column if not exists user_num integer default 1;
 
--- 4. Table 1: Consolidated User Metrics & Directory (visitor_logs)
+-- 5. Table 1: Consolidated User Metrics & Directory (visitor_logs)
 -- Recreated so user_id is the primary key and repeat visits increment metrics rather than adding duplicate rows
 drop table if exists public.visitor_logs cascade;
 
