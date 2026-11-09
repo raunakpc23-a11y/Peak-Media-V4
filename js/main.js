@@ -4589,20 +4589,23 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
           });
         }
         if (!res.ok) throw new Error('HTTP ' + res.status);
-        const rows = await res.json();
+        const allRows = await res.json();
+        // Filter out zero-second sessions so empty records do not clutter the view
+        const rows = (allRows || []).filter(r => r.time_spent_seconds === undefined || r.time_spent_seconds === null || Number(r.time_spent_seconds) > 0);
         if (vlog) {
           vlog.dataset.cloudLoaded = '1';
           const uniqueVisitors = new Set(rows.map(r => r.visitor_name || 'Guest')).size;
-          vlog.innerHTML = `<div class="text-emerald-300 font-bold mb-1">// Live Supabase Cloud Feed: ${rows.length} check-ins (${uniqueVisitors} unique visitors)</div>` +
+          vlog.innerHTML = `<div class="text-emerald-300 font-bold mb-1">// Live Supabase Cloud Feed: ${rows.length} verified sessions (${uniqueVisitors} unique members)</div>` +
             (rows.length ? rows.map(r => {
               const dt = r.visited_at ? new Date(r.visited_at).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : 'recent';
+              const durationStr = r.time_spent_seconds ? ` · Time: ${r.time_spent_seconds}s` : '';
               return `<div class="border-b border-white/10 py-1.5 flex flex-wrap items-center justify-between gap-1">
                 <span><strong class="text-brand-gold">${esc(r.visitor_name || 'Guest')}</strong> · <span class="text-cyan-200">${esc(r.device_type || 'Device')}</span></span>
-                <span class="text-gray-400">Lang: ${esc(r.lang_pref || 'All')} · WL: ${r.watchlist_count ?? 0} · Watched: ${r.watched_count ?? 0} · ${esc(dt)}</span>
+                <span class="text-gray-400">Lang: ${esc(r.lang_pref || 'All')} · WL: ${r.watchlist_count ?? 0} · Watched: ${r.watched_count ?? 0}${durationStr} · ${esc(dt)}</span>
               </div>`;
-            }).join('') : '<div>No visitor rows in visitor_logs yet. Click Sync / Ping Supabase to insert a test row!</div>');
+            }).join('') : '<div>No active visitor records found. Sessions with 0s duration are excluded.</div>');
         }
-        if (!silent) showToast(`Loaded ${rows.length} visitor logs from Supabase!`, 'fa-cloud-arrow-down', 'text-emerald-400');
+        if (!silent) showToast(`Loaded ${rows.length} active visitor sessions!`, 'fa-cloud-arrow-down', 'text-emerald-400');
       } catch (e) {
         if (!silent) showToast('Could not read visitor_logs — run the Copy Supabase SQL script in Supabase SQL Editor.', 'fa-triangle-exclamation', 'text-rose-400');
       }
@@ -4614,22 +4617,48 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
     let currentSessionId = sessionStorage.getItem('pm_supa_session_id') || null;
     let sessionSeconds = parseInt(sessionStorage.getItem('pm_supa_time_spent') || '0', 10);
 
+    function getPersistentUserNumber() {
+      let num = localStorage.getItem('pm_user_seq_num');
+      if (!num) {
+        num = String(Math.floor(1000 + Math.random() * 9000));
+        localStorage.setItem('pm_user_seq_num', num);
+      }
+      return num;
+    }
+
     function getPersistentVisitorId() {
+      const userNum = getPersistentUserNumber();
       let vid = localStorage.getItem('pm_visitor_id');
       if (!vid) {
-        vid = 'usr_' + Math.random().toString(36).substring(2, 9);
+        vid = 'usr_' + userNum;
         localStorage.setItem('pm_visitor_id', vid);
       }
       return vid;
     }
 
     function getTelemetryProfileName() {
+      const userNum = getPersistentUserNumber();
       try {
-        if (typeof obProfile !== 'undefined' && obProfile && obProfile.username) return obProfile.username.trim();
-        const stored = localStorage.getItem('cs_profile_username');
-        if (stored) return stored.trim();
+        let name = '';
+        if (typeof obProfile !== 'undefined' && obProfile && obProfile.username) {
+          name = obProfile.username.trim();
+        }
+        if (!name) {
+          const stored = localStorage.getItem('cs_profile_username');
+          if (stored) name = stored.trim();
+        }
+        // Direct link to Supabase authenticated user account if signed in
+        if (!name && window.supabaseClient && window.supabaseClient.auth) {
+          const u = typeof window.supabaseClient.auth.user === 'function' ? window.supabaseClient.auth.user() : null;
+          if (u) {
+            name = (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || (u.email ? u.email.split('@')[0] : '');
+          }
+        }
+        if (name && name.toLowerCase() !== 'guest') {
+          return `${name} (#${userNum})`;
+        }
       } catch (_) {}
-      return 'Guest';
+      return `Guest (#${userNum})`;
     }
 
     function getISTTimestampString() {
@@ -4677,7 +4706,6 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
       if (cached) return cached;
       const tz = (Intl.DateTimeFormat && Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Asia/Kolkata';
       try {
-        // Fast, privacy-friendly IP-based city & state detection without GPS permissions
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(), 2500);
         const res = await fetch('https://ipwho.is/', { signal: ctrl.signal }).catch(() => null);
@@ -4701,9 +4729,7 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
 
     function getLoyaltyCohortString() {
       const visits = parseInt(localStorage.getItem('cs_visit_count') || '1', 10);
-      if (visits <= 1) return 'New Visitor (Visit #1)';
-      if (visits <= 4) return `Returning Visitor (Visit #${visits})`;
-      return `Power Cinephile (Visit #${visits})`;
+      return `Visit #${visits}`;
     }
 
     function getScreenOrientationString() {
@@ -4727,7 +4753,6 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
         return;
       }
 
-      // Initialize the official Supabase client instance if the CDN library is loaded
       if (window.supabase && typeof window.supabase.createClient === 'function' && !window.supabaseClient) {
         try {
           window.supabaseClient = window.supabase.createClient(cfg.url, cfg.key);
@@ -4735,11 +4760,8 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
         } catch (e) {
           console.warn('[Supabase] Client initialization notice:', e.message);
         }
-      } else if (!window.supabase) {
-        console.info('[Supabase] SDK CDN script not loaded yet (using direct REST client fallback).');
       }
 
-      // Fetch precise city/state asynchronously via IP
       const locStr = await getTelemetryLocationAsync();
       const deviceStr = getTelemetryDeviceString();
       const visitorName = getTelemetryProfileName();
@@ -4753,35 +4775,39 @@ grant select, insert on public.visitor_logs to anon, authenticated;`;
         const visitCount = (parseInt(localStorage.getItem('cs_visit_count') || '0', 10)) + 1;
         localStorage.setItem('cs_visit_count', visitCount);
 
-        try {
-          const res = await fetch(cfg.url + '/rest/v1/visitor_sessions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': cfg.key,
-              'Authorization': 'Bearer ' + cfg.key,
-              'Prefer': 'return=representation'
-            },
-            body: JSON.stringify({
-              device: `${visitorName} · ${deviceStr} · ${launchStr}`,
-              location: `${locStr} · ${cohortStr} · ${orientStr}`,
-              time_spent_seconds: sessionSeconds
-            })
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (Array.isArray(data) && data[0] && data[0].id) {
-              currentSessionId = data[0].id;
-              sessionStorage.setItem('pm_supa_session_id', currentSessionId);
+        // Require at least 5 seconds of real visitor dwell time before creating session record,
+        // ensuring 0-second bounces are filtered out and not logged.
+        setTimeout(async () => {
+          sessionSeconds = Math.max(sessionSeconds, 5);
+          sessionStorage.setItem('pm_supa_time_spent', sessionSeconds);
+
+          try {
+            const res = await fetch(cfg.url + '/rest/v1/visitor_sessions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': cfg.key,
+                'Authorization': 'Bearer ' + cfg.key,
+                'Prefer': 'return=representation'
+              },
+              body: JSON.stringify({
+                device: `${visitorName} · ${deviceStr} · ${launchStr}`,
+                location: `${locStr} · ${cohortStr} · ${orientStr}`,
+                time_spent_seconds: sessionSeconds
+              })
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (Array.isArray(data) && data[0] && data[0].id) {
+                currentSessionId = data[0].id;
+                sessionStorage.setItem('pm_supa_session_id', currentSessionId);
+              }
+              console.log('%c[Supabase]%c Visitor session recorded (#' + (currentSessionId || 'OK') + ' · ' + visitorName + ' · ' + istTimeStr + ' · ' + cohortStr + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
             }
-            console.log('%c[Supabase]%c Visitor session started & telemetry active (Session #' + (currentSessionId || 'OK') + ' · ' + visitorName + ' · ' + istTimeStr + ' · ' + cohortStr + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
-          } else {
-            const errBody = await res.text().catch(() => '');
-            console.warn('[Supabase] HTTP ' + res.status + ' syncing visitor session:', errBody);
+          } catch (err) {
+            console.warn('[Supabase] Telemetry notice:', err.message);
           }
-        } catch (err) {
-          console.warn('[Supabase] Network error connecting to database:', err.message);
-        }
+        }, 5000);
       }
 
       if (!window._supaHeartbeatInterval) {

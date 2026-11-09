@@ -14439,6 +14439,7 @@ Odd Taxi|2021|87
         localStorage.setItem('cs_watched', JSON.stringify(watchedTitles));
         localStorage.setItem('cs_favs', JSON.stringify(favTitles));
         localStorage.setItem('cs_ratings', JSON.stringify(myRatings));
+        if (typeof computeDynamicSpotlight === 'function') computeDynamicSpotlight(false);
       } catch (e) {}
 
       const updateText = (id, val) => {
@@ -14594,9 +14595,9 @@ Odd Taxi|2021|87
     }
 
     // ==========================================
-    // 6. SPOTLIGHT HERO & DISCOVER ROWS
+    // 6. DYNAMIC SPOTLIGHT RECOMMENDATION ENGINE
     // ==========================================
-    const spotlightTitles = [
+    const DEFAULT_SPOTLIGHT_SEED = [
       {
         title: "Dune: Part Two",
         tagline: "Long live the fighters.",
@@ -14623,13 +14624,204 @@ Odd Taxi|2021|87
         blurb: "When the menace known as the Joker wreaks havoc and chaos on Gotham, Batman must accept one of the greatest psychological and physical tests of his ability."
       },
       {
-        title: "Breaking Bad",
-        tagline: "Change the equation.",
-        blurb: "A chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine to secure his family's financial future."
+        title: "3 Idiots",
+        tagline: "All Izz Well.",
+        blurb: "Two friends search for their long-lost companion while revisiting their college days and the non-conformist friend who inspired them to think differently."
       }
     ];
 
+    // Synchronous Pre-Indexed Instant Paint from Local Storage
+    let spotlightTitles = (function() {
+      try {
+        const cached = localStorage.getItem('pm_spotlight_cache');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length === 6) return parsed;
+        }
+      } catch (_) {}
+      return DEFAULT_SPOTLIGHT_SEED.slice();
+    })();
+
     let currentSpotlightIdx = 0;
+
+    /**
+     * Dynamic Composite Scoring Recommendation Engine
+     * Weights: 20% IMDb, 15% Genre Affinity, 25% Personal Rating, 10% Recency, 5% Novelty, 25% Contextual Factors
+     * Strict Constraints: 4 Films + 2 TV Shows, 5 English + 1 Hindi title, Excludes watched items.
+     */
+    function computeDynamicSpotlight(forceRender = false) {
+      if (!window.movies || !window.tvShows || !movies.length || !tvShows.length) return;
+
+      const watched = new Set(Array.isArray(window.watchedTitles) ? window.watchedTitles : (getLocal('cs_watched', []) || []));
+      const ratings = window.myRatings || getLocal('cs_ratings', {}) || {};
+      const wish = new Set(Array.isArray(window.wishlistTitles) ? window.wishlistTitles : (getLocal('cs_wishlist', []) || []));
+
+      // 1. Calculate User Genre Affinity Map
+      const genreCounts = {};
+      wish.forEach(t => {
+        const it = globalDatabase[t];
+        if (it && it.genre) genreCounts[it.genre] = (genreCounts[it.genre] || 0) + 2;
+      });
+      Object.keys(ratings).forEach(t => {
+        const it = globalDatabase[t];
+        if (it && it.genre) {
+          const r = Number(ratings[t]) || 3;
+          genreCounts[it.genre] = (genreCounts[it.genre] || 0) + (r >= 4 ? 3 : 1);
+        }
+      });
+      const favGenre = (typeof obProfile !== 'undefined' && obProfile.favoriteGenre) || localStorage.getItem('cs_profile_favorite_genre') || 'Sci-Fi';
+      genreCounts[favGenre] = (genreCounts[favGenre] || 0) + 4;
+
+      let maxGenreCount = 1;
+      Object.values(genreCounts).forEach(c => { if (c > maxGenreCount) maxGenreCount = c; });
+
+      // 2. Impression Tracking for 5% Novelty
+      let impressions = {};
+      try {
+        impressions = JSON.parse(localStorage.getItem('pm_spotlight_impressions') || '{}');
+      } catch (_) {}
+
+      const currentYear = 2026;
+
+      function scoreCandidate(item) {
+        if (!item || !item.title) return -9999;
+        // Strict Exclusion: Never recommend watched items
+        if (watched.has(item.title)) return -9999;
+
+        // Factor 1: 20% IMDb Rating
+        const imdb = parseFloat(item.rating || '7.0');
+        const sImdb = Math.min(1.0, Math.max(0, (imdb - 5.0) / 5.0)) * 0.20;
+
+        // Factor 2: 15% Genre Affinity
+        const gAffinity = (genreCounts[item.genre] || 0) / maxGenreCount;
+        const sGenre = gAffinity * 0.15;
+
+        // Factor 3: 25% Personal User Rating / Taste Alignment
+        let sPersonal = 0;
+        if (ratings[item.title] !== undefined) {
+          sPersonal = (Number(ratings[item.title]) / 5.0) * 0.25;
+        } else {
+          const prior = 0.5 + (gAffinity * 0.3) + ((imdb / 10) * 0.2);
+          sPersonal = Math.min(1.0, prior) * 0.25;
+        }
+
+        // Factor 4: 10% Recency
+        const yr = Number(item.year) || 2010;
+        const recencyRatio = Math.max(0.3, Math.min(1.0, (yr - 1970) / (currentYear - 1970)));
+        const sRecency = recencyRatio * 0.10;
+
+        // Factor 5: 5% Novelty
+        const imp = impressions[item.title] || 0;
+        const noveltyRatio = Math.max(0.2, 1.0 - (imp * 0.12));
+        const sNovelty = noveltyRatio * 0.05;
+
+        // Factor 6: Remaining 25% Contextual Factors
+        // 10% Popularity Tier
+        const sPopularity = (imdb >= 8.5 ? 1.0 : imdb >= 7.8 ? 0.75 : 0.4) * 0.10;
+        // 10% Time/Mood Alignment
+        const h = new Date().getHours();
+        const isNight = h >= 19 || h < 4;
+        const nightGenres = ['Sci-Fi', 'Thriller', 'Horror', 'Action', 'Drama', 'Crime'];
+        const dayGenres = ['Comedy', 'Animation', 'Adventure', 'Family', 'Drama', 'Romance'];
+        const moodMatch = isNight ? nightGenres.includes(item.genre) : dayGenres.includes(item.genre);
+        const sMood = (moodMatch ? 1.0 : 0.6) * 0.10;
+        // 5% Artwork & Readiness
+        const sReady = (item.thumb ? 1.0 : 0.6) * 0.05;
+
+        return sImdb + sGenre + sPersonal + sRecency + sNovelty + sPopularity + sMood + sReady;
+      }
+
+      // Candidate Pools
+      const filmEn = movies.filter(m => m.lang !== 'hi' && !watched.has(m.title));
+      const filmHi = movies.filter(m => m.lang === 'hi' && !watched.has(m.title));
+      const showEn = tvShows.filter(s => s.lang !== 'hi' && !watched.has(s.title));
+      const showHi = tvShows.filter(s => s.lang === 'hi' && !watched.has(s.title));
+
+      const scoreMap = new Map();
+      [...filmEn, ...filmHi, ...showEn, ...showHi].forEach(it => {
+        scoreMap.set(it, scoreCandidate(it));
+      });
+
+      const sortByScore = (list) => list.slice().sort((a, b) => (scoreMap.get(b) || 0) - (scoreMap.get(a) || 0));
+
+      const sortedFilmEn = sortByScore(filmEn);
+      const sortedFilmHi = sortByScore(filmHi);
+      const sortedShowEn = sortByScore(showEn);
+      const sortedShowHi = sortByScore(showHi);
+
+      function pickDiverse(candidates, count, existing, maxPerGenre = 2) {
+        const picked = [];
+        const genreTally = {};
+        existing.forEach(it => { if (it && it.genre) genreTally[it.genre] = (genreTally[it.genre] || 0) + 1; });
+
+        for (const it of candidates) {
+          if (picked.length >= count) break;
+          if (existing.some(e => e.title === it.title) || picked.some(p => p.title === it.title)) continue;
+          const curG = genreTally[it.genre] || 0;
+          if (curG < maxPerGenre) {
+            picked.push(it);
+            genreTally[it.genre] = curG + 1;
+          }
+        }
+        if (picked.length < count) {
+          for (const it of candidates) {
+            if (picked.length >= count) break;
+            if (!existing.some(e => e.title === it.title) && !picked.some(p => p.title === it.title)) {
+              picked.push(it);
+            }
+          }
+        }
+        return picked;
+      }
+
+      // Enforce 4 Films + 2 TV Shows, with exactly 5 English + 1 Hindi title
+      const topFilmHiScore = sortedFilmHi.length ? (scoreMap.get(sortedFilmHi[0]) || 0) : -1;
+      const topShowHiScore = sortedShowHi.length ? (scoreMap.get(sortedShowHi[0]) || 0) : -1;
+
+      let selected = [];
+      if (topFilmHiScore >= topShowHiScore && sortedFilmHi.length > 0) {
+        // 1 Hindi Film + 3 English Films + 2 English Shows
+        const hiFilm = sortedFilmHi[0];
+        const pickedFilms = pickDiverse(sortedFilmEn, 3, [hiFilm]);
+        const pickedShows = pickDiverse(sortedShowEn, 2, [hiFilm, ...pickedFilms]);
+        selected = [pickedFilms[0], pickedFilms[1], hiFilm, pickedFilms[2], pickedShows[0], pickedShows[1]].filter(Boolean);
+      } else if (sortedShowHi.length > 0) {
+        // 1 Hindi Show + 4 English Films + 1 English Show
+        const hiShow = sortedShowHi[0];
+        const pickedFilms = pickDiverse(sortedFilmEn, 4, [hiShow]);
+        const pickedShows = pickDiverse(sortedShowEn, 1, [hiShow, ...pickedFilms]);
+        selected = [pickedFilms[0], pickedFilms[1], pickedFilms[2], hiShow, pickedFilms[3], pickedShows[0]].filter(Boolean);
+      } else {
+        const pickedFilms = pickDiverse(sortedFilmEn, 4, []);
+        const pickedShows = pickDiverse(sortedShowEn, 2, pickedFilms);
+        selected = [...pickedFilms, ...pickedShows];
+      }
+
+      if (selected.length === 6) {
+        const formatted = selected.map(it => ({
+          title: it.title,
+          tagline: `${it.genre} • ${it.year} • ★ ${it.rating}`,
+          blurb: it.synopsis || (it.cleanName ? `Experience ${it.cleanName}, streaming in cinematic quality.` : 'Featured selection on Peak Media.')
+        }));
+
+        spotlightTitles = formatted;
+        window.spotlightTitles = formatted;
+        try {
+          localStorage.setItem('pm_spotlight_cache', JSON.stringify(formatted));
+          selected.forEach(it => {
+            impressions[it.title] = (impressions[it.title] || 0) + 1;
+          });
+          localStorage.setItem('pm_spotlight_impressions', JSON.stringify(impressions));
+        } catch (_) {}
+
+        if (forceRender && window.renderHeroSpotlight) {
+          window.renderHeroSpotlight(0, false, false);
+        }
+      }
+    }
+
+    window.computeDynamicSpotlight = computeDynamicSpotlight;
+    window.spotlightTitles = spotlightTitles;
 
     function fyShuffle(arr) {
       const a = arr.slice();
@@ -14915,6 +15107,12 @@ Odd Taxi|2021|87
       window._discoverRendered = true;
       renderHeroSpotlight(0);
       renderMoodPills();
+
+      // Asynchronously re-rank dynamic spotlight in background microtask without blocking initial paint
+      const deferRank = window.requestIdleCallback || ((cb) => setTimeout(cb, 80));
+      deferRank(() => {
+        if (typeof computeDynamicSpotlight === 'function') computeDynamicSpotlight(true);
+      });
 
       // Row 1: Pantheon (8.5+ when filtered by Hindi, 9.0+ otherwise)
       const minPantheon = window.globalLangFilter === 'hi' ? 8.3 : 9.0;
