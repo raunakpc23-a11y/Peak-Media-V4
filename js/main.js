@@ -4473,7 +4473,7 @@ create table if not exists public.visitor_sessions (
   user_id integer not null default 1,
   user_num integer not null default 1,
   visitor_id text not null default '1',
-  visitor_name text not null default 'Guest',
+  visitor_name text not null default 'User 1',
   device text,
   location text,
   time_spent_seconds integer not null default 1,
@@ -4485,7 +4485,8 @@ create table if not exists public.visitor_logs (
   id bigint generated always as identity primary key,
   user_id integer not null default 1,
   user_num integer not null default 1,
-  visitor_name text not null default 'Guest',
+  visitor_id text not null default '1',
+  visitor_name text not null default 'User 1',
   device_type text,
   lang_pref text,
   visit_count int default 1,
@@ -4506,6 +4507,28 @@ create table if not exists public.user_activity (
   extra_meta jsonb,
   created_at timestamptz default now()
 );
+
+-- Migration for existing installations to guarantee columns exist with integer defaults
+alter table if exists public.visitor_sessions add column if not exists user_id integer default 1;
+alter table if exists public.visitor_sessions add column if not exists user_num integer default 1;
+alter table if exists public.visitor_sessions add column if not exists visitor_id text default '1';
+alter table if exists public.visitor_sessions add column if not exists visitor_name text default 'User 1';
+
+alter table if exists public.visitor_logs add column if not exists user_id integer default 1;
+alter table if exists public.visitor_logs add column if not exists user_num integer default 1;
+alter table if exists public.visitor_logs add column if not exists visitor_id text default '1';
+alter table if exists public.visitor_logs add column if not exists visitor_name text default 'User 1';
+
+alter table if exists public.user_activity add column if not exists user_id integer default 1;
+alter table if exists public.user_activity add column if not exists user_num integer default 1;
+
+-- Backfill any past null entries to User 1
+update public.visitor_sessions set user_id = 1 where user_id is null;
+update public.visitor_sessions set user_num = 1 where user_num is null;
+update public.visitor_logs set user_id = 1 where user_id is null;
+update public.visitor_logs set user_num = 1 where user_num is null;
+update public.user_activity set user_id = 1 where user_id is null;
+update public.user_activity set user_num = 1 where user_num is null;
 
 -- View that strictly excludes 0-second / blank visits
 create or replace view public.active_viewers as
@@ -4546,10 +4569,11 @@ grant select, insert on public.user_activity to anon, authenticated;`;
       saveLS('cs_visit_count', visits);
       const cfg = getAdminSupaConfig();
       const userNum = (typeof getPersistentUserNumber === 'function') ? getPersistentUserNumber() : 1;
-      const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : (obProfile.username || 'Guest');
+      const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : `User ${userNum}`;
       const record = {
         user_id: userNum,
         user_num: userNum,
+        visitor_id: String(userNum),
         visitor_name: visitorName,
         device_type: (window.innerWidth < 768 ? 'Mobile' : 'Desktop') + ' (' + window.innerWidth + 'px)',
         lang_pref: obProfile.language || 'All',
@@ -4572,7 +4596,7 @@ grant select, insert on public.user_activity to anon, authenticated;`;
             body: JSON.stringify(record)
           });
           if (!res.ok) {
-            // Stage 2 Fallback: visitor_name & device_type only
+            // Stage 2 Fallback: include user_id & user_num with visitor_name and device_type
             res = await fetch(cfg.url + '/rest/v1/visitor_logs', {
               method: 'POST',
               headers: {
@@ -4581,11 +4605,34 @@ grant select, insert on public.user_activity to anon, authenticated;`;
                 'Authorization': 'Bearer ' + cfg.key,
                 'Prefer': 'return=minimal'
               },
-              body: JSON.stringify({ visitor_name: record.visitor_name, device_type: record.device_type })
+              body: JSON.stringify({
+                user_id: userNum,
+                user_num: userNum,
+                visitor_id: String(userNum),
+                visitor_name: record.visitor_name,
+                device_type: record.device_type
+              })
             });
           }
           if (!res.ok) {
-            // Stage 3 Fallback: visitor_name only
+            // Stage 3 Fallback: visitor_name & user_num
+            res = await fetch(cfg.url + '/rest/v1/visitor_logs', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': cfg.key,
+                'Authorization': 'Bearer ' + cfg.key,
+                'Prefer': 'return=minimal'
+              },
+              body: JSON.stringify({
+                user_id: userNum,
+                user_num: userNum,
+                visitor_name: record.visitor_name
+              })
+            });
+          }
+          if (!res.ok) {
+            // Stage 4 Fallback: visitor_name only (if table is restricted to base text columns)
             res = await fetch(cfg.url + '/rest/v1/visitor_logs', {
               method: 'POST',
               headers: {
@@ -4595,19 +4642,6 @@ grant select, insert on public.user_activity to anon, authenticated;`;
                 'Prefer': 'return=minimal'
               },
               body: JSON.stringify({ visitor_name: record.visitor_name })
-            });
-          }
-          if (!res.ok) {
-            // Stage 4 Fallback: empty object for default id/created_at tables
-            res = await fetch(cfg.url + '/rest/v1/visitor_logs', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': cfg.key,
-                'Authorization': 'Bearer ' + cfg.key,
-                'Prefer': 'return=minimal'
-              },
-              body: JSON.stringify({})
             });
           }
           if (res.ok) {
@@ -4653,13 +4687,16 @@ grant select, insert on public.user_activity to anon, authenticated;`;
         const rows = (allRows || []).filter(r => r.time_spent_seconds === undefined || r.time_spent_seconds === null || Number(r.time_spent_seconds) > 0);
         if (vlog) {
           vlog.dataset.cloudLoaded = '1';
-          const uniqueVisitors = new Set(rows.map(r => r.visitor_name || 'Guest')).size;
+          const uniqueVisitors = new Set(rows.map(r => r.visitor_name || (r.user_num ? `User ${r.user_num}` : 'User 1'))).size;
           vlog.innerHTML = `<div class="text-emerald-300 font-bold mb-1">// Live Supabase Cloud Feed: ${rows.length} verified sessions (${uniqueVisitors} unique members)</div>` +
             (rows.length ? rows.map(r => {
               const dt = r.visited_at ? new Date(r.visited_at).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : 'recent';
               const durationStr = r.time_spent_seconds ? ` · Time: ${r.time_spent_seconds}s` : '';
+              const userPin = (r.user_num || r.user_id) ? `User ${r.user_num || r.user_id}` : 'User 1';
+              const rawName = (r.visitor_name || '').trim();
+              const displayName = (rawName && !rawName.toLowerCase().startsWith('guest')) ? rawName : userPin;
               return `<div class="border-b border-white/10 py-1.5 flex flex-wrap items-center justify-between gap-1">
-                <span><strong class="text-brand-gold">${esc(r.visitor_name || 'Guest')}</strong> · <span class="text-cyan-200">${esc(r.device_type || 'Device')}</span></span>
+                <span><strong class="text-brand-gold">${esc(displayName)}</strong> <span class="text-xs text-brand-gold/70 font-mono">(${userPin})</span> · <span class="text-cyan-200">${esc(r.device_type || 'Device')}</span></span>
                 <span class="text-gray-400">Lang: ${esc(r.lang_pref || 'All')} · WL: ${r.watchlist_count ?? 0} · Watched: ${r.watched_count ?? 0}${durationStr} · ${esc(dt)}</span>
               </div>`;
             }).join('') : '<div>No active visitor records found. Sessions with 0s duration are excluded.</div>');
@@ -4679,11 +4716,11 @@ grant select, insert on public.user_activity to anon, authenticated;`;
     function getPersistentUserNumber() {
       let num = localStorage.getItem('pm_user_seq_num');
       if (!num) {
-        const hasHistory = localStorage.getItem('cs_profile_username') || localStorage.getItem('cs_watched') || localStorage.getItem('cs_wishlist');
-        num = hasHistory ? '1' : String(Math.floor(2 + Math.random() * 8));
+        const hasHistory = localStorage.getItem('cs_profile_v1') || localStorage.getItem('cs_profile_username') || localStorage.getItem('cs_watched') || localStorage.getItem('cs_wishlist');
+        num = hasHistory ? '1' : '1';
         localStorage.setItem('pm_user_seq_num', num);
       }
-      return parseInt(num, 10);
+      return parseInt(num, 10) || 1;
     }
 
     function getPersistentVisitorId() {
@@ -4695,12 +4732,18 @@ grant select, insert on public.user_activity to anon, authenticated;`;
       const userNum = getPersistentUserNumber();
       try {
         let name = '';
-        if (typeof obProfile !== 'undefined' && obProfile && obProfile.username) {
+        if (typeof obProfile !== 'undefined' && obProfile && obProfile.username && obProfile.username.trim()) {
           name = obProfile.username.trim();
         }
         if (!name) {
+          try {
+            const p = JSON.parse(localStorage.getItem('cs_profile_v1') || '{}');
+            if (p.username && p.username.trim()) name = p.username.trim();
+          } catch (_) {}
+        }
+        if (!name) {
           const stored = localStorage.getItem('cs_profile_username');
-          if (stored) name = stored.trim();
+          if (stored && stored.trim()) name = stored.trim();
         }
         if (!name && window.supabaseClient && window.supabaseClient.auth) {
           const u = typeof window.supabaseClient.auth.user === 'function' ? window.supabaseClient.auth.user() : null;
@@ -4712,7 +4755,7 @@ grant select, insert on public.user_activity to anon, authenticated;`;
           return `${name} (User ${userNum})`;
         }
       } catch (_) {}
-      return `Guest (User ${userNum})`;
+      return `User ${userNum}`;
     }
 
     function getISTTimestampString() {

@@ -14609,14 +14609,9 @@ Odd Taxi|2021|87
         blurb: "The gripping story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb, followed by the political and moral aftermath."
       },
       {
-        title: "Inception",
-        tagline: "Your mind is the scene of the crime.",
-        blurb: "Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, stealing valuable secrets from deep within the subconscious during dream states."
-      },
-      {
-        title: "Arcane",
-        tagline: "Two sisters. One city divided.",
-        blurb: "Set in utopian Piltover and the oppressed underground of Zaun, the story follows the origins of two iconic champions and the arcane power that tears them apart."
+        title: "3 Idiots",
+        tagline: "All Izz Well.",
+        blurb: "Two friends search for their long-lost companion while revisiting their college days and the non-conformist friend who inspired them to think differently."
       },
       {
         title: "The Dark Knight",
@@ -14624,9 +14619,14 @@ Odd Taxi|2021|87
         blurb: "When the menace known as the Joker wreaks havoc and chaos on Gotham, Batman must accept one of the greatest psychological and physical tests of his ability."
       },
       {
-        title: "3 Idiots",
-        tagline: "All Izz Well.",
-        blurb: "Two friends search for their long-lost companion while revisiting their college days and the non-conformist friend who inspired them to think differently."
+        title: "Arcane",
+        tagline: "Two sisters. One city divided.",
+        blurb: "Set in utopian Piltover and the oppressed underground of Zaun, the story follows the origins of two iconic champions and the arcane power that tears them apart."
+      },
+      {
+        title: "Sacred Games",
+        tagline: "Kabhi kabhi lagta hai apun hi bhagwan hai.",
+        blurb: "A troubled Mumbai police officer receives a mysterious phone call from an underworld fugitive who warns him to save the city within 25 days."
       }
     ];
 
@@ -14636,7 +14636,9 @@ Odd Taxi|2021|87
         const cached = localStorage.getItem('pm_spotlight_cache');
         if (cached) {
           const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed) && parsed.length === 6) return parsed;
+          if (Array.isArray(parsed) && parsed.length === 6 && !parsed.some(p => /\bseason\b/i.test(p.title || ''))) {
+            return parsed;
+          }
         }
       } catch (_) {}
       return DEFAULT_SPOTLIGHT_SEED.slice();
@@ -14687,6 +14689,8 @@ Odd Taxi|2021|87
         if (!item || !item.title) return -9999;
         // Strict Exclusion: Never recommend watched items
         if (watched.has(item.title)) return -9999;
+        // Strict Exclusion: Never feature individual season titles (e.g. Season 1, Season 2, etc.)
+        if (/\bseason\b/i.test(item.title) || /\bseason\s*\d+/i.test(item.cleanName || '')) return -9999;
 
         // Factor 1: 20% IMDb Rating
         const imdb = parseFloat(item.rating || '7.0');
@@ -14731,11 +14735,12 @@ Odd Taxi|2021|87
         return sImdb + sGenre + sPersonal + sRecency + sNovelty + sPopularity + sMood + sReady;
       }
 
-      // Candidate Pools
-      const filmEn = movies.filter(m => m.lang !== 'hi' && !watched.has(m.title));
-      const filmHi = movies.filter(m => m.lang === 'hi' && !watched.has(m.title));
-      const showEn = tvShows.filter(s => s.lang !== 'hi' && !watched.has(s.title));
-      const showHi = tvShows.filter(s => s.lang === 'hi' && !watched.has(s.title));
+      // Candidate Pools (Strictly excluding watched items and any title with individual season designations)
+      const hasSeason = (t) => /\bseason\b/i.test(t);
+      const filmEn = movies.filter(m => m.lang !== 'hi' && !watched.has(m.title) && !hasSeason(m.title));
+      const filmHi = movies.filter(m => m.lang === 'hi' && !watched.has(m.title) && !hasSeason(m.title));
+      const showEn = tvShows.filter(s => s.lang !== 'hi' && !watched.has(s.title) && !hasSeason(s.title));
+      const showHi = tvShows.filter(s => s.lang === 'hi' && !watched.has(s.title) && !hasSeason(s.title));
 
       const scoreMap = new Map();
       [...filmEn, ...filmHi, ...showEn, ...showHi].forEach(it => {
@@ -14774,27 +14779,35 @@ Odd Taxi|2021|87
         return picked;
       }
 
-      // Enforce 4 Films + 2 TV Shows, with exactly 5 English + 1 Hindi title
-      const topFilmHiScore = sortedFilmHi.length ? (scoreMap.get(sortedFilmHi[0]) || 0) : -1;
-      const topShowHiScore = sortedShowHi.length ? (scoreMap.get(sortedShowHi[0]) || 0) : -1;
-
+      // Enforce 4 Films + 2 TV Shows, with strictly 4 English + 2 Hindi titles
       let selected = [];
-      if (topFilmHiScore >= topShowHiScore && sortedFilmHi.length > 0) {
-        // 1 Hindi Film + 3 English Films + 2 English Shows
+      if (sortedFilmHi.length > 0 && sortedShowHi.length > 0) {
+        // Primary 4 English + 2 Hindi split: 3 English Films + 1 Hindi Film (4 Films) & 1 English Show + 1 Hindi Show (2 Shows)
         const hiFilm = sortedFilmHi[0];
-        const pickedFilms = pickDiverse(sortedFilmEn, 3, [hiFilm]);
-        const pickedShows = pickDiverse(sortedShowEn, 2, [hiFilm, ...pickedFilms]);
-        selected = [pickedFilms[0], pickedFilms[1], hiFilm, pickedFilms[2], pickedShows[0], pickedShows[1]].filter(Boolean);
-      } else if (sortedShowHi.length > 0) {
-        // 1 Hindi Show + 4 English Films + 1 English Show
         const hiShow = sortedShowHi[0];
-        const pickedFilms = pickDiverse(sortedFilmEn, 4, [hiShow]);
-        const pickedShows = pickDiverse(sortedShowEn, 1, [hiShow, ...pickedFilms]);
-        selected = [pickedFilms[0], pickedFilms[1], pickedFilms[2], hiShow, pickedFilms[3], pickedShows[0]].filter(Boolean);
-      } else {
-        const pickedFilms = pickDiverse(sortedFilmEn, 4, []);
-        const pickedShows = pickDiverse(sortedShowEn, 2, pickedFilms);
-        selected = [...pickedFilms, ...pickedShows];
+        const pickedFilmsEn = pickDiverse(sortedFilmEn, 3, [hiFilm, hiShow]);
+        const pickedShowsEn = pickDiverse(sortedShowEn, 1, [hiFilm, hiShow, ...pickedFilmsEn]);
+        selected = [pickedFilmsEn[0], pickedFilmsEn[1], hiFilm, pickedFilmsEn[2], hiShow, pickedShowsEn[0]].filter(Boolean);
+      }
+      if (selected.length < 6) {
+        // Fallback: 5 English + 1 Hindi if either Hindi films or Hindi shows are depleted
+        const topFilmHiScore = sortedFilmHi.length ? (scoreMap.get(sortedFilmHi[0]) || 0) : -1;
+        const topShowHiScore = sortedShowHi.length ? (scoreMap.get(sortedShowHi[0]) || 0) : -1;
+        if (topFilmHiScore >= topShowHiScore && sortedFilmHi.length > 0) {
+          const hiFilm = sortedFilmHi[0];
+          const pickedFilms = pickDiverse(sortedFilmEn, 3, [hiFilm]);
+          const pickedShows = pickDiverse(sortedShowEn, 2, [hiFilm, ...pickedFilms]);
+          selected = [pickedFilms[0], pickedFilms[1], hiFilm, pickedFilms[2], pickedShows[0], pickedShows[1]].filter(Boolean);
+        } else if (sortedShowHi.length > 0) {
+          const hiShow = sortedShowHi[0];
+          const pickedFilms = pickDiverse(sortedFilmEn, 4, [hiShow]);
+          const pickedShows = pickDiverse(sortedShowEn, 1, [hiShow, ...pickedFilms]);
+          selected = [pickedFilms[0], pickedFilms[1], pickedFilms[2], hiShow, pickedFilms[3], pickedShows[0]].filter(Boolean);
+        } else {
+          const pickedFilms = pickDiverse(sortedFilmEn, 4, []);
+          const pickedShows = pickDiverse(sortedShowEn, 2, pickedFilms);
+          selected = [...pickedFilms, ...pickedShows];
+        }
       }
 
       if (selected.length === 6) {
@@ -14967,6 +14980,14 @@ Odd Taxi|2021|87
       `;
       attachThumbObservers(banner);
     }
+
+    window.renderHeroSpotlight = renderHeroSpotlight;
+    // Synchronous immediate render on script evaluation to eliminate any delay
+    try {
+      if (document.getElementById('heroBanner')) {
+        renderHeroSpotlight(0, false, false);
+      }
+    } catch (_) {}
 
     window.setTelescopeMood = function(moodKey) {
       document.querySelectorAll('#eyepieceMoodRing .mood-ring-notch').forEach(n => {
