@@ -736,12 +736,10 @@
     window.filterOpeningShelves('all');
   };
 
-  // Star-streak flight transition across stations
+  // Direct instant station transition
   window.flyToStation = function (dest) {
     if (dest === 'music') {
       window.openMusicFromVinyl();
-    } else if (window.triggerStarFlight && !document.body.classList.contains('reduce-fx')) {
-      window.triggerStarFlight(300, () => window.switchTab(dest));
     } else {
       window.switchTab(dest);
     }
@@ -938,8 +936,8 @@
     return { top, text, theme: AUTO[top] || 'clear' };
   }
 
-  // ---------- particles & star-streak flight ----------
-  const cv = $('fxCanvas'), cx = cv.getContext('2d'); let W = 0, H = 0, parts = [], mode = 'stars', raf = 0, tt = 0;
+  // ---------- particles & canvas FX (disabled by default for smooth 60fps performance) ----------
+  const cv = $('fxCanvas'), cx = cv ? cv.getContext('2d') : null; let W = 0, H = 0, parts = [], mode = 'none', raf = 0, tt = 0;
   let flightActive = false, flightStart = 0, flightDuration = 300, flightCb = null;
   window.triggerStarFlight = function (dur = 300, cb) {
     flightActive = true;

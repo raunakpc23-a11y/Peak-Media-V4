@@ -23,6 +23,5 @@ Peak Media V4 is a responsive, client-side progressive web application for cinem
   - `js/features.js` - Deciders toolset: Time Machine, Mood Ricochet pinball lab, and Opposite Day contrarian engine.
   - `js/marathon.js` - Marathon Architect scheduling and timeline pacing.
   - `js/universes.js` - Cinematic universes and franchise exploration matrices.
-  - `js/constellation.js` - Interactive movie constellation graph viewer.
   - `js/pwa.js` - PWA update notifications, install prompts, and lifecycle handlers.
 - `icons/` - PWA icons and app launcher graphics.
