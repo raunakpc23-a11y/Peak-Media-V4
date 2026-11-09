@@ -1242,9 +1242,8 @@
         musicPlaylists = parsed.playlists || [];
         const rawSongs = parsed.songs || [];
         const cleaner = window.cleanTrackTitle || (x => x);
-        const dead = JSON.parse(localStorage.getItem('pm_dead_songs') || '[]');
-        const deadSet = new Set(dead);
-        musicCatalog = rawSongs.filter(s => !deadSet.has(s.id)).map(s => {
+        try { localStorage.removeItem('pm_dead_songs'); } catch (_) {}
+        musicCatalog = rawSongs.map(s => {
           s.t = cleaner(s.t || s.rawTitle, s.a);
           return s;
         });
@@ -1613,19 +1612,7 @@
             onError: e => {
               // Auto-skip on videos that block embedding (errors 100, 101, 150)
               const cur = musicQueue[musicQueueIdx];
-              if (cur && cur.id) {
-                try {
-                  const dead = JSON.parse(localStorage.getItem('pm_dead_songs') || '[]');
-                  if (!dead.includes(cur.id)) {
-                    dead.push(cur.id);
-                    localStorage.setItem('pm_dead_songs', JSON.stringify(dead));
-                  }
-                  if (Array.isArray(musicCatalog)) {
-                    musicCatalog = musicCatalog.filter(track => track.id !== cur.id);
-                  }
-                } catch (_) {}
-              }
-              showToast(`Track unavailable (${e.data}) - auto-skipping to next song`, 'fa-forward-fast', 'text-amber-400');
+              showToast(`Track temporarily unavailable (${e.data}) - skipping`, 'fa-forward-fast', 'text-amber-400');
               setTimeout(() => window.musicNext(), 700);
             }
           }
