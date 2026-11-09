@@ -4466,24 +4466,26 @@ window.PEAK_SUPABASE_ANON_KEY = '${cfg.key || 'YOUR-PUBLIC-ANON-KEY'}';`;
     };
     window.copySupabaseSetupSQL = function() {
       const sql = `-- Run this in your Supabase SQL Editor:
--- Resolves NULL user IDs, assigns constant stick numbers (User 1, 2, 3), and filters 0-second sessions
+-- Complete Data Coherence Migration: User IDs, persistent numbers, authentic names, and dwell-time filtering
 
+-- 1. Ensure core tables exist with flexible text user_id columns
 create table if not exists public.visitor_sessions (
-  id bigint generated always as identity primary key,
-  user_id integer not null default 1,
+  id uuid default gen_random_uuid() primary key,
+  user_id text not null default '1',
   user_num integer not null default 1,
   visitor_id text not null default '1',
   visitor_name text not null default 'User 1',
   device text,
   location text,
-  time_spent_seconds integer not null default 1,
+  time_spent_seconds integer not null default 5,
+  session_start timestamptz default now(),
   created_at timestamptz default now(),
   last_active_at timestamptz default now()
 );
 
 create table if not exists public.visitor_logs (
   id bigint generated always as identity primary key,
-  user_id integer not null default 1,
+  user_id text not null default '1',
   user_num integer not null default 1,
   visitor_id text not null default '1',
   visitor_name text not null default 'User 1',
@@ -4492,23 +4494,24 @@ create table if not exists public.visitor_logs (
   visit_count int default 1,
   watchlist_count int default 0,
   watched_count int default 0,
-  time_spent_seconds integer default 1,
+  time_spent_seconds integer default 5,
   visited_at timestamptz default now()
 );
 
 create table if not exists public.user_activity (
-  id bigint generated always as identity primary key,
-  user_id integer not null default 1,
+  id uuid default gen_random_uuid() primary key,
+  user_id text not null default '1',
   user_num integer not null default 1,
-  session_id bigint,
+  session_id uuid,
   action_type text not null,
   item_id text,
   item_title text,
+  visitor_name text not null default 'User 1',
   extra_meta jsonb,
   created_at timestamptz default now()
 );
 
--- Migration for existing installations to guarantee columns exist with integer defaults
+-- 2. Migrate existing tables: convert user_id from UUID to TEXT so integer IDs (1, 2, 3) are accepted without syntax error 22P02
 alter table if exists public.visitor_sessions add column if not exists user_id text default '1';
 alter table if exists public.visitor_sessions alter column user_id type text using user_id::text;
 alter table if exists public.visitor_sessions alter column user_id set default '1';
@@ -4518,19 +4521,25 @@ alter table if exists public.user_activity alter column user_id type text using 
 alter table if exists public.user_activity alter column user_id set default '1';
 
 alter table if exists public.visitor_sessions add column if not exists visitor_name text default 'User 1';
-alter table if exists public.visitor_logs add column if not exists user_id text default '1';
-alter table if exists public.visitor_logs add column if not exists visitor_name text default 'User 1';
+alter table if exists public.user_activity add column if not exists visitor_name text default 'User 1';
+alter table if exists public.visitor_sessions add column if not exists user_num integer default 1;
+alter table if exists public.user_activity add column if not exists user_num integer default 1;
 
--- Backfill any past null entries to User 1 and replace generic 'Guest' tags
+-- 3. Backfill existing null rows to User 1 and replace generic 'Guest' tags
 update public.visitor_sessions set user_id = '1' where user_id is null;
+update public.visitor_sessions set user_num = 1 where user_num is null;
 update public.visitor_sessions set visitor_name = 'User 1 (Admin)' where visitor_name = 'Guest' or visitor_name is null;
-update public.user_activity set user_id = '1' where user_id is null;
 
--- View that strictly excludes 0-second / blank visits
+update public.user_activity set user_id = '1' where user_id is null;
+update public.user_activity set user_num = 1 where user_num is null;
+update public.user_activity set visitor_name = 'User 1 (Admin)' where visitor_name = 'Guest' or visitor_name is null;
+
+-- 4. View that strictly filters out instant bounces (less than 5 seconds dwell time)
 create or replace view public.active_viewers as
 select * from public.visitor_sessions
-where time_spent_seconds > 0;
+where time_spent_seconds >= 5;
 
+-- 5. Row Level Security and permissions
 alter table public.visitor_sessions enable row level security;
 alter table public.visitor_logs enable row level security;
 alter table public.user_activity enable row level security;
