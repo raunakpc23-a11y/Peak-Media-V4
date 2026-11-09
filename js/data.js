@@ -14649,7 +14649,7 @@ Odd Taxi|2021|87
     /**
      * Dynamic Composite Scoring Recommendation Engine
      * Weights: 20% IMDb, 15% Genre Affinity, 25% Personal Rating, 10% Recency, 5% Novelty, 25% Contextual Factors
-     * Strict Constraints: 4 Films + 2 TV Shows, 5 English + 1 Hindi title, Excludes watched items.
+     * Strict Constraints: 4 Films + 2 TV Shows, 4 English + 2 Hindi titles, Excludes watched items.
      */
     function computeDynamicSpotlight(forceRender = false) {
       if (!window.movies || !window.tvShows || !movies.length || !tvShows.length) return;
