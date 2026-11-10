@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Peak Media</title>
+  <link rel="icon" type="image/svg+xml" href="icons/peak-media.svg">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(circle at top right, #081832 0%, #050811 55%, #03050a 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+      line-height: 1.65;
+    }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 36px 20px 64px; }
+    header {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 16px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 32px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; font-weight: 800; letter-spacing: 0.04em; }
+    .brand img { width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(56,189,248,0.4); }
+    nav { display: flex; gap: 16px; font-size: 14px; }
+    nav a { color: #94a3b8; text-decoration: none; font-weight: 600; }
+    nav a:hover, nav a.active { color: #f5c518; }
+    main {
+      background: rgba(13, 16, 24, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; color: #fff; }
+    .meta { color: #94a3b8; font-size: 13px; margin-bottom: 24px; }
+    h2 { margin-top: 26px; margin-bottom: 10px; font-size: 17px; color: #f5c518; }
+    p, li { color: #cbd5e1; font-size: 14.5px; }
+    ul { padding-left: 20px; }
+    li + li { margin-top: 6px; }
+    a { color: #38bdf8; }
+    footer { margin-top: 28px; text-align: center; font-size: 12.5px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="./">
+        <img src="icons/peak-media.svg" alt="Peak Media Logo">
+        <span>PEAK MEDIA</span>
+      </a>
+      <nav>
+        <a href="./">Home</a>
+        <a href="privacy.html" class="active">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Privacy &amp; Data Policy</h1>
+      <div class="meta">Last updated: November 10, 2026 · Peak Media (Film, Series &amp; Music Vault)</div>
+
+      <p>Peak Media values your privacy. We collect minimal data solely to operate optional cloud sync, keep playback and interface features responsive, and improve recommendations across movies, TV series, and music.</p>
+
+      <h2>1. Data Stored Locally vs. Cloud Sync</h2>
+      <ul>
+        <li><strong>Guest Mode (Local Only):</strong> Your watchlist, watched titles, ratings, favorites, theme preferences, and custom lists stay in your browser's local storage.</li>
+        <li><strong>Optional Account &amp; Cloud Sync:</strong> If you choose to create an account or sign in via Supabase, we store your chosen username, hashed password, optional recovery email, and synced library snapshot so you can restore your list across devices.</li>
+      </ul>
+
+      <h2>2. Google OAuth Sign-In Data</h2>
+      <p>If you choose <strong>Continue with Google</strong>, Peak Media requests only basic profile and email information (<code>profile</code> and <code>email</code> scopes) via Supabase Authentication to identify your account and link your personal Peak Media library. We do not access your Gmail messages, contacts, Drive files, or any sensitive Google scopes.</p>
+
+      <h2>3. Operational Metrics We Record</h2>
+      <ul>
+        <li><strong>Device Specifications:</strong> Browser platform and viewport dimensions for responsive layout support.</li>
+        <li><strong>General Region:</strong> Coarse city/timezone information for locale and catalog formatting.</li>
+        <li><strong>Session Duration &amp; Media Interactions:</strong> Aggregated playback, search, and watchlist actions used inside the app telemetry log.</li>
+      </ul>
+
+      <h2>4. Data Security &amp; No Third-Party Tracking</h2>
+      <p>Cloud database tables use PostgreSQL <strong>Row Level Security (RLS)</strong> and salted password hashing on Supabase. Peak Media does not sell personal information, share data with data brokers, or run third-party advertising trackers.</p>
+
+      <h2>5. Exporting &amp; Deleting Your Data</h2>
+      <p>You can export your complete library backup anytime from the <strong>Profile</strong> tab in JSON format, clear your local browser storage, or sign out to revoke active session tokens. For repository or data deletion inquiries, contact the maintainer via the Peak Media repository at <a href="https://github.com/raunakpc23-a11y/Peak-Media-V4" target="_blank" rel="noopener">github.com/raunakpc23-a11y/Peak-Media-V4</a>.</p>
+    </main>
+
+    <footer>
+      © 2026 Peak Media · <a href="./">Return to App</a> · <a href="terms.html">Terms of Service</a>
+    </footer>
+  </div>
+</body>
+</html>
