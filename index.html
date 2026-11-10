@@ -1925,9 +1925,26 @@
                   <button type="button" onclick="syncCloudLibraryNow()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 font-semibold text-xs transition-all">
                     <i class="fa-solid fa-cloud-arrow-up mr-1 text-emerald-400"></i>Sync Now
                   </button>
+                  <button type="button" id="profileChangePwToggleBtn" onclick="toggleProfileChangePwBox()" class="hidden px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 text-amber-200 font-semibold text-xs transition-all">
+                    <i class="fa-solid fa-key mr-1"></i>Change Password
+                  </button>
                   <button type="button" id="profileCloudLogoutBtn" onclick="signOutPeakAccount(false)" class="hidden px-3.5 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-400/40 text-rose-200 font-semibold text-xs transition-all">
                     Sign Out
                   </button>
+                </div>
+                <div id="profileChangePwBox" class="hidden pt-2 mt-2 border-t border-white/10 space-y-2">
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-amber-300">Update Account Password (Synced to Supabase)</div>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <input id="profilePwCurrent" type="password" autocomplete="current-password" placeholder="Current password..." class="px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
+                    <input id="profilePwNew" type="password" autocomplete="new-password" placeholder="New password (4+ chars)..." class="px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
+                    <input id="profilePwConfirm" type="password" autocomplete="new-password" placeholder="Confirm new password..." class="px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
+                  </div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" onclick="submitPeakPasswordChange('profile')" class="px-3.5 py-1.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs transition-all">
+                      Save New Password
+                    </button>
+                    <span id="profileChangePwMsg" class="text-[11px] font-medium text-gray-300"></span>
+                  </div>
                 </div>
               </div>
 

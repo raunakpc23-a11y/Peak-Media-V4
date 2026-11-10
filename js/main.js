@@ -1060,23 +1060,39 @@
       }
 
       // -------------------------------------------------------------
-      // STAGE 9: Account & Sync (Custom Client Tokens + Optional Gmail + Guest)
+      // STAGE 9: Account & Sync (Custom Client Tokens + Google + Guest Mode)
       // -------------------------------------------------------------
       else if (obStep === 9) {
         const activeUser = window._peakAuthSession || null;
-        const suggestedName = (obProfile.username && obProfile.username !== 'CinePhile') ? obProfile.username : (isLikelyMainAdminDevice() ? 'Admin' : 'CinePhile');
+        const suggestedName = (obProfile.username && obProfile.username !== 'CinePhile') ? obProfile.username : '';
 
         if (activeUser && activeUser.user_id) {
           vp.innerHTML = `
-            <div class="ob-step-enter max-w-lg mx-auto w-full py-4 space-y-5 text-center">
-              <div class="p-6 rounded-3xl bg-emerald-500/10 border border-emerald-400/35 shadow-xl space-y-3">
-                <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 text-2xl">
+            <div class="ob-step-enter max-w-lg mx-auto w-full py-2 space-y-4 text-center">
+              <div class="p-5 sm:p-6 rounded-3xl bg-emerald-500/10 border border-emerald-400/35 shadow-xl space-y-3">
+                <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 text-xl">
                   <i class="fa-solid fa-shield-check"></i>
                 </div>
                 <div class="text-xs font-extrabold uppercase tracking-widest text-emerald-300">Verified Client Token Active</div>
-                <h4 class="text-xl font-display font-black text-white">${esc(activeUser.username)} <span class="text-sm font-mono text-emerald-300">(ID #${esc(activeUser.user_id)})</span></h4>
-                <p class="text-xs text-slate-300 leading-relaxed">Your watchlist, watched history, favorites, and profile are cryptographically linked with Supabase. Sign in with this username on any other device to restore your library.</p>
-                ${activeUser.gmail_email ? `<div class="text-[11px] font-mono text-cyan-300">Linked Gmail: ${esc(activeUser.gmail_email)}</div>` : `<div class="text-[11px] font-mono text-slate-400">Zero-email custom token mode</div>`}
+                <h4 class="text-xl font-display font-black text-white">${esc(activeUser.username)} <span class="text-sm font-mono text-emerald-300">(ID #${esc(activeUser.user_id)})</span>${activeUser.role === 'admin' ? ' <span class="ml-1 px-2 py-0.5 rounded-md bg-amber-400/20 border border-amber-400/40 text-amber-300 text-[10px] font-extrabold uppercase align-middle">Admin</span>' : ''}</h4>
+                <p class="text-xs text-slate-300 leading-relaxed">Your watchlist, watched history, favorites, and profile are linked with Supabase. Sign in with this username on any device to restore your library.</p>
+                ${activeUser.gmail_email ? `<div class="text-[11px] font-mono text-cyan-300">Linked Google: ${esc(activeUser.gmail_email)}</div>` : `<div class="text-[11px] font-mono text-slate-400">Custom token mode</div>`}
+
+                ${obAuthError ? `<div class="p-2 rounded-xl bg-rose-500/15 border border-rose-400/40 text-rose-200 text-xs font-medium">${esc(obAuthError)}</div>` : ''}
+                ${obAuthSuccess ? `<div class="p-2 rounded-xl bg-emerald-500/15 border border-emerald-400/40 text-emerald-200 text-xs font-medium">${esc(obAuthSuccess)}</div>` : ''}
+
+                <div class="pt-2 border-t border-white/10 text-left space-y-2">
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-amber-300"><i class="fa-solid fa-key mr-1"></i>Change Password</div>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <input id="obPwCurrent" type="password" autocomplete="current-password" placeholder="Current password..." class="px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
+                    <input id="obPwNew" type="password" autocomplete="new-password" placeholder="New (4+ chars)..." class="px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
+                    <input id="obPwConfirm" type="password" autocomplete="new-password" placeholder="Confirm new..." class="px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
+                  </div>
+                  <button type="button" onclick="window.submitPeakPasswordChange('ob')" ${obAuthBusy ? 'disabled' : ''} class="w-full py-2 px-3 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs transition-all">
+                    ${obAuthBusy ? 'Updating Password...' : 'Update Password in Supabase'}
+                  </button>
+                </div>
+
                 <div class="pt-2 flex flex-wrap items-center justify-center gap-2.5">
                   <button type="button" onclick="window.syncCloudLibraryNow()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs flex items-center gap-1.5 transition-all">
                     <i class="fa-solid fa-cloud-arrow-up"></i> Sync Library Now
@@ -1097,7 +1113,7 @@
         vp.innerHTML = `
           <div class="ob-step-enter max-w-xl mx-auto w-full py-1 space-y-4">
             <div class="text-center space-y-1">
-              <p class="text-xs text-slate-300">Create a password-protected account <span class="text-emerald-300 font-semibold">(zero email needed)</span>, sign in from another device, use Gmail, or browse as a Guest.</p>
+              <p class="text-xs text-slate-300">Create a password-protected account, sign in from another device, continue with Google, or use Guest Mode.</p>
             </div>
 
             <!-- 3 Clean Auth Mode Tabs -->
@@ -1109,7 +1125,7 @@
                 <i class="fa-solid fa-key mr-1"></i>Sign In
               </button>
               <button type="button" onclick="window.setObAuthMode('gmail')" class="py-2 px-2 rounded-xl text-xs font-bold transition-all ${isGmail ? 'bg-white text-black shadow' : 'text-slate-300 hover:text-white'}">
-                <i class="fa-brands fa-google mr-1"></i>Gmail
+                <i class="fa-brands fa-google mr-1"></i>Google
               </button>
             </div>
 
@@ -1119,11 +1135,11 @@
             ${!isGmail ? `
               <div class="p-4 sm:p-5 rounded-2xl bg-black/50 border border-white/10 space-y-3 max-w-md mx-auto">
                 <div>
-                  <label for="obAuthUsername" class="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">${isSignup ? 'Choose Username (Use "Admin" to protect owner account)' : 'Username or Optional Gmail'}</label>
-                  <input id="obAuthUsername" type="text" maxlength="40" value="${esc(suggestedName)}" placeholder="e.g. Admin or your handle..." class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
+                  <label for="obAuthUsername" class="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">${isSignup ? 'Choose Username' : 'Username'}</label>
+                  <input id="obAuthUsername" type="text" maxlength="40" value="${esc(suggestedName)}" placeholder="Enter username..." class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
                 </div>
                 <div>
-                  <label for="obAuthPassword" class="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">${isSignup ? 'Create Password (for cross-device sync)' : 'Password'}</label>
+                  <label for="obAuthPassword" class="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">${isSignup ? 'Create Password' : 'Password'}</label>
                   <div class="relative">
                     <input id="obAuthPassword" type="password" autocomplete="${isSignup ? 'new-password' : 'current-password'}" placeholder="${isSignup ? 'At least 4 characters...' : 'Enter your password...'}" class="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
                     <button type="button" onclick="window.toggleObAuthPwVis()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs" title="Show/Hide Password"><i class="fa-solid fa-eye"></i></button>
@@ -1131,8 +1147,8 @@
                 </div>
                 ${isSignup ? `
                   <div>
-                    <label for="obAuthGmailOpt" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Gmail Recovery <span class="text-emerald-400 font-normal">(Optional — leave blank for zero personal data)</span></label>
-                    <input id="obAuthGmailOpt" type="email" autocomplete="email" placeholder="Optional (not required)" class="w-full px-3.5 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <label for="obAuthGmailOpt" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Gmail Recovery <span class="text-emerald-400 font-normal">Optional</span></label>
+                    <input id="obAuthGmailOpt" type="email" autocomplete="email" placeholder="Optional" class="w-full px-3.5 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white focus:outline-none focus:border-cyan-400">
                   </div>
                 ` : ''}
                 <button type="button" id="obAuthSubmitBtn" onclick="window.submitObCustomAuth(false)" ${obAuthBusy ? 'disabled' : ''} class="w-full py-2.5 px-4 rounded-xl ${isSignup ? 'bg-brand-gold hover:bg-yellow-400 text-black' : 'bg-cyan-400 hover:bg-cyan-300 text-black'} font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95">
@@ -1142,23 +1158,18 @@
               </div>
             ` : `
               <div class="p-4 sm:p-5 rounded-2xl bg-black/50 border border-white/10 space-y-3.5 max-w-md mx-auto text-center">
-                <p class="text-xs text-slate-300">Prefer one-click Gmail login instead of managing a username & password? Sign in securely via Google or Magic Link:</p>
+                <p class="text-xs font-semibold text-slate-300">Continue with Google</p>
                 <button type="button" onclick="window.signInWithGmailOAuth()" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all">
                   <i class="fa-brands fa-google text-rose-500"></i>
-                  <span>Continue with Google / Gmail</span>
+                  <span>Continue with Google</span>
                 </button>
-                <div class="flex items-center gap-2 text-[10px] text-slate-500 uppercase font-bold"><span class="flex-1 h-px bg-white/10"></span>Or Email Link<span class="flex-1 h-px bg-white/10"></span></div>
-                <div class="flex gap-2">
-                  <input id="obMagicGmailInput" type="email" placeholder="yourname@gmail.com" class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
-                  <button type="button" onclick="window.sendGmailMagicLink()" class="px-3.5 py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-bold text-xs shrink-0">Send Link</button>
-                </div>
               </div>
             `}
 
             <!-- Continue as Guest Option -->
             <div class="text-center pt-1">
               <button type="button" onclick="window.continueAsGuestAccount()" class="text-xs text-slate-400 hover:text-brand-gold underline underline-offset-4 transition-colors">
-                Skip login &amp; continue as Guest (no account required)
+                Guest Mode
               </button>
             </div>
           </div>`;
@@ -1254,14 +1265,14 @@
       if (!resObj || !resObj.user_id) return;
       window._peakAuthSession = {
         user_id: String(resObj.user_id),
-        username: resObj.username || (String(resObj.user_id) === '1' ? 'Admin' : `CinePhile ${resObj.user_id}`),
+        username: resObj.username || `CinePhile ${resObj.user_id}`,
         role: resObj.role || (String(resObj.user_id) === '1' ? 'admin' : 'user'),
         gmail_email: resObj.gmail_email || null
       };
       if (resObj.token) setClientToken(resObj.token);
       localStorage.setItem('pm_user_seq_num', String(resObj.user_id));
       localStorage.setItem('pm_user_v4_verified', '1');
-      if (window._peakAuthSession.username && window._peakAuthSession.username !== 'Admin') {
+      if (window._peakAuthSession.username) {
         obProfile.username = window._peakAuthSession.username;
         saveLS('cs_profile_v1', obProfile);
       }
@@ -1269,24 +1280,103 @@
         applyLibrarySnapshot(resObj.library_data);
       }
       saveLS('cs_onboarded_v1', 'true');
+      if (typeof updateHeaderProfileUI === 'function') updateHeaderProfileUI();
       updateAccountStatusUI();
     }
 
     function updateAccountStatusUI() {
       const badge = $('profileCloudAuthStatus');
       const authBtn = $('profileCloudAuthBtn');
+      const pwToggleBtn = $('profileChangePwToggleBtn');
+      const pwBox = $('profileChangePwBox');
       const logoutBtn = $('profileCloudLogoutBtn');
       const sess = window._peakAuthSession;
+      const isSignedIn = Boolean(sess && sess.user_id);
       if (badge) {
-        if (sess && sess.user_id) {
-          badge.innerHTML = `<span class="text-emerald-300 font-bold"><i class="fa-solid fa-shield-check mr-1"></i>Verified Token · ${esc(sess.username)} (ID #${esc(sess.user_id)})</span>`;
+        if (isSignedIn) {
+          const roleTag = sess.role === 'admin' ? ' · Admin' : '';
+          badge.innerHTML = `<span class="text-emerald-300 font-bold"><i class="fa-solid fa-shield-check mr-1"></i>Verified Token · ${esc(sess.username)} (ID #${esc(sess.user_id)}${roleTag})</span>`;
         } else {
           badge.innerHTML = `<span class="text-gray-400"><i class="fa-solid fa-user-clock mr-1"></i>Guest Mode (ID #${getPersistentUserNumber()} · Local Session)</span>`;
         }
       }
-      if (authBtn) authBtn.textContent = (sess && sess.user_id) ? 'Account Settings' : 'Sign In / Create Account';
-      if (logoutBtn) logoutBtn.classList.toggle('hidden', !(sess && sess.user_id));
+      if (authBtn) authBtn.textContent = isSignedIn ? 'Account Settings' : 'Sign In / Create Account';
+      if (pwToggleBtn) pwToggleBtn.classList.toggle('hidden', !isSignedIn);
+      if (pwBox && !isSignedIn) pwBox.classList.add('hidden');
+      if (logoutBtn) logoutBtn.classList.toggle('hidden', !isSignedIn);
     }
+
+    window.toggleProfileChangePwBox = function() {
+      const box = $('profileChangePwBox');
+      if (!box) return;
+      box.classList.toggle('hidden');
+      const msg = $('profileChangePwMsg');
+      if (msg) msg.textContent = '';
+    };
+
+    window.submitPeakPasswordChange = async function(source = 'profile') {
+      const token = getClientToken();
+      const msgEl = $('profileChangePwMsg');
+      const setMsg = (txt, isErr = false) => {
+        if (source === 'ob') {
+          obAuthError = isErr ? txt : '';
+          obAuthSuccess = isErr ? '' : txt;
+          renderObStep();
+        } else if (msgEl) {
+          msgEl.textContent = txt;
+          msgEl.className = 'text-[11px] font-medium ' + (isErr ? 'text-rose-300' : 'text-emerald-300');
+        }
+      };
+      if (!token) {
+        setMsg('Sign in first before changing password.', true);
+        return;
+      }
+      const curInp = $(source === 'ob' ? 'obPwCurrent' : 'profilePwCurrent');
+      const newInp = $(source === 'ob' ? 'obPwNew' : 'profilePwNew');
+      const cfmInp = $(source === 'ob' ? 'obPwConfirm' : 'profilePwConfirm');
+      const curPw = (curInp && curInp.value) || '';
+      const newPw = (newInp && newInp.value) || '';
+      const cfmPw = (cfmInp && cfmInp.value) || '';
+
+      if (!newPw || newPw.length < 4) {
+        setMsg('New password must be at least 4 characters.', true);
+        return;
+      }
+      if (newPw !== cfmPw) {
+        setMsg('New passwords do not match.', true);
+        return;
+      }
+
+      if (source === 'ob') { obAuthBusy = true; obAuthError = ''; obAuthSuccess = ''; renderObStep(); }
+      try {
+        const res = await callPeakAuthRpc('peak_change_password', {
+          p_token: token,
+          p_current_password: curPw,
+          p_new_password: newPw
+        });
+        if (!res || !res.ok) {
+          throw new Error((res && res.error) || 'Could not update password.');
+        }
+        if (window._peakAuthSession && window._peakAuthSession.role === 'admin') {
+          const cfg = getLS('cs_supabase_cfg', { url: '', key: '', passkey: 'admin' });
+          cfg.passkey = newPw;
+          saveLS('cs_supabase_cfg', cfg);
+        }
+        if (curInp) curInp.value = '';
+        if (newInp) newInp.value = '';
+        if (cfmInp) cfmInp.value = '';
+        if (source === 'ob') obAuthBusy = false;
+        setMsg('Password updated in Supabase!', false);
+        showToast('Password updated in Supabase!', 'fa-key', 'text-emerald-400');
+        if (window.logUserActivity) window.logUserActivity('password_change', 'Account Password Updated', (window._peakAuthSession && window._peakAuthSession.username) || 'Account');
+      } catch (err) {
+        if (source === 'ob') obAuthBusy = false;
+        const m = err.message && err.message.includes('Could not find the function')
+          ? 'Run the updated Supabase SQL script first to enable peak_change_password.'
+          : (err.message || 'Password update failed.');
+        setMsg(m, true);
+      }
+    };
 
     async function callPeakAuthRpc(fnName, params) {
       const cfg = getAdminSupaConfig();
@@ -1386,6 +1476,7 @@
         obAuthSuccess = `Authenticated as ${data.username} (User #${data.user_id})!`;
         if (!fromNextButton) renderObStep();
         showToast(`Signed in as ${data.username} (#${data.user_id})`, 'fa-shield-check', 'text-emerald-400');
+        if (window.logUserActivity) window.logUserActivity(obAuthMode === 'login' ? 'auth_login' : 'auth_signup', data.username, `${data.username} (#${data.user_id})`);
         return true;
       } catch (err) {
         obAuthBusy = false;
@@ -1404,45 +1495,34 @@
         renderObStep();
         return;
       }
+      if (window.location.protocol === 'file:') {
+        obAuthError = 'Google sign-in requires running on http://localhost or HTTPS (not file://), or sign in with Username & Password.';
+        renderObStep();
+        return;
+      }
       try {
+        // Verify Google OAuth provider is enabled in Supabase before redirecting (prevents 400 validation_failed error page)
+        const settingsRes = await fetch(`${cfg.url}/auth/v1/settings`, {
+          headers: { 'apikey': cfg.key }
+        }).catch(() => null);
+        if (settingsRes && settingsRes.ok) {
+          const settings = await settingsRes.json().catch(() => null);
+          if (settings && settings.external && settings.external.google !== true) {
+            obAuthError = 'Google OAuth provider is disabled in this Supabase project (code 400 validation_failed). Enable Google in Supabase Dashboard → Authentication → Providers → Google, or use Create / Sign In.';
+            renderObStep();
+            return;
+          }
+        }
         const { error } = await window.supabaseClient.auth.signInWithOAuth({
           provider: 'google',
           options: { redirectTo: window.location.origin + window.location.pathname }
         });
         if (error) {
-          obAuthError = error.message || 'Google OAuth failed. Enable Google provider in Supabase Auth, or use the Email Link below.';
+          obAuthError = error.message || 'Google sign-in failed. Enable Google provider in Supabase Auth or use Username & Password.';
           renderObStep();
         }
       } catch (err) {
         obAuthError = err.message || 'Google sign-in unavailable.';
-        renderObStep();
-      }
-    };
-
-    window.sendGmailMagicLink = async function() {
-      const inp = $('obMagicGmailInput');
-      const email = ((inp && inp.value) || '').trim();
-      if (!email || !email.includes('@')) {
-        obAuthError = 'Enter a valid Gmail address for Magic Link login.';
-        renderObStep();
-        return;
-      }
-      if (!window.supabaseClient) {
-        obAuthError = 'Supabase client not ready.';
-        renderObStep();
-        return;
-      }
-      try {
-        const { error } = await window.supabaseClient.auth.signInWithOtp({
-          email,
-          options: { emailRedirectTo: window.location.origin + window.location.pathname }
-        });
-        if (error) throw error;
-        obAuthError = '';
-        obAuthSuccess = `Magic sign-in link sent to ${email}! Open your inbox and click the link.`;
-        renderObStep();
-      } catch (err) {
-        obAuthError = err.message || 'Could not send Gmail magic link.';
         renderObStep();
       }
     };
@@ -1457,7 +1537,7 @@
           ov.classList.remove('flex');
         }
         applyProfileAndCloseWizard();
-        showToast(`Entered as Guest (${obProfile.username || 'CinePhile'})`, 'fa-user-clock', 'text-cyan-300');
+        showToast(`Guest Mode (${obProfile.username || 'CinePhile'})`, 'fa-user-clock', 'text-cyan-300');
       });
     };
 
@@ -1483,6 +1563,7 @@
 
     window.signOutPeakAccount = async function(reRenderStep = false) {
       const token = getClientToken();
+      const prevUser = window._peakAuthSession ? window._peakAuthSession.username : '';
       if (token) {
         try { await callPeakAuthRpc('peak_logout_token', { p_token: token }); } catch (_) {}
       }
@@ -1492,6 +1573,19 @@
         }
       } catch (_) {}
       clearClientToken();
+      if (prevUser && obProfile.username && obProfile.username.toLowerCase() === prevUser.toLowerCase()) {
+        obProfile.username = 'CinePhile';
+        saveLS('cs_profile_v1', obProfile);
+      }
+      try {
+        localStorage.removeItem('pm_user_seq_num');
+        localStorage.removeItem('pm_user_v4_verified');
+      } catch (_) {}
+      const cfg = getAdminSupaConfig();
+      if (cfg.url && cfg.key && typeof resolveSequentialUserIdentity === 'function') {
+        try { await resolveSequentialUserIdentity(cfg); } catch (_) {}
+      }
+      if (typeof updateHeaderProfileUI === 'function') updateHeaderProfileUI();
       updateAccountStatusUI();
       showToast('Signed out cleanly', 'fa-right-from-bracket', 'text-gray-300');
       if (reRenderStep) renderObStep();
@@ -1501,7 +1595,7 @@
     async function hydrateAuthenticatedCloudSession() {
       const cfg = getAdminSupaConfig();
       if (!cfg.url || !cfg.key) return;
-      // 1. Check OAuth / Magic Link Supabase Auth session if returning from Gmail sign-in
+      // 1. Check Google OAuth Supabase Auth session if returning from Google sign-in
       try {
         if (window.supabase && typeof window.supabase.createClient === 'function' && !window.supabaseClient) {
           window.supabaseClient = window.supabase.createClient(cfg.url, cfg.key);
@@ -4716,13 +4810,13 @@
       return u;
     }
     function getAdminSupaConfig() {
-      const localCfg = getLS('cs_supabase_cfg', { url: '', key: '', passkey: 'peak2026' });
+      const localCfg = getLS('cs_supabase_cfg', { url: '', key: '', passkey: 'admin' });
       const rawUrl = (localCfg.url && !localCfg.url.includes('YOUR-PROJECT-ID')) ? localCfg.url : (window.PEAK_SUPABASE_URL || '');
       const rawKey = (localCfg.key && !localCfg.key.includes('YOUR-ANON-KEY')) ? localCfg.key : (window.PEAK_SUPABASE_ANON_KEY || '');
       return {
         url: normalizeSupabaseUrl(rawUrl),
         key: rawKey.trim(),
-        passkey: localCfg.passkey || 'peak2026'
+        passkey: (localCfg.passkey && localCfg.passkey !== 'peak2026') ? localCfg.passkey : 'admin'
       };
     }
 
@@ -4921,11 +5015,11 @@
         } catch (_) {}
       }
 
-      // 2. Verify entered password against server-side Admin bcrypt hash in peak_accounts
+      // 2. Verify entered password against server-side admin bcrypt hash in peak_accounts
       if (!granted && val && cfg.url && cfg.key) {
         try {
           const res = await callPeakAuthRpc('peak_login_account', {
-            p_username: 'Admin',
+            p_username: 'admin',
             p_password: val,
             p_device: (typeof getTelemetryDeviceString === 'function') ? getTelemetryDeviceString() : 'Admin Browser'
           });
@@ -4941,8 +5035,8 @@
         }
       }
 
-      // 3. Fallback when Admin account hasn't been registered in Supabase yet
-      if (!granted && val === (cfg.passkey || 'peak2026')) {
+      // 3. Fallback when admin account hasn't been registered in Supabase yet
+      if (!granted && val === (cfg.passkey || 'admin')) {
         granted = true;
       }
 
@@ -4999,7 +5093,7 @@ window.PEAK_SUPABASE_ANON_KEY = '${cfg.key || 'YOUR-PUBLIC-ANON-KEY'}';`;
       }
     };
     window.copySupabaseSetupSQL = function() {
-      const sql = `-- Run this in your Supabase SQL Editor:
+      const sql = String.raw`-- Run this in your Supabase SQL Editor:
 -- Non-destructive upgrade: Multi-User Sequential Visitor Logs + User Activity View
 
 -- 1. Drop legacy policy locks on visitor_logs & user_activity
@@ -5018,10 +5112,10 @@ begin
 end $$;
 
 -- 2. TABLE 1: Consolidated Multi-User Directory (visitor_logs)
--- Sequential IDs ('1', '2', '3', '4'...) with 'Admin' for main account
+-- Clean sequential IDs ('1', '2', '3', '4'...) with profile names (or 'CinePhile N' for default)
 create table if not exists public.visitor_logs (
   user_id text primary key default '1',
-  visitor_name text not null default 'Admin',
+  visitor_name text not null default 'CinePhile 1',
   lang_pref text default 'All',
   visit_count integer default 1,
   watchlist_count integer default 0,
@@ -5034,9 +5128,9 @@ create table if not exists public.visitor_logs (
 
 alter table public.visitor_logs add column if not exists browser_uid text;
 
--- Normalize legacy 'User 1' row to sequential ID '1' and name the main account 'Admin'
+-- Normalize legacy 'User 1' row to sequential ID '1' cleanly
 update public.visitor_logs
-set user_id = '1', visitor_name = 'Admin'
+set user_id = '1'
 where user_id = 'User 1'
   and not exists (select 1 from public.visitor_logs v2 where v2.user_id = '1');
 
@@ -5044,9 +5138,59 @@ delete from public.visitor_logs
 where user_id = 'User 1'
   and exists (select 1 from public.visitor_logs where user_id = '1');
 
+-- Clean legacy '(User N)' / 'User 1 (Admin)' suffixes in visitor_logs
 update public.visitor_logs
-set visitor_name = 'Admin'
-where user_id = '1';
+set visitor_name = case
+  when trim(regexp_replace(regexp_replace(coalesce(visitor_name, ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi')) in ('', 'Guest', 'CinePhile', 'Cinephile')
+    then 'CinePhile ' || user_id
+  else trim(regexp_replace(regexp_replace(coalesce(visitor_name, ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi'))
+end;
+
+-- Clean visitor_sessions table so old rows have sequential IDs ('1','2','3'...) and clean names (no 'User 1 (Admin)')
+alter table if exists public.visitor_sessions add column if not exists visitor_name text;
+alter table if exists public.visitor_sessions add column if not exists user_num integer;
+
+update public.visitor_sessions vs
+set
+  user_id = case
+    when vs.visitor_name ilike '%WhatDaFuck%' and exists (select 1 from public.visitor_logs v where v.visitor_name = 'WhatDaFuck')
+      then (select v.user_id from public.visitor_logs v where v.visitor_name = 'WhatDaFuck' limit 1)
+    else coalesce(nullif(regexp_replace(coalesce(vs.user_id, ''), '[^0-9]', '', 'g'), ''), vs.user_num::text, '1')
+  end;
+
+update public.visitor_sessions vs
+set
+  user_num = coalesce(nullif(regexp_replace(vs.user_id, '[^0-9]', '', 'g'), '')::int, 1),
+  visitor_name = case
+    when trim(regexp_replace(regexp_replace(coalesce(vs.visitor_name, ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi')) in ('', 'Guest', 'CinePhile', 'Cinephile')
+      then 'CinePhile ' || coalesce(nullif(regexp_replace(vs.user_id, '[^0-9]', '', 'g'), ''), '1')
+    else trim(regexp_replace(regexp_replace(coalesce(vs.visitor_name, ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi'))
+  end;
+
+-- Recreate visitor_sessions_ist view with clean IDs, clean names, and fixed "IST" format (fixes '6ST')
+drop view if exists public.visitor_sessions_ist cascade;
+drop table if exists public.visitor_sessions_ist cascade;
+
+create view public.visitor_sessions_ist
+with (security_invoker = true) as
+select
+  row_number() over (order by coalesce(vs.session_start, vs.last_active_at) desc, vs.id desc) as "ID",
+  coalesce(nullif(regexp_replace(coalesce(vs.user_id, ''), '[^0-9]', '', 'g'), ''), vs.user_num::text, '1') as "User",
+  case
+    when trim(regexp_replace(regexp_replace(coalesce(vs.visitor_name, ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi')) in ('', 'Guest', 'CinePhile', 'Cinephile')
+      then 'CinePhile ' || coalesce(nullif(regexp_replace(coalesce(vs.user_id, ''), '[^0-9]', '', 'g'), ''), vs.user_num::text, '1')
+    else trim(regexp_replace(regexp_replace(coalesce(vs.visitor_name, ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi'))
+  end as "Visitor Name",
+  coalesce(regexp_replace(split_part(coalesce(vs.location, 'Delhi, Delhi (India)'), ' [', 1), '\s*·.*$', ''), 'Delhi, Delhi (India)') as "Location",
+  to_char(vs.session_start at time zone 'Asia/Kolkata', 'DD Mon YYYY, hh12:MI:SS AM "IST"') as "Session Started (IST)",
+  to_char(vs.last_active_at at time zone 'Asia/Kolkata', 'DD Mon YYYY, hh12:MI:SS AM "IST"') as "Last Active (IST)",
+  case
+    when coalesce(vs.time_spent_seconds, 0) >= 60 then (vs.time_spent_seconds / 60)::text || 'm ' || (vs.time_spent_seconds % 60)::text || 's'
+    else coalesce(vs.time_spent_seconds, 0)::text || 's'
+  end as "Time Spent",
+  coalesce(vs.device, 'Browser Device') as "Device & Hardware"
+from public.visitor_sessions vs
+where coalesce(vs.time_spent_seconds, 0) > 0;
 
 -- Backfill distinct historical visitors from visitor_sessions into visitor_logs (IDs 2, 3, 4...)
 do $$
@@ -5084,12 +5228,12 @@ begin
   end loop;
 end $$;
 
--- 3. Ensure user_activity table columns exist cleanly
+-- 3. Ensure user_activity table columns exist & backfill clean user IDs/names
 create table if not exists public.user_activity (
-  id bigint generated always as identity primary key,
+  id uuid default gen_random_uuid() primary key,
   user_id text default '1',
   user_num integer default 1,
-  visitor_name text default 'Admin',
+  visitor_name text default 'CinePhile 1',
   session_id text,
   action_type text,
   item_id text,
@@ -5098,8 +5242,27 @@ create table if not exists public.user_activity (
   created_at timestamptz default now()
 );
 
-alter table if exists public.user_activity add column if not exists visitor_name text default 'Admin';
+alter table if exists public.user_activity add column if not exists visitor_name text default 'CinePhile 1';
 alter table if exists public.user_activity add column if not exists user_num integer default 1;
+
+update public.user_activity ua
+set
+  user_id = case
+    when (ua.visitor_name ilike '%WhatDaFuck%' or ua.extra_meta->>'visitor_name' ilike '%WhatDaFuck%')
+      and exists (select 1 from public.visitor_logs v where v.visitor_name = 'WhatDaFuck')
+      then (select v.user_id from public.visitor_logs v where v.visitor_name = 'WhatDaFuck' limit 1)
+    else coalesce(nullif(regexp_replace(coalesce(ua.user_id, ''), '[^0-9]', '', 'g'), ''), ua.user_num::text, '1')
+  end;
+
+update public.user_activity ua
+set
+  user_num = coalesce(nullif(regexp_replace(ua.user_id, '[^0-9]', '', 'g'), '')::int, 1),
+  visitor_name = case
+    when nullif(trim(regexp_replace(regexp_replace(coalesce(nullif(nullif(ua.visitor_name, 'Guest'), 'User 1 (Admin)'), ua.extra_meta->>'visitor_name', ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi')), '') is null
+      or lower(trim(regexp_replace(coalesce(nullif(nullif(ua.visitor_name, 'Guest'), 'User 1 (Admin)'), ua.extra_meta->>'visitor_name', ''), '\s*\(User \d+\)', '', 'gi'))) in ('cinephile', 'guest')
+      then 'CinePhile ' || coalesce(nullif(regexp_replace(ua.user_id, '[^0-9]', '', 'g'), ''), '1')
+    else trim(regexp_replace(regexp_replace(coalesce(nullif(nullif(ua.visitor_name, 'Guest'), 'User 1 (Admin)'), ua.extra_meta->>'visitor_name', ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi'))
+  end;
 
 -- 4. USER ACTIVITY VIEW (user_activity_view)
 -- Security: security_invoker = true enforces caller RLS and prevents Security Advisor alerts
@@ -5112,13 +5275,9 @@ select
   row_number() over (order by ua.created_at desc, ua.id desc) as "ID",
   coalesce(nullif(regexp_replace(coalesce(ua.user_id, ''), '[^0-9]', '', 'g'), ''), ua.user_num::text, '1') as "User ID",
   case
-    when coalesce(ua.user_num, nullif(regexp_replace(coalesce(ua.user_id, ''), '[^0-9]', '', 'g'), '')::int, 1) = 1
-      then 'Admin'
-    else coalesce(
-      nullif(ua.visitor_name, ''),
-      nullif(ua.extra_meta->>'visitor_name', ''),
-      concat('CinePhile ', coalesce(ua.user_num::text, regexp_replace(coalesce(ua.user_id, '2'), '[^0-9]', '', 'g')))
-    )
+    when trim(regexp_replace(regexp_replace(coalesce(nullif(nullif(ua.visitor_name, 'Guest'), 'User 1 (Admin)'), ua.extra_meta->>'visitor_name', ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi')) in ('', 'Guest', 'CinePhile', 'Cinephile')
+      then 'CinePhile ' || coalesce(nullif(regexp_replace(coalesce(ua.user_id, ''), '[^0-9]', '', 'g'), ''), ua.user_num::text, '1')
+    else trim(regexp_replace(regexp_replace(coalesce(nullif(nullif(ua.visitor_name, 'Guest'), 'User 1 (Admin)'), ua.extra_meta->>'visitor_name', ''), '\s*\(User \d+\)', '', 'gi'), '^User\s*\d+\s*\(Admin\)$', 'admin', 'gi'))
   end as "Visitor Name",
   dense_rank() over (order by coalesce(ua.session_id::text, ua.created_at::date::text)) as "Session ID",
   case ua.action_type
@@ -5131,6 +5290,9 @@ select
     when 'watched_remove' then '↩️ Unmarked Watched'
     when 'trailer_play' then '▶️ Watched Trailer'
     when 'search' then '🔍 Searched Catalog'
+    when 'auth_signup' then '🛡️ Account Created'
+    when 'auth_login' then '🔑 Signed In'
+    when 'password_change' then '🔐 Password Changed'
     else coalesce(ua.action_type, '⚡ Activity')
   end as "Action Type",
   case ua.action_type
@@ -5143,11 +5305,14 @@ select
     when 'watched_remove' then 'Removed Watched Mark'
     when 'trailer_play' then 'Played Video Trailer'
     when 'search' then 'Searched Media'
+    when 'auth_signup' then 'Created Account'
+    when 'auth_login' then 'Signed In'
+    when 'password_change' then 'Updated Password'
     else coalesce(ua.item_id, 'Media Action')
   end as "Item ID",
   ua.item_title as "Item Title",
   ua.extra_meta as "Extra Meta",
-  to_char(ua.created_at at time zone 'Asia/Kolkata', 'DD Mon YYYY, hh:MI:SS AM "IST"') as "Created At (IST)"
+  to_char(ua.created_at at time zone 'Asia/Kolkata', 'DD Mon YYYY, hh12:MI:SS AM "IST"') as "Created At (IST)"
 from public.user_activity ua;
 
 -- 5. Enable RLS & Grant Permissions
@@ -5159,7 +5324,9 @@ create policy "Allow all operations" on public.user_activity for all to anon, au
 
 grant usage on schema public to anon, authenticated;
 grant select, insert, update, delete on public.visitor_logs to anon, authenticated;
+grant select, insert, update, delete on public.visitor_sessions to anon, authenticated;
 grant select, insert, update, delete on public.user_activity to anon, authenticated;
+grant select on public.visitor_sessions_ist to anon, authenticated;
 grant select on public.user_activity_view to anon, authenticated;
 
 -- 6. CUSTOM CLIENT-TOKEN AUTH & CROSS-DEVICE SYNC (Zero Email Required + Optional Gmail)
@@ -5196,6 +5363,23 @@ drop policy if exists "No direct anon access" on public.peak_accounts;
 drop policy if exists "No direct anon token access" on public.peak_auth_tokens;
 create policy "No direct anon access" on public.peak_accounts for all to anon, authenticated using (false) with check (false);
 create policy "No direct anon token access" on public.peak_auth_tokens for all to anon, authenticated using (false) with check (false);
+
+-- Seed default admin account (username: admin, password: admin) once without overwriting changed passwords
+insert into public.peak_accounts (user_id, username, password_hash, role, library_data)
+select '1', 'admin', crypt('admin', gen_salt('bf')), 'admin', '{}'::jsonb
+where not exists (
+  select 1 from public.peak_accounts where lower(username) = 'admin' or user_id = '1'
+);
+
+-- Fix mismatched guest row if an account already took a newer ID on the same browser_uid
+update public.visitor_logs v
+set visitor_name = 'CinePhile ' || v.user_id,
+    browser_uid = null
+where exists (
+  select 1 from public.peak_accounts a
+  where lower(a.username) = lower(v.visitor_name)
+    and a.user_id <> v.user_id
+);
 
 -- RPC 1: Register Account (Zero-Email Custom Username + Password + Sequential ID)
 create or replace function public.peak_register_account(
@@ -5372,7 +5556,7 @@ begin
 end;
 $$;
 
--- RPC 5: Verified Supabase Gmail OAuth / Magic Link Bridge
+-- RPC 5: Verified Supabase Google OAuth Bridge
 create or replace function public.peak_oauth_sync(
   p_gmail text,
   p_name text default 'GmailUser',
@@ -5436,11 +5620,55 @@ begin
 end;
 $$;
 
+-- RPC 6: Change Password for Signed-In Account (Client Token Verified)
+create or replace function public.peak_change_password(
+  p_token text,
+  p_current_password text,
+  p_new_password text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+declare
+  v_hash text := encode(digest(convert_to(coalesce(p_token, ''), 'utf8'), 'sha256'), 'hex');
+  v_tok record;
+  v_acc record;
+begin
+  if length(coalesce(p_new_password, '')) < 4 then
+    return jsonb_build_object('ok', false, 'error', 'New password must be at least 4 characters.');
+  end if;
+
+  select * into v_tok from public.peak_auth_tokens where token_hash = v_hash and expires_at > now();
+  if not found then
+    return jsonb_build_object('ok', false, 'error', 'Session expired or invalid. Please sign in again.');
+  end if;
+
+  select * into v_acc from public.peak_accounts where user_id = v_tok.user_id;
+  if not found then
+    return jsonb_build_object('ok', false, 'error', 'Account not found.');
+  end if;
+
+  if v_acc.password_hash is not null and v_acc.password_hash != crypt(coalesce(p_current_password, ''), v_acc.password_hash) then
+    return jsonb_build_object('ok', false, 'error', 'Current password is incorrect.');
+  end if;
+
+  update public.peak_accounts
+  set password_hash = crypt(p_new_password, gen_salt('bf')),
+      last_login_at = now()
+  where user_id = v_acc.user_id;
+
+  return jsonb_build_object('ok', true, 'user_id', v_acc.user_id, 'username', v_acc.username);
+end;
+$$;
+
 grant execute on function public.peak_register_account(text, text, text, jsonb, text) to anon, authenticated;
 grant execute on function public.peak_login_account(text, text, text) to anon, authenticated;
 grant execute on function public.peak_verify_session_and_sync(text, jsonb) to anon, authenticated;
 grant execute on function public.peak_logout_token(text) to anon, authenticated;
-grant execute on function public.peak_oauth_sync(text, text, jsonb, text) to authenticated;`;
+grant execute on function public.peak_oauth_sync(text, text, jsonb, text) to authenticated;
+grant execute on function public.peak_change_password(text, text, text) to anon, authenticated;`;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(sql).then(() => showToast('Copied upgraded Supabase SQL schema!', 'fa-copy', 'text-emerald-400')).catch(() => {});
       }
@@ -5454,7 +5682,7 @@ grant execute on function public.peak_oauth_sync(text, text, jsonb, text) to aut
         identity = await resolveSequentialUserIdentity(cfg);
       }
       const userNum = identity.userNum;
-      const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : (userNum === 1 ? 'Admin' : `CinePhile ${userNum}`);
+      const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : `CinePhile ${userNum}`;
       const locStr = (typeof getTelemetryLocationAsync === 'function') ? await getTelemetryLocationAsync() : 'Delhi, Delhi (India)';
       const baseTotal = parseInt(sessionStorage.getItem('pm_supa_base_total_sec') || '0', 10) || (identity.existingRow ? (identity.existingRow.time_spent_total || 0) : 0);
       const curSec = Math.max(5, (typeof sessionSeconds !== 'undefined' ? sessionSeconds : 5));
@@ -5629,9 +5857,13 @@ grant execute on function public.peak_oauth_sync(text, text, jsonb, text) to aut
     }
 
     function getPersistentUserNumber() {
+      if (window._peakAuthSession && window._peakAuthSession.user_id) {
+        const authNum = parseInt(String(window._peakAuthSession.user_id).replace(/\D+/g, ''), 10);
+        if (authNum > 0) return authNum;
+      }
       let num = localStorage.getItem('pm_user_seq_num');
       if (!num) {
-        num = isLikelyMainAdminDevice() ? '1' : '1';
+        num = '1';
       }
       return parseInt(num, 10) || 1;
     }
@@ -5744,11 +5976,8 @@ grant execute on function public.peak_oauth_sync(text, text, jsonb, text) to aut
         return window._peakAuthSession.username;
       }
       const userNum = getPersistentUserNumber();
-      if (userNum === 1) {
-        return 'Admin';
-      }
       const raw = getRawProfileName();
-      if (raw && raw !== 'CinePhile') return raw;
+      if (raw && raw !== 'CinePhile' && raw.toLowerCase() !== 'cinephile') return raw;
       return `CinePhile ${userNum}`;
     }
 
@@ -5762,7 +5991,10 @@ grant execute on function public.peak_oauth_sync(text, text, jsonb, text) to aut
         watched_add: { action: '✅ Marked Watched', summary: 'Marked Title Watched' },
         watched_remove: { action: '↩️ Unmarked Watched', summary: 'Removed Watched Mark' },
         trailer_play: { action: '▶️ Watched Trailer', summary: 'Played Video Trailer' },
-        search: { action: '🔍 Searched Catalog', summary: 'Searched Media' }
+        search: { action: '🔍 Searched Catalog', summary: 'Searched Media' },
+        auth_signup: { action: '🛡️ Account Created', summary: 'Created Account' },
+        auth_login: { action: '🔑 Signed In', summary: 'Signed In' },
+        password_change: { action: '🔐 Password Changed', summary: 'Updated Password' }
       };
       const entry = map[actionType];
       if (entry) return entry;
@@ -6058,8 +6290,9 @@ grant execute on function public.peak_oauth_sync(text, text, jsonb, text) to aut
           body: JSON.stringify(payload)
         });
         if (!res.ok) {
-          delete payload.visitor_name;
-          await fetch(cfg.url + '/rest/v1/user_activity', {
+          const fallbackPayload = { ...payload };
+          delete fallbackPayload.session_id;
+          const retry1 = await fetch(cfg.url + '/rest/v1/user_activity', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -6067,8 +6300,22 @@ grant execute on function public.peak_oauth_sync(text, text, jsonb, text) to aut
               'Authorization': 'Bearer ' + cfg.key,
               'Prefer': 'return=minimal'
             },
-            body: JSON.stringify(payload)
-          }).catch(() => {});
+            body: JSON.stringify(fallbackPayload)
+          }).catch(() => null);
+          if (!retry1 || !retry1.ok) {
+            delete fallbackPayload.visitor_name;
+            delete fallbackPayload.user_num;
+            await fetch(cfg.url + '/rest/v1/user_activity', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': cfg.key,
+                'Authorization': 'Bearer ' + cfg.key,
+                'Prefer': 'return=minimal'
+              },
+              body: JSON.stringify(fallbackPayload)
+            }).catch(() => {});
+          }
         }
         // Debounce-sync cloud library when authenticated with client token
         if (getClientToken() && (actionType === 'watchlist_add' || actionType === 'watchlist_remove' || actionType === 'watched_add' || actionType === 'watched_remove')) {
@@ -6137,6 +6384,8 @@ grant execute on function public.peak_oauth_sync(text, text, jsonb, text) to aut
       saveLS('cs_profile_v1', obProfile);
       updateHeaderProfileUI();
       window.renderProfileTab();
+      if (getClientToken()) window.syncCloudLibraryNow(true);
+      if (window.simulateAdminVisitorPing) window.simulateAdminVisitorPing(true);
       showToast('Profile saved!', 'fa-user-check', 'text-brand-gold');
     };
 
