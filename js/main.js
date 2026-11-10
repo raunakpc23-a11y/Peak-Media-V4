@@ -5244,6 +5244,7 @@ create table if not exists public.user_activity (
 
 alter table if exists public.user_activity add column if not exists visitor_name text default 'CinePhile 1';
 alter table if exists public.user_activity add column if not exists user_num integer default 1;
+alter table if exists public.user_activity drop constraint if exists user_activity_action_type_check;
 
 update public.user_activity ua
 set
@@ -5284,7 +5285,7 @@ select
     when 'song_play' then '🎵 Playing Music'
     when 'watchlist_add' then '🔖 Added to Watchlist'
     when 'watchlist_remove' then '🗑️ Removed from Watchlist'
-    when 'movie_click' then '🎬 Opened Movie'
+    when 'movie_click' then coalesce(nullif(ua.extra_meta->>'action_label', ''), '🎬 Opened Movie')
     when 'show_click' then '📺 Opened TV Show'
     when 'watched_add' then '✅ Marked Watched'
     when 'watched_remove' then '↩️ Unmarked Watched'
@@ -5293,7 +5294,7 @@ select
     when 'auth_signup' then '🛡️ Account Created'
     when 'auth_login' then '🔑 Signed In'
     when 'password_change' then '🔐 Password Changed'
-    else coalesce(ua.action_type, '⚡ Activity')
+    else coalesce(nullif(ua.extra_meta->>'action_label', ''), ua.action_type, '⚡ Activity')
   end as "Action Type",
   case ua.action_type
     when 'song_play' then 'Music Track Played'
@@ -6260,16 +6261,19 @@ grant execute on function public.peak_change_password(text, text, text) to anon,
         const launchStr = getAppLaunchModeString();
         const fmt = formatActivityActionAndItem(actionType, itemId, itemTitle);
 
+        const rawAction = String(actionType || 'movie_click');
         const payload = {
           user_id: String(userNum),
           user_num: userNum,
           visitor_name: visitorName,
           session_id: currentSessionId || undefined,
-          action_type: fmt.action,
+          action_type: rawAction,
           item_id: fmt.summary,
           item_title: String(itemTitle || itemId),
           extra_meta: {
             ...extraMeta,
+            actual_action: rawAction,
+            action_label: fmt.action,
             user_id: userNum,
             visitor_name: visitorName,
             visitor_id: String(userNum),
@@ -6279,40 +6283,38 @@ grant execute on function public.peak_change_password(text, text, text) to anon,
             app_launch_mode: launchStr
           }
         };
+        const headers = {
+          'Content-Type': 'application/json',
+          'apikey': cfg.key,
+          'Authorization': 'Bearer ' + cfg.key,
+          'Prefer': 'return=minimal'
+        };
         const res = await fetch(cfg.url + '/rest/v1/user_activity', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': cfg.key,
-            'Authorization': 'Bearer ' + cfg.key,
-            'Prefer': 'return=minimal'
-          },
+          headers,
           body: JSON.stringify(payload)
         });
         if (!res.ok) {
+          const errTxt = await res.text().catch(() => '');
           const fallbackPayload = { ...payload };
-          delete fallbackPayload.session_id;
+          if (errTxt.includes('user_activity_action_type_check')) {
+            fallbackPayload.action_type = 'movie_click';
+          } else {
+            delete fallbackPayload.session_id;
+          }
           const retry1 = await fetch(cfg.url + '/rest/v1/user_activity', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': cfg.key,
-              'Authorization': 'Bearer ' + cfg.key,
-              'Prefer': 'return=minimal'
-            },
+            headers,
             body: JSON.stringify(fallbackPayload)
           }).catch(() => null);
           if (!retry1 || !retry1.ok) {
+            delete fallbackPayload.session_id;
             delete fallbackPayload.visitor_name;
             delete fallbackPayload.user_num;
+            fallbackPayload.action_type = 'movie_click';
             await fetch(cfg.url + '/rest/v1/user_activity', {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': cfg.key,
-                'Authorization': 'Bearer ' + cfg.key,
-                'Prefer': 'return=minimal'
-              },
+              headers,
               body: JSON.stringify(fallbackPayload)
             }).catch(() => {});
           }
