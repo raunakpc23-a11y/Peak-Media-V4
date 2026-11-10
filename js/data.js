@@ -14388,6 +14388,9 @@ Odd Taxi|2021|87
         watchedTitles.push(title);
         showToast(`Marked "${title}" as Watched!`, "fa-circle-check", "text-emerald-400");
       }
+      if (window.logUserActivity) {
+        window.logUserActivity(exists ? 'watched_remove' : 'watched_add', title, title);
+      }
       updateAllCountersAndViews();
     }
 

@@ -4470,56 +4470,9 @@ window.PEAK_SUPABASE_ANON_KEY = '${cfg.key || 'YOUR-PUBLIC-ANON-KEY'}';`;
     };
     window.copySupabaseSetupSQL = function() {
       const sql = `-- Run this in your Supabase SQL Editor:
--- Resolves 0A000 policy lock & foreign key constraint type incompatibility (text vs uuid)
+-- Non-destructive upgrade: Multi-User Sequential Visitor Logs + User Activity View
 
--- 1. Drop ALL foreign keys referencing user_id so text user IDs (User 1, User 2) don't conflict with auth.users uuid
-do $$
-declare
-  fk record;
-begin
-  for fk in (
-    select tc.table_name, tc.constraint_name
-    from information_schema.table_constraints tc
-    join information_schema.key_column_usage kcu
-      on tc.constraint_name = kcu.constraint_name
-      and tc.table_schema = kcu.table_schema
-    where tc.constraint_type = 'FOREIGN KEY'
-      and tc.table_schema = 'public'
-      and kcu.column_name = 'user_id'
-  ) loop
-    execute format('alter table public.%I drop constraint if exists %I cascade', fk.table_name, fk.constraint_name);
-  end loop;
-end $$;
-
--- Explicit drops as fallback
-alter table if exists public.visitor_sessions drop constraint if exists visitor_sessions_user_id_fkey;
-alter table if exists public.visitor_sessions drop constraint if exists visitor_session_user_id_fkey;
-alter table if exists public.user_activity drop constraint if exists user_activity_user_id_fkey;
-
--- 2. Drop ANY views depending on visitor_sessions FIRST with CASCADE
--- This eliminates the error: "cannot alter type of a column used by a rule"
-drop view if exists public.active_viewers cascade;
-drop view if exists public.visitor_sessions_ist cascade;
-
--- Dynamically drop any remaining views attached to visitor_sessions
-do $$
-declare
-  v record;
-begin
-  for v in (
-    select distinct c.relname as view_name
-    from pg_depend d
-    join pg_rewrite r on r.oid = d.objid
-    join pg_class c on c.oid = r.ev_class
-    join pg_class dep on dep.oid = d.refobjid
-    where c.relkind = 'v'
-      and dep.relname in ('visitor_sessions', 'visitor_logs', 'user_activity')
-  ) loop
-    execute format('drop view if exists public.%I cascade', v.view_name);
-  end loop;
-end $$;
-
--- 3. Drop ALL existing policies to prevent error 0A000
+-- 1. Drop legacy policy locks on visitor_logs & user_activity
 do $$
 declare
   pol record;
@@ -4528,104 +4481,156 @@ begin
     select policyname, tablename 
     from pg_policies 
     where schemaname = 'public' 
-      and tablename in ('visitor_sessions', 'user_activity', 'visitor_logs')
+      and tablename in ('visitor_logs', 'user_activity')
   ) loop
     execute format('drop policy if exists %I on public.%I', pol.policyname, pol.tablename);
   end loop;
 end $$;
 
--- 4. Alter user_id from UUID to TEXT conditionally (only if not already text)
-do $$
-begin
-  if exists (
-    select 1 from information_schema.columns 
-    where table_schema = 'public' and table_name = 'visitor_sessions' 
-      and column_name = 'user_id' and data_type != 'text'
-  ) then
-    alter table public.visitor_sessions alter column user_id type text using user_id::text;
-  end if;
-  if exists (
-    select 1 from information_schema.columns 
-    where table_schema = 'public' and table_name = 'user_activity' 
-      and column_name = 'user_id' and data_type != 'text'
-  ) then
-    alter table public.user_activity alter column user_id type text using user_id::text;
-  end if;
-end $$;
-
-alter table if exists public.visitor_sessions alter column user_id set default 'User 1';
-alter table if exists public.user_activity alter column user_id set default 'User 1';
-
-alter table if exists public.visitor_sessions add column if not exists visitor_name text default 'CinePhile';
-alter table if exists public.user_activity add column if not exists visitor_name text default 'CinePhile';
-alter table if exists public.visitor_sessions add column if not exists user_num integer default 1;
-alter table if exists public.user_activity add column if not exists user_num integer default 1;
-
--- 5. Table 1: Consolidated User Metrics & Directory (visitor_logs)
--- Recreated so user_id is the primary key and repeat visits increment metrics rather than adding duplicate rows
-drop table if exists public.visitor_logs cascade;
-
-create table public.visitor_logs (
-  user_id text primary key default 'User 1',
-  visitor_name text not null default 'CinePhile',
+-- 2. TABLE 1: Consolidated Multi-User Directory (visitor_logs)
+-- Sequential IDs ('1', '2', '3', '4'...) with 'Admin' for main account
+create table if not exists public.visitor_logs (
+  user_id text primary key default '1',
+  visitor_name text not null default 'Admin',
   lang_pref text default 'All',
   visit_count integer default 1,
   watchlist_count integer default 0,
   watched_count integer default 0,
-  time_spent_total integer default 5,
+  time_spent_total integer default 0,
   location text default 'Delhi, Delhi (India)',
-  last_active_at timestamptz default now()
+  last_active_at timestamptz default now(),
+  browser_uid text
 );
 
--- 5. Underlying Session Telemetry Table (visitor_sessions)
-create table if not exists public.visitor_sessions (
-  id uuid default gen_random_uuid() primary key,
-  user_id text default 'User 1',
+alter table public.visitor_logs add column if not exists browser_uid text;
+
+-- Normalize legacy 'User 1' row to sequential ID '1' and name the main account 'Admin'
+update public.visitor_logs
+set user_id = '1', visitor_name = 'Admin'
+where user_id = 'User 1'
+  and not exists (select 1 from public.visitor_logs v2 where v2.user_id = '1');
+
+delete from public.visitor_logs
+where user_id = 'User 1'
+  and exists (select 1 from public.visitor_logs where user_id = '1');
+
+update public.visitor_logs
+set visitor_name = 'Admin'
+where user_id = '1';
+
+-- Backfill distinct historical visitors from visitor_sessions into visitor_logs (IDs 2, 3, 4...)
+do $$
+declare
+  rec record;
+  next_id int;
+begin
+  select coalesce(max(nullif(regexp_replace(user_id, '[^0-9]', '', 'g'), '')::int), 1)
+  into next_id
+  from public.visitor_logs;
+
+  for rec in (
+    select
+      trim(regexp_replace(coalesce(visitor_name, ''), '\s*\(User \d+\)', '', 'gi')) as clean_name,
+      count(*) as visits,
+      sum(coalesce(time_spent_seconds, 0)) as total_secs,
+      max(last_active_at) as last_seen,
+      max(regexp_replace(split_part(location, ' [', 1), '\s*·.*$', '')) as clean_loc
+    from public.visitor_sessions
+    where visitor_name is not null
+      and visitor_name not ilike '%Admin%'
+      and visitor_name not ilike '%Supabase Tester%'
+      and visitor_name not ilike '%CinePhile%'
+      and trim(regexp_replace(visitor_name, '\s*\(User \d+\)', '', 'gi')) != ''
+    group by 1
+  ) loop
+    if not exists (
+      select 1 from public.visitor_logs
+      where lower(visitor_name) = lower(rec.clean_name)
+    ) then
+      next_id := next_id + 1;
+      insert into public.visitor_logs (user_id, visitor_name, lang_pref, visit_count, time_spent_total, location, last_active_at)
+      values (next_id::text, rec.clean_name, 'All', rec.visits, rec.total_secs, coalesce(rec.clean_loc, 'Delhi, Delhi (India)'), coalesce(rec.last_seen, now()));
+    end if;
+  end loop;
+end $$;
+
+-- 3. Ensure user_activity table columns exist cleanly
+create table if not exists public.user_activity (
+  id bigint generated always as identity primary key,
+  user_id text default '1',
   user_num integer default 1,
-  visitor_name text default 'CinePhile',
-  device text,
-  location text default 'Delhi, Delhi (India)',
-  time_spent_seconds integer default 5,
-  session_start timestamptz default now(),
-  last_active_at timestamptz default now()
+  visitor_name text default 'Admin',
+  session_id text,
+  action_type text,
+  item_id text,
+  item_title text,
+  extra_meta jsonb default '{}'::jsonb,
+  created_at timestamptz default now()
 );
 
-update public.visitor_sessions set user_id = coalesce(user_id, 'User 1');
-update public.visitor_sessions set visitor_name = 'CinePhile' where visitor_name = 'Guest' or visitor_name is null;
+alter table if exists public.user_activity add column if not exists visitor_name text default 'Admin';
+alter table if exists public.user_activity add column if not exists user_num integer default 1;
 
--- 6. Table 2 / View: Individual Session Details in IST (visitor_sessions_ist)
--- Security: security_invoker = true enforces caller RLS and clears Supabase Security Advisor warnings
-drop view if exists public.visitor_sessions_ist cascade;
-drop table if exists public.visitor_sessions_ist cascade;
+-- 4. USER ACTIVITY VIEW (user_activity_view)
+-- Security: security_invoker = true enforces caller RLS and prevents Security Advisor alerts
+drop view if exists public.user_activity_view cascade;
+drop table if exists public.user_activity_view cascade;
 
-create view public.visitor_sessions_ist
+create view public.user_activity_view
 with (security_invoker = true) as
 select
-  row_number() over (order by coalesce(vs.last_active_at, vs.session_start, now()) desc) as "ID",
-  coalesce(vs.user_id, concat('User ', vs.user_num)) as "User",
-  coalesce(vs.visitor_name, 'CinePhile') as "Visitor Name",
-  regexp_replace(split_part(vs.location, ' [', 1), '\s*·.*$', '') as "Location",
-  to_char(coalesce(vs.session_start, vs.last_active_at, now()) at time zone 'Asia/Kolkata', 'DD Mon YYYY, hh:MI:SS AM IST') as "Session Started (IST)",
-  to_char(coalesce(vs.last_active_at, vs.session_start, now()) at time zone 'Asia/Kolkata', 'DD Mon YYYY, hh:MI:SS AM IST') as "Last Active (IST)",
-  concat(floor(coalesce(vs.time_spent_seconds, 0) / 60), 'm ', mod(coalesce(vs.time_spent_seconds, 0), 60), 's') as "Time Spent",
-  coalesce(vs.device, 'Browser Device') as "Device & Hardware"
-from public.visitor_sessions vs
-where coalesce(vs.time_spent_seconds, 0) >= 5;
+  row_number() over (order by ua.created_at desc, ua.id desc) as "ID",
+  coalesce(nullif(regexp_replace(coalesce(ua.user_id, ''), '[^0-9]', '', 'g'), ''), ua.user_num::text, '1') as "User ID",
+  case
+    when coalesce(ua.user_num, nullif(regexp_replace(coalesce(ua.user_id, ''), '[^0-9]', '', 'g'), '')::int, 1) = 1
+      then 'Admin'
+    else coalesce(
+      nullif(ua.visitor_name, ''),
+      nullif(ua.extra_meta->>'visitor_name', ''),
+      concat('CinePhile ', coalesce(ua.user_num::text, regexp_replace(coalesce(ua.user_id, '2'), '[^0-9]', '', 'g')))
+    )
+  end as "Visitor Name",
+  dense_rank() over (order by coalesce(ua.session_id::text, ua.created_at::date::text)) as "Session ID",
+  case ua.action_type
+    when 'song_play' then '🎵 Playing Music'
+    when 'watchlist_add' then '🔖 Added to Watchlist'
+    when 'watchlist_remove' then '🗑️ Removed from Watchlist'
+    when 'movie_click' then '🎬 Opened Movie'
+    when 'show_click' then '📺 Opened TV Show'
+    when 'watched_add' then '✅ Marked Watched'
+    when 'watched_remove' then '↩️ Unmarked Watched'
+    when 'trailer_play' then '▶️ Watched Trailer'
+    when 'search' then '🔍 Searched Catalog'
+    else coalesce(ua.action_type, '⚡ Activity')
+  end as "Action Type",
+  case ua.action_type
+    when 'song_play' then 'Music Track Played'
+    when 'watchlist_add' then 'Saved to Watchlist'
+    when 'watchlist_remove' then 'Removed from Watchlist'
+    when 'movie_click' then 'Viewed Movie Details'
+    when 'show_click' then 'Viewed Show Details'
+    when 'watched_add' then 'Marked Title Watched'
+    when 'watched_remove' then 'Removed Watched Mark'
+    when 'trailer_play' then 'Played Video Trailer'
+    when 'search' then 'Searched Media'
+    else coalesce(ua.item_id, 'Media Action')
+  end as "Item ID",
+  ua.item_title as "Item Title",
+  ua.extra_meta as "Extra Meta",
+  to_char(ua.created_at at time zone 'Asia/Kolkata', 'DD Mon YYYY, hh:MI:SS AM "IST"') as "Created At (IST)"
+from public.user_activity ua;
 
--- 7. Enable RLS and re-attach clean open policies
-alter table public.visitor_sessions enable row level security;
+-- 5. Enable RLS & Grant Permissions
 alter table public.visitor_logs enable row level security;
+alter table public.user_activity enable row level security;
 
-create policy "Allow all operations" on public.visitor_sessions for all to anon, authenticated using (true) with check (true);
 create policy "Allow all operations" on public.visitor_logs for all to anon, authenticated using (true) with check (true);
+create policy "Allow all operations" on public.user_activity for all to anon, authenticated using (true) with check (true);
 
 grant usage on schema public to anon, authenticated;
-grant select, insert, update, delete on public.visitor_sessions to anon, authenticated;
 grant select, insert, update, delete on public.visitor_logs to anon, authenticated;
-grant select on public.visitor_sessions_ist to anon, authenticated;
-
--- Optional Clean-Up (Only run if you want to remove the unused 3rd table):
--- drop table if exists public.user_activity cascade;`;
+grant select, insert, update, delete on public.user_activity to anon, authenticated;
+grant select on public.user_activity_view to anon, authenticated;`;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(sql).then(() => showToast('Copied upgraded Supabase SQL schema!', 'fa-copy', 'text-emerald-400')).catch(() => {});
       }
@@ -4634,20 +4639,27 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
       const visits = (getLS('cs_visit_count', 0) || 0) + 1;
       saveLS('cs_visit_count', visits);
       const cfg = getAdminSupaConfig();
-      const userNum = (typeof getPersistentUserNumber === 'function') ? getPersistentUserNumber() : 1;
-      const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : `CinePhile`;
+      let identity = { userNum: getPersistentUserNumber(), browserUid: getBrowserUid(), supportsBrowserUid: true, existingRow: null };
+      if (cfg.url && cfg.key && typeof resolveSequentialUserIdentity === 'function') {
+        identity = await resolveSequentialUserIdentity(cfg);
+      }
+      const userNum = identity.userNum;
+      const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : (userNum === 1 ? 'Admin' : `CinePhile ${userNum}`);
       const locStr = (typeof getTelemetryLocationAsync === 'function') ? await getTelemetryLocationAsync() : 'Delhi, Delhi (India)';
+      const baseTotal = parseInt(sessionStorage.getItem('pm_supa_base_total_sec') || '0', 10) || (identity.existingRow ? (identity.existingRow.time_spent_total || 0) : 0);
+      const curSec = Math.max(5, (typeof sessionSeconds !== 'undefined' ? sessionSeconds : 5));
       const record = {
-        user_id: `User ${userNum}`,
+        user_id: String(userNum),
         visitor_name: visitorName,
         lang_pref: obProfile.language || 'All',
-        visit_count: visits,
+        visit_count: Math.max(visits, (identity.existingRow ? (identity.existingRow.visit_count || 0) + 1 : 1)),
         watchlist_count: wishlistTitles.length,
         watched_count: watchedTitles.length,
-        time_spent_total: Math.max(5, (typeof sessionSeconds !== 'undefined' ? sessionSeconds : 5)),
+        time_spent_total: baseTotal + curSec,
         location: locStr,
         last_active_at: new Date().toISOString()
       };
+      if (identity.supportsBrowserUid) record.browser_uid = identity.browserUid;
       const pill = $('adminCloudStatusPill');
       if (cfg.url && cfg.key) {
         try {
@@ -4661,6 +4673,19 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
             },
             body: JSON.stringify(record)
           });
+          if (!res.ok && record.browser_uid) {
+            delete record.browser_uid;
+            res = await fetch(cfg.url + '/rest/v1/visitor_logs', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': cfg.key,
+                'Authorization': 'Bearer ' + cfg.key,
+                'Prefer': 'resolution=merge-duplicates'
+              },
+              body: JSON.stringify(record)
+            });
+          }
           if (res.ok) {
             if (pill) {
               pill.textContent = '✓ Synced to Supabase (' + new Date().toLocaleTimeString() + ')';
@@ -4743,23 +4768,16 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
     let currentSessionId = sessionStorage.getItem('pm_supa_session_id') || null;
     let sessionSeconds = parseInt(sessionStorage.getItem('pm_supa_time_spent') || '0', 10);
 
-    function getPersistentUserNumber() {
-      let num = localStorage.getItem('pm_user_seq_num');
-      if (!num) {
-        const hasHistory = localStorage.getItem('cs_profile_v1') || localStorage.getItem('cs_profile_username') || localStorage.getItem('cs_watched') || localStorage.getItem('cs_wishlist');
-        num = hasHistory ? '1' : '1';
-        localStorage.setItem('pm_user_seq_num', num);
+    function getBrowserUid() {
+      let uid = localStorage.getItem('pm_browser_uid');
+      if (!uid) {
+        uid = 'b_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+        localStorage.setItem('pm_browser_uid', uid);
       }
-      return parseInt(num, 10) || 1;
+      return uid;
     }
 
-    function getPersistentVisitorId() {
-      const userNum = getPersistentUserNumber();
-      return `usr_${userNum}`;
-    }
-
-    function getTelemetryProfileName() {
-      const userNum = getPersistentUserNumber();
+    function getRawProfileName() {
       try {
         let name = '';
         if (typeof obProfile !== 'undefined' && obProfile && obProfile.username && obProfile.username.trim()) {
@@ -4784,9 +4802,156 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
         if (!name || name === 'Supabase Tester' || name.toLowerCase() === 'guest') {
           name = 'CinePhile';
         }
-        return `${name} (User ${userNum})`;
+        return name;
       } catch (_) {}
-      return `CinePhile (User ${userNum})`;
+      return 'CinePhile';
+    }
+
+    function isLikelyMainAdminDevice() {
+      try {
+        const w = (typeof watchedTitles !== 'undefined' && Array.isArray(watchedTitles)) ? watchedTitles.length : 0;
+        const wl = (typeof wishlistTitles !== 'undefined' && Array.isArray(wishlistTitles)) ? wishlistTitles.length : 0;
+        const vc = parseInt(localStorage.getItem('cs_visit_count') || '0', 10) || 0;
+        return w >= 5 || wl >= 5 || vc >= 5;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function getPersistentUserNumber() {
+      let num = localStorage.getItem('pm_user_seq_num');
+      if (!num) {
+        num = isLikelyMainAdminDevice() ? '1' : '1';
+      }
+      return parseInt(num, 10) || 1;
+    }
+
+    async function resolveSequentialUserIdentity(cfg) {
+      const browserUid = getBrowserUid();
+      const rawName = getRawProfileName();
+      const isMainAdmin = isLikelyMainAdminDevice();
+      let resolvedNum = null;
+      let existingRow = null;
+      let supportsBrowserUid = true;
+
+      const extractNum = (uid) => {
+        const m = String(uid || '').match(/\d+/);
+        return m ? parseInt(m[0], 10) : 0;
+      };
+
+      try {
+        let res = await fetch(cfg.url + '/rest/v1/visitor_logs?select=user_id,visitor_name,browser_uid,visit_count,time_spent_total', {
+          headers: { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key }
+        });
+        if (!res.ok) {
+          supportsBrowserUid = false;
+          res = await fetch(cfg.url + '/rest/v1/visitor_logs?select=user_id,visitor_name,visit_count,time_spent_total', {
+            headers: { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key }
+          });
+        }
+        const logs = res.ok ? (await res.json()) : [];
+
+        // 1. Exact browser_uid match in visitor_logs
+        if (supportsBrowserUid && Array.isArray(logs)) {
+          const byUid = logs.find(r => r.browser_uid === browserUid);
+          if (byUid) {
+            existingRow = byUid;
+            resolvedNum = extractNum(byUid.user_id) || 1;
+          }
+        }
+
+        // 2. Assign or claim sequential ID (1, 2, 3, 4...) without colliding with existing users
+        if (!resolvedNum && Array.isArray(logs)) {
+          const row1 = logs.find(r => extractNum(r.user_id) === 1) || null;
+          const row1OwnedByOther = supportsBrowserUid && row1 && row1.browser_uid && row1.browser_uid !== browserUid;
+          const verifiedFlag = localStorage.getItem('pm_user_v4_verified');
+          const storedNum = parseInt(localStorage.getItem('pm_user_seq_num') || '0', 10);
+
+          if (isMainAdmin && !row1OwnedByOther) {
+            resolvedNum = 1;
+            existingRow = row1;
+          } else if (verifiedFlag && storedNum > 1) {
+            resolvedNum = storedNum;
+            existingRow = logs.find(r => extractNum(r.user_id) === storedNum) || null;
+          } else {
+            const clean = rawName.toLowerCase();
+            const unownedNameMatch = (clean && clean !== 'cinephile' && clean !== 'admin')
+              ? logs.find(r => extractNum(r.user_id) > 1 && (!supportsBrowserUid || !r.browser_uid) && String(r.visitor_name || '').toLowerCase() === clean)
+              : null;
+
+            if (unownedNameMatch) {
+              existingRow = unownedNameMatch;
+              resolvedNum = extractNum(unownedNameMatch.user_id);
+            } else if (logs.length === 0) {
+              resolvedNum = 1;
+            } else {
+              let maxSessionNum = 0;
+              try {
+                const sRes = await fetch(cfg.url + '/rest/v1/visitor_sessions?select=user_id,user_num&limit=200', {
+                  headers: { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key }
+                });
+                if (sRes.ok) {
+                  const sRows = await sRes.json();
+                  maxSessionNum = sRows.reduce((mx, r) => Math.max(mx, r.user_num || extractNum(r.user_id) || 0), 0);
+                }
+              } catch (_) {}
+              const maxLogNum = logs.reduce((mx, r) => Math.max(mx, extractNum(r.user_id) || 0), 0);
+              resolvedNum = Math.max(1, maxLogNum, maxSessionNum) + 1;
+            }
+          }
+        }
+      } catch (_) {}
+
+      if (!resolvedNum) {
+        resolvedNum = isMainAdmin ? 1 : (parseInt(localStorage.getItem('pm_user_seq_num') || '1', 10) || 1);
+      }
+
+      localStorage.setItem('pm_user_seq_num', String(resolvedNum));
+      localStorage.setItem('pm_user_v4_verified', '1');
+      if (existingRow && typeof existingRow.time_spent_total === 'number' && !sessionStorage.getItem('pm_supa_base_total_sec')) {
+        sessionStorage.setItem('pm_supa_base_total_sec', String(existingRow.time_spent_total));
+      }
+      return {
+        userNum: resolvedNum,
+        browserUid,
+        supportsBrowserUid,
+        existingRow
+      };
+    }
+
+    function getPersistentVisitorId() {
+      const userNum = getPersistentUserNumber();
+      return String(userNum);
+    }
+
+    function getTelemetryProfileName() {
+      const userNum = getPersistentUserNumber();
+      if (userNum === 1) {
+        return 'Admin';
+      }
+      const raw = getRawProfileName();
+      if (raw && raw !== 'CinePhile') return raw;
+      return `CinePhile ${userNum}`;
+    }
+
+    function formatActivityActionAndItem(actionType, itemId, itemTitle) {
+      const map = {
+        song_play: { action: '🎵 Playing Music', summary: 'Music Track Played' },
+        watchlist_add: { action: '🔖 Added to Watchlist', summary: 'Saved to Watchlist' },
+        watchlist_remove: { action: '🗑️ Removed from Watchlist', summary: 'Removed from Watchlist' },
+        movie_click: { action: '🎬 Opened Movie', summary: 'Viewed Movie Details' },
+        show_click: { action: '📺 Opened TV Show', summary: 'Viewed Show Details' },
+        watched_add: { action: '✅ Marked Watched', summary: 'Marked Title Watched' },
+        watched_remove: { action: '↩️ Unmarked Watched', summary: 'Removed Watched Mark' },
+        trailer_play: { action: '▶️ Watched Trailer', summary: 'Played Video Trailer' },
+        search: { action: '🔍 Searched Catalog', summary: 'Searched Media' }
+      };
+      const entry = map[actionType];
+      if (entry) return entry;
+      return {
+        action: `⚡ ${String(actionType || 'activity').replace(/_/g, ' ')}`,
+        summary: String(itemId || actionType || 'Media Action').slice(0, 48)
+      };
     }
 
     function getISTTimestampString() {
@@ -4890,6 +5055,8 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
         }
       }
 
+      const identity = await resolveSequentialUserIdentity(cfg);
+      const userNum = identity.userNum;
       const locStr = await getTelemetryLocationAsync();
       const deviceStr = getTelemetryDeviceString();
       const visitorName = getTelemetryProfileName();
@@ -4910,7 +5077,8 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
           sessionStorage.setItem('pm_supa_time_spent', sessionSeconds);
 
           try {
-            const userSeqId = `User ${getPersistentUserNumber()}`;
+            const userSeqId = String(getPersistentUserNumber());
+            const curName = getTelemetryProfileName();
             const res = await fetch(cfg.url + '/rest/v1/visitor_sessions', {
               method: 'POST',
               headers: {
@@ -4922,9 +5090,10 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
               body: JSON.stringify({
                 user_id: userSeqId,
                 user_num: getPersistentUserNumber(),
-                visitor_name: visitorName,
+                visitor_name: curName,
                 device: deviceStr,
                 location: locStr,
+                ist_time: istTimeStr,
                 time_spent_seconds: sessionSeconds
               })
             });
@@ -4934,9 +5103,23 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
                 currentSessionId = data[0].id;
                 sessionStorage.setItem('pm_supa_session_id', currentSessionId);
               }
-              // Upsert consolidated user profile in visitor_logs (increment / record user metrics)
+              // Upsert consolidated user profile in visitor_logs (unique sequential user_id: 1, 2, 3, 4...)
               try {
-                fetch(cfg.url + '/rest/v1/visitor_logs', {
+                const baseTotal = parseInt(sessionStorage.getItem('pm_supa_base_total_sec') || '0', 10) || (identity.existingRow ? (identity.existingRow.time_spent_total || 0) : 0);
+                const prevVisits = identity.existingRow ? (identity.existingRow.visit_count || 0) : 0;
+                const logPayload = {
+                  user_id: userSeqId,
+                  visitor_name: curName,
+                  lang_pref: obProfile.language || 'All',
+                  visit_count: Math.max(visitCount, prevVisits + 1),
+                  watchlist_count: wishlistTitles.length,
+                  watched_count: watchedTitles.length,
+                  time_spent_total: baseTotal + sessionSeconds,
+                  location: locStr,
+                  last_active_at: new Date().toISOString()
+                };
+                if (identity.supportsBrowserUid) logPayload.browser_uid = identity.browserUid;
+                let logRes = await fetch(cfg.url + '/rest/v1/visitor_logs', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -4944,20 +5127,23 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
                     'Authorization': 'Bearer ' + cfg.key,
                     'Prefer': 'resolution=merge-duplicates'
                   },
-                  body: JSON.stringify({
-                    user_id: userSeqId,
-                    visitor_name: visitorName,
-                    lang_pref: obProfile.language || 'All',
-                    visit_count: visitCount,
-                    watchlist_count: wishlistTitles.length,
-                    watched_count: watchedTitles.length,
-                    time_spent_total: sessionSeconds,
-                    location: locStr,
-                    last_active_at: new Date().toISOString()
-                  })
-                }).catch(() => {});
+                  body: JSON.stringify(logPayload)
+                });
+                if (!logRes.ok && logPayload.browser_uid) {
+                  delete logPayload.browser_uid;
+                  fetch(cfg.url + '/rest/v1/visitor_logs', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'apikey': cfg.key,
+                      'Authorization': 'Bearer ' + cfg.key,
+                      'Prefer': 'resolution=merge-duplicates'
+                    },
+                    body: JSON.stringify(logPayload)
+                  }).catch(() => {});
+                }
               } catch (_) {}
-              console.log('%c[Supabase]%c Visitor session recorded (#' + (currentSessionId || 'OK') + ' · ' + visitorName + ' · ' + istTimeStr + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
+              console.log('%c[Supabase]%c Visitor session recorded (#' + (currentSessionId || 'OK') + ' · User ' + userSeqId + ' · ' + curName + ' · ' + istTimeStr + ').', 'color:#3ecf8e;font-weight:bold;', 'color:inherit;');
             }
           } catch (err) {
             console.warn('[Supabase] Telemetry notice:', err.message);
@@ -4981,12 +5167,15 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
               },
               body: JSON.stringify({
                 time_spent_seconds: sessionSeconds,
+                ist_time: getISTTimestampString(),
                 last_active_at: new Date().toISOString()
               })
             });
-            // Also refresh cumulative time in visitor_logs
+            // Also refresh cumulative time & counts in visitor_logs for this sequential user ID
             try {
-              fetch(cfg.url + `/rest/v1/visitor_logs?user_id=eq.User%20${getPersistentUserNumber()}`, {
+              const curUserNum = getPersistentUserNumber();
+              const baseTotal = parseInt(sessionStorage.getItem('pm_supa_base_total_sec') || '0', 10) || 0;
+              fetch(cfg.url + `/rest/v1/visitor_logs?user_id=eq.${encodeURIComponent(String(curUserNum))}`, {
                 method: 'PATCH',
                 headers: {
                   'Content-Type': 'application/json',
@@ -4995,7 +5184,11 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
                   'Prefer': 'return=minimal'
                 },
                 body: JSON.stringify({
-                  time_spent_total: sessionSeconds,
+                  visitor_name: getTelemetryProfileName(),
+                  lang_pref: obProfile.language || 'All',
+                  watchlist_count: wishlistTitles.length,
+                  watched_count: watchedTitles.length,
+                  time_spent_total: baseTotal + sessionSeconds,
                   last_active_at: new Date().toISOString()
                 })
               }).catch(() => {});
@@ -5009,14 +5202,34 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
       const cfg = getAdminSupaConfig();
       if (!cfg.url || !cfg.key) return;
       try {
+        const userNum = getPersistentUserNumber();
         const visitorName = getTelemetryProfileName();
-        const visitorId = getPersistentVisitorId();
         const istTimeStr = getISTTimestampString();
         const cohortStr = getLoyaltyCohortString();
         const orientStr = getScreenOrientationString();
         const launchStr = getAppLaunchModeString();
+        const fmt = formatActivityActionAndItem(actionType, itemId, itemTitle);
 
-        await fetch(cfg.url + '/rest/v1/user_activity', {
+        const payload = {
+          user_id: String(userNum),
+          user_num: userNum,
+          visitor_name: visitorName,
+          session_id: currentSessionId || undefined,
+          action_type: fmt.action,
+          item_id: fmt.summary,
+          item_title: String(itemTitle || itemId),
+          extra_meta: {
+            ...extraMeta,
+            user_id: userNum,
+            visitor_name: visitorName,
+            visitor_id: String(userNum),
+            ist_time: istTimeStr,
+            visit_count: cohortStr,
+            screen_orientation: orientStr,
+            app_launch_mode: launchStr
+          }
+        };
+        const res = await fetch(cfg.url + '/rest/v1/user_activity', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -5024,25 +5237,21 @@ grant select on public.visitor_sessions_ist to anon, authenticated;
             'Authorization': 'Bearer ' + cfg.key,
             'Prefer': 'return=minimal'
           },
-          body: JSON.stringify({
-            user_id: getPersistentUserNumber(),
-            user_num: getPersistentUserNumber(),
-            session_id: currentSessionId || undefined,
-            action_type: actionType,
-            item_id: String(itemId || itemTitle),
-            item_title: String(itemTitle || itemId),
-            extra_meta: {
-              ...extraMeta,
-              user_id: getPersistentUserNumber(),
-              visitor_name: visitorName,
-              visitor_id: String(getPersistentUserNumber()),
-              ist_time: istTimeStr,
-              visit_count: cohortStr,
-              screen_orientation: orientStr,
-              app_launch_mode: launchStr
-            }
-          })
+          body: JSON.stringify(payload)
         });
+        if (!res.ok) {
+          delete payload.visitor_name;
+          await fetch(cfg.url + '/rest/v1/user_activity', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': cfg.key,
+              'Authorization': 'Bearer ' + cfg.key,
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(payload)
+          }).catch(() => {});
+        }
       } catch (_) {}
     };
 
