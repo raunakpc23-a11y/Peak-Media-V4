@@ -89,8 +89,8 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
 
-  // 1. Always pass through YouTube player iframes, Supabase, live APIs, etc. (do not block image thumbnails)
-  if (PASSTHROUGH_ORIGINS.some(o => url.href.startsWith(o))) {
+  // 1. Always pass through YouTube player iframes, Supabase (*.supabase.co), live APIs, etc.
+  if (url.hostname.endsWith('.supabase.co') || PASSTHROUGH_ORIGINS.some(o => url.href.startsWith(o))) {
     return; // let the browser handle it directly
   }
 
