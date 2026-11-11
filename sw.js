@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v7.9-legal-links';
+const CACHE_NAME = 'peak-media-v8.0-seo-indexing';
 const POSTER_CACHE = 'peak-media-posters-v1';
 
 // All local files to pre-cache the moment the SW installs
