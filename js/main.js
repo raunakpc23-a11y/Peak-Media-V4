@@ -165,7 +165,7 @@
 
     let obStep = 1;
     const TOTAL_OB_STEPS = 9;
-    let obAuthMode = 'signup'; // 'signup' | 'login' | 'gmail'
+    let obAuthMode = 'signup'; // 'signup' | 'login'
     let obAuthBusy = false;
     let obAuthError = '';
     let obAuthSuccess = '';
@@ -1060,7 +1060,7 @@
       }
 
       // -------------------------------------------------------------
-      // STAGE 9: Account & Sync (Custom Client Tokens + Google + Guest Mode)
+      // STAGE 9: Account & Sync (Custom Client Tokens + Guest Mode)
       // -------------------------------------------------------------
       else if (obStep === 9) {
         const activeUser = window._peakAuthSession || null;
@@ -1076,7 +1076,7 @@
                 <div class="text-xs font-extrabold uppercase tracking-widest text-emerald-300">Verified Client Token Active</div>
                 <h4 class="text-xl font-display font-black text-white">${esc(activeUser.username)} <span class="text-sm font-mono text-emerald-300">(ID #${esc(activeUser.user_id)})</span>${activeUser.role === 'admin' ? ' <span class="ml-1 px-2 py-0.5 rounded-md bg-amber-400/20 border border-amber-400/40 text-amber-300 text-[10px] font-extrabold uppercase align-middle">Admin</span>' : ''}</h4>
                 <p class="text-xs text-slate-300 leading-relaxed">Your watchlist, watched history, favorites, and profile are linked with Supabase. Sign in with this username on any device to restore your library.</p>
-                ${activeUser.gmail_email ? `<div class="text-[11px] font-mono text-cyan-300">Linked Google: ${esc(activeUser.gmail_email)}</div>` : `<div class="text-[11px] font-mono text-slate-400">Custom token mode</div>`}
+                <div class="text-[11px] font-mono text-slate-400">Custom token mode</div>
 
                 ${obAuthError ? `<div class="p-2 rounded-xl bg-rose-500/15 border border-rose-400/40 text-rose-200 text-xs font-medium">${esc(obAuthError)}</div>` : ''}
                 ${obAuthSuccess ? `<div class="p-2 rounded-xl bg-emerald-500/15 border border-emerald-400/40 text-emerald-200 text-xs font-medium">${esc(obAuthSuccess)}</div>` : ''}
@@ -1108,63 +1108,43 @@
 
         const isSignup = obAuthMode === 'signup';
         const isLogin = obAuthMode === 'login';
-        const isGmail = obAuthMode === 'gmail';
 
         vp.innerHTML = `
           <div class="ob-step-enter max-w-xl mx-auto w-full py-1 space-y-4">
             <div class="text-center space-y-1">
-              <p class="text-xs text-slate-300">Create a password-protected account, sign in from another device, continue with Google, or use Guest Mode.</p>
+              <p class="text-xs text-slate-300">Create a password-protected account, sign in from another device, or use Guest Mode.</p>
             </div>
 
-            <!-- 3 Clean Auth Mode Tabs -->
-            <div class="grid grid-cols-3 gap-2 p-1 rounded-2xl bg-black/50 border border-white/10 max-w-md mx-auto">
-              <button type="button" onclick="window.setObAuthMode('signup')" class="py-2 px-2 rounded-xl text-xs font-bold transition-all ${isSignup ? 'bg-brand-gold text-black shadow' : 'text-slate-300 hover:text-white'}">
-                <i class="fa-solid fa-user-plus mr-1"></i>Create
+            <!-- 2 Clean Auth Mode Tabs: Create & Sign In -->
+            <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-black/50 border border-white/10 max-w-xs mx-auto">
+              <button type="button" onclick="window.setObAuthMode('signup')" class="py-2 px-3 rounded-xl text-xs font-bold transition-all ${isSignup ? 'bg-brand-gold text-black shadow' : 'text-slate-300 hover:text-white'}">
+                <i class="fa-solid fa-user-plus mr-1.5"></i>Create
               </button>
-              <button type="button" onclick="window.setObAuthMode('login')" class="py-2 px-2 rounded-xl text-xs font-bold transition-all ${isLogin ? 'bg-cyan-400 text-black shadow' : 'text-slate-300 hover:text-white'}">
-                <i class="fa-solid fa-key mr-1"></i>Sign In
-              </button>
-              <button type="button" onclick="window.setObAuthMode('gmail')" class="py-2 px-2 rounded-xl text-xs font-bold transition-all ${isGmail ? 'bg-white text-black shadow' : 'text-slate-300 hover:text-white'}">
-                <i class="fa-brands fa-google mr-1"></i>Google
+              <button type="button" onclick="window.setObAuthMode('login')" class="py-2 px-3 rounded-xl text-xs font-bold transition-all ${isLogin ? 'bg-cyan-400 text-black shadow' : 'text-slate-300 hover:text-white'}">
+                <i class="fa-solid fa-key mr-1.5"></i>Sign In
               </button>
             </div>
 
             ${obAuthError ? `<div id="obAuthErrorBox" class="p-2.5 rounded-xl bg-rose-500/15 border border-rose-400/40 text-rose-200 text-xs text-center font-medium">${esc(obAuthError)}</div>` : '<div id="obAuthErrorBox" class="hidden"></div>'}
             ${obAuthSuccess ? `<div class="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-400/40 text-emerald-200 text-xs text-center font-medium">${esc(obAuthSuccess)}</div>` : ''}
 
-            ${!isGmail ? `
-              <div class="p-4 sm:p-5 rounded-2xl bg-black/50 border border-white/10 space-y-3 max-w-md mx-auto">
-                <div>
-                  <label for="obAuthUsername" class="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">${isSignup ? 'Choose Username' : 'Username'}</label>
-                  <input id="obAuthUsername" type="text" maxlength="40" value="${esc(suggestedName)}" placeholder="Enter username..." class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
-                </div>
-                <div>
-                  <label for="obAuthPassword" class="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">${isSignup ? 'Create Password' : 'Password'}</label>
-                  <div class="relative">
-                    <input id="obAuthPassword" type="password" autocomplete="${isSignup ? 'new-password' : 'current-password'}" placeholder="${isSignup ? 'At least 4 characters...' : 'Enter your password...'}" class="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
-                    <button type="button" onclick="window.toggleObAuthPwVis()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs" title="Show/Hide Password"><i class="fa-solid fa-eye"></i></button>
-                  </div>
-                </div>
-                ${isSignup ? `
-                  <div>
-                    <label for="obAuthGmailOpt" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Gmail Recovery <span class="text-emerald-400 font-normal">Optional</span></label>
-                    <input id="obAuthGmailOpt" type="email" autocomplete="email" placeholder="Optional" class="w-full px-3.5 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white focus:outline-none focus:border-cyan-400">
-                  </div>
-                ` : ''}
-                <button type="button" id="obAuthSubmitBtn" onclick="window.submitObCustomAuth(false)" ${obAuthBusy ? 'disabled' : ''} class="w-full py-2.5 px-4 rounded-xl ${isSignup ? 'bg-brand-gold hover:bg-yellow-400 text-black' : 'bg-cyan-400 hover:bg-cyan-300 text-black'} font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95">
-                  <i class="fa-solid ${isSignup ? 'fa-shield-halved' : 'fa-right-to-bracket'}"></i>
-                  <span>${obAuthBusy ? 'Verifying with Supabase...' : (isSignup ? 'Create Account & Sync Token' : 'Sign In & Restore Library')}</span>
-                </button>
+            <div class="p-4 sm:p-5 rounded-2xl bg-black/50 border border-white/10 space-y-3 max-w-md mx-auto">
+              <div>
+                <label for="obAuthUsername" class="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">${isSignup ? 'Choose Username' : 'Username'}</label>
+                <input id="obAuthUsername" type="text" maxlength="40" value="${esc(suggestedName)}" placeholder="Enter username..." class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
               </div>
-            ` : `
-              <div class="p-4 sm:p-5 rounded-2xl bg-black/50 border border-white/10 space-y-3.5 max-w-md mx-auto text-center">
-                <p class="text-xs font-semibold text-slate-300">Continue with Google</p>
-                <button type="button" onclick="window.signInWithGmailOAuth()" class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all">
-                  <i class="fa-brands fa-google text-rose-500"></i>
-                  <span>Continue with Google</span>
-                </button>
+              <div>
+                <label for="obAuthPassword" class="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">${isSignup ? 'Create Password' : 'Password'}</label>
+                <div class="relative">
+                  <input id="obAuthPassword" type="password" autocomplete="${isSignup ? 'new-password' : 'current-password'}" placeholder="${isSignup ? 'At least 4 characters...' : 'Enter your password...'}" class="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-brand-gold">
+                  <button type="button" onclick="window.toggleObAuthPwVis()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs" title="Show/Hide Password"><i class="fa-solid fa-eye"></i></button>
+                </div>
               </div>
-            `}
+              <button type="button" id="obAuthSubmitBtn" onclick="window.submitObCustomAuth(false)" ${obAuthBusy ? 'disabled' : ''} class="w-full py-2.5 px-4 rounded-xl ${isSignup ? 'bg-brand-gold hover:bg-yellow-400 text-black' : 'bg-cyan-400 hover:bg-cyan-300 text-black'} font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95">
+                <i class="fa-solid ${isSignup ? 'fa-shield-halved' : 'fa-right-to-bracket'}"></i>
+                <span>${obAuthBusy ? 'Verifying with Supabase...' : (isSignup ? 'Create Account & Sync Token' : 'Sign In & Restore Library')}</span>
+              </button>
+            </div>
 
             <!-- Continue as Guest Option -->
             <div class="text-center pt-1">
@@ -1411,7 +1391,7 @@
     }
 
     window.setObAuthMode = function(mode) {
-      obAuthMode = mode;
+      obAuthMode = mode === 'login' ? 'login' : 'signup';
       obAuthError = '';
       obAuthSuccess = '';
       renderObStep();
@@ -1437,10 +1417,8 @@
     window.submitObCustomAuth = async function(fromNextButton = false) {
       const userInp = $('obAuthUsername');
       const passInp = $('obAuthPassword');
-      const gmailInp = $('obAuthGmailOpt');
       const username = ((userInp && userInp.value) || '').trim();
       const password = (passInp && passInp.value) || '';
-      const gmail = ((gmailInp && gmailInp.value) || '').trim() || null;
 
       if (!username || username.length < 2) {
         obAuthError = 'Enter a username (at least 2 characters).';
@@ -1464,7 +1442,7 @@
         const rpcName = obAuthMode === 'login' ? 'peak_login_account' : 'peak_register_account';
         const payload = obAuthMode === 'login'
           ? { p_username: username, p_password: password, p_device: device }
-          : { p_username: username, p_password: password, p_gmail: gmail, p_library: lib, p_device: device };
+          : { p_username: username, p_password: password, p_gmail: null, p_library: lib, p_device: device };
 
         const data = await callPeakAuthRpc(rpcName, payload);
         if (!data || !data.ok) {
@@ -1488,44 +1466,7 @@
       }
     };
 
-    window.signInWithGmailOAuth = async function() {
-      const cfg = getAdminSupaConfig();
-      if (!cfg.url || !cfg.key || !window.supabaseClient) {
-        obAuthError = 'Supabase SDK not initialized. Verify supabase-config.js.';
-        renderObStep();
-        return;
-      }
-      if (window.location.protocol === 'file:') {
-        obAuthError = 'Google sign-in requires running on http://localhost or HTTPS (not file://), or sign in with Username & Password.';
-        renderObStep();
-        return;
-      }
-      try {
-        // Verify Google OAuth provider is enabled in Supabase before redirecting (prevents 400 validation_failed error page)
-        const settingsRes = await fetch(`${cfg.url}/auth/v1/settings`, {
-          headers: { 'apikey': cfg.key }
-        }).catch(() => null);
-        if (settingsRes && settingsRes.ok) {
-          const settings = await settingsRes.json().catch(() => null);
-          if (settings && settings.external && settings.external.google !== true) {
-            obAuthError = 'Google OAuth provider is disabled in this Supabase project (code 400 validation_failed). Enable Google in Supabase Dashboard → Authentication → Providers → Google, or use Create / Sign In.';
-            renderObStep();
-            return;
-          }
-        }
-        const { error } = await window.supabaseClient.auth.signInWithOAuth({
-          provider: 'google',
-          options: { redirectTo: window.location.origin + window.location.pathname }
-        });
-        if (error) {
-          obAuthError = error.message || 'Google sign-in failed. Enable Google provider in Supabase Auth or use Username & Password.';
-          renderObStep();
-        }
-      } catch (err) {
-        obAuthError = err.message || 'Google sign-in unavailable.';
-        renderObStep();
-      }
-    };
+    window.signInWithGmailOAuth = function() {};
 
     window.continueAsGuestAccount = function() {
       obAuthError = '';
@@ -1595,27 +1536,8 @@
     async function hydrateAuthenticatedCloudSession() {
       const cfg = getAdminSupaConfig();
       if (!cfg.url || !cfg.key) return;
-      // 1. Check Google OAuth Supabase Auth session if returning from Google sign-in
-      try {
-        if (window.supabase && typeof window.supabase.createClient === 'function' && !window.supabaseClient) {
-          window.supabaseClient = window.supabase.createClient(cfg.url, cfg.key);
-        }
-        if (window.supabaseClient && window.supabaseClient.auth) {
-          const { data } = await window.supabaseClient.auth.getSession();
-          if (data && data.session && data.session.user && !getClientToken()) {
-            const u = data.session.user;
-            const res = await callPeakAuthRpc('peak_oauth_sync', {
-              p_gmail: u.email || null,
-              p_name: (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || (u.email ? u.email.split('@')[0] : 'GmailUser'),
-              p_library: collectLibrarySnapshot(),
-              p_device: (typeof getTelemetryDeviceString === 'function') ? getTelemetryDeviceString() : 'Browser'
-            });
-            if (res && res.ok) applyVerifiedAuthSession(res, true);
-          }
-        }
-      } catch (_) {}
 
-      // 2. Verify existing cryptographic client token & pull latest library
+      // Verify existing cryptographic client token & pull latest library
       const token = getClientToken();
       if (token) {
         try {
