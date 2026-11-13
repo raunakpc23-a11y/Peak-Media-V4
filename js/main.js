@@ -369,8 +369,8 @@
 
       const kicker = $('obStepKicker');
       if (kicker) {
-        kicker.textContent = `Step ${obStep} of ${TOTAL_OB_STEPS}`;
-        kicker.classList.remove('hidden');
+        kicker.textContent = '';
+        kicker.classList.add('hidden');
       }
       $('obStepTitleTop').textContent = titles[obStep - 1] || 'Theme';
       $('obProgressBar').style.width = `${Math.round((obStep / TOTAL_OB_STEPS) * 100)}%`;
