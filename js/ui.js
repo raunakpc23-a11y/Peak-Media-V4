@@ -97,11 +97,13 @@
       headerRightControls.classList.toggle('hidden', isImmersiveDeck);
     }
 
-    // PiP Video Dock is strictly visible only while actively inside the Music tab
+    // PiP Video Dock is docked offscreen outside Music tab without stopping media decode
     if (key !== 'music') {
-      const vDock = document.getElementById('musicVideoDock');
-      if (vDock && !vDock.classList.contains('hidden')) {
-        vDock.classList.add('hidden');
+      if (typeof window.toggleMusicVideoDock === 'function') {
+        window.toggleMusicVideoDock(false);
+      } else {
+        const vDock = document.getElementById('musicVideoDock');
+        if (vDock) vDock.classList.add('dock-offscreen');
       }
     }
 

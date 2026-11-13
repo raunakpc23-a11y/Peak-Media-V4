@@ -176,8 +176,19 @@ input[type="range"]:active::-moz-range-thumb {
    ========================================================================== */
 #musicVideoDock {
   touch-action: none;
-  transition: box-shadow 0.2s ease, width 0.25s ease;
-  will-change: transform, left, top;
+  transition: box-shadow 0.2s ease, width 0.25s ease, opacity 0.2s ease;
+  will-change: transform, left, top, opacity;
+}
+
+#musicVideoDock.dock-offscreen {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translate3d(-9999px, -9999px, 0) !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  bottom: auto !important;
+  right: auto !important;
+  visibility: visible !important;
 }
 
 #musicVideoDock.is-dragging {
@@ -201,7 +212,10 @@ input[type="range"]:active::-moz-range-thumb {
 }
 
 #musicVideoDock.pip-minimized .dock-body {
-  display: none !important;
+  height: 0px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
 }
 
 #musicVideoDock .dock-drag-handle {

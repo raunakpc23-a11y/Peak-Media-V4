@@ -2313,7 +2313,7 @@
 
 
   <!-- PERSISTENT YOUTUBE MINI-PLAYER BAR & VISIBLE VIDEO DOCK (DRAGGABLE PiP PREVIEW) -->
-  <div id="musicVideoDock" class="fixed right-3 bottom-36 md:bottom-24 z-50 hidden w-72 sm:w-80 rounded-2xl overflow-hidden glass-card border border-brand-gold/40 shadow-2xl pip-standard">
+  <div id="musicVideoDock" class="fixed right-3 bottom-36 md:bottom-24 z-50 dock-offscreen w-72 sm:w-80 rounded-2xl overflow-hidden glass-card border border-brand-gold/40 shadow-2xl pip-standard">
     <div id="musicVideoDockHeader" class="dock-drag-handle flex items-center justify-between px-3 py-1.5 bg-black/90 border-b border-white/10 text-[11px] cursor-grab select-none">
       <div class="flex items-center gap-1.5">
         <i class="fa-solid fa-grip-vertical text-gray-500 text-xs" title="Drag dock anywhere"></i>
@@ -2490,9 +2490,9 @@
           <i class="fa-solid fa-forward-step"></i>
         </button>
 
-        <!-- Video Dock Toggle (Visible on desktop) -->
-        <button type="button" onclick="toggleMusicVideoDock()" id="mpVideoBtn" title="Show / Hide Video Player" class="hidden md:flex px-3 h-9 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-brand-gold items-center gap-1.5 transition-colors">
-          <i class="fa-solid fa-tv text-xs"></i><span>Video</span>
+        <!-- Video Dock Toggle (Visible on Mobile & Desktop) -->
+        <button type="button" onclick="toggleMusicVideoDock()" id="mpVideoBtn" title="Show / Hide Video Player" class="flex px-2 sm:px-3 h-8 sm:h-9 rounded-lg sm:rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-brand-gold items-center gap-1 sm:gap-1.5 transition-colors">
+          <i class="fa-solid fa-tv text-xs"></i><span class="hidden sm:inline">Video</span>
         </button>
 
         <!-- Favorite Button -->

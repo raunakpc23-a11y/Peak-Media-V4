@@ -2174,7 +2174,142 @@
       }
     });
 
-    // Official YouTube IFrame Player Loader (Single Visible Instance)
+    // ---------------------------------------------------------
+    // BACKGROUND AUDIO ANCHOR & WAKELOCK (MOBILE CONTINUOUS PLAYBACK)
+    // ---------------------------------------------------------
+    let bgAudioAnchor = null;
+    let wakeLockSentinel = null;
+    let userExplicitlyPaused = false;
+    let lastMediaPositionSync = 0;
+
+    function ensureBgAudioAnchor() {
+      if (!bgAudioAnchor) {
+        bgAudioAnchor = document.getElementById('peakBgAudioAnchor');
+        if (!bgAudioAnchor) {
+          bgAudioAnchor = document.createElement('audio');
+          bgAudioAnchor.id = 'peakBgAudioAnchor';
+          bgAudioAnchor.loop = true;
+          bgAudioAnchor.preload = 'auto';
+          bgAudioAnchor.setAttribute('playsinline', 'true');
+          bgAudioAnchor.setAttribute('webkit-playsinline', 'true');
+          // Lightweight 1-second silent stereo WAV data URI
+          bgAudioAnchor.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+          bgAudioAnchor.volume = 0.05; // Audible-threshold volume so mobile OS maintains active audio session
+          document.body.appendChild(bgAudioAnchor);
+        }
+      }
+      return bgAudioAnchor;
+    }
+
+    function startBgAudioAnchor() {
+      try {
+        const audio = ensureBgAudioAnchor();
+        if (audio && audio.paused) {
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(err => {
+              console.debug('[PeakMusic] Audio anchor waiting for user gesture:', err);
+            });
+          }
+        }
+      } catch (err) {
+        console.debug('[PeakMusic] Audio anchor err:', err);
+      }
+    }
+
+    function stopBgAudioAnchor() {
+      try {
+        if (bgAudioAnchor && !bgAudioAnchor.paused) {
+          bgAudioAnchor.pause();
+        }
+      } catch (_) {}
+    }
+
+    async function requestWakeLock() {
+      if ('wakeLock' in navigator && !wakeLockSentinel && !document.hidden) {
+        try {
+          wakeLockSentinel = await navigator.wakeLock.request('screen');
+          wakeLockSentinel.addEventListener('release', () => {
+            wakeLockSentinel = null;
+          });
+        } catch (_) {}
+      }
+    }
+
+    function releaseWakeLock() {
+      if (wakeLockSentinel) {
+        try { wakeLockSentinel.release(); } catch (_) {}
+        wakeLockSentinel = null;
+      }
+    }
+
+    function showBgPlayMobileHint() {
+      const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (!isMobile) return;
+      const shown = getLS('pm_bg_hint_shown', false);
+      if (!shown) {
+        saveLS('pm_bg_hint_shown', true);
+        setTimeout(() => {
+          if (typeof window.showToast === 'function') {
+            window.showToast('Background Play Active: Lock phone or switch apps anytime! Control via lock screen 🎧', 'fa-headphones', 'text-brand-gold', 5500);
+          }
+        }, 1200);
+      }
+    }
+
+    function syncMediaSessionPosition() {
+      if (!('mediaSession' in navigator) || typeof navigator.mediaSession.setPositionState !== 'function') return;
+      if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function' || typeof ytPlayer.getDuration !== 'function') return;
+      try {
+        const cur = ytPlayer.getCurrentTime() || 0;
+        const dur = ytPlayer.getDuration() || 0;
+        if (dur > 0 && cur >= 0 && cur <= dur) {
+          navigator.mediaSession.setPositionState({
+            duration: Math.round(dur),
+            playbackRate: 1,
+            position: Math.round(cur)
+          });
+        }
+      } catch (_) {}
+    }
+
+    // Mobile Background Audio Keepalive Watcher (Handles tab minimize & screen lock)
+    if (!window._bgMusicVisibilityBound) {
+      window._bgMusicVisibilityBound = true;
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          // Tab or app went to background / screen turned off
+          if (isPlayingMusic && !userExplicitlyPaused) {
+            startBgAudioAnchor();
+            // Counteract aggressive YouTube iframe throttling
+            setTimeout(() => {
+              if (isPlayingMusic && !userExplicitlyPaused && ytPlayer && typeof ytPlayer.playVideo === 'function') {
+                try { ytPlayer.playVideo(); } catch (_) {}
+              }
+            }, 300);
+            setTimeout(() => {
+              if (isPlayingMusic && !userExplicitlyPaused && ytPlayer && typeof ytPlayer.playVideo === 'function') {
+                try { ytPlayer.playVideo(); } catch (_) {}
+              }
+            }, 1000);
+          }
+        } else {
+          // User returned to tab / unlocked phone
+          if (isPlayingMusic && !userExplicitlyPaused) {
+            requestWakeLock();
+            if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
+              const st = ytPlayer.getPlayerState();
+              if (st !== YT.PlayerState.PLAYING && st !== YT.PlayerState.BUFFERING) {
+                try { ytPlayer.playVideo(); } catch (_) {}
+              }
+            }
+            updateMiniPlayerUI();
+          }
+        }
+      });
+    }
+
+    // Official YouTube IFrame Player Loader (Single Persistent Instance)
     function loadYouTubeAPI() {
       if (window.YT && window.YT.Player) {
         initYTPlayerInstance();
@@ -2200,10 +2335,27 @@
           height: '100%',
           width: '100%',
           videoId: ytPendingVid || '2Vv-BfVoq4g',
-          playerVars: { autoplay: 1, playsinline: 1, rel: 0, modestbranding: 1 },
+          playerVars: {
+            autoplay: 1,
+            playsinline: 1,
+            rel: 0,
+            modestbranding: 1,
+            enablejsapi: 1,
+            origin: window.location.origin
+          },
           events: {
-            onReady: () => {
+            onReady: (event) => {
               ytReady = true;
+              try {
+                const iframe = (event.target && typeof event.target.getIframe === 'function')
+                  ? event.target.getIframe()
+                  : document.querySelector('#ytPlayerMount iframe');
+                if (iframe) {
+                  iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+                  iframe.setAttribute('playsinline', '1');
+                  iframe.setAttribute('webkit-playsinline', '1');
+                }
+              } catch (_) {}
               if (ytPendingVid) {
                 ytPlayer.loadVideoById(ytPendingVid);
                 ytPendingVid = null;
@@ -2212,16 +2364,37 @@
             onStateChange: e => {
               if (e.data === YT.PlayerState.PLAYING) {
                 isPlayingMusic = true;
+                userExplicitlyPaused = false;
+                startBgAudioAnchor();
+                requestWakeLock();
                 updateMiniPlayerUI();
               } else if (e.data === YT.PlayerState.PAUSED) {
-                isPlayingMusic = false;
-                updateMiniPlayerUI();
+                if (!userExplicitlyPaused) {
+                  // Non-user pause: triggered by phone backgrounding, screen lock, or OS visibility
+                  console.log('[PeakMusic] Background auto-pause detected. Preserving background session.');
+                  isPlayingMusic = true;
+                  startBgAudioAnchor();
+                  if ('mediaSession' in navigator) {
+                    try { navigator.mediaSession.playbackState = 'playing'; } catch (_) {}
+                  }
+                  setTimeout(() => {
+                    if (isPlayingMusic && !userExplicitlyPaused && ytPlayer && ytPlayer.playVideo) {
+                      try { ytPlayer.playVideo(); } catch (_) {}
+                    }
+                  }, 350);
+                } else {
+                  isPlayingMusic = false;
+                  stopBgAudioAnchor();
+                  releaseWakeLock();
+                  if ('mediaSession' in navigator) {
+                    try { navigator.mediaSession.playbackState = 'paused'; } catch (_) {}
+                  }
+                  updateMiniPlayerUI();
+                }
               } else if (e.data === YT.PlayerState.ENDED) {
                 if (musicSleepEndTrack) {
                   musicSleepEndTrack = false;
-                  if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
-                  isPlayingMusic = false;
-                  updateMiniPlayerUI();
+                  window.musicPause();
                   cancelMusicSleepTimer();
                   showToast('Sleep timer reached end of track. Pausing music. Goodnight! 🌙', 'fa-moon', 'text-indigo-400');
                   return;
@@ -2236,7 +2409,6 @@
             },
             onError: e => {
               // Auto-skip on videos that block embedding (errors 100, 101, 150)
-              const cur = musicQueue[musicQueueIdx];
               showToast(`Track temporarily unavailable (${e.data}) - skipping`, 'fa-forward-fast', 'text-amber-400');
               setTimeout(() => window.musicNext(), 700);
             }
@@ -2249,9 +2421,13 @@
       const s = musicQueue[musicQueueIdx];
       if (!s) return;
       saveLS('cs_last_song', s.id);
+      userExplicitlyPaused = false;
+      startBgAudioAnchor();
+      requestWakeLock();
       $('musicMiniPlayer').classList.remove('hidden');
       isPlayingMusic = true;
       updateMiniPlayerUI();
+      showBgPlayMobileHint();
       if (window.logUserActivity) {
         window.logUserActivity('song_play', s.id, s.t || s.rawTitle, { artist: s.a });
       }
@@ -2273,30 +2449,29 @@
       mediaSessionBound = true;
       const actions = [
         ['play', () => {
-          if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
-          isPlayingMusic = true;
-          updateMiniPlayerUI();
+          window.musicPlay();
         }],
         ['pause', () => {
-          if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
-          isPlayingMusic = false;
-          updateMiniPlayerUI();
+          window.musicPause();
         }],
         ['previoustrack', () => window.musicPrev()],
         ['nexttrack', () => window.musicNext()],
         ['seekto', (details) => {
           if (details && details.seekTime !== undefined && ytPlayer && ytPlayer.seekTo) {
             ytPlayer.seekTo(details.seekTime, true);
+            syncMediaSessionPosition();
           }
         }],
         ['seekbackward', (details) => {
           if (ytPlayer && ytPlayer.getCurrentTime && ytPlayer.seekTo) {
             ytPlayer.seekTo(Math.max(0, ytPlayer.getCurrentTime() - (details.seekOffset || 10)), true);
+            syncMediaSessionPosition();
           }
         }],
         ['seekforward', (details) => {
           if (ytPlayer && ytPlayer.getCurrentTime && ytPlayer.seekTo) {
             ytPlayer.seekTo(ytPlayer.getCurrentTime() + (details.seekOffset || 10), true);
+            syncMediaSessionPosition();
           }
         }],
         ['stop', () => window.closeMusicMiniPlayer()]
@@ -2314,16 +2489,22 @@
     function updateMediaSession(song) {
       if (!('mediaSession' in navigator) || !song) return;
       try {
+        const cleaner = window.cleanTrackTitle || (x => x);
+        const title = cleaner(song.t || song.rawTitle || 'Peak Music Track', song.a);
+        const artist = song.a || 'Peak Music Vault';
         navigator.mediaSession.metadata = new MediaMetadata({
-          title: song.t || 'Peak Music Track',
-          artist: song.a || 'Peak Music Vault',
+          title: title,
+          artist: artist,
           album: 'Peak Media Soundstage',
           artwork: [
+            { src: `https://i.ytimg.com/vi/${song.id}/default.jpg`, sizes: '120x90', type: 'image/jpeg' },
             { src: `https://i.ytimg.com/vi/${song.id}/mqdefault.jpg`, sizes: '320x180', type: 'image/jpeg' },
-            { src: `https://i.ytimg.com/vi/${song.id}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpeg' }
+            { src: `https://i.ytimg.com/vi/${song.id}/hqdefault.jpg`, sizes: '480x360', type: 'image/jpeg' },
+            { src: `https://i.ytimg.com/vi/${song.id}/maxresdefault.jpg`, sizes: '1280x720', type: 'image/jpeg' }
           ]
         });
         navigator.mediaSession.playbackState = isPlayingMusic ? 'playing' : 'paused';
+        syncMediaSessionPosition();
       } catch (err) {
         console.debug('MediaSession update error:', err);
       }
@@ -2522,16 +2703,45 @@
       window.playSongById(lastId || (musicCatalog[0] && musicCatalog[0].id));
     };
 
-    window.musicTogglePlay = function() {
-      if (!ytPlayer) { window.musicResumeLast(); return; }
-      if (isPlayingMusic && ytPlayer.pauseVideo) {
-        ytPlayer.pauseVideo();
-        isPlayingMusic = false;
-      } else if (ytPlayer.playVideo) {
-        ytPlayer.playVideo();
-        isPlayingMusic = true;
+    window.musicPause = function() {
+      userExplicitlyPaused = true;
+      stopBgAudioAnchor();
+      releaseWakeLock();
+      if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+      isPlayingMusic = false;
+      if ('mediaSession' in navigator) {
+        try { navigator.mediaSession.playbackState = 'paused'; } catch (_) {}
       }
       updateMiniPlayerUI();
+      if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
+    };
+
+    window.musicPlay = function() {
+      userExplicitlyPaused = false;
+      startBgAudioAnchor();
+      requestWakeLock();
+      if (ytPlayer && ytPlayer.playVideo && ytReady) {
+        ytPlayer.playVideo();
+        isPlayingMusic = true;
+        const mp = $('musicMiniPlayer');
+        if (mp) mp.classList.remove('hidden');
+        updateMiniPlayerUI();
+      } else {
+        window.musicResumeLast();
+      }
+      if ('mediaSession' in navigator) {
+        try { navigator.mediaSession.playbackState = 'playing'; } catch (_) {}
+      }
+      if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
+    };
+
+    window.musicTogglePlay = function() {
+      if (!ytPlayer) { window.musicResumeLast(); return; }
+      if (isPlayingMusic) {
+        window.musicPause();
+      } else {
+        window.musicPlay();
+      }
     };
 
     window.musicNext = function() {
@@ -2578,17 +2788,8 @@
       if (isPlayingMusic) {
         window.musicPause();
       } else {
-        if (ytPlayer && typeof ytPlayer.playVideo === 'function' && ytReady) {
-          ytPlayer.playVideo();
-          isPlayingMusic = true;
-          const mp = $('musicMiniPlayer');
-          if (mp) mp.classList.remove('hidden');
-          updateMiniPlayerUI();
-        } else {
-          startTrackFromQueue();
-        }
+        window.musicPlay();
       }
-      if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
     };
 
     window.musicToggleShuffle = function() {
@@ -2652,6 +2853,11 @@
               if ($('mpCurrentTimeDesk')) $('mpCurrentTimeDesk').textContent = curStr;
               if ($('mpTotalTime')) $('mpTotalTime').textContent = durStr;
               if ($('mpTotalTimeDesk')) $('mpTotalTimeDesk').textContent = durStr;
+            }
+            const now = Date.now();
+            if (now - lastMediaPositionSync > 1000) {
+              lastMediaPositionSync = now;
+              syncMediaSessionPosition();
             }
           } catch (_) {}
         }
@@ -2741,8 +2947,18 @@
     window.toggleMusicVideoDock = function(force) {
       const d = $('musicVideoDock');
       if (!d) return;
-      if (typeof force === 'boolean') d.classList.toggle('hidden', !force);
-      else d.classList.toggle('hidden');
+      const isOffscreen = d.classList.contains('dock-offscreen') || d.classList.contains('hidden');
+      const shouldShow = (typeof force === 'boolean') ? force : isOffscreen;
+      d.classList.remove('hidden');
+      d.classList.toggle('dock-offscreen', !shouldShow);
+      const btn = $('mpVideoBtn');
+      if (btn) {
+        if (shouldShow) {
+          btn.classList.add('bg-brand-gold/25', 'border', 'border-brand-gold/60');
+        } else {
+          btn.classList.remove('bg-brand-gold/25', 'border', 'border-brand-gold/60');
+        }
+      }
     };
 
     window.cycleVideoDockSize = function() {
@@ -2861,6 +3077,9 @@
     };
 
     window.closeMusicMiniPlayer = function() {
+      userExplicitlyPaused = true;
+      stopBgAudioAnchor();
+      releaseWakeLock();
       if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
       isPlayingMusic = false;
       if ('mediaSession' in navigator) {
@@ -2868,8 +3087,9 @@
       }
       if ($('musicMiniPlayer')) $('musicMiniPlayer').classList.add('hidden');
       if ($('orbitingMoonPlayer')) $('orbitingMoonPlayer').classList.add('hidden');
-      if ($('musicVideoDock')) $('musicVideoDock').classList.add('hidden');
+      if ($('musicVideoDock')) $('musicVideoDock').classList.add('dock-offscreen');
       if ($('musicQueueDrawer')) $('musicQueueDrawer').classList.add('hidden');
+      if (window.updateHomeVinylPlayer) window.updateHomeVinylPlayer();
     };
 
     // Easy Queue Management: Move Up/Down, Remove, Shuffle
