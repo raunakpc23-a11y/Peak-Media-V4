@@ -2782,60 +2782,49 @@
 
     <div class="relative z-10 w-full max-w-4xl rounded-3xl bg-[#0d1018]/95 border border-white/15 shadow-[0_30px_90px_rgba(0,0,0,0.85)] overflow-hidden my-auto backdrop-blur-2xl">
       <!-- Editorial Header -->
-      <div class="px-6 sm:px-8 pt-5 pb-4 border-b border-white/[0.08] flex flex-col gap-3">
-        <div class="flex items-center justify-between gap-3 relative">
-          <div class="flex items-center gap-2.5 shrink-0">
-            <div class="h-8 px-2 py-0.5 rounded-lg bg-[#050811] border border-sky-400/35 flex items-center justify-center shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="25 25 770 395" class="h-5 w-auto" fill="none">
-                <g stroke="#FFFFFF" stroke-width="8" stroke-linejoin="miter" fill="#090D16">
-                  <path d="M115 124 H195 C224 124 242 140 242 166 C242 192 224 208 195 208 H152 V254 H115 Z M152 152 V180 H190 C202 180 208 175 208 166 C208 157 202 152 190 152 Z" fill-rule="evenodd"/>
-                  <path d="M266 124 H368 V152 H303 V175 H356 V202 H303 V226 H368 V254 H266 Z"/>
-                  <path d="M442 124 H476 L532 254 H493 L481 223 H436 L424 254 H385 Z M446 195 H471 L458.5 160 Z" fill-rule="evenodd"/>
-                  <path d="M550 124 H587 V180 L646 124 H692 L626 185 L696 254 H648 L587 193 V254 H550 Z"/>
-                  <path d="M115 280 H156 L184 348 L212 280 H253 V406 H219 V334 L192 396 H176 L149 334 V406 H115 Z"/>
-                  <path d="M274 280 H372 V308 H310 V331 H360 V357 H310 V378 H372 V406 H274 Z"/>
-                  <path d="M392 280 H448 C484 280 506 303 506 343 C506 383 484 406 448 406 H392 Z M428 308 V378 H446 C463 378 472 365 472 343 C472 321 463 308 446 308 Z" fill-rule="evenodd"/>
-                  <path d="M526 280 H568 V406 H526 Z"/>
-                  <path d="M636 280 H670 L724 406 H686 L674 376 H630 L618 406 H580 Z M639 348 H664 L651.5 314 Z" fill-rule="evenodd"/>
-                </g>
-                <g stroke="url(#hdrGoldGrad)" stroke-linecap="round" stroke-linejoin="round" fill="none">
-                  <path d="M34 372 L134 332 L228 286 L326 226 L402 162 L452 94 L484 38" stroke-width="11"/>
-                  <path d="M484 38 L522 106 L568 182 L628 258 L698 328 L784 376" stroke-width="11"/>
-                </g>
-              </svg>
-            </div>
-            <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-md bg-white/[0.06] text-brand-gold border border-white/10 shrink-0 hidden" id="obStepKicker"></span>
+      <div class="px-4 sm:px-8 pt-4 sm:pt-5 pb-3 sm:pb-4 border-b border-white/[0.08] flex flex-col gap-3">
+        <div class="flex items-center justify-between gap-3 relative min-h-[36px]">
+          <!-- Left: Step Indicator Badge (Replaces Peak Media Logo universally) -->
+          <div class="flex items-center z-10 shrink-0">
+            <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-md bg-white/[0.08] text-brand-gold border border-brand-gold/30 shrink-0 shadow-sm" id="obStepKicker">Step 1 of 9</span>
           </div>
-          <div class="flex-1 text-center">
+          <!-- Center: Mathematically Centered Step Title (Universal & Mobile) -->
+          <div class="absolute inset-x-0 flex items-center justify-center pointer-events-none">
             <h3 class="text-sm sm:text-base font-display font-extrabold tracking-widest text-white uppercase text-center" id="obStepTitleTop">Profile</h3>
           </div>
-          <button id="obSkipBtn" onclick="skipOnboardingWizard()" class="hidden text-xs text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors shrink-0">
-            Close
-          </button>
+          <!-- Right: Close Button -->
+          <div class="flex items-center justify-end z-10 shrink-0 min-w-[50px]">
+            <button id="obSkipBtn" onclick="skipOnboardingWizard()" class="hidden text-xs text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors shrink-0">
+              Close
+            </button>
+          </div>
         </div>
         <!-- Subtle Thin Progress Line -->
         <div class="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
-          <div id="obProgressBar" class="h-full bg-brand-gold transition-all duration-500 rounded-full" style="width: 12.5%"></div>
+          <div id="obProgressBar" class="h-full bg-brand-gold transition-all duration-500 rounded-full" style="width: 11.1%"></div>
         </div>
       </div>
 
       <!-- Dynamic Step Content Body -->
-      <div id="obStepViewport" class="p-6 sm:p-8 min-h-[410px] max-h-[68vh] overflow-y-auto flex flex-col justify-between">
+      <div id="obStepViewport" class="p-4 sm:p-8 min-h-[380px] sm:min-h-[410px] max-h-[72vh] overflow-y-auto flex flex-col justify-between">
         <!-- Populated dynamically by onboarding JS -->
       </div>
 
       <!-- Live Taste Tray + Footer Navigation Controls -->
-      <div class="px-6 sm:px-8 py-4 border-t border-white/[0.08] bg-black/40 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
-          <button id="obBackBtn" onclick="obPrevStep()" class="px-5 py-2.5 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95 shadow-sm" title="Back" aria-label="Back">
-            <i class="fa-solid fa-arrow-left text-xs"></i>
-            <span>Back</span>
-          </button>
-          <div id="obLiveTray" class="flex-1 min-w-0 flex items-center gap-1 sm:gap-1.5 text-[11px] text-gray-300 overflow-x-auto scrollbar-none flex-nowrap py-1 px-1"></div>
-        </div>
-        <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+      <div class="px-4 sm:px-8 py-3.5 sm:py-4 border-t border-white/[0.08] bg-black/40 flex items-center justify-between gap-3 w-full">
+        <!-- Lower Left: Back Button -->
+        <button id="obBackBtn" onclick="obPrevStep()" class="px-4 sm:px-5 py-2.5 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95 shadow-sm shrink-0" title="Back" aria-label="Back">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          <span>Back</span>
+        </button>
+
+        <!-- Center: Live Taste Tray (Desktop Only, completely removed on mobile per instructions) -->
+        <div id="obLiveTray" class="hidden sm:flex flex-1 min-w-0 items-center justify-center gap-1 sm:gap-1.5 text-[11px] text-gray-300 overflow-x-auto scrollbar-none flex-nowrap py-1 px-1"></div>
+
+        <!-- Lower Right: Continue Button (Pinned right on the same line) -->
+        <div class="flex items-center gap-4 shrink-0 ml-auto sm:ml-0">
           <div id="obStepDots" class="hidden"></div>
-          <button id="obNextBtn" onclick="obNextStep()" class="px-6 py-2.5 rounded-xl bg-white hover:bg-brand-gold text-black font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
+          <button id="obNextBtn" onclick="obNextStep()" class="px-5 sm:px-6 py-2.5 rounded-xl bg-white hover:bg-brand-gold text-black font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all active:scale-95">
             <span id="obNextBtnLabel">Continue</span> <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
         </div>

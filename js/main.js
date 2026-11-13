@@ -141,24 +141,36 @@
     };
 
     const defaultProfile = {
-      username: 'CinePhile',
+      username: '',
       avatar: 'cinephile',
-      favoriteGenre: 'Sci-Fi',
-      secondaryGenres: ['Thriller', 'Drama'],
-      language: 'All',
-      languages: ['English', 'Hindi'],
+      favoriteGenre: '',
+      secondaryGenres: [],
+      genres: [],
+      language: '',
+      languages: [],
       favMoviesSeed: [],
       favShowsSeed: [],
-      musicMoods: ['Romantic & Melody', 'Pop & Hits'],
-      favArtists: ['Arijit Singh', 'The Weeknd']
+      musicMoods: [],
+      favArtists: []
     };
     let obProfile = Object.assign({}, defaultProfile, getLS('cs_profile_v1', {}));
-    if (!obProfile.username || obProfile.username === 'Supabase Tester' || obProfile.username === 'Guest' || obProfile.username.toLowerCase() === 'cinephile') {
-      obProfile.username = 'CinePhile';
-      saveLS('cs_profile_v1', obProfile);
-    }
-    if (!Array.isArray(obProfile.languages) || !obProfile.languages.length) {
-      obProfile.languages = obProfile.language === 'English' ? ['English'] : obProfile.language === 'Hindi' ? ['Hindi'] : ['English', 'Hindi'];
+    if (getLS('cs_onboarded_v1', null)) {
+      if (!obProfile.username || obProfile.username === 'Supabase Tester' || obProfile.username === 'Guest') {
+        obProfile.username = 'CinePhile';
+      }
+      if (!Array.isArray(obProfile.languages) || !obProfile.languages.length) {
+        obProfile.languages = ['English', 'Hindi'];
+      }
+    } else {
+      // For initial setup, start with zero/empty selections per instructions
+      const saved = getLS('cs_profile_v1', null);
+      obProfile.username = (saved && saved.username) || '';
+      obProfile.languages = (saved && Array.isArray(saved.languages)) ? saved.languages : [];
+      obProfile.genres = (saved && Array.isArray(saved.genres)) ? saved.genres : [];
+      obProfile.favoriteGenre = (saved && saved.favoriteGenre) || '';
+      obProfile.secondaryGenres = (saved && Array.isArray(saved.secondaryGenres)) ? saved.secondaryGenres : [];
+      obProfile.favMoviesSeed = (saved && Array.isArray(saved.favMoviesSeed)) ? saved.favMoviesSeed : [];
+      obProfile.favShowsSeed = (saved && Array.isArray(saved.favShowsSeed)) ? saved.favShowsSeed : [];
     }
     if (LEGACY_EMOJI_MAP[obProfile.avatar]) obProfile.avatar = LEGACY_EMOJI_MAP[obProfile.avatar];
     if (!AVATAR_META[obProfile.avatar]) obProfile.avatar = 'cinephile';
@@ -342,7 +354,7 @@
         }
       }
 
-      // Minimal headers without step numbers, centralized
+      // Minimal headers with universal step tracker, centralized
       const titles = [
         'Profile',
         'Languages',
@@ -350,15 +362,15 @@
         'Films',
         'Series',
         'Deciders',
-        'Soundtrack Lounge',
+        'Sound Step',
         'Theme',
         'Account & Sync'
       ];
 
       const kicker = $('obStepKicker');
       if (kicker) {
-        kicker.textContent = '';
-        kicker.classList.add('hidden');
+        kicker.textContent = `Step ${obStep} of ${TOTAL_OB_STEPS}`;
+        kicker.classList.remove('hidden');
       }
       $('obStepTitleTop').textContent = titles[obStep - 1] || 'Theme';
       $('obProgressBar').style.width = `${Math.round((obStep / TOTAL_OB_STEPS) * 100)}%`;
@@ -366,11 +378,25 @@
       const backBtn = $('obBackBtn');
       if (backBtn) {
         if (obStep === 1) {
-          backBtn.classList.add('hidden');
-          backBtn.style.visibility = 'hidden';
-        } else {
+          backBtn.classList.add('invisible');
           backBtn.classList.remove('hidden');
+          backBtn.style.visibility = 'hidden';
+          backBtn.disabled = true;
+        } else {
+          backBtn.classList.remove('invisible', 'hidden');
           backBtn.style.visibility = 'visible';
+          backBtn.disabled = false;
+        }
+      }
+
+      const nextBtn = $('obNextBtn');
+      if (nextBtn) {
+        if (obStep === 3 && (!obProfile.genres || obProfile.genres.length === 0)) {
+          nextBtn.classList.add('opacity-40', 'cursor-not-allowed');
+          nextBtn.setAttribute('aria-disabled', 'true');
+        } else {
+          nextBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+          nextBtn.removeAttribute('aria-disabled');
         }
       }
 
@@ -401,22 +427,22 @@
       };
 
       // -------------------------------------------------------------
-      // STAGE 1: Profile (Display Name & Avatar) - Centralized
+      // STAGE 1: Profile (Display Name & Avatar) - Centralized on Mobile & Desktop
       // -------------------------------------------------------------
       if (obStep === 1) {
         vp.innerHTML = `
-          <div class="ob-step-enter max-w-2xl mx-auto w-full space-y-6 py-2 text-center">
-            <div class="space-y-2 max-w-md mx-auto">
+          <div class="ob-step-enter max-w-2xl mx-auto w-full space-y-5 sm:space-y-6 py-2 text-center flex flex-col items-center justify-center my-auto">
+            <div class="space-y-2 max-w-md w-full mx-auto text-center">
               <label for="obUsernameInput" class="block text-xs sm:text-sm font-bold uppercase tracking-wider text-brand-gold text-center">Display Name</label>
-              <input id="obUsernameInput" type="text" value="${esc(obProfile.username || 'Cinephile')}" maxlength="24" class="w-full px-4 py-3 rounded-2xl bg-black/60 border border-white/15 text-white text-base font-bold focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all text-center placeholder-slate-500 shadow-inner" placeholder="Enter your display name">
+              <input id="obUsernameInput" type="text" value="${esc(obProfile.username || '')}" maxlength="24" class="w-full px-4 py-3 rounded-2xl bg-black/60 border border-white/15 text-white text-base font-bold focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all text-center placeholder-slate-500 shadow-inner" placeholder="Enter your display name">
             </div>
-            <div class="space-y-3">
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+            <div class="space-y-3 w-full">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-center sm:text-left justify-center">
                 ${Object.keys(AVATAR_META).map(k => {
                   const m = AVATAR_META[k];
                   const sel = obProfile.avatar === k;
-                  return `<button type="button" data-obavatar="${k}" class="p-3.5 rounded-2xl border flex items-center gap-3 transition-all ${sel ? 'border-brand-gold bg-brand-gold/15 shadow-lg' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
-                    <span class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">${m.svg}</span>
+                  return `<button type="button" data-obavatar="${k}" class="p-2.5 sm:p-3.5 rounded-2xl border flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-2 sm:gap-3 transition-all text-center sm:text-left ${sel ? 'border-brand-gold bg-brand-gold/15 shadow-lg' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
+                    <span class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">${m.svg}</span>
                     <div class="min-w-0">
                       <div class="text-xs font-bold text-white truncate">${esc(m.name)}</div>
                       <div class="text-[10px] text-slate-400 truncate">${esc(m.sub)}</div>
@@ -463,12 +489,12 @@
         ];
 
         const allAvailable = [...topLangs, ...otherLangs];
-        const userLangs = new Set(obProfile.languages || ['English', 'Hindi', 'Spanish', 'Tamil']);
-        const isAllActive = allAvailable.every(l => userLangs.has(l.name));
+        const userLangs = new Set(obProfile.languages || []);
+        const isAllActive = allAvailable.length > 0 && allAvailable.every(l => userLangs.has(l.name));
         const othersSelectedCount = otherLangs.filter(l => userLangs.has(l.name)).length;
 
         vp.innerHTML = `
-          <div class="ob-step-enter max-w-3xl mx-auto w-full space-y-6 py-2 text-center">
+          <div class="ob-step-enter max-w-3xl mx-auto w-full space-y-5 sm:space-y-6 py-2 text-center flex flex-col items-center justify-center my-auto">
             <!-- Master Filters: All vs Custom -->
             <div class="flex items-center justify-center gap-3">
               <button type="button" id="obLangAllToggle" class="px-5 py-2.5 rounded-2xl border text-xs sm:text-sm font-bold transition-all ${isAllActive ? 'border-brand-gold bg-brand-gold text-black shadow-lg shadow-amber-500/20' : 'border-white/10 bg-white/5 text-slate-300 hover:text-white'}">
@@ -480,7 +506,7 @@
             </div>
 
             <!-- Top 4 Primary Language Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left w-full">
               ${topLangs.map(l => {
                 const isSel = userLangs.has(l.name);
                 return `<button type="button" data-oblang="${l.name}" class="p-4 rounded-2xl border flex items-center justify-between gap-3 transition-all ${isSel ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10' : 'border-white/10 bg-black/45 hover:bg-white/5'}">
@@ -500,7 +526,7 @@
 
             <!-- Expandable Others Drawer -->
             ${obOthersExpanded ? `
-              <div class="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3 text-left">
+              <div class="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3 text-left w-full">
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[28vh] overflow-y-auto pr-1">
                   ${otherLangs.map(l => {
                     const isSel = userLangs.has(l.name);
@@ -524,11 +550,11 @@
         if (allBtn) {
           allBtn.onclick = () => {
             if (isAllActive) {
-              obProfile.languages = ['English', 'Hindi', 'Spanish', 'Tamil'];
+              obProfile.languages = [];
             } else {
               obProfile.languages = allAvailable.map(l => l.name);
             }
-            obProfile.language = 'All';
+            obProfile.language = obProfile.languages.length === 1 ? obProfile.languages[0] : (obProfile.languages.length ? 'All' : '');
             renderObStep();
           };
         }
@@ -545,19 +571,19 @@
           b.onclick = () => {
             const l = b.dataset.oblang;
             if (userLangs.has(l)) {
-              if (userLangs.size > 1) userLangs.delete(l);
+              userLangs.delete(l);
             } else {
               userLangs.add(l);
             }
             obProfile.languages = Array.from(userLangs);
-            obProfile.language = obProfile.languages.length === 1 ? obProfile.languages[0] : 'All';
+            obProfile.language = obProfile.languages.length === 1 ? obProfile.languages[0] : (obProfile.languages.length ? 'All' : '');
             renderObStep();
           };
         });
       }
 
       // -------------------------------------------------------------
-      // STAGE 3: Genres (Synchronized with internal categoryData - No Slider / Compact Sizing)
+      // STAGE 3: Genres (Zero Initial Selections, Mandatory >=1, Centered & Smooth Without Sliders)
       // -------------------------------------------------------------
       else if (obStep === 3) {
         const catGenres = (window.categoryData ? Object.keys(window.categoryData) : [
@@ -583,38 +609,39 @@
           Musical: { accent: '#14b8a6', icon: 'fa-music' }
         };
 
-        const selGenres = new Set(obProfile.genres || (obProfile.favoriteGenre ? [obProfile.favoriteGenre] : ['Drama', 'Sci-Fi', 'Crime']));
+        const selGenres = new Set(obProfile.genres || []);
 
         vp.innerHTML = `
-          <div class="ob-step-enter max-w-4xl mx-auto w-full space-y-3 py-1 text-center">
-            <!-- 15 Genres formatted in 3 rows of 5 with adjusted compact sizes to eliminate slider/scrolling -->
-            <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-2.5 py-1">
+          <div class="ob-step-enter max-w-4xl mx-auto w-full space-y-2 sm:space-y-3 py-1 text-center flex flex-col items-center justify-center my-auto">
+            <!-- 15 Genres formatted in 3 rows of 5 on desktop, and ultra-compact 3 columns on mobile to eliminate all scroll/sliders -->
+            <div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5 sm:gap-2.5 py-1 w-full max-w-3xl mx-auto">
               ${catGenres.map(g => {
                 const isSel = selGenres.has(g);
                 const t = themes[g] || { accent: '#f59e0b', icon: 'fa-film' };
-                return `<button type="button" data-obgenre="${esc(g)}" class="p-2 sm:p-2.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all text-center group ${isSel ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10 scale-[1.02]' : 'border-white/10 bg-black/45 hover:bg-white/5 hover:border-white/20'}">
-                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <i class="fa-solid ${t.icon} text-sm sm:text-base" style="color: ${t.accent}"></i>
+                return `<button type="button" data-obgenre="${esc(g)}" class="p-1.5 sm:p-2.5 rounded-xl border flex flex-col items-center justify-center gap-1 sm:gap-1.5 transition-all text-center group ${isSel ? 'border-brand-gold bg-brand-gold/15 shadow-md shadow-amber-500/10 scale-[1.02]' : 'border-white/10 bg-black/45 hover:bg-white/5 hover:border-white/20'}">
+                  <div class="w-6 h-6 sm:w-9 sm:h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i class="fa-solid ${t.icon} text-xs sm:text-base" style="color: ${t.accent}"></i>
                   </div>
-                  <div class="text-[11px] sm:text-xs font-bold text-white truncate max-w-full">${esc(g)}</div>
-                  <div class="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
+                  <div class="text-[10px] sm:text-xs font-bold text-white truncate max-w-full">${esc(g)}</div>
+                  <div class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center text-[8px] sm:text-[9px] font-black shrink-0 ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
                     ${isSel ? '✓' : '+'}
                   </div>
                 </button>`;
               }).join('')}
             </div>
+            ${selGenres.size === 0 ? `<div class="text-[11px] text-amber-400/90 font-medium pt-0.5"><i class="fa-solid fa-circle-info mr-1"></i>Select at least one genre to continue</div>` : ''}
           </div>`;
 
         vp.querySelectorAll('[data-obgenre]').forEach(b => {
           b.onclick = () => {
             const g = b.dataset.obgenre;
             if (selGenres.has(g)) {
-              if (selGenres.size > 1) selGenres.delete(g);
+              selGenres.delete(g);
             } else {
               selGenres.add(g);
             }
             obProfile.genres = Array.from(selGenres);
-            obProfile.favoriteGenre = obProfile.genres[0] || 'Drama';
+            obProfile.favoriteGenre = obProfile.genres[0] || '';
             obProfile.secondaryGenres = obProfile.genres.slice(1);
             renderObStep();
           };
@@ -763,24 +790,32 @@
               </div>
             </div>`;
         } else if (window.obDeciderDemoMode === 'roulette') {
-          const winner = window.obRouletteDemoWinner || { title: "Interstellar", year: 2014, genre: "Sci-Fi", rating: "8.7", thumb: "https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SX300.jpg" };
+          const ROULETTE_PRESETS = [
+            { title: "The Dark Knight", year: 2008, genre: "Action", rating: "9.0", type: "Film", thumb: "https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg" },
+            { title: "Inception", year: 2010, genre: "Sci-Fi", rating: "8.8", type: "Film", thumb: "https://upload.wikimedia.org/wikipedia/en/2/2e/Inception_%282010%29_theatrical_poster.jpg" },
+            { title: "Breaking Bad", year: 2008, genre: "Crime", rating: "9.5", type: "TV Show", thumb: "https://static.tvmaze.com/uploads/images/original_untouched/501/1253519.jpg" }
+          ];
+          const spinCount = typeof window.obRouletteSpinCount === 'number' ? window.obRouletteSpinCount : 0;
+          const winner = window.obRouletteDemoWinner || ROULETTE_PRESETS[Math.min(spinCount, 2)];
           const isSpinning = !!window.obRouletteIsSpinning;
+          const maxSpinsReached = spinCount >= 2;
           demoHtml = `
             <div class="space-y-3 max-w-md mx-auto">
-              <div class="text-xs text-slate-300 text-center font-medium">Cinema Roulette · Tap spin to randomly flash & land on tonight's film</div>
+              <div class="text-xs text-slate-300 text-center font-medium">Cinema Roulette · Tap spin to randomly flash & land on tonight's pick</div>
               <div class="p-4 rounded-2xl bg-black/60 border border-purple-500/40 shadow-xl flex items-center gap-3.5 text-left">
                 <div class="relative w-16 h-24 sm:w-20 sm:h-28 rounded-xl overflow-hidden bg-black shrink-0 border border-purple-400/50 shadow">
-                  <img src="${winner.thumb}" alt="${winner.title}" class="w-full h-full object-cover ${isSpinning ? 'opacity-40 animate-pulse' : 'opacity-100'}">
+                  <img src="${winner.thumb}" alt="${winner.title}" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg';" class="w-full h-full object-cover ${isSpinning ? 'opacity-40 animate-pulse' : 'opacity-100'}">
                   ${isSpinning ? '<div class="absolute inset-0 flex items-center justify-center"><i class="fa-solid fa-dice text-2xl text-purple-300 animate-spin"></i></div>' : ''}
                 </div>
                 <div class="flex-1 min-w-0 space-y-1">
                   <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${isSpinning ? 'bg-purple-500/30 text-purple-300 animate-pulse' : 'bg-brand-gold text-black'}">
-                    ${isSpinning ? 'Spinning...' : 'Roulette Pick'}
+                    ${isSpinning ? 'Spinning...' : `${winner.type || 'Pick'}`}
                   </span>
                   <h4 class="text-sm sm:text-base font-bold text-white truncate">${winner.title}</h4>
                   <div class="text-xs text-slate-400">${winner.genre} · ${winner.year} · ★ ${winner.rating}</div>
-                  <button type="button" onclick="spinObRouletteDemo()" ${isSpinning ? 'disabled' : ''} class="mt-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-extrabold text-xs shadow flex items-center gap-1.5 transition-all active:scale-95">
-                    <i class="fa-solid fa-dice"></i> ${isSpinning ? 'Rolling...' : 'Spin Roulette'}
+                  <button type="button" onclick="spinObRouletteDemo()" ${isSpinning || maxSpinsReached ? 'disabled' : ''} class="mt-2 px-3.5 py-1.5 rounded-xl ${maxSpinsReached ? 'bg-purple-950/60 border border-purple-500/20 text-purple-300/40 cursor-not-allowed' : 'bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-extrabold active:scale-95 shadow'} text-xs flex items-center gap-1.5 transition-all">
+                    <i class="fa-solid ${maxSpinsReached ? 'fa-lock' : 'fa-dice'}"></i>
+                    ${isSpinning ? 'Rolling...' : (maxSpinsReached ? 'Max 2 Spins Used' : (spinCount === 0 ? 'Spin Roulette (2 left)' : 'Spin Roulette (1 left)'))}
                   </button>
                 </div>
               </div>
@@ -898,9 +933,18 @@
           };
         });
 
-        // Roulette Interactive Demo Spinner
+        // Roulette Interactive Demo Spinner (Rigged Sequence, Max 2 Spins, Preloaded Thumbnails)
+        const ROULETTE_PRESETS = [
+          { title: "The Dark Knight", year: 2008, genre: "Action", rating: "9.0", type: "Film", thumb: "https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg" },
+          { title: "Inception", year: 2010, genre: "Sci-Fi", rating: "8.8", type: "Film", thumb: "https://upload.wikimedia.org/wikipedia/en/2/2e/Inception_%282010%29_theatrical_poster.jpg" },
+          { title: "Breaking Bad", year: 2008, genre: "Crime", rating: "9.5", type: "TV Show", thumb: "https://static.tvmaze.com/uploads/images/original_untouched/501/1253519.jpg" }
+        ];
+
         window.spinObRouletteDemo = function() {
           if (window.obRouletteIsSpinning) return;
+          const currentSpins = typeof window.obRouletteSpinCount === 'number' ? window.obRouletteSpinCount : 0;
+          if (currentSpins >= 2) return;
+
           window.obRouletteIsSpinning = true;
           renderObStep();
           try {
@@ -920,43 +964,64 @@
               osc.stop(ctx.currentTime + 0.35);
             }
           } catch (_) {}
-          const pool = [
-            { title: "Interstellar", year: 2014, genre: "Sci-Fi", rating: "8.7", thumb: "https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SX300.jpg" },
-            { title: "The Dark Knight", year: 2008, genre: "Action", rating: "9.0", thumb: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg" },
-            { title: "Spirited Away", year: 2001, genre: "Animation", rating: "8.6", thumb: "https://m.media-amazon.com/images/M/MV5BNTEyNmEwOWUtYzkyOC00ZTQ4LTllZmUtMjk0Y2Y5ZWU3Y2ExXkEyXkFqcGc@._V1_SX300.jpg" },
-            { title: "Dune: Part Two", year: 2024, genre: "Sci-Fi", rating: "8.6", thumb: "https://m.media-amazon.com/images/M/MV5BN2QyZGUgkNjMtODcxMS00NDExLWIwZjQtNmNkYzMyNTQ1NWU3XkEyXkFqcGc@._V1_SX300.jpg" },
-            { title: "Blade Runner 2049", year: 2017, genre: "Sci-Fi", rating: "8.0", thumb: "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_SX300.jpg" }
-          ];
+
           setTimeout(() => {
-            const currentTitle = window.obRouletteDemoWinner ? window.obRouletteDemoWinner.title : '';
-            const remaining = pool.filter(p => p.title !== currentTitle);
-            window.obRouletteDemoWinner = remaining[Math.floor(Math.random() * remaining.length)];
+            window.obRouletteSpinCount = currentSpins + 1;
+            const targetIdx = Math.min(window.obRouletteSpinCount, 2);
+            window.obRouletteDemoWinner = ROULETTE_PRESETS[targetIdx];
             window.obRouletteIsSpinning = false;
             renderObStep();
             showToast(`Roulette landed on ${window.obRouletteDemoWinner.title}!`, "fa-dice", "text-purple-300");
           }, 450);
         };
+
+        window.pulseObVinylDemo = function() {
+          const disc = $('obTurntableDisc');
+          if (disc) {
+            disc.classList.add('scale-105', 'ring-4', 'ring-purple-400/50');
+            setTimeout(() => {
+              if (disc) disc.classList.remove('scale-105', 'ring-4', 'ring-purple-400/50');
+            }, 700);
+          }
+          try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+              const ctx = new AudioCtx();
+              const osc = ctx.createOscillator();
+              const g = ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+              osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.18);
+              g.gain.setValueAtTime(0.08, ctx.currentTime);
+              g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+              osc.connect(g);
+              g.connect(ctx.destination);
+              osc.start();
+              osc.stop(ctx.currentTime + 0.25);
+            }
+          } catch (_) {}
+        };
       }
 
       // -------------------------------------------------------------
-      // STAGE 7: Music Lounge (Vinyl Turntable + Language Toggle)
+      // STAGE 7: Sound Step (Vinyl Turntable + Language Toggle - Decoupled from Full Music Lounge)
       // -------------------------------------------------------------
       else if (obStep === 7) {
         if (!obProfile.musicLang) obProfile.musicLang = 'all';
 
         vp.innerHTML = `
-          <div class="ob-step-enter max-w-xl mx-auto w-full space-y-6 py-4 flex flex-col items-center justify-center text-center">
-            <!-- Exact Turntable Visualizer from Music section with Articulated Tone Arm & Purple Neon Badge -->
-            <div class="relative shrink-0 cursor-pointer flex flex-col items-center justify-center p-1" onclick="if(window.openMusicFromVinyl){window.openMusicFromVinyl();}" title="Click to open Music Lounge">
+          <div class="ob-step-enter max-w-xl mx-auto w-full space-y-5 sm:space-y-6 py-2 sm:py-4 flex flex-col items-center justify-center my-auto text-center">
+            <!-- Exact Turntable Visualizer with Articulated Tone Arm & Purple Neon Badge - Preview only, doesn't leave setup -->
+            <div class="relative shrink-0 cursor-pointer flex flex-col items-center justify-center p-1" onclick="window.pulseObVinylDemo()" title="Click to test sound effect">
               <!-- Animated Ripple effect from click cue -->
               <div class="absolute inset-1 rounded-full border border-purple-400/40 vinyl-click-ripple pointer-events-none"></div>
 
-              <!-- Turntable Vinyl Disc matching #homeVinylShowcase (Prominent & Large) -->
-              <div id="obTurntableDisc" class="vinyl-record-disc m-hover-scale w-40 h-40 sm:w-48 sm:h-48 rounded-full relative flex items-center justify-center shadow-2xl transition-transform" style="animation-duration: 4s;">
+              <!-- Turntable Vinyl Disc matching #homeVinylShowcase -->
+              <div id="obTurntableDisc" class="vinyl-record-disc m-hover-scale w-36 h-36 sm:w-48 sm:h-48 rounded-full relative flex items-center justify-center shadow-2xl transition-transform" style="animation-duration: 4s;">
                 <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
                 <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
-                <div class="vinyl-center-album absolute w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-purple-400/80 flex items-center justify-center shadow-inner overflow-hidden">
-                  <i class="fa-solid fa-record-vinyl text-purple-300 text-xl sm:text-2xl"></i>
+                <div class="vinyl-center-album absolute w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-purple-400/80 flex items-center justify-center shadow-inner overflow-hidden">
+                  <i class="fa-solid fa-record-vinyl text-purple-300 text-lg sm:text-2xl"></i>
                 </div>
               </div>
 
@@ -967,30 +1032,30 @@
                 <div class="tone-arm-head"></div>
               </div>
 
-              <span class="text-base sm:text-lg font-display font-black tracking-widest text-purple-300 uppercase mt-3 transition-colors">MUSIC</span>
+              <span class="text-sm sm:text-base font-display font-black tracking-widest text-purple-300 uppercase mt-2.5 transition-colors">SOUND</span>
 
-              <!-- Animated Mouse Cursor Clicking Demonstration -->
-              <div class="absolute bottom-6 -right-6 pointer-events-none flex items-center gap-2 animate-mouse-click z-20">
-                <svg class="w-7 h-7 text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] filter" viewBox="0 0 24 24" fill="currentColor">
+              <!-- Interactive Click Hint -->
+              <div class="absolute bottom-5 -right-5 pointer-events-none flex items-center gap-2 animate-mouse-click z-20">
+                <svg class="w-6 h-6 text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] filter" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M4.5 1.5l14 10.7-6.1 1 3.8 7.7-3.1 1.5-3.8-7.8-4.8 4.6z"/>
                 </svg>
-                <span class="px-2.5 py-1 rounded-full bg-black/85 border border-purple-400/40 text-[10px] font-black tracking-wider text-purple-300 uppercase shadow-lg backdrop-blur-sm whitespace-nowrap">
-                  Click to open
+                <span class="px-2 py-0.5 rounded-full bg-black/85 border border-purple-400/40 text-[9px] font-black tracking-wider text-purple-300 uppercase shadow-lg backdrop-blur-sm whitespace-nowrap">
+                  Test Sound
                 </span>
               </div>
             </div>
 
-            <!-- Language Toggle (Replacing Play Sample per user request) -->
-            <div class="space-y-2.5">
+            <!-- Language Toggle (Sound Language per user instruction) -->
+            <div class="space-y-2">
               <div class="text-[11px] font-extrabold uppercase tracking-widest text-purple-300">
-                Soundtrack Language
+                Sound Language
               </div>
-              <div class="inline-flex items-center bg-black/60 p-1.5 rounded-2xl border border-purple-400/30 gap-1.5 shadow-xl" role="group" aria-label="Music Language Switch">
-                <button type="button" data-obmusiclang="all" class="px-5 py-2 rounded-xl text-xs font-bold transition-all ${obProfile.musicLang === 'all' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5'}">All</button>
-                <button type="button" data-obmusiclang="en" class="px-5 py-2 rounded-xl text-xs font-bold transition-all ${obProfile.musicLang === 'en' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5'}">English</button>
-                <button type="button" data-obmusiclang="hi" class="px-5 py-2 rounded-xl text-xs font-bold transition-all ${obProfile.musicLang === 'hi' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5'}">Hindi</button>
+              <div class="inline-flex items-center bg-black/60 p-1.5 rounded-2xl border border-purple-400/30 gap-1.5 shadow-xl" role="group" aria-label="Sound Language Switch">
+                <button type="button" data-obmusiclang="all" class="px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all ${obProfile.musicLang === 'all' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5'}">All</button>
+                <button type="button" data-obmusiclang="en" class="px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all ${obProfile.musicLang === 'en' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5'}">English</button>
+                <button type="button" data-obmusiclang="hi" class="px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all ${obProfile.musicLang === 'hi' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5'}">Hindi</button>
               </div>
-              <p class="text-xs text-slate-400">Sets your default soundtrack and OST curation in the Music Lounge</p>
+              <p class="text-xs text-slate-400">Sets your default sound and music language preferences</p>
             </div>
           </div>`;
 
@@ -1003,7 +1068,7 @@
       }
 
       // -------------------------------------------------------------
-      // STAGE 8: Theme Selection (Style Accents ONLY)
+      // STAGE 8: Theme Selection (Compact Layout Fitting Entirely Without Sliders)
       // -------------------------------------------------------------
       else if (obStep === 8) {
         if (!obProfile.settings) obProfile.settings = {};
@@ -1025,22 +1090,22 @@
         ];
 
         vp.innerHTML = `
-          <div class="ob-step-enter max-w-4xl mx-auto w-full py-2 text-center space-y-3">
-            <!-- Selection of Style Accents Only (12 Options) -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 text-left max-h-[52vh] overflow-y-auto pr-1">
+          <div class="ob-step-enter max-w-4xl mx-auto w-full py-1 text-center space-y-2 sm:space-y-3 flex flex-col items-center justify-center my-auto">
+            <!-- Selection of Style Accents Only (12 Options) - Sized so all 12 fit cleanly without slider -->
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 sm:gap-2.5 text-left w-full max-w-3xl mx-auto py-1">
               ${styleAccents.map(([id, name, color, desc]) => {
                 const isSel = currentTheme === id;
                 return `
-                  <button type="button" data-obtheme="${id}" class="p-3 sm:p-3.5 rounded-2xl border flex flex-col justify-between gap-2.5 transition-all ${isSel ? 'border-brand-gold bg-brand-gold/15 ring-2 ring-brand-gold/40 shadow-xl scale-[1.02]' : 'border-white/10 bg-black/45 hover:bg-white/5 hover:border-white/20'}">
+                  <button type="button" data-obtheme="${id}" class="p-2 sm:p-3 rounded-xl sm:rounded-2xl border flex flex-col justify-between gap-1 sm:gap-2 transition-all ${isSel ? 'border-brand-gold bg-brand-gold/15 ring-2 ring-brand-gold/40 shadow-xl scale-[1.02]' : 'border-white/10 bg-black/45 hover:bg-white/5 hover:border-white/20'}">
                     <div class="flex items-center justify-between">
-                      <div class="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center shadow-lg shrink-0" style="background:${color}"></div>
-                      <div class="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
+                      <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/30 flex items-center justify-center shadow-lg shrink-0" style="background:${color}"></div>
+                      <div class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center text-[8px] sm:text-[9px] font-black ${isSel ? 'bg-brand-gold text-black' : 'bg-white/10 text-slate-400'}">
                         ${isSel ? '✓' : ''}
                       </div>
                     </div>
                     <div class="min-w-0">
-                      <div class="text-xs sm:text-sm font-bold text-white truncate">${name}</div>
-                      <div class="text-[10px] text-slate-400 mt-0.5 truncate">${desc}</div>
+                      <div class="text-[10px] sm:text-xs font-bold text-white truncate">${name}</div>
+                      <div class="text-[9px] text-slate-400 mt-0.5 truncate hidden sm:block">${desc}</div>
                     </div>
                   </button>
                 `;
@@ -1060,11 +1125,20 @@
       }
 
       // -------------------------------------------------------------
-      // STAGE 9: Account & Sync (Custom Client Tokens + Guest Mode)
+      // STAGE 9: Account & Sync (Dynamic Theme Matched Colors, Not Static Blue)
       // -------------------------------------------------------------
       else if (obStep === 9) {
         const activeUser = window._peakAuthSession || null;
         const suggestedName = (obProfile.username && obProfile.username !== 'CinePhile') ? obProfile.username : '';
+
+        // Dynamic theme accent color mapping
+        const activeThemeId = document.body.getAttribute('data-theme') || (obProfile.settings && obProfile.settings.theme) || 'blood';
+        const themeHexMap = {
+          blood: '#ef4444', space: '#38bdf8', clear: '#F5C518', amethyst: '#c084fc',
+          emerald: '#10b981', rose: '#f43f5e', solar: '#f97316', noir: '#94a3b8',
+          neon: '#06b6d4', aurora: '#34d399', golden: '#ff9f1c', velvet: '#a855f7'
+        };
+        const activeThemeHex = themeHexMap[activeThemeId] || '#F5C518';
 
         if (activeUser && activeUser.user_id) {
           vp.innerHTML = `
@@ -1088,7 +1162,7 @@
                     <input id="obPwNew" type="password" autocomplete="new-password" placeholder="New (4+ chars)..." class="px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
                     <input id="obPwConfirm" type="password" autocomplete="new-password" placeholder="Confirm new..." class="px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white focus:outline-none focus:border-brand-gold">
                   </div>
-                  <button type="button" onclick="window.submitPeakPasswordChange('ob')" ${obAuthBusy ? 'disabled' : ''} class="w-full py-2 px-3 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-extrabold text-xs transition-all">
+                  <button type="button" onclick="window.submitPeakPasswordChange('ob')" ${obAuthBusy ? 'disabled' : ''} style="background-color: ${activeThemeHex}; color: #000;" class="w-full py-2 px-3 rounded-xl font-extrabold text-xs transition-all hover:brightness-110">
                     ${obAuthBusy ? 'Updating Password...' : 'Update Password in Supabase'}
                   </button>
                 </div>
@@ -1115,12 +1189,12 @@
               <p class="text-xs text-slate-300">Create a password-protected account, sign in from another device, or use Guest Mode.</p>
             </div>
 
-            <!-- 2 Clean Auth Mode Tabs: Create & Sign In -->
+            <!-- 2 Clean Auth Mode Tabs: Create & Sign In (Styled with Active Theme Color) -->
             <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-black/50 border border-white/10 max-w-xs mx-auto">
-              <button type="button" onclick="window.setObAuthMode('signup')" class="py-2 px-3 rounded-xl text-xs font-bold transition-all ${isSignup ? 'bg-brand-gold text-black shadow' : 'text-slate-300 hover:text-white'}">
+              <button type="button" onclick="window.setObAuthMode('signup')" style="${isSignup ? `background-color: ${activeThemeHex}; color: #000; box-shadow: 0 4px 14px ${activeThemeHex}40;` : ''}" class="py-2 px-3 rounded-xl text-xs font-bold transition-all ${isSignup ? '' : 'text-slate-300 hover:text-white'}">
                 <i class="fa-solid fa-user-plus mr-1.5"></i>Create
               </button>
-              <button type="button" onclick="window.setObAuthMode('login')" class="py-2 px-3 rounded-xl text-xs font-bold transition-all ${isLogin ? 'bg-cyan-400 text-black shadow' : 'text-slate-300 hover:text-white'}">
+              <button type="button" onclick="window.setObAuthMode('login')" style="${isLogin ? `background-color: ${activeThemeHex}; color: #000; box-shadow: 0 4px 14px ${activeThemeHex}40;` : ''}" class="py-2 px-3 rounded-xl text-xs font-bold transition-all ${isLogin ? '' : 'text-slate-300 hover:text-white'}">
                 <i class="fa-solid fa-key mr-1.5"></i>Sign In
               </button>
             </div>
@@ -1140,7 +1214,7 @@
                   <button type="button" onclick="window.toggleObAuthPwVis()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs" title="Show/Hide Password"><i class="fa-solid fa-eye"></i></button>
                 </div>
               </div>
-              <button type="button" id="obAuthSubmitBtn" onclick="window.submitObCustomAuth(false)" ${obAuthBusy ? 'disabled' : ''} class="w-full py-2.5 px-4 rounded-xl ${isSignup ? 'bg-brand-gold hover:bg-yellow-400 text-black' : 'bg-cyan-400 hover:bg-cyan-300 text-black'} font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95">
+              <button type="button" id="obAuthSubmitBtn" onclick="window.submitObCustomAuth(false)" ${obAuthBusy ? 'disabled' : ''} style="background-color: ${activeThemeHex}; color: #000; box-shadow: 0 6px 20px ${activeThemeHex}40;" class="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 hover:brightness-110">
                 <i class="fa-solid ${isSignup ? 'fa-shield-halved' : 'fa-right-to-bracket'}"></i>
                 <span>${obAuthBusy ? 'Verifying with Supabase...' : (isSignup ? 'Create Account & Sync Token' : 'Sign In & Restore Library')}</span>
               </button>
@@ -1601,6 +1675,18 @@
         obAudioPreviewPlaying = false;
         obAuthError = '';
         obAuthSuccess = '';
+        window.obRouletteSpinCount = 0;
+        window.obRouletteDemoWinner = null;
+        if (!getLS('cs_onboarded_v1', null)) {
+          obProfile.username = '';
+          obProfile.languages = [];
+          obProfile.language = '';
+          obProfile.genres = [];
+          obProfile.favoriteGenre = '';
+          obProfile.secondaryGenres = [];
+          obProfile.favMoviesSeed = [];
+          obProfile.favShowsSeed = [];
+        }
       }
       const ov = $('onboardingOverlay');
       ov.classList.remove('hidden');
@@ -1637,6 +1723,12 @@
       if (obStep === 1) {
         const inp = $('obUsernameInput');
         if (inp && inp.value.trim()) obProfile.username = inp.value.trim();
+      }
+      if (obStep === 3) {
+        if (!obProfile.genres || obProfile.genres.length === 0) {
+          if (window.showToast) window.showToast('Please select at least one genre to continue', 'fa-film', 'text-amber-400');
+          return;
+        }
       }
       if (obPreviewAudioEl) {
         obPreviewAudioEl.pause();
