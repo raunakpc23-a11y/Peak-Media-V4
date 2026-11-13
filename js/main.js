@@ -2103,6 +2103,52 @@
     let wakeLockSentinel = null;
     let userExplicitlyPaused = false;
     let lastMediaPositionSync = 0;
+    let bgAudioCtx = null;
+
+    function enableAudioKeepAlive() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!bgAudioCtx) {
+          bgAudioCtx = new AudioCtx();
+          const buffer = bgAudioCtx.createBuffer(1, bgAudioCtx.sampleRate * 2, bgAudioCtx.sampleRate);
+          const source = bgAudioCtx.createBufferSource();
+          source.buffer = buffer;
+          source.loop = true;
+          const gain = bgAudioCtx.createGain();
+          gain.gain.value = 0.00001;
+          source.connect(gain);
+          gain.connect(bgAudioCtx.destination);
+          source.start(0);
+        } else if (bgAudioCtx.state === 'suspended') {
+          bgAudioCtx.resume();
+        }
+      } catch (_) {}
+    }
+
+    function disableAudioKeepAlive() {
+      if (bgAudioCtx && bgAudioCtx.state === 'running') {
+        try { bgAudioCtx.suspend(); } catch (_) {}
+      }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (isPlayingMusic && !userExplicitlyPaused && !musicPlayerDismissed) {
+          enableAudioKeepAlive();
+          if ('mediaSession' in navigator) {
+            try { navigator.mediaSession.playbackState = 'playing'; } catch (_) {}
+          }
+          if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+            try { ytPlayer.playVideo(); } catch (_) {}
+          }
+        }
+      } else {
+        if (isPlayingMusic && !userExplicitlyPaused && !musicPlayerDismissed) {
+          requestWakeLock();
+        }
+      }
+    });
 
     async function requestWakeLock() {
       if ('wakeLock' in navigator && !wakeLockSentinel && !document.hidden) {
@@ -2222,10 +2268,20 @@
                 if (userExplicitlyPaused) {
                   isPlayingMusic = false;
                   releaseWakeLock();
+                  disableAudioKeepAlive();
                   if ('mediaSession' in navigator && !musicPlayerDismissed) {
                     try { navigator.mediaSession.playbackState = 'paused'; } catch (_) {}
                   }
                   if (!musicPlayerDismissed) updateMiniPlayerUI();
+                } else if (document.hidden) {
+                  console.log('[PeakMusic] Background auto-pause detected. Resuming playback and maintaining audio focus.');
+                  enableAudioKeepAlive();
+                  if ('mediaSession' in navigator && !musicPlayerDismissed) {
+                    try { navigator.mediaSession.playbackState = 'playing'; } catch (_) {}
+                  }
+                  try {
+                    if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
+                  } catch (_) {}
                 } else {
                   console.log('[PeakMusic] Lock screen / background pause detected. Preserving MediaSession.');
                   if ('mediaSession' in navigator && !musicPlayerDismissed) {
@@ -2266,6 +2322,7 @@
       saveLS('cs_last_song', s.id);
       userExplicitlyPaused = false;
       requestWakeLock();
+      enableAudioKeepAlive();
       $('musicMiniPlayer').classList.remove('hidden');
       isPlayingMusic = true;
       updateMiniPlayerUI();
@@ -2561,6 +2618,7 @@
       musicPlayerDismissed = false;
       userExplicitlyPaused = false;
       requestWakeLock();
+      enableAudioKeepAlive();
       if (ytPlayer && ytPlayer.playVideo && ytReady) {
         ytPlayer.playVideo();
         isPlayingMusic = true;
@@ -2923,6 +2981,7 @@
       userExplicitlyPaused = true;
       ytPendingVid = null;
       releaseWakeLock();
+      disableAudioKeepAlive();
       if (ytPlayer) {
         try { if (typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo(); } catch (e) {}
         try { if (typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo(); } catch (e) {}
