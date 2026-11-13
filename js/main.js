@@ -2175,55 +2175,11 @@
     });
 
     // ---------------------------------------------------------
-    // BACKGROUND AUDIO ANCHOR & WAKELOCK (MOBILE CONTINUOUS PLAYBACK)
+    // WAKELOCK & MOBILE MEDIA SESSION SYNC
     // ---------------------------------------------------------
-    let bgAudioAnchor = null;
     let wakeLockSentinel = null;
     let userExplicitlyPaused = false;
     let lastMediaPositionSync = 0;
-
-    function ensureBgAudioAnchor() {
-      if (!bgAudioAnchor) {
-        bgAudioAnchor = document.getElementById('peakBgAudioAnchor');
-        if (!bgAudioAnchor) {
-          bgAudioAnchor = document.createElement('audio');
-          bgAudioAnchor.id = 'peakBgAudioAnchor';
-          bgAudioAnchor.loop = true;
-          bgAudioAnchor.preload = 'auto';
-          bgAudioAnchor.setAttribute('playsinline', 'true');
-          bgAudioAnchor.setAttribute('webkit-playsinline', 'true');
-          // Lightweight 1-second silent stereo WAV data URI
-          bgAudioAnchor.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-          bgAudioAnchor.volume = 0.05; // Audible-threshold volume so mobile OS maintains active audio session
-          document.body.appendChild(bgAudioAnchor);
-        }
-      }
-      return bgAudioAnchor;
-    }
-
-    function startBgAudioAnchor() {
-      try {
-        const audio = ensureBgAudioAnchor();
-        if (audio && audio.paused) {
-          const playPromise = audio.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(err => {
-              console.debug('[PeakMusic] Audio anchor waiting for user gesture:', err);
-            });
-          }
-        }
-      } catch (err) {
-        console.debug('[PeakMusic] Audio anchor err:', err);
-      }
-    }
-
-    function stopBgAudioAnchor() {
-      try {
-        if (bgAudioAnchor && !bgAudioAnchor.paused) {
-          bgAudioAnchor.pause();
-        }
-      } catch (_) {}
-    }
 
     async function requestWakeLock() {
       if ('wakeLock' in navigator && !wakeLockSentinel && !document.hidden) {
@@ -2251,7 +2207,7 @@
         saveLS('pm_bg_hint_shown', true);
         setTimeout(() => {
           if (typeof window.showToast === 'function') {
-            window.showToast('Background Play Active: Lock phone or switch apps anytime! Control via lock screen 🎧', 'fa-headphones', 'text-brand-gold', 5500);
+            window.showToast('Music ready! Use lock screen or headphone buttons to play & pause anytime 🎧', 'fa-headphones', 'text-brand-gold', 5500);
           }
         }, 1200);
       }
@@ -2271,42 +2227,6 @@
           });
         }
       } catch (_) {}
-    }
-
-    // Mobile Background Audio Keepalive Watcher (Handles tab minimize & screen lock)
-    if (!window._bgMusicVisibilityBound) {
-      window._bgMusicVisibilityBound = true;
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          // Tab or app went to background / screen turned off
-          if (isPlayingMusic && !userExplicitlyPaused) {
-            startBgAudioAnchor();
-            // Counteract aggressive YouTube iframe throttling
-            setTimeout(() => {
-              if (isPlayingMusic && !userExplicitlyPaused && ytPlayer && typeof ytPlayer.playVideo === 'function') {
-                try { ytPlayer.playVideo(); } catch (_) {}
-              }
-            }, 300);
-            setTimeout(() => {
-              if (isPlayingMusic && !userExplicitlyPaused && ytPlayer && typeof ytPlayer.playVideo === 'function') {
-                try { ytPlayer.playVideo(); } catch (_) {}
-              }
-            }, 1000);
-          }
-        } else {
-          // User returned to tab / unlocked phone
-          if (isPlayingMusic && !userExplicitlyPaused) {
-            requestWakeLock();
-            if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
-              const st = ytPlayer.getPlayerState();
-              if (st !== YT.PlayerState.PLAYING && st !== YT.PlayerState.BUFFERING) {
-                try { ytPlayer.playVideo(); } catch (_) {}
-              }
-            }
-            updateMiniPlayerUI();
-          }
-        }
-      });
     }
 
     // Official YouTube IFrame Player Loader (Single Persistent Instance)
@@ -2339,23 +2259,11 @@
             autoplay: 1,
             playsinline: 1,
             rel: 0,
-            modestbranding: 1,
-            enablejsapi: 1,
-            origin: window.location.origin
+            modestbranding: 1
           },
           events: {
-            onReady: (event) => {
+            onReady: () => {
               ytReady = true;
-              try {
-                const iframe = (event.target && typeof event.target.getIframe === 'function')
-                  ? event.target.getIframe()
-                  : document.querySelector('#ytPlayerMount iframe');
-                if (iframe) {
-                  iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-                  iframe.setAttribute('playsinline', '1');
-                  iframe.setAttribute('webkit-playsinline', '1');
-                }
-              } catch (_) {}
               if (ytPendingVid) {
                 ytPlayer.loadVideoById(ytPendingVid);
                 ytPendingVid = null;
@@ -2365,27 +2273,18 @@
               if (e.data === YT.PlayerState.PLAYING) {
                 isPlayingMusic = true;
                 userExplicitlyPaused = false;
-                startBgAudioAnchor();
                 requestWakeLock();
                 updateMiniPlayerUI();
               } else if (e.data === YT.PlayerState.PAUSED) {
-                if (!userExplicitlyPaused) {
-                  // Non-user pause: triggered by phone backgrounding, screen lock, or OS visibility
-                  console.log('[PeakMusic] Background auto-pause detected. Preserving background session.');
-                  isPlayingMusic = true;
-                  startBgAudioAnchor();
-                  if ('mediaSession' in navigator) {
-                    try { navigator.mediaSession.playbackState = 'playing'; } catch (_) {}
-                  }
-                  setTimeout(() => {
-                    if (isPlayingMusic && !userExplicitlyPaused && ytPlayer && ytPlayer.playVideo) {
-                      try { ytPlayer.playVideo(); } catch (_) {}
-                    }
-                  }, 350);
-                } else {
+                if (userExplicitlyPaused) {
                   isPlayingMusic = false;
-                  stopBgAudioAnchor();
                   releaseWakeLock();
+                  if ('mediaSession' in navigator) {
+                    try { navigator.mediaSession.playbackState = 'paused'; } catch (_) {}
+                  }
+                  updateMiniPlayerUI();
+                } else {
+                  console.log('[PeakMusic] Lock screen / background pause detected. Preserving MediaSession.');
                   if ('mediaSession' in navigator) {
                     try { navigator.mediaSession.playbackState = 'paused'; } catch (_) {}
                   }
@@ -2422,7 +2321,6 @@
       if (!s) return;
       saveLS('cs_last_song', s.id);
       userExplicitlyPaused = false;
-      startBgAudioAnchor();
       requestWakeLock();
       $('musicMiniPlayer').classList.remove('hidden');
       isPlayingMusic = true;
@@ -2431,7 +2329,7 @@
       if (window.logUserActivity) {
         window.logUserActivity('song_play', s.id, s.t || s.rawTitle, { artist: s.a });
       }
-      if (ytReady && ytPlayer && ytPlayer.loadVideoById) {
+      if (ytReady && ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
         ytPlayer.loadVideoById(s.id);
       } else {
         ytPendingVid = s.id;
@@ -2705,7 +2603,6 @@
 
     window.musicPause = function() {
       userExplicitlyPaused = true;
-      stopBgAudioAnchor();
       releaseWakeLock();
       if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
       isPlayingMusic = false;
@@ -2718,7 +2615,6 @@
 
     window.musicPlay = function() {
       userExplicitlyPaused = false;
-      startBgAudioAnchor();
       requestWakeLock();
       if (ytPlayer && ytPlayer.playVideo && ytReady) {
         ytPlayer.playVideo();
@@ -3078,7 +2974,6 @@
 
     window.closeMusicMiniPlayer = function() {
       userExplicitlyPaused = true;
-      stopBgAudioAnchor();
       releaseWakeLock();
       if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
       isPlayingMusic = false;

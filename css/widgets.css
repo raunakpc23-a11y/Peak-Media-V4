@@ -181,14 +181,28 @@ input[type="range"]:active::-moz-range-thumb {
 }
 
 #musicVideoDock.dock-offscreen {
-  opacity: 0 !important;
+  position: fixed !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  top: auto !important;
+  left: auto !important;
+  width: 240px !important;
+  height: 135px !important;
+  opacity: 0.001 !important;
   pointer-events: none !important;
-  transform: translate3d(-9999px, -9999px, 0) !important;
-  top: -9999px !important;
-  left: -9999px !important;
-  bottom: auto !important;
-  right: auto !important;
+  z-index: -999 !important;
+  transform: none !important;
   visibility: visible !important;
+}
+
+#musicVideoDock.dock-offscreen #musicVideoDockHeader {
+  display: none !important;
+}
+
+#musicVideoDock.dock-offscreen #dockVideoBody {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 16 / 9 !important;
 }
 
 #musicVideoDock.is-dragging {
