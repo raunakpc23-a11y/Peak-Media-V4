@@ -2,13 +2,26 @@
       --gold: 239 68 68; 
       --gold-hex: #ef4444; 
       --bg: #0c0203; 
-      --bgimg: radial-gradient(ellipse at 50% 0%, rgba(239,68,68,.14), transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(20,5,8,.7), transparent 50%);
+      --bgimg: radial-gradient(circle at 50% -20%, rgba(239,68,68,.30), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(20,5,8,.7), transparent 50%);
       --card-bg: rgba(22, 8, 10, 0.82);
       --card-gradient: linear-gradient(135deg, rgba(30, 8, 10, 0.88) 0%, rgba(14, 4, 6, 0.96) 100%);
       --card-border: rgba(239, 68, 68, 0.25);
       --surface-elevated: rgba(30, 8, 10, 0.75);
       --text-main: #f3f4f6;
       --text-muted: #94a3b8;
+
+      /* Unified Motion Timing Tokens */
+      --dur-instant: 120ms;
+      --dur-quick: 200ms;
+      --dur-normal: 340ms;
+      --dur-slow: 550ms;
+      --dur-ambient: 12s;
+
+      /* Unified Motion Easing Tokens */
+      --ease-ui: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     }
     [data-theme="clear"], [data-palette="clear"]  { 
       --gold: 245 197 24; --gold-hex: #F5C518; --bg: #03050a; --bgimg: none;
@@ -109,17 +122,37 @@
       color: #f3f4f6 !important;
       color-scheme: dark;
       scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     body {
       background-color: var(--bg, #03050a) !important;
-      background-image: var(--bgimg) !important;
-      background-attachment: fixed !important;
-      background-repeat: no-repeat !important;
-      background-size: cover !important;
       color: var(--text-main, #f3f4f6) !important;
       min-height: 100vh;
       overflow-x: hidden;
-      transition: background-color 0.4s ease;
+      transition: background-color var(--dur-normal) var(--ease-ui);
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: var(--bgimg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      pointer-events: none;
+      transform: translateZ(0);
+      transition: opacity var(--dur-normal) ease;
+    }
+    body.theme-transit,
+    body.theme-transit * {
+      transition: background-color var(--dur-normal) var(--ease-ui),
+                  border-color var(--dur-normal) var(--ease-ui),
+                  color var(--dur-normal) var(--ease-ui),
+                  box-shadow var(--dur-normal) var(--ease-ui) !important;
     }
     #fxCanvas {
       position: fixed;
@@ -128,6 +161,7 @@
       height: 100%;
       pointer-events: none;
       z-index: 0;
+      transform: translateZ(0);
     }
     main, footer {
       position: relative;
@@ -148,15 +182,14 @@
       background: var(--gold-hex, #38bdf8);
     }
     .glass-nav {
-      background: rgba(8, 10, 15, 0.85) !important;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      background: rgba(8, 10, 15, 0.88) !important;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-color: rgba(255, 255, 255, 0.08);
+      transform: translateZ(0);
     }
     .glass-card {
-      background: var(--card-bg, rgba(14, 18, 30, 0.78)) !important;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: var(--card-bg, rgba(14, 18, 30, 0.88)) !important;
       border: 1px solid var(--card-border, rgba(255, 255, 255, 0.1)) !important;
     }
     .sub-pill {
@@ -167,7 +200,7 @@
       color: #cbd5e1;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: all 0.2s ease;
+      transition: color var(--dur-quick) ease, background var(--dur-quick) ease, border-color var(--dur-quick) ease, transform var(--dur-instant) ease;
       display: inline-flex;
       gap: 8px;
       align-items: center;
@@ -175,6 +208,10 @@
     .sub-pill:hover {
       color: #ffffff;
       background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+    .sub-pill:active {
+      transform: scale(0.96);
     }
     .sub-pill.on {
       background: rgb(var(--gold) / 0.18);
@@ -182,14 +219,14 @@
       border-color: rgb(var(--gold) / 0.5);
     }
 
-    /* Toggle Switch Component (e.g. Calm Mode Toggle) */
+    /* Toggle Switch Component (Tactile elastic squeeze on click) */
     .tgl {
       width: 40px;
       height: 22px;
       border-radius: 9999px;
       background: #334155;
       position: relative;
-      transition: background 0.2s ease;
+      transition: background var(--dur-quick) ease, box-shadow var(--dur-quick) ease;
       flex: none;
       display: inline-block;
       cursor: pointer;
@@ -204,23 +241,31 @@
       border-radius: 50%;
       background: #ffffff;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s ease;
+      transition: transform var(--dur-quick) var(--ease-spring), width var(--dur-instant) ease;
+    }
+    .tgl:active::after {
+      width: 20px;
     }
     .tgl.on {
       background: var(--gold-hex, #F5C518) !important;
+      box-shadow: 0 0 10px rgb(var(--gold) / 0.4);
     }
     .tgl.on::after {
       transform: translateX(18px);
+    }
+    .tgl.on:active::after {
+      transform: translateX(14px);
     }
 
     /* Universal Card & Surface Elements That Bind To Theme Variables */
     #heroBanner, #homeVinylShowcase, #homePlayLab, .portal-gateway-card, .theme-card-bg, .theme-box-card, .card-footer-meta, .decider-stage-panel > div, .curated-shelf-wrapper {
       background: var(--card-gradient) !important;
       border-color: var(--card-border) !important;
-      transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+      transition: background var(--dur-normal) var(--ease-ui), border-color var(--dur-normal) var(--ease-ui), color var(--dur-normal) var(--ease-ui);
     }
     .bg-black\/60, .bg-black\/50, .bg-black\/40, .bg-black\/70, .bg-black\/80, .bg-black\/35, .bg-black\/30 {
       background-color: var(--surface-elevated, rgba(10, 14, 25, 0.7));
+      transition: background-color var(--dur-normal) var(--ease-ui);
     }
 
     /* ==========================================================================
@@ -323,7 +368,15 @@
       background: linear-gradient(90deg, transparent 5%, rgba(226, 168, 75, 0.2) 30%, rgba(226, 168, 75, 0.45) 50%, rgba(226, 168, 75, 0.2) 70%, transparent 95%);
     }
 
-    /* Concentric Coordinate Reticle Circles */
+    /* Concentric Coordinate Reticle Circles with Subtle Ambient Orbital Drift */
+    @keyframes reticleRotateCW {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes reticleRotateCCW {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
     .telescope-reticle-circle {
       position: absolute;
       top: 50%;
@@ -333,10 +386,11 @@
       border: 1px dashed rgba(226, 168, 75, 0.18);
       pointer-events: none;
       z-index: 6;
+      will-change: transform;
     }
-    .reticle-c1 { width: 180px; height: 180px; }
+    .reticle-c1 { width: 180px; height: 180px; animation: reticleRotateCW 48s linear infinite; }
     .reticle-c2 { width: 340px; height: 340px; border-style: solid; border-color: rgba(226, 168, 75, 0.1); }
-    .reticle-c3 { width: 520px; height: 520px; border-color: rgba(226, 168, 75, 0.06); }
+    .reticle-c3 { width: 520px; height: 520px; border-color: rgba(226, 168, 75, 0.06); animation: reticleRotateCCW 72s linear infinite; }
 
     /* The Focal Star Stage (Tonight's Pick inside Telescope) */
     .focal-star-stage {
@@ -347,7 +401,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+      transition: transform var(--dur-normal) var(--ease-spring), opacity var(--dur-quick) ease;
     }
 
     /* Rotary Brass Mood Ring around Eyepiece */
@@ -374,12 +428,16 @@
       border: 1px solid rgba(226, 168, 75, 0.2);
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.2s ease;
+      transition: color var(--dur-quick) ease, background var(--dur-quick) ease, border-color var(--dur-quick) ease, transform var(--dur-instant) ease;
     }
     .mood-ring-notch:hover {
       color: #fff;
       border-color: rgba(245, 197, 24, 0.6);
       background: rgba(245, 197, 24, 0.12);
+      transform: translateY(-1px);
+    }
+    .mood-ring-notch:active {
+      transform: scale(0.96);
     }
     .mood-ring-notch.active {
       color: #000;
@@ -411,13 +469,17 @@
       border: 1px solid rgba(255, 255, 255, 0.15);
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.2s ease;
+      transition: color var(--dur-quick) ease, background var(--dur-quick) ease, border-color var(--dur-quick) ease, transform var(--dur-instant) ease;
       backdrop-filter: blur(8px);
     }
     .optical-glass-slide:hover {
       background: rgba(255, 255, 255, 0.12);
       border-color: #fff;
       color: #fff;
+      transform: translateY(-1px);
+    }
+    .optical-glass-slide:active {
+      transform: scale(0.96);
     }
     .optical-glass-slide.active {
       background: rgba(245, 197, 24, 0.2);
@@ -444,8 +506,8 @@
       border-radius: 9999px;
       cursor: pointer;
       z-index: 15;
-      animation: meteorPass 4.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
-      animation-delay: 6s;
+      animation: meteorPass 5.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+      animation-delay: 8s;
     }
     .telescope-meteor-ray:hover {
       animation-play-state: paused;
@@ -457,19 +519,28 @@
     }
     .card-hover {
       position: relative;
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, opacity 0.25s ease, filter 0.25s ease;
-      will-change: transform, box-shadow;
+      transition: transform var(--dur-quick) var(--ease-spring),
+                  box-shadow var(--dur-normal) var(--ease-ui),
+                  border-color var(--dur-quick) ease,
+                  opacity var(--dur-normal) var(--ease-ui),
+                  filter var(--dur-normal) var(--ease-ui);
+      will-change: transform;
     }
     .card-hover:hover {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.95), 0 0 25px -4px rgb(var(--gold) / 0.4);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.9), 0 0 20px -4px rgb(var(--gold) / 0.35);
       border-color: rgba(245, 197, 24, 0.6);
       z-index: 25;
     }
-    /* Dim surrounding stars in the constellation when focusing (Single Light Source Rule) */
+    .card-hover:active {
+      transform: translateY(-2px) scale(0.99);
+      transition-duration: var(--dur-instant);
+    }
+    /* Dim surrounding stars in the constellation when focusing (Single Light Source Rule) - Softer to eliminate strobe flashing */
     .constellation-zone:hover .card-hover:not(:hover) {
-      opacity: 0.62;
-      filter: brightness(0.8) saturate(0.82);
+      opacity: 0.82;
+      filter: brightness(0.9) saturate(0.92);
+      transition: opacity var(--dur-normal) var(--ease-ui), filter var(--dur-normal) var(--ease-ui);
     }
     .poster-fade {
       background: linear-gradient(to top, rgba(6, 9, 17, 0.98) 0%, rgba(6, 9, 17, 0.72) 48%, transparent 100%);
@@ -500,25 +571,35 @@
     /* Tonight's Pick Eyepiece Reticle & Velocity Card-Flick */
     @keyframes cardFlickOut {
       0% { transform: scale(1) translate(0, 0) rotate(0deg); opacity: 1; }
-      100% { transform: scale(0.88) translate(125%, -24px) rotate(18deg); opacity: 0; }
+      100% { transform: scale(0.9) translate(110%, -18px) rotate(14deg); opacity: 0; }
     }
     @keyframes cardDropIn {
-      0% { transform: scale(0.92) translate(-40px, -30px) rotate(-6deg); opacity: 0; }
-      65% { transform: scale(1.02) translate(4px, 4px) rotate(1deg); opacity: 1; }
+      0% { transform: scale(0.94) translate(-28px, -20px) rotate(-4deg); opacity: 0; }
+      68% { transform: scale(1.01) translate(2px, 2px) rotate(0.5deg); opacity: 1; }
       100% { transform: scale(1) translate(0, 0) rotate(0deg); opacity: 1; }
     }
     .flick-out {
-      animation: cardFlickOut 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+      animation: cardFlickOut 0.52s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
       pointer-events: none;
     }
     .drop-in {
-      animation: cardDropIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+      animation: cardDropIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
     }
 
     /* The 5 Engraved Brass Station Plates (Bottom Navigation) */
+    @keyframes dockEntrance {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(24px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
     .station-plates-dock {
       position: fixed;
-      bottom: 1.25rem;
+      bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));
       left: 50%;
       transform: translateX(-50%);
       z-index: 45;
@@ -533,15 +614,18 @@
       align-items: center;
       gap: 4px;
       max-width: calc(100vw - 1.5rem);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      transition: transform var(--dur-normal) var(--ease-in-out), opacity var(--dur-normal) ease, box-shadow var(--dur-quick) ease;
+      animation: dockEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
     }
     .station-plates-dock.dock-slim {
-      transform: translateX(-50%) translateY(32%);
-      opacity: 0.45;
+      transform: translateX(-50%) translateY(calc(100% + 2rem));
+      opacity: 0;
+      pointer-events: none;
     }
     .station-plates-dock:hover {
       opacity: 1 !important;
       transform: translateX(-50%) translateY(0) !important;
+      pointer-events: auto !important;
     }
     .station-plate {
       position: relative;
@@ -552,8 +636,9 @@
       border-radius: 9999px;
       font-size: 12.5px;
       font-weight: 700;
+      letter-spacing: 0.01em;
       color: #94a3b8;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: color var(--dur-quick) ease, background var(--dur-quick) ease, transform var(--dur-instant) ease, box-shadow var(--dur-quick) ease;
       white-space: nowrap;
       cursor: pointer;
       user-select: none;
@@ -561,6 +646,10 @@
     .station-plate:hover {
       color: #fff;
       background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-1px);
+    }
+    .station-plate:active {
+      transform: scale(0.96);
     }
     .station-plate.active {
       color: #000;
@@ -585,7 +674,7 @@
     .orbiting-moon {
       position: fixed;
       right: 1.5rem;
-      bottom: 5.5rem;
+      bottom: max(5.5rem, calc(4rem + env(safe-area-inset-bottom, 1.5rem)));
       z-index: 40;
       width: 50px;
       height: 50px;
@@ -597,11 +686,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+      transition: transform var(--dur-quick) var(--ease-spring), border-color var(--dur-quick) ease, box-shadow var(--dur-normal) ease;
     }
     .orbiting-moon:hover {
-      transform: scale(1.1);
+      transform: scale(1.08);
       border-color: #c084fc;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.85), 0 0 22px rgba(192, 132, 252, 0.5);
+    }
+    .orbiting-moon:active {
+      transform: scale(0.95);
     }
     .orbiting-moon img {
       width: 42px;
@@ -627,15 +720,19 @@
       position: relative;
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, width 0.2s ease;
+      transition: transform var(--dur-quick) var(--ease-spring), box-shadow var(--dur-normal) var(--ease-ui), width var(--dur-quick) var(--ease-spring), border-color var(--dur-quick) ease;
       box-shadow: 2px 4px 10px rgba(0,0,0,0.6);
+      will-change: transform, width;
     }
     .spine-card:hover {
-      transform: translateY(-10px) scale(1.05);
+      transform: translateY(-8px) scale(1.03);
       width: 44px;
       z-index: 20;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.9), 0 0 16px rgba(245, 197, 24, 0.4);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.9), 0 0 18px rgb(var(--gold) / 0.45);
       border-color: var(--gold-hex);
+    }
+    .spine-card:active {
+      transform: translateY(-4px) scale(0.98);
     }
     .spine-title {
       writing-mode: vertical-rl;
@@ -684,21 +781,22 @@
       letter-spacing: 2px;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.15s ease, transform 0.15s ease;
+      transition: opacity var(--dur-quick) ease, transform var(--dur-quick) var(--ease-spring);
       z-index: 25;
+      transform: scale(0.8);
     }
     .comet-stamp.kept {
       right: 28px;
       color: #34d399;
       border-color: #34d399;
-      transform: rotate(14deg);
+      transform: scale(1) rotate(14deg);
       background: rgba(52, 211, 153, 0.18);
     }
     .comet-stamp.pass {
       left: 28px;
       color: #f87171;
       border-color: #f87171;
-      transform: rotate(-14deg);
+      transform: scale(1) rotate(-14deg);
       background: rgba(248, 113, 113, 0.18);
     }
     @keyframes pulseGlow {
@@ -709,14 +807,24 @@
       animation: pulseGlow 7s ease-in-out infinite;
     }
     .fade-in {
-      animation: fadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeIn var(--dur-normal) var(--ease-out) forwards;
+      will-change: transform, opacity;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .lazy-poster {
-      transition: opacity 0.4s ease, transform 0.45s ease !important;
+      transition: opacity var(--dur-normal) var(--ease-ui), transform var(--dur-slow) var(--ease-out) !important;
+    }
+    .lazy-poster:not([src]), .lazy-poster[src=""] {
+      background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+      background-size: 200% 100%;
+      animation: posterShimmer 1.8s infinite linear;
+    }
+    @keyframes posterShimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
     .hscroll, .snap-x {
       scroll-behavior: smooth;
@@ -728,7 +836,6 @@
     .row-arrow {
       position: absolute;
       top: 50%;
-      transform: translateY(-50%);
       z-index: 20;
       width: 42px;
       height: 42px;
@@ -741,17 +848,32 @@
       justify-content: center;
       box-shadow: 0 8px 24px rgba(0,0,0,0.7);
       opacity: 0;
-      transition: all 0.25s ease;
+      transition: opacity var(--dur-normal) ease, transform var(--dur-quick) var(--ease-spring), background var(--dur-quick) ease, color var(--dur-quick) ease;
       cursor: pointer;
     }
     .has-arrows:hover .row-arrow {
       opacity: 1;
     }
+    .row-arrow.left-arrow, .row-arrow.row-arrow-prev, .row-arrow[data-dir="left"], .has-arrows > .row-arrow:first-of-type {
+      transform: translateY(-50%) translateX(-6px);
+    }
+    .has-arrows:hover .row-arrow.left-arrow, .has-arrows:hover .row-arrow.row-arrow-prev, .has-arrows:hover .row-arrow[data-dir="left"], .has-arrows:hover > .row-arrow:first-of-type {
+      transform: translateY(-50%) translateX(0);
+    }
+    .row-arrow.right-arrow, .row-arrow.row-arrow-next, .row-arrow[data-dir="right"], .has-arrows > .row-arrow:last-of-type {
+      transform: translateY(-50%) translateX(6px);
+    }
+    .has-arrows:hover .row-arrow.right-arrow, .has-arrows:hover .row-arrow.row-arrow-next, .has-arrows:hover .row-arrow[data-dir="right"], .has-arrows:hover > .row-arrow:last-of-type {
+      transform: translateY(-50%) translateX(0);
+    }
     .row-arrow:hover {
       background: var(--gold-hex);
       color: #000;
       border-color: var(--gold-hex);
-      transform: translateY(-50%) scale(1.1);
+      transform: translateY(-50%) scale(1.1) !important;
+    }
+    .row-arrow:active {
+      transform: translateY(-50%) scale(0.95) !important;
     }
     @media (hover: none) {
       .row-arrow { display: none !important; }
@@ -1739,20 +1861,16 @@
     @keyframes portalGladeIn {
       0% {
         opacity: 0;
-        transform: scale(0.985) translateY(12px);
-        filter: blur(4px);
-      }
-      60% {
-        filter: blur(0);
+        transform: translateY(8px);
       }
       100% {
         opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: translateY(0);
       }
     }
     .portal-glade-in {
-      animation: portalGladeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      will-change: transform, opacity, filter;
+      animation: portalGladeIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      will-change: transform, opacity;
     }
 
     /* Stream Quick Format Switcher */
@@ -2209,6 +2327,8 @@
       scroll-snap-type: x mandatory;
       padding: 0.75rem 0.25rem 1.25rem 0.25rem;
       -webkit-overflow-scrolling: touch;
+      contain: layout style;
+      transform: translateZ(0);
     }
     .shelf-scroll-row::-webkit-scrollbar {
       display: none;
@@ -2216,6 +2336,21 @@
     .shelf-scroll-row {
       -ms-overflow-style: none;
       scrollbar-width: none;
+    }
+
+    /* Hardware & Layout Isolation for Smooth 60/120 FPS Scrolling */
+    .tab-pane {
+      contain: layout;
+    }
+    .shelf-scroll-row > * {
+      contain: layout style;
+      content-visibility: auto;
+      contain-intrinsic-size: 180px 270px;
+    }
+    #moviesResults > *,
+    #showsResults > * {
+      content-visibility: auto;
+      contain-intrinsic-size: 200px 300px;
     }
 
 /* Poster Shimmer Skeleton Loader (Task 2) */

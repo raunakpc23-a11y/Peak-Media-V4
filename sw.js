@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v8.4-bg-audio-engine';
+const CACHE_NAME = 'peak-media-v8.7-balanced-buffer-engine';
 const POSTER_CACHE = 'peak-media-posters-v1';
 
 // All local files to pre-cache the moment the SW installs
@@ -21,6 +21,7 @@ const PRE_CACHE = [
   './css/base.css',
   './css/widgets.css',
   './css/responsive.css',
+  './js/virtual-scroll.js',
   './js/data.js',
   './js/songs-data.js',
   './js/constellation.js',

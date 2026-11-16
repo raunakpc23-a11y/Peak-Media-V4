@@ -117,7 +117,8 @@
   window.syncInstallButtonPosition = positionBtn;
   positionBtn();
   window.addEventListener('resize', positionBtn);
-  setInterval(positionBtn, 500);
+  // Auto-sync position on visibility change or modal states instead of a continuous 500ms polling loop
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) positionBtn(); });
 
   // Browser fires this when the app is installable
   window.addEventListener('beforeinstallprompt', function (e) {

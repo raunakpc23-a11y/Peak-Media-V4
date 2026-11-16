@@ -22,10 +22,11 @@
     style.textContent = `
       :root {
         --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-        --dur-open: 600ms;
-        --dur-close: 450ms;
+        --dur-open: 550ms;
+        --dur-close: 400ms;
         --dur-content: 250ms;
-        --stagger: 50ms;
+        --stagger: 40ms;
+        --vinyl-spin-dur: 6s;
       }
       body.motion-scroll-locked {
         overflow: hidden !important;
@@ -73,7 +74,7 @@
       .m-hover-scale:hover [data-spin],
       .m-hover-scale:hover.vinyl-record-disc,
       #homeVinylDisc.m-hover-scale:hover {
-        animation: motion-spin 8s linear infinite;
+        animation: motion-spin var(--vinyl-spin-dur, 6s) linear infinite;
       }
       @keyframes motion-spin {
         to { transform: rotate(360deg); }
@@ -592,14 +593,14 @@
         Q.resA.playbackRate = 1; Q.resA.play();
       } else {
         Q.resA = c.results.animate(
-          Q.reduced ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translateY(-12px)' }, { opacity: 1, transform: 'translateY(0)' }],
+          Q.reduced ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }],
           { duration: Q.reduced ? 150 : T.content, easing: Q.reduced ? 'linear' : T.ease, fill: 'both' }
         );
         if (!Q.reduced && c.list) {
-          Array.prototype.slice.call(c.list.children, 0, 6).forEach(function (el, i) {
+          Array.prototype.slice.call(c.list.children, 0, 8).forEach(function (el, i) {
             el.animate(
               [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
-              { duration: T.content, delay: i * 30, easing: T.ease, fill: 'backwards' }
+              { duration: T.content, delay: i * 35, easing: T.ease, fill: 'backwards' }
             );
           });
         }

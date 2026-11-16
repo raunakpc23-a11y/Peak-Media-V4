@@ -23,6 +23,25 @@
     if (hdrKbd) hdrKbd.textContent = kbdHint;
     document.querySelectorAll('#browseSearch kbd').forEach(k => { k.textContent = kbdHint; });
 
+    // Robust YouTube Song Thumbnail Fallback Handler (mqdefault -> hqdefault -> default -> dark vinyl SVG)
+    window.handleSongThumbFallback = function(img) {
+      if (!img || img.dataset.fallbackTried === '3') return;
+      const currentSrc = img.src || '';
+      if (!img.dataset.fallbackTried && currentSrc.includes('mqdefault.jpg')) {
+        img.dataset.fallbackTried = '1';
+        img.src = currentSrc.replace('mqdefault.jpg', 'hqdefault.jpg');
+        return;
+      }
+      if (img.dataset.fallbackTried === '1' && currentSrc.includes('hqdefault.jpg')) {
+        img.dataset.fallbackTried = '2';
+        img.src = currentSrc.replace('hqdefault.jpg', 'default.jpg');
+        return;
+      }
+      img.dataset.fallbackTried = '3';
+      img.onerror = null;
+      img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180' width='320' height='180'><rect width='320' height='180' fill='%23120d20'/><circle cx='160' cy='90' r='55' fill='%231f1338' stroke='%23a855f7' stroke-width='2' stroke-opacity='0.4'/><circle cx='160' cy='90' r='20' fill='%237e22ce' stroke='%23c084fc' stroke-width='2'/><circle cx='160' cy='90' r='6' fill='%23fef08a'/><path d='M155 85 L168 90 L155 95 Z' fill='%23ffffff' opacity='0.9'/></svg>";
+    };
+
     // ---------------------------------------------------------
     // 1. INDEXEDDB POSTER CACHE (Offloads 5MB localStorage limit)
     // ---------------------------------------------------------
@@ -2102,32 +2121,13 @@
       const totalPages = Math.max(1, Math.ceil(musicFiltered.length / MUSIC_PAGE_SIZE));
       if (musicPage > totalPages) musicPage = totalPages;
 
-      const slice = musicFiltered.slice((musicPage - 1) * MUSIC_PAGE_SIZE, musicPage * MUSIC_PAGE_SIZE);
       const container = $('musicTracksContainer');
-      if (!slice.length) {
-        if (musicViewMode === 'favs') {
-          container.innerHTML = `
-            <div class="col-span-full py-12 text-center space-y-3">
-              <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 text-2xl shadow-[0_0_20px_rgba(244,63,94,0.3)]">
-                <i class="fa-solid fa-heart"></i>
-              </div>
-              <h3 class="text-base font-bold text-white">Your Favorites Playlist is Empty</h3>
-              <p class="text-xs text-gray-400 max-w-sm mx-auto">Tap the heart on any song card to add it to your Favorites playlist!</p>
-              <button type="button" onclick="setMusicViewMode('all')" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow transition-all cursor-pointer">Explore All Songs</button>
-            </div>`;
-        } else {
-          container.innerHTML = `<div class="col-span-full py-12 text-center text-purple-200/60 text-sm font-mono">No tracks found matching your search. <button type="button" onclick="resetMusicFilters()" class="text-brand-gold underline ml-1 font-bold">Clear filters</button></div>`;
-        }
-        $('musicPagination').innerHTML = '';
-        return;
-      }
+      if (!container) return;
 
       const curPlayingId = (musicQueue[musicQueueIdx] && musicQueue[musicQueueIdx].id) || '';
-      container.innerHTML = slice.map((s, idx) => {
-        const globalIdx = (musicPage - 1) * MUSIC_PAGE_SIZE + idx + 1;
+      function createSongCardHTML(s) {
         const isFav = songFavs.includes(s.id);
         const isPlayingThis = curPlayingId === s.id;
-        const plName = (musicPlaylists[(s.p && s.p[0]) || 0] || {}).title || ' Vault';
         const cardStyle = isPlayingThis 
           ? 'border-purple-400 bg-purple-950/45 shadow-[0_0_24px_rgba(192,132,252,0.4)] ring-1 ring-purple-400/50' 
           : 'border-purple-500/20 bg-gradient-to-r from-purple-950/20 via-[#0a0d18]/90 to-black hover:border-purple-400/60 hover:shadow-[0_0_18px_rgba(192,132,252,0.25)]';
@@ -2135,7 +2135,7 @@
         return `
           <div class="rounded-2xl p-2.5 sm:p-3 border ${cardStyle} flex items-center gap-3 transition-all duration-300 group">
             <div onclick="playSongById('${s.id}')" class="relative w-16 h-12 rounded-xl overflow-hidden bg-black shrink-0 cursor-pointer border border-purple-500/30">
-              <img src="https://i.ytimg.com/vi/${s.id}/mqdefault.jpg" loading="lazy" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              <img src="https://i.ytimg.com/vi/${s.id}/mqdefault.jpg" loading="lazy" decoding="async" alt="" onerror="window.handleSongThumbFallback(this)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
                 <i class="fa-solid ${isPlayingThis && isPlayingMusic ? 'fa-volume-high text-purple-300 animate-pulse' : 'fa-play text-white'} text-xs"></i>
               </div>
@@ -2154,7 +2154,59 @@
               <button type="button" onclick="toggleSongFav('${s.id}')" title="Favorite Starlight Track" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg ${isFav ? 'bg-rose-500 text-white' : 'bg-white/5 hover:bg-white/15 text-gray-300'} flex items-center justify-center text-xs transition-colors"><i class="fa-solid fa-heart text-[11px]"></i></button>
             </div>
           </div>`;
-      }).join('');
+      }
+
+      if (window.PeakVirtualScroller) {
+        container.className = "grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3";
+        let scroller = window.PeakVirtualScroller.get('music');
+        const emptyMsg = (musicViewMode === 'favs')
+          ? `<div class="col-span-full py-12 text-center space-y-3" style="grid-column: 1 / -1;"><div class="w-14 h-14 mx-auto rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 text-2xl shadow-[0_0_20px_rgba(244,63,94,0.3)]"><i class="fa-solid fa-heart"></i></div><h3 class="text-base font-bold text-white">Your Favorites Playlist is Empty</h3><p class="text-xs text-gray-400 max-w-sm mx-auto">Tap the heart on any song card to add it to your Favorites playlist!</p><button type="button" onclick="setMusicViewMode('all')" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow transition-all cursor-pointer">Explore All Songs</button></div>`
+          : `<div class="col-span-full py-12 text-center text-purple-200/60 text-sm font-mono" style="grid-column: 1 / -1;">No tracks found matching your search. <button type="button" onclick="resetMusicFilters()" class="text-brand-gold underline ml-1 font-bold">Clear filters</button></div>`;
+
+        if (!scroller) {
+          scroller = window.PeakVirtualScroller.mount('music', {
+            container: '#musicTracksContainer',
+            items: musicFiltered,
+            pageSize: MUSIC_PAGE_SIZE,
+            paginationId: 'musicPagination',
+            estimatedRowHeight: 84,
+            bufferRows: 14,
+            bufferPx: 1400,
+            renderItem: (item) => createSongCardHTML(item),
+            emptyHTML: emptyMsg,
+            onRangeChange: (start, end, total, curPage, totalPages) => {
+              const curLbl = $('musicCurPageLbl');
+              if (curLbl) curLbl.textContent = curPage;
+            }
+          });
+        } else {
+          scroller.emptyHTML = emptyMsg;
+          scroller.renderItem = (item) => createSongCardHTML(item);
+          scroller.setItems(musicFiltered, resetPage);
+        }
+        return;
+      }
+
+      const slice = musicFiltered.slice((musicPage - 1) * MUSIC_PAGE_SIZE, musicPage * MUSIC_PAGE_SIZE);
+      if (!slice.length) {
+        if (musicViewMode === 'favs') {
+          container.innerHTML = `
+            <div class="col-span-full py-12 text-center space-y-3">
+              <div class="w-14 h-14 mx-auto rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 text-2xl shadow-[0_0_20px_rgba(244,63,94,0.3)]">
+                <i class="fa-solid fa-heart"></i>
+              </div>
+              <h3 class="text-base font-bold text-white">Your Favorites Playlist is Empty</h3>
+              <p class="text-xs text-gray-400 max-w-sm mx-auto">Tap the heart on any song card to add it to your Favorites playlist!</p>
+              <button type="button" onclick="setMusicViewMode('all')" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow transition-all cursor-pointer">Explore All Songs</button>
+            </div>`;
+        } else {
+          container.innerHTML = `<div class="col-span-full py-12 text-center text-purple-200/60 text-sm font-mono">No tracks found matching your search. <button type="button" onclick="resetMusicFilters()" class="text-brand-gold underline ml-1 font-bold">Clear filters</button></div>`;
+        }
+        $('musicPagination').innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = slice.map(s => createSongCardHTML(s)).join('');
 
       renderPagination('musicPagination', musicPage, totalPages, p => {
         musicPage = p;
@@ -2167,13 +2219,15 @@
       const el = $(id);
       if (!el) return;
       if (id === 'musicSearchInput') {
+        let musicSearchDebounceTimer;
         el.addEventListener('input', () => {
           const clearBtn = $('musicSearchClear');
           if (clearBtn) {
             if (el.value.trim().length > 0) clearBtn.classList.remove('hidden');
             else clearBtn.classList.add('hidden');
           }
-          filterAndRenderMusic(true);
+          clearTimeout(musicSearchDebounceTimer);
+          musicSearchDebounceTimer = setTimeout(() => filterAndRenderMusic(true), 160);
         });
         el.addEventListener('keydown', (e) => {
           if (e.key === 'Escape') {
@@ -3307,13 +3361,14 @@
       return ratio >= 0.78 ? Math.round(ratio * 50) : 0;
     }
 
-    window.palSearch = function(query) {
-      ensureMusicLoaded();
+    let palSearchDebounceTimer = null;
+    window.palSearch = function(query, immediate = false) {
       const q = String(query || '').trim();
       const list = $('palList');
       if (!list) return;
 
       if (!q) {
+        if (palSearchDebounceTimer) clearTimeout(palSearchDebounceTimer);
         list.innerHTML = `
           <div class="p-4 space-y-3">
             <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-gray-400">
@@ -3321,69 +3376,79 @@
               <span class="text-brand-gold">Movies · Shows · Songs · Universes</span>
             </div>
             <div class="flex flex-wrap gap-2">
-              ${recentSearches.map(r => `<button type="button" onclick="document.getElementById('palInput').value='${esc(r)}'; palSearch('${esc(r)}');" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-brand-gold hover:text-black text-xs text-gray-200 border border-white/10 transition-all"><i class="fa-solid fa-clock-rotate-left mr-1.5 opacity-70"></i>${esc(r)}</button>`).join('')}
+              ${recentSearches.map(r => `<button type="button" onclick="document.getElementById('palInput').value='${esc(r)}'; palSearch('${esc(r)}', true);" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-brand-gold hover:text-black text-xs text-gray-200 border border-white/10 transition-all"><i class="fa-solid fa-clock-rotate-left mr-1.5 opacity-70"></i>${esc(r)}</button>`).join('')}
             </div>
           </div>`;
         return;
       }
 
-      // 1. Score Movies & Shows
-      const mediaHits = [];
-      const scope = window._palScope || 'home';
-      for (const t of allTitles) {
-        const item = globalDatabase[t];
-        if (!item) continue;
-        if (scope === 'films' && item.type !== 'movie') continue;
-        if (scope === 'shows' && item.type !== 'show') continue;
-        if (scope === 'dramas' && !String(item.genre || '').includes('Drama')) continue;
-        const sc = Math.max(fuzzyMatchScore(item.cleanName || item.title, q), fuzzyMatchScore(item.genre + ' ' + item.year, q));
-        if (sc > 0) mediaHits.push({ item, sc: sc + parseFloat(item.rating) });
-      }
-      mediaHits.sort((a, b) => b.sc - a.sc);
-      const topMedia = mediaHits.slice(0, 8);
-
-      // 2. Score Songs (Only shown when browsing all/home)
-      const songHits = [];
-      if (scope === 'home') {
-        for (const s of (musicCatalog || [])) {
-          const sc = Math.max(fuzzyMatchScore(s.t, q), fuzzyMatchScore(s.a, q));
-          if (sc > 0) songHits.push({ s, sc });
-          if (songHits.length >= 40 && sc < 60) break;
+      if (palSearchDebounceTimer) clearTimeout(palSearchDebounceTimer);
+      const executePalSearch = () => {
+        ensureMusicLoaded();
+        // 1. Score Movies & Shows
+        const mediaHits = [];
+        const scope = window._palScope || 'home';
+        for (const t of allTitles) {
+          const item = globalDatabase[t];
+          if (!item) continue;
+          if (scope === 'films' && item.type !== 'movie') continue;
+          if (scope === 'shows' && item.type !== 'show') continue;
+          if (scope === 'dramas' && !String(item.genre || '').includes('Drama')) continue;
+          const sc = Math.max(fuzzyMatchScore(item.cleanName || item.title, q), fuzzyMatchScore(item.genre + ' ' + item.year, q));
+          if (sc > 0) mediaHits.push({ item, sc: sc + parseFloat(item.rating) });
         }
-        songHits.sort((a, b) => b.sc - a.sc);
-      }
-      const topSongs = songHits.slice(0, 5);
+        mediaHits.sort((a, b) => b.sc - a.sc);
+        const topMedia = mediaHits.slice(0, 8);
 
-      if (!topMedia.length && !topSongs.length) {
-        list.innerHTML = `<div class="p-6 text-center space-y-2 text-xs text-gray-400">
-          <div>No exact matches for "<strong class="text-white">${esc(q)}</strong>". Try one of these popular picks:</div>
-          <div class="flex flex-wrap justify-center gap-2 pt-2">
-            ${['Interstellar', '3 Idiots', 'Breaking Bad', 'Arijit Singh', 'Ed Sheeran'].map(s => `<button type="button" onclick="document.getElementById('palInput').value='${s}'; palSearch('${s}');" class="px-3 py-1 rounded-lg bg-white/10 text-brand-gold font-bold">${s}</button>`).join('')}
-          </div>
-        </div>`;
-        return;
-      }
+        // 2. Score Songs (Only shown when browsing all/home)
+        const songHits = [];
+        if (scope === 'home') {
+          for (const s of (musicCatalog || [])) {
+            const sc = Math.max(fuzzyMatchScore(s.t, q), fuzzyMatchScore(s.a, q));
+            if (sc > 0) songHits.push({ s, sc });
+            if (songHits.length >= 40 && sc < 60) break;
+          }
+          songHits.sort((a, b) => b.sc - a.sc);
+        }
+        const topSongs = songHits.slice(0, 5);
 
-      let outHTML = '';
-      if (topMedia.length) {
-        outHTML += `<div class="px-4 py-1.5 bg-white/[0.03] text-[10px] font-extrabold uppercase tracking-wider text-brand-gold">Movies & TV Series</div>`;
-        outHTML += topMedia.map(({ item }) => {
-          const escT = item.title.replace(/'/g, "\\'");
-          return `<button type="button" onclick="saveRecentSearch('${esc(q)}'); closePalette(); openDetailModal('${escT}')" class="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center justify-between gap-3 text-xs sm:text-sm transition-colors group">
-            <span class="text-white truncate group-hover:text-brand-gold">${esc(item.cleanName || item.title)} <span class="text-gray-500">(${item.year} · ${item.lang === 'hi' ? 'Hindi' : 'English'})</span></span>
-            <span class="text-brand-gold font-bold text-xs shrink-0">${item.type === 'show' ? 'TV' : 'Film'} · ★ ${item.rating}</span>
-          </button>`;
-        }).join('');
+        if (!topMedia.length && !topSongs.length) {
+          list.innerHTML = `<div class="p-6 text-center space-y-2 text-xs text-gray-400">
+            <div>No exact matches for "<strong class="text-white">${esc(q)}</strong>". Try one of these popular picks:</div>
+            <div class="flex flex-wrap justify-center gap-2 pt-2">
+              ${['Interstellar', '3 Idiots', 'Breaking Bad', 'Arijit Singh', 'Ed Sheeran'].map(s => `<button type="button" onclick="document.getElementById('palInput').value='${s}'; palSearch('${s}', true);" class="px-3 py-1 rounded-lg bg-white/10 text-brand-gold font-bold">${s}</button>`).join('')}
+            </div>
+          </div>`;
+          return;
+        }
+
+        let outHTML = '';
+        if (topMedia.length) {
+          outHTML += `<div class="px-4 py-1.5 bg-white/[0.03] text-[10px] font-extrabold uppercase tracking-wider text-brand-gold">Movies & TV Series</div>`;
+          outHTML += topMedia.map(({ item }) => {
+            const escT = item.title.replace(/'/g, "\\'");
+            return `<button type="button" onclick="saveRecentSearch('${esc(q)}'); closePalette(); openDetailModal('${escT}')" class="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center justify-between gap-3 text-xs sm:text-sm transition-colors group">
+              <span class="text-white truncate group-hover:text-brand-gold">${esc(item.cleanName || item.title)} <span class="text-gray-500">(${item.year} · ${item.lang === 'hi' ? 'Hindi' : 'English'})</span></span>
+              <span class="text-brand-gold font-bold text-xs shrink-0">${item.type === 'show' ? 'TV' : 'Film'} · ★ ${item.rating}</span>
+            </button>`;
+          }).join('');
+        }
+        if (topSongs.length) {
+          outHTML += `<div class="px-4 py-1.5 bg-white/[0.03] text-[10px] font-extrabold uppercase tracking-wider text-cyan-400">Songs & Music Videos</div>`;
+          outHTML += topSongs.map(({ s }) => `
+            <button type="button" onclick="saveRecentSearch('${esc(q)}'); closePalette(); switchTab('music'); playSongById('${s.id}');" class="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center justify-between gap-3 text-xs sm:text-sm transition-colors group">
+              <span class="text-white truncate group-hover:text-cyan-300"><i class="fa-solid fa-play text-[10px] text-cyan-400 mr-2"></i>${esc(s.t)}</span>
+              <span class="text-gray-400 text-xs shrink-0">${esc(s.a)} · ${s.l === 'hi' ? 'HI' : 'EN'}</span>
+            </button>`).join('');
+        }
+        list.innerHTML = outHTML;
+      };
+
+      if (immediate) {
+        executePalSearch();
+      } else {
+        palSearchDebounceTimer = setTimeout(executePalSearch, 160);
       }
-      if (topSongs.length) {
-        outHTML += `<div class="px-4 py-1.5 bg-white/[0.03] text-[10px] font-extrabold uppercase tracking-wider text-cyan-400">Songs & Music Videos</div>`;
-        outHTML += topSongs.map(({ s }) => `
-          <button type="button" onclick="saveRecentSearch('${esc(q)}'); closePalette(); switchTab('music'); playSongById('${s.id}');" class="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center justify-between gap-3 text-xs sm:text-sm transition-colors group">
-            <span class="text-white truncate group-hover:text-cyan-300"><i class="fa-solid fa-play text-[10px] text-cyan-400 mr-2"></i>${esc(s.t)}</span>
-            <span class="text-gray-400 text-xs shrink-0">${esc(s.a)} · ${s.l === 'hi' ? 'HI' : 'EN'}</span>
-          </button>`).join('');
-      }
-      list.innerHTML = outHTML;
     };
 
     window.saveRecentSearch = function(q) {
@@ -3583,12 +3648,12 @@
       if (tracks.length >= 4) {
         return `
           <div class="${dim} rounded-xl overflow-hidden grid grid-cols-2 grid-rows-2 shrink-0 border border-purple-500/35 bg-black/80 shadow-md ring-1 ring-white/10 group-hover:scale-105 transition-transform duration-300">
-            ${tracks.map(tid => `<img src="https://i.ytimg.com/vi/${tid}/default.jpg" class="w-full h-full object-cover" alt="">`).join('')}
+            ${tracks.map(tid => `<img src="https://i.ytimg.com/vi/${tid}/default.jpg" onerror="window.handleSongThumbFallback(this)" class="w-full h-full object-cover" alt="">`).join('')}
           </div>`;
       } else if (tracks.length >= 1) {
         return `
           <div class="relative ${dim} rounded-xl overflow-hidden shrink-0 border border-purple-500/35 bg-black/80 shadow-md ring-1 ring-white/10 group-hover:scale-105 transition-transform duration-300">
-            <img src="https://i.ytimg.com/vi/${tracks[0]}/mqdefault.jpg" class="w-full h-full object-cover" alt="">
+            <img src="https://i.ytimg.com/vi/${tracks[0]}/mqdefault.jpg" onerror="window.handleSongThumbFallback(this)" class="w-full h-full object-cover" alt="">
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-1">
               <span class="text-[9px] font-mono font-black text-purple-300">★ MIX</span>
             </div>
@@ -4016,7 +4081,7 @@
         <div class="p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between gap-3 group">
           <div class="flex items-center gap-3 min-w-0">
             <div onclick="playSongById('${s.id}')" class="relative w-12 h-10 rounded-lg overflow-hidden bg-black shrink-0 cursor-pointer border border-purple-500/30">
-              <img src="https://i.ytimg.com/vi/${s.id}/mqdefault.jpg" class="w-full h-full object-cover">
+              <img src="https://i.ytimg.com/vi/${s.id}/mqdefault.jpg" onerror="window.handleSongThumbFallback(this)" class="w-full h-full object-cover">
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <i class="fa-solid fa-play text-white text-[10px]"></i>
               </div>
@@ -4084,7 +4149,7 @@
         return `
           <div class="p-2 rounded-lg bg-black/60 border border-white/5 flex items-center justify-between gap-2">
             <div class="flex items-center gap-2 min-w-0">
-              <img src="https://i.ytimg.com/vi/${s.id}/default.jpg" class="w-8 h-6 object-cover rounded shrink-0">
+              <img src="https://i.ytimg.com/vi/${s.id}/default.jpg" onerror="window.handleSongThumbFallback(this)" class="w-8 h-6 object-cover rounded shrink-0">
               <div class="min-w-0">
                 <div class="text-xs font-bold text-white truncate">${esc(s.t)}</div>
                 <div class="text-[10px] text-purple-300 truncate">${esc(s.a)}</div>
@@ -4173,7 +4238,7 @@
       const banner = $('addToPlaylistTrackBanner');
       if (banner) {
         banner.innerHTML = `
-          <img src="https://i.ytimg.com/vi/${song.id}/mqdefault.jpg" class="w-14 h-11 object-cover rounded-xl shrink-0 border border-purple-500/30">
+          <img src="https://i.ytimg.com/vi/${song.id}/mqdefault.jpg" onerror="window.handleSongThumbFallback(this)" class="w-14 h-11 object-cover rounded-xl shrink-0 border border-purple-500/30">
           <div class="min-w-0 flex-1">
             <h4 class="text-xs font-bold text-white truncate">${esc(song.t)}</h4>
             <div class="text-[11px] text-purple-300 truncate">${esc(song.a)}</div>

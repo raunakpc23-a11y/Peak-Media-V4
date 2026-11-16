@@ -13784,7 +13784,7 @@ Odd Taxi|2021|87
       'movie:Gladiator': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Gladiator_%282000_film_poster%29.png',
       'movie:Whiplash': 'https://upload.wikimedia.org/wikipedia/en/0/01/Whiplash_poster.jpg',
       'movie:The Prestige': 'https://upload.wikimedia.org/wikipedia/en/d/d2/Prestige_poster.jpg',
-      'movie:Rear Window': 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Rear_Window_poster.jpg',
+      'movie:Rear Window': 'https://upload.wikimedia.org/wikipedia/commons/3/38/Rear_Window_film_poster.jpg',
       'movie:Psycho': 'https://upload.wikimedia.org/wikipedia/commons/7/76/Psycho_%281960%29_theatrical_poster_%28retouched%29.jpg',
       'movie:Spider-Man: Across the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg',
       'movie:Spider-Man: Into the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
@@ -14170,7 +14170,7 @@ Odd Taxi|2021|87
           imgEl.src = realUrl;
         }
       });
-    }, { rootMargin: '350px 0px 350px 0px' });
+    }, { rootMargin: '650px 0px 650px 0px' });
 
     function handlePosterFallback(img) {
       if (!img) return;
@@ -14206,6 +14206,7 @@ Odd Taxi|2021|87
         thumbObserver.observe(img);
       });
     }
+    window.attachThumbObservers = attachThumbObservers;
 
     // ==========================================
     // 4. USER STATE (LOCAL STORAGE SYNC)
@@ -15331,6 +15332,28 @@ Odd Taxi|2021|87
       const container = document.getElementById('moviesResults');
       if (!container) return;
 
+      if (window.PeakVirtualScroller) {
+        container.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5";
+        let scroller = window.PeakVirtualScroller.get('movies');
+        const emptyMsg = `<div class="py-16 text-center text-gray-400 col-span-full" style="grid-column: 1 / -1;"><i class="fa-solid fa-film text-4xl text-gray-600 mb-3 block"></i>No movies matched your filter criteria.</div>`;
+        if (!scroller) {
+          scroller = window.PeakVirtualScroller.mount('movies', {
+            container: '#moviesResults',
+            items: list,
+            pageSize: PAGE_SIZE,
+            paginationId: 'moviesPagination',
+            bufferRows: 5,
+            bufferPx: 1400,
+            renderItem: (item) => createCardHTML(item, false),
+            emptyHTML: emptyMsg
+          });
+        } else {
+          scroller.emptyHTML = emptyMsg;
+          scroller.setItems(list, resetPage);
+        }
+        return;
+      }
+
       if (!list.length) {
         container.className = "py-16 text-center text-gray-400";
         container.innerHTML = `<i class="fa-solid fa-film text-4xl text-gray-600 mb-3 block"></i>No movies matched your filter criteria.`;
@@ -15396,6 +15419,28 @@ Odd Taxi|2021|87
       if (cntEl) cntEl.textContent = list.length.toLocaleString();
       const container = document.getElementById('showsResults');
       if (!container) return;
+
+      if (window.PeakVirtualScroller) {
+        container.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5";
+        let scroller = window.PeakVirtualScroller.get('shows');
+        const emptyMsg = `<div class="py-16 text-center text-gray-400 col-span-full" style="grid-column: 1 / -1;"><i class="fa-solid fa-tv text-4xl text-gray-600 mb-3 block"></i>No TV shows matched your filter criteria.</div>`;
+        if (!scroller) {
+          scroller = window.PeakVirtualScroller.mount('shows', {
+            container: '#showsResults',
+            items: list,
+            pageSize: PAGE_SIZE,
+            paginationId: 'showsPagination',
+            bufferRows: 5,
+            bufferPx: 1400,
+            renderItem: (item) => createCardHTML(item, false),
+            emptyHTML: emptyMsg
+          });
+        } else {
+          scroller.emptyHTML = emptyMsg;
+          scroller.setItems(list, resetPage);
+        }
+        return;
+      }
 
       if (!list.length) {
         container.className = "py-16 text-center text-gray-400";

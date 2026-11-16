@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Peak Media — The Projectionist Apparatus</title>
+  <link rel="icon" type="image/svg+xml" href="icons/peak-media.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Fira+Code:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cinema-red: #ef4444;
+      --cinema-crimson: #b91c1c;
+      --brass: #d97706;
+      --brass-glow: rgba(217, 119, 6, 0.4);
+      --chassis-dark: #0d0406;
+      --chassis-metal: #18080b;
+      --rivet: #2c0f14;
+    }
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: var(--chassis-dark);
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      touch-action: pan-y pinch-zoom;
+    }
+
+    /* Ambient Theater Vignette & Projector Lamp */
+    .theater-beam {
+      position: fixed;
+      top: -160px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 780px;
+      height: 520px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(245, 158, 11, 0.16) 0%, rgba(239, 68, 68, 0.05) 50%, transparent 75%);
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(36px);
+      animation: lampFlicker 9s infinite alternate ease-in-out;
+    }
+    @keyframes lampFlicker {
+      0% { opacity: 0.75; transform: translateX(-50%) scale(0.96); }
+      50% { opacity: 0.95; transform: translateX(-50%) scale(1.02); }
+      100% { opacity: 0.85; transform: translateX(-50%) scale(0.98); }
+    }
+
+    /* Celluloid Film Sprockets */
+    .film-sprockets-top, .film-sprockets-bottom {
+      height: 16px;
+      background-image: radial-gradient(circle, #0d0406 5px, transparent 5.5px);
+      background-size: 26px 16px;
+      background-repeat: repeat-x;
+      background-position: center;
+    }
+
+    /* Hardware Knobs & Levers */
+    .knurled-dial {
+      background: radial-gradient(circle at 40% 30%, #3d1419 0%, #150507 70%);
+      box-shadow: 
+        0 8px 25px rgba(0,0,0,0.9),
+        inset 0 2px 3px rgba(255,255,255,0.25),
+        inset 0 -3px 5px rgba(0,0,0,0.8);
+      cursor: grab;
+      touch-action: none;
+    }
+    .knurled-dial:active {
+      cursor: grabbing;
+    }
+
+    /* Master Mode Selector Switch Detents */
+    .mode-notch {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Tonearm Assembly Drag & Physics */
+    .tonearm-assembly {
+      transform-origin: 22px 22px;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: grab;
+    }
+    .tonearm-assembly:active {
+      cursor: grabbing;
+    }
+    .tonearm-assembly.playing {
+      transform: rotate(27deg);
+    }
+
+    /* Microgroove Vinyl Record */
+    .vinyl-platter {
+      background: 
+        radial-gradient(circle at 50% 50%, #1a080a 0%, #0c0203 36%, #280a0f 38%, #0c0203 40%, #280a0f 58%, #0c0203 60%, #280a0f 78%, #0c0203 80%, #050102 100%);
+      box-shadow: 
+        inset 0 0 45px rgba(0, 0, 0, 0.95),
+        0 12px 40px rgba(0, 0, 0, 0.95),
+        0 0 24px rgba(239, 68, 68, 0.18);
+    }
+    .spinning {
+      animation: vinylSpin 3.6s linear infinite;
+    }
+    .spinning-45 {
+      animation: vinylSpin 2.6s linear infinite;
+    }
+    @keyframes vinylSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Spinning Take-Up Film Reels */
+    .film-reel-wheel {
+      animation: reelSpin 4s linear infinite;
+    }
+    @keyframes reelSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Studio Console Vertical Faders */
+    .fader-slot {
+      width: 10px;
+      height: 140px;
+      background: #080203;
+      border-radius: 5px;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.9);
+      position: relative;
+      touch-action: none;
+    }
+    .fader-grip {
+      width: 32px;
+      height: 24px;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, 0);
+      background: linear-gradient(to bottom, #4f151a 0%, #1c0507 100%);
+      border: 1.5px solid #ef4444;
+      border-radius: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.3);
+      cursor: grab;
+    }
+    .fader-grip:active {
+      cursor: grabbing;
+      border-color: #fbbf24;
+      box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+    }
+    .fader-grip::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 3px;
+      right: 3px;
+      height: 2px;
+      background: #ef4444;
+      transform: translateY(-50%);
+    }
+
+    /* Mechanical Flip Toggle Switch */
+    .switch-lever {
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-origin: bottom center;
+    }
+    .switch-lever.on {
+      transform: rotate(-24deg);
+    }
+    .switch-lever.off {
+      transform: rotate(24deg);
+    }
+
+    /* Heavy Guillotine Blade */
+    .guillotine-blade {
+      transition: transform 0.12s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    /* Mechanical Odometer Frame Counter */
+    .counter-roller {
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 3px;
+      padding: 2px 4px;
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      color: #fbbf24;
+      text-shadow: 0 0 4px rgba(251, 191, 36, 0.5);
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(13, 4, 6, 0.9);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(239, 68, 68, 0.35);
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="relative flex flex-col justify-between select-none">
+
+  <!-- Background Ambience -->
+  <div class="theater-beam"></div>
+
+  <!-- TOP CONSOLE CHASSIS: Master Rotary Switchboard & Hardware Status -->
+  <header class="relative z-20 flex items-center justify-between px-4 sm:px-6 py-3 border-b-2 border-rose-950/80 bg-[#120406]/90 backdrop-blur-md shadow-2xl">
+    
+    <!-- Left: Return to Deck & Mechanical Chassis Badge -->
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-rose-500/30 bg-rose-950/40 hover:bg-rose-500/20 text-rose-300 hover:text-white transition-all text-xs font-mono tracking-wider active:scale-95 shadow">
+        <i class="fa-solid fa-arrow-left text-[11px]"></i>
+        <span class="font-bold">RETURN</span>
+      </a>
+      <div class="h-4 w-px bg-rose-900/50 hidden sm:block"></div>
+      <!-- Stamped Brass Model Plate -->
+      <div class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded bg-black/60 border border-neutral-800 text-[10px] font-mono text-neutral-400">
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+        <span>PEAK APPARATUS // MK-IV</span>
+      </div>
+    </div>
+
+    <!-- Center: Physical 5-Position Rotary Mode Selector Switch -->
+    <div class="flex items-center gap-3 sm:gap-5 px-3 py-1.5 rounded-2xl bg-black/70 border border-rose-900/50 shadow-inner">
+      <!-- Position Marks: I, II, III, IV, V -->
+      <div class="flex items-center gap-2 sm:gap-3 text-xs font-mono font-bold">
+        <button onclick="setApparatusMode(1)" id="modeMark-1" class="mode-badge w-8 h-8 rounded-lg flex items-center justify-center border border-rose-500 bg-rose-600/30 text-rose-200 shadow-[0_0_10px_rgba(239,68,68,0.4)] transition-all">I</button>
+        <button onclick="setApparatusMode(2)" id="modeMark-2" class="mode-badge w-8 h-8 rounded-lg flex items-center justify-center border border-neutral-800 bg-neutral-900/50 text-neutral-500 hover:text-rose-300 transition-all">II</button>
+        <button onclick="setApparatusMode(3)" id="modeMark-3" class="mode-badge w-8 h-8 rounded-lg flex items-center justify-center border border-neutral-800 bg-neutral-900/50 text-neutral-500 hover:text-rose-300 transition-all">III</button>
+        <button onclick="setApparatusMode(4)" id="modeMark-4" class="mode-badge w-8 h-8 rounded-lg flex items-center justify-center border border-neutral-800 bg-neutral-900/50 text-neutral-500 hover:text-rose-300 transition-all">IV</button>
+        <button onclick="setApparatusMode(5)" id="modeMark-5" class="mode-badge w-8 h-8 rounded-lg flex items-center justify-center border border-neutral-800 bg-neutral-900/50 text-neutral-500 hover:text-rose-300 transition-all">V</button>
+      </div>
+
+      <!-- Rotary Mechanical Knob Indicator -->
+      <div class="relative w-8 h-8 rounded-full border border-rose-500/40 bg-neutral-900 shadow-md flex items-center justify-center">
+        <div id="modeSelectorNotch" class="mode-notch absolute top-1 w-1.5 h-3 rounded-full bg-rose-400 shadow-[0_0_8px_#ef4444]"></div>
+      </div>
+    </div>
+
+    <!-- Right: Sound Toggle & Schematic Blueprint Button -->
+    <div class="flex items-center gap-2">
+      <button id="soundMasterToggle" onclick="toggleApparatusAudio()" title="Sound On / Mute" class="w-8 h-8 rounded-lg flex items-center justify-center border border-rose-500/30 bg-rose-950/40 text-rose-400 hover:text-white transition-all active:scale-95">
+        <i class="fa-solid fa-volume-high text-xs" id="soundMasterIcon"></i>
+      </button>
+      <button onclick="openTutorialModal()" title="View Machine Blueprint & Tutorial" class="w-8 h-8 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition-all flex items-center justify-center text-xs font-mono font-bold active:scale-95">
+        ?
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN HARDWARE WORKBENCH STAGE -->
+  <main class="relative z-10 flex-1 flex items-center justify-center p-3 sm:p-6 max-w-6xl mx-auto w-full">
+
+    <!-- =========================================================================
+         MODULE I: 35MM STEENBECK FLATBED EDITING BENCH
+         ========================================================================= -->
+    <section id="module-1" class="apparatus-section w-full flex flex-col items-center gap-6">
+      
+      <!-- Top Mechanism Bar: Frame Counter & Tachometer -->
+      <div class="w-full max-w-4xl flex items-center justify-between px-3 font-mono text-xs text-neutral-400">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-film text-rose-500"></i>
+          <span class="font-bold text-slate-200 tracking-wider">35MM STEENBECK FLATBED</span>
+        </div>
+        <!-- 5-Digit Mechanical Odometer Counter -->
+        <div class="flex items-center gap-1.5 text-xs bg-black/80 px-2.5 py-1 rounded-md border border-neutral-800">
+          <span class="text-[10px] text-neutral-500 mr-1">FRAME</span>
+          <span class="counter-roller">0</span>
+          <span class="counter-roller">1</span>
+          <span class="counter-roller">4</span>
+          <span id="odometerTens" class="counter-roller">2</span>
+          <span id="odometerUnits" class="counter-roller">8</span>
+        </div>
+      </div>
+
+      <!-- Main Flatbed Deck Housing -->
+      <div class="relative w-full max-w-4xl rounded-3xl border-2 border-rose-950 bg-[#160608] p-5 sm:p-8 shadow-[0_0_50px_rgba(239,68,68,0.15)] flex flex-col items-center gap-6 overflow-hidden">
+        
+        <!-- Left & Right Film Feed Wheels + Ground Glass Viewer -->
+        <div class="w-full flex items-center justify-between gap-4">
+          <!-- Feed Reel (Spinning Wheel) -->
+          <div id="feedReelWheel" class="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center shadow-lg">
+            <div class="absolute inset-1 rounded-full border border-dashed border-neutral-600/50"></div>
+            <div class="w-6 h-6 rounded-full bg-rose-600/30 border border-rose-500/50"></div>
+          </div>
+
+          <!-- Central Illuminated Ground Glass Plate (Frame Preview) -->
+          <div class="relative flex-1 max-w-lg h-44 sm:h-52 rounded-2xl border-2 border-rose-500/40 bg-black overflow-hidden shadow-[inset_0_0_30px_rgba(239,68,68,0.2)] flex items-center justify-center">
+            <img id="activeFilmViewerImg" src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transition-all duration-300" alt="Pulp Fiction">
+            <!-- Optical Reticle Lines -->
+            <div class="absolute inset-0 border border-rose-500/20 pointer-events-none"></div>
+            <div class="absolute inset-x-0 top-1/2 h-px bg-rose-500/30 pointer-events-none"></div>
+            <div class="absolute inset-y-0 left-1/2 w-px bg-rose-500/30 pointer-events-none"></div>
+            <!-- Active Film Title Stamped Tag -->
+            <div id="activeViewerTitle" class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/80 border border-rose-500/40 text-[10px] font-mono text-rose-300 font-bold">
+              PULP FICTION // 1994 // 35MM
+            </div>
+            <!-- Yellow Wax Cut Point Overlay (Shown when marked) -->
+            <div id="waxCutMark" class="absolute inset-0 bg-amber-400/20 border-r-4 border-amber-400 pointer-events-none transition-opacity duration-300 opacity-0"></div>
+          </div>
+
+          <!-- Take-Up Reel -->
+          <div id="takeUpReelWheel" class="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full border-2 border-neutral-700 bg-neutral-900 flex items-center justify-center shadow-lg">
+            <div class="absolute inset-1 rounded-full border border-dashed border-neutral-600/50"></div>
+            <div class="w-6 h-6 rounded-full bg-rose-600/30 border border-rose-500/50"></div>
+          </div>
+        </div>
+
+        <!-- Sprocket Film Strip Ribbon (Horizontally Draggable) -->
+        <div class="w-full">
+          <div class="film-sprockets-top border-b border-rose-950 mb-2 opacity-80"></div>
+          
+          <div id="filmStripConveyor" class="flex items-center gap-4 overflow-x-auto py-2 cursor-grab active:cursor-grabbing no-scrollbar">
+            <!-- Frame 1: The Godfather -->
+            <div onclick="selectFilmFrame(1, 'THE GODFATHER // 1972', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?q=80&w=800&auto=format&fit=crop')" class="film-cell shrink-0 w-36 sm:w-44 h-24 rounded-lg border border-rose-500/30 bg-neutral-900 overflow-hidden relative cursor-pointer hover:border-rose-400 group">
+              <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Godfather">
+              <span class="absolute bottom-1 left-1 text-[9px] font-mono bg-black/70 px-1 rounded text-neutral-300">01</span>
+            </div>
+            <!-- Frame 2: Taxi Driver -->
+            <div onclick="selectFilmFrame(2, 'TAXI DRIVER // 1976', 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=800&auto=format&fit=crop')" class="film-cell shrink-0 w-36 sm:w-44 h-24 rounded-lg border border-rose-500/30 bg-neutral-900 overflow-hidden relative cursor-pointer hover:border-rose-400 group">
+              <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Taxi Driver">
+              <span class="absolute bottom-1 left-1 text-[9px] font-mono bg-black/70 px-1 rounded text-neutral-300">02</span>
+            </div>
+            <!-- Frame 3: Pulp Fiction (Active) -->
+            <div onclick="selectFilmFrame(3, 'PULP FICTION // 1994', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800&auto=format&fit=crop')" class="film-cell shrink-0 w-36 sm:w-44 h-24 rounded-lg border-2 border-rose-500 bg-neutral-900 overflow-hidden relative cursor-pointer ring-2 ring-rose-500/40">
+              <img src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Pulp Fiction">
+              <span class="absolute bottom-1 left-1 text-[9px] font-mono bg-rose-600 px-1 rounded text-white font-bold">03 · ACTIVE</span>
+            </div>
+            <!-- Frame 4: Apocalypse Now -->
+            <div onclick="selectFilmFrame(4, 'APOCALYPSE NOW // 1979', 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=800&auto=format&fit=crop')" class="film-cell shrink-0 w-36 sm:w-44 h-24 rounded-lg border border-rose-500/30 bg-neutral-900 overflow-hidden relative cursor-pointer hover:border-rose-400 group">
+              <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Apocalypse Now">
+              <span class="absolute bottom-1 left-1 text-[9px] font-mono bg-black/70 px-1 rounded text-neutral-300">04</span>
+            </div>
+            <!-- Frame 5: Goodfellas -->
+            <div onclick="selectFilmFrame(5, 'GOODFELLAS // 1990', 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop')" class="film-cell shrink-0 w-36 sm:w-44 h-24 rounded-lg border border-rose-500/30 bg-neutral-900 overflow-hidden relative cursor-pointer hover:border-rose-400 group">
+              <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Goodfellas">
+              <span class="absolute bottom-1 left-1 text-[9px] font-mono bg-black/70 px-1 rounded text-neutral-300">05</span>
+            </div>
+            <!-- Frame 6: The Dark Knight -->
+            <div onclick="selectFilmFrame(6, 'THE DARK KNIGHT // 2008', 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=800&auto=format&fit=crop')" class="film-cell shrink-0 w-36 sm:w-44 h-24 rounded-lg border border-rose-500/30 bg-neutral-900 overflow-hidden relative cursor-pointer hover:border-rose-400 group">
+              <img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Dark Knight">
+              <span class="absolute bottom-1 left-1 text-[9px] font-mono bg-black/70 px-1 rounded text-neutral-300">06</span>
+            </div>
+          </div>
+
+          <div class="film-sprockets-bottom border-t border-rose-950 mt-2 opacity-80"></div>
+        </div>
+
+        <!-- Physical Scrub Wheel & Grease Pencil Stamp -->
+        <div class="flex items-center justify-center gap-8 pt-2">
+          <!-- Heavy Cast Handwheel -->
+          <div class="flex flex-col items-center gap-1.5">
+            <div id="rotaryFilmScrubDial" class="knurled-dial w-20 h-20 rounded-full border-2 border-rose-500/60 relative flex items-center justify-center">
+              <div id="scrubDialPointer" class="absolute top-2 w-2 h-4 rounded bg-rose-400 shadow-[0_0_8px_#ef4444]"></div>
+              <div class="w-8 h-8 rounded-full bg-black/70 border border-neutral-700 flex items-center justify-center text-[10px] font-mono text-neutral-400">
+                24
+              </div>
+            </div>
+            <span class="font-mono text-[9px] text-neutral-400">CRANK / SCRUB</span>
+          </div>
+
+          <!-- Physical Grease Pencil Wax Stamp -->
+          <div class="flex flex-col items-center gap-1.5">
+            <button onclick="stampWaxCut()" title="Mark Grease Pencil Wax Cut" class="w-14 h-14 rounded-2xl border-2 border-amber-500/60 bg-gradient-to-b from-amber-950/70 to-black hover:border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow-lg active:scale-90 transition-all">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+            <span class="font-mono text-[9px] text-amber-500/80">CUT MARK</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         MODULE II: MASTER VINYL CUTTING TURNTABLE
+         ========================================================================= -->
+    <section id="module-2" class="apparatus-section w-full hidden flex-col items-center gap-6">
+      
+      <div class="w-full max-w-3xl flex items-center justify-between px-3 font-mono text-xs text-neutral-400">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-record-vinyl text-rose-500"></i>
+          <span class="font-bold text-slate-200 tracking-wider">DIRECT-DRIVE MASTER TURNTABLE</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span id="vinylSpeedDisplay" class="font-bold text-amber-400">33⅓ RPM</span>
+          <span class="text-neutral-600">|</span>
+          <span id="needleStateDisplay" class="text-neutral-400">TONEARM AT REST</span>
+        </div>
+      </div>
+
+      <!-- Heavy Turntable Plinth -->
+      <div class="relative w-full max-w-3xl rounded-3xl border-2 border-rose-950 bg-[#160608] p-6 sm:p-8 shadow-[0_0_50px_rgba(239,68,68,0.18)] flex flex-col md:flex-row items-center justify-between gap-8">
+        
+        <!-- Left: Cast Platter with 12" Vinyl Disc -->
+        <div class="relative w-64 h-64 sm:w-76 sm:h-76 rounded-full p-2 bg-[#0c0203] border-4 border-neutral-800 shadow-[inset_0_0_25px_black] flex items-center justify-center">
+          <!-- Strobe dots rim -->
+          <div class="absolute inset-0 rounded-full border-4 border-dashed border-neutral-700/40"></div>
+
+          <!-- Vinyl Record Disc -->
+          <div id="vinylRecordDisc" class="vinyl-platter w-full h-full rounded-full relative flex items-center justify-center cursor-pointer">
+            <div class="w-24 h-24 rounded-full border-2 border-rose-500/60 bg-gradient-to-tr from-rose-950 via-[#1e070a] to-rose-900 p-2 flex flex-col items-center justify-center text-center shadow-lg pointer-events-none">
+              <i class="fa-solid fa-music text-rose-300 text-xs mb-1"></i>
+              <div class="text-[9px] font-mono font-bold text-rose-200 tracking-wider">ENNIO MORRICONE</div>
+              <div class="text-[8px] font-mono text-rose-400/80">THE ECSTASY OF GOLD</div>
+              <div class="w-3 h-3 rounded-full bg-slate-300 border border-slate-600 mt-1 shadow-inner"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Tonearm, Analog Ballistic VU Meters, Physical Speed Snap -->
+        <div class="flex flex-col items-center md:items-start justify-between h-full gap-6 w-full max-w-xs">
+          
+          <!-- Physical Tonearm Pivot Deck (Interactive Drag or Click Lever) -->
+          <div class="relative w-full bg-black/60 rounded-2xl border border-rose-950 p-4 flex flex-col justify-between">
+            <div class="flex items-center justify-between font-mono text-[10px] text-neutral-400 pb-2 border-b border-neutral-900">
+              <span>TONEARM ASSEMBLY</span>
+              <span class="text-rose-400 font-bold">DRAG OR FLICK</span>
+            </div>
+
+            <div class="relative w-full h-24 flex items-center">
+              <!-- Draggable / Clickable Tonearm -->
+              <div id="physicalTonearm" onclick="toggleNeedleDrop()" class="tonearm-assembly absolute top-2 left-6 w-36 h-6 flex items-center cursor-pointer" title="Click or Drag Tonearm onto Record">
+                <!-- Gimbal Pivot Base -->
+                <div class="w-8 h-8 rounded-full border-2 border-rose-500 bg-neutral-800 shadow-[0_0_12px_rgba(239,68,68,0.5)] flex items-center justify-center">
+                  <div class="w-3 h-3 rounded-full bg-rose-400"></div>
+                </div>
+                <!-- Brushed Chrome Arm Wand -->
+                <div class="w-26 h-1.5 bg-gradient-to-r from-neutral-300 to-neutral-500 rounded-full shadow"></div>
+                <!-- Headshell / Cartridge -->
+                <div class="w-4 h-3 bg-rose-500 rounded-sm shadow-[0_0_8px_#ef4444]"></div>
+              </div>
+            </div>
+
+            <!-- Physical Cueing Lever Switch -->
+            <div class="flex items-center justify-between pt-2 border-t border-neutral-900">
+              <span class="font-mono text-[10px] text-neutral-400">CUE LEVER</span>
+              <button onclick="toggleNeedleDrop()" id="cueLeverSnap" class="w-12 h-6 rounded-full border border-rose-500/50 bg-neutral-900 p-0.5 flex items-center transition-colors">
+                <div id="cueLeverThumb" class="w-4 h-4 rounded-full bg-rose-500 shadow transition-transform"></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dual Analog Backlit VU Meters -->
+          <div class="w-full grid grid-cols-2 gap-3">
+            <div class="p-2.5 rounded-xl border border-rose-950 bg-black flex flex-col gap-1.5">
+              <div class="flex justify-between font-mono text-[9px] text-neutral-400">
+                <span>VU L</span>
+                <span class="text-amber-400">-3 dB</span>
+              </div>
+              <div class="relative h-6 bg-[#160608] rounded border border-rose-950 overflow-hidden flex items-end p-1">
+                <div id="vuL" class="w-full h-1.5 bg-gradient-to-r from-amber-500 via-amber-300 to-rose-500 rounded transition-all duration-75" style="width: 25%;"></div>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl border border-rose-950 bg-black flex flex-col gap-1.5">
+              <div class="flex justify-between font-mono text-[9px] text-neutral-400">
+                <span>VU R</span>
+                <span class="text-amber-400">-1 dB</span>
+              </div>
+              <div class="relative h-6 bg-[#160608] rounded border border-rose-950 overflow-hidden flex items-end p-1">
+                <div id="vuR" class="w-full h-1.5 bg-gradient-to-r from-amber-500 via-amber-300 to-rose-500 rounded transition-all duration-75" style="width: 30%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Speed Snap Switch: 33⅓ vs 45 RPM -->
+          <div class="flex items-center justify-between w-full p-2.5 rounded-xl bg-black/60 border border-neutral-900">
+            <span class="font-mono text-[10px] text-neutral-400">SPEED DETENT</span>
+            <div class="flex items-center gap-2 font-mono text-xs">
+              <button onclick="setVinylSpeed(33.3)" id="rpm33SnapBtn" class="px-3 py-1 rounded border border-rose-500 bg-rose-600/30 text-rose-200 font-bold">33⅓</button>
+              <button onclick="setVinylSpeed(45)" id="rpm45SnapBtn" class="px-3 py-1 rounded border border-neutral-800 bg-neutral-900 text-neutral-500 font-bold hover:text-rose-300">45</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         MODULE III: 5-BAND STUDIO MASTERING CONSOLE & RTA LED MATRIX
+         ========================================================================= -->
+    <section id="module-3" class="apparatus-section w-full hidden flex-col items-center gap-6">
+      
+      <div class="w-full max-w-4xl flex items-center justify-between px-3 font-mono text-xs text-neutral-400">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-rose-500"></i>
+          <span class="font-bold text-slate-200 tracking-wider">NEVE MASTERING CONSOLE</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span>GAIN: <strong id="eqGainDisplay" class="text-amber-400">+4.0 dB</strong></span>
+          <span class="text-neutral-600">|</span>
+          <span id="consoleStatusLabel" class="text-emerald-400">ACTIVE</span>
+        </div>
+      </div>
+
+      <!-- Console Strip Housing -->
+      <div class="relative w-full max-w-4xl rounded-3xl border-2 border-rose-950 bg-[#160608] p-6 sm:p-8 shadow-[0_0_50px_rgba(239,68,68,0.18)] flex flex-col md:flex-row items-center gap-8">
+        
+        <!-- Left: 16-Band Real-Time LED Audio Spectrum Matrix -->
+        <div class="relative w-64 h-64 sm:w-80 sm:h-76 rounded-2xl border-2 border-neutral-800 bg-black p-4 flex flex-col justify-between shadow-inner">
+          <div class="flex items-center justify-between font-mono text-[9px] text-neutral-400 pb-2 border-b border-neutral-900">
+            <span>SPECTRUM ANALYZER</span>
+            <span>20 HZ - 20 KHZ</span>
+          </div>
+          <!-- Canvas Matrix -->
+          <canvas id="matrixCanvas" width="280" height="180" class="w-full h-full my-2"></canvas>
+          <div class="flex justify-between font-mono text-[8px] text-neutral-500 pt-1 border-t border-neutral-900">
+            <span>60Hz</span>
+            <span>250Hz</span>
+            <span>1kHz</span>
+            <span>4kHz</span>
+            <span>16kHz</span>
+          </div>
+        </div>
+
+        <!-- Right: 5 Physical Channel Faders & Master Rotary Trim -->
+        <div class="flex-1 flex flex-col justify-between gap-6 w-full">
+          
+          <!-- Faders Bay -->
+          <div class="flex items-center justify-between gap-2 sm:gap-4 p-4 rounded-2xl border border-rose-950 bg-black/70">
+            <!-- Fader 1 -->
+            <div class="flex flex-col items-center gap-2">
+              <div class="fader-slot" data-fader="1">
+                <div class="fader-grip" style="top: 35px;"></div>
+              </div>
+              <span class="font-mono text-[9px] text-neutral-300 font-bold">SUB</span>
+            </div>
+            <!-- Fader 2 -->
+            <div class="flex flex-col items-center gap-2">
+              <div class="fader-slot" data-fader="2">
+                <div class="fader-grip" style="top: 50px;"></div>
+              </div>
+              <span class="font-mono text-[9px] text-neutral-300 font-bold">BASS</span>
+            </div>
+            <!-- Fader 3 -->
+            <div class="flex flex-col items-center gap-2">
+              <div class="fader-slot" data-fader="3">
+                <div class="fader-grip" style="top: 25px;"></div>
+              </div>
+              <span class="font-mono text-[9px] text-neutral-300 font-bold">MID</span>
+            </div>
+            <!-- Fader 4 -->
+            <div class="flex flex-col items-center gap-2">
+              <div class="fader-slot" data-fader="4">
+                <div class="fader-grip" style="top: 60px;"></div>
+              </div>
+              <span class="font-mono text-[9px] text-neutral-300 font-bold">HIGH</span>
+            </div>
+            <!-- Fader 5 -->
+            <div class="flex flex-col items-center gap-2">
+              <div class="fader-slot" data-fader="5">
+                <div class="fader-grip" style="top: 40px;"></div>
+              </div>
+              <span class="font-mono text-[9px] text-neutral-300 font-bold">AIR</span>
+            </div>
+          </div>
+
+          <!-- Bottom: Master Gain Dial & Physical Toggle Switch -->
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-black/60 border border-neutral-900">
+            <!-- Rotary Gain Trim -->
+            <div class="flex items-center gap-3">
+              <div id="rotaryMasterTrim" class="knurled-dial w-14 h-14 rounded-full border-2 border-rose-500/60 relative flex items-center justify-center">
+                <div id="trimKnobPointer" class="absolute top-1.5 w-1 h-3 rounded-full bg-amber-400"></div>
+                <i class="fa-solid fa-volume-high text-rose-400 text-xs"></i>
+              </div>
+              <div>
+                <div class="font-mono text-xs font-bold text-slate-200">MASTER TRIM</div>
+                <div class="font-mono text-[10px] text-neutral-500">ANALOG PREAMP</div>
+              </div>
+            </div>
+
+            <!-- Physical Mute Toggle Switch -->
+            <div class="flex flex-col items-center gap-1">
+              <button onclick="toggleConsoleMute()" id="consoleMuteSwitch" class="w-12 h-6 rounded-full border border-rose-500/40 bg-neutral-900 p-0.5 flex items-center transition-colors">
+                <div id="muteSwitchThumb" class="w-4 h-4 rounded-full bg-rose-500 shadow transition-transform"></div>
+              </button>
+              <span class="font-mono text-[9px] text-neutral-400">MUTE</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         MODULE IV: CIR CATOZZO 35MM GUILLOTINE FILM SPLICER
+         ========================================================================= -->
+    <section id="module-4" class="apparatus-section w-full hidden flex-col items-center gap-6">
+      
+      <div class="w-full max-w-3xl flex items-center justify-between px-3 font-mono text-xs text-neutral-400">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-scissors text-rose-500"></i>
+          <span class="font-bold text-slate-200 tracking-wider">CIR CATOZZO 35MM TAPE SPLICER</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span>CLAMP: 120 LBS</span>
+          <span class="text-neutral-600">|</span>
+          <span class="text-rose-400 font-bold">READY TO CHOP</span>
+        </div>
+      </div>
+
+      <!-- Guillotine Bed -->
+      <div class="relative w-full max-w-3xl rounded-3xl border-2 border-rose-950 bg-[#160608] p-6 sm:p-8 shadow-[0_0_50px_rgba(239,68,68,0.18)] flex flex-col items-center gap-8">
+        
+        <!-- Two Contenders Laid Across Registration Pins -->
+        <div class="relative w-full grid grid-cols-2 gap-4 sm:gap-8 items-center">
+          <!-- Contender A: The Godfather -->
+          <div id="duelCardA" class="relative rounded-2xl border-2 border-rose-400/60 bg-[#120406] p-3 sm:p-4 overflow-hidden transition-all duration-300">
+            <div class="relative h-48 rounded-xl overflow-hidden bg-neutral-900">
+              <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="The Godfather">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-rose-600 text-white text-[10px] font-mono font-bold">REEL 01</span>
+            </div>
+            <div class="mt-3 font-mono text-center">
+              <div class="text-sm sm:text-base font-bold text-slate-100">THE GODFATHER</div>
+              <div class="text-[10px] text-rose-400/80">9.2 / 10 • 1972</div>
+            </div>
+          </div>
+
+          <!-- Contender B: Goodfellas -->
+          <div id="duelCardB" class="relative rounded-2xl border-2 border-rose-950 bg-[#120406] p-3 sm:p-4 overflow-hidden transition-all duration-300">
+            <div class="relative h-48 rounded-xl overflow-hidden bg-neutral-900">
+              <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Goodfellas">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-neutral-800 text-neutral-400 text-[10px] font-mono font-bold">REEL 02</span>
+            </div>
+            <div class="mt-3 font-mono text-center">
+              <div class="text-sm sm:text-base font-bold text-slate-100">GOODFELLAS</div>
+              <div class="text-[10px] text-neutral-400">8.7 / 10 • 1990</div>
+            </div>
+          </div>
+
+          <!-- Heavy Steel Guillotine Blade Crossbar -->
+          <div id="guillotineBladeBar" class="guillotine-blade absolute inset-x-0 -top-4 h-6 bg-gradient-to-r from-neutral-600 via-neutral-200 to-neutral-600 border-b-2 border-rose-500 shadow-[0_8px_25px_rgba(0,0,0,0.9),0_0_20px_rgba(239,68,68,0.5)] z-20 pointer-events-none transform -translate-y-2"></div>
+        </div>
+
+        <!-- Heavy Physical Lever Handle (Grab & Pull) -->
+        <div class="flex flex-col items-center gap-2">
+          <button id="splicerChopBtn" onclick="slamSplicerLever()" class="group relative px-10 py-4 rounded-2xl border-2 border-rose-500/60 bg-gradient-to-b from-rose-950/80 to-black hover:border-rose-400 text-rose-200 hover:text-white font-mono text-sm font-bold tracking-wider shadow-[0_0_30px_rgba(239,68,68,0.3)] transition-all active:scale-95 flex items-center gap-3 cursor-pointer">
+            <i class="fa-solid fa-angles-down text-rose-400 group-hover:translate-y-1 transition-transform"></i>
+            <span>PULL LEVER TO SPLICE</span>
+            <i class="fa-solid fa-bolt text-rose-400"></i>
+          </button>
+          <span class="font-mono text-[9px] text-neutral-500">ACTUATES SPRING-LOADED BLADE</span>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         MODULE V: BOX OFFICE TICKET EMBOSSER & ARCHIVE VAULT
+         ========================================================================= -->
+    <section id="module-5" class="apparatus-section w-full hidden flex-col items-center gap-6">
+      
+      <div class="w-full max-w-4xl flex items-center justify-between px-3 font-mono text-xs text-neutral-400">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-box-archive text-amber-500"></i>
+          <span class="font-bold text-slate-200 tracking-wider">CRITERION SPINE ARCHIVE & EMBOSSER</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span>TIER: ARCHIVAL</span>
+          <span class="text-neutral-600">|</span>
+          <span class="text-amber-400 font-bold">READY TO STAMP</span>
+        </div>
+      </div>
+
+      <!-- Vault & Dispenser Bed -->
+      <div class="relative w-full max-w-4xl rounded-3xl border-2 border-rose-950 bg-[#160608] p-6 sm:p-8 shadow-[0_0_50px_rgba(239,68,68,0.18)] flex flex-col md:flex-row items-center gap-8">
+        
+        <!-- Criterion Spine Rack (Click Spine to Select) -->
+        <div class="flex-1 w-full flex items-end justify-center gap-3 p-4 bg-black/80 rounded-2xl border border-neutral-900 min-h-[220px]">
+          <!-- Spine 1: Citizen Kane -->
+          <div onclick="selectArchiveSpine('CITIZEN KANE', '#101')" class="spine-strip w-14 sm:w-16 h-48 rounded-lg bg-gradient-to-b from-rose-950 via-neutral-800 to-black border border-rose-500/40 p-2 flex flex-col justify-between items-center cursor-pointer hover:-translate-y-3 transition-transform shadow-lg group">
+            <span class="font-mono text-[9px] text-rose-300">#101</span>
+            <span class="font-mono text-[10px] font-bold text-slate-200 [writing-mode:vertical-rl] rotate-180 tracking-widest group-hover:text-rose-300">CITIZEN KANE</span>
+            <div class="w-2 h-2 rounded-full bg-rose-500"></div>
+          </div>
+
+          <!-- Spine 2: Casablanca -->
+          <div onclick="selectArchiveSpine('CASABLANCA', '#082')" class="spine-strip w-14 sm:w-16 h-52 rounded-lg bg-gradient-to-b from-amber-950 via-neutral-800 to-black border border-amber-500/40 p-2 flex flex-col justify-between items-center cursor-pointer hover:-translate-y-3 transition-transform shadow-lg group">
+            <span class="font-mono text-[9px] text-amber-300">#082</span>
+            <span class="font-mono text-[10px] font-bold text-slate-200 [writing-mode:vertical-rl] rotate-180 tracking-widest group-hover:text-amber-300">CASABLANCA</span>
+            <div class="w-2 h-2 rounded-full bg-amber-400"></div>
+          </div>
+
+          <!-- Spine 3: 8½ (Active) -->
+          <div onclick="selectArchiveSpine('FELLINI 8½', '#140')" class="spine-strip w-14 sm:w-16 h-56 rounded-lg bg-gradient-to-b from-red-950 via-neutral-800 to-black border-2 border-rose-500 p-2 flex flex-col justify-between items-center cursor-pointer -translate-y-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] group">
+            <span class="font-mono text-[9px] text-rose-300 font-bold">#140</span>
+            <span class="font-mono text-[10px] font-bold text-rose-200 [writing-mode:vertical-rl] rotate-180 tracking-widest">FELLINI 8½</span>
+            <div class="w-2 h-2 rounded-full bg-rose-400"></div>
+          </div>
+
+          <!-- Spine 4: Seven Samurai -->
+          <div onclick="selectArchiveSpine('SEVEN SAMURAI', '#002')" class="spine-strip w-14 sm:w-16 h-48 rounded-lg bg-gradient-to-b from-stone-900 via-neutral-800 to-black border border-neutral-700 p-2 flex flex-col justify-between items-center cursor-pointer hover:-translate-y-3 transition-transform shadow-lg group">
+            <span class="font-mono text-[9px] text-neutral-300">#002</span>
+            <span class="font-mono text-[10px] font-bold text-slate-200 [writing-mode:vertical-rl] rotate-180 tracking-widest group-hover:text-neutral-200">7 SAMURAI</span>
+            <div class="w-2 h-2 rounded-full bg-neutral-400"></div>
+          </div>
+        </div>
+
+        <!-- Ticket Dispenser Chute & Emboss Stamp Plunger -->
+        <div class="w-full md:w-80 flex flex-col items-center gap-4">
+          <!-- Animated Dispensed Golden Foil Ticket Stub -->
+          <div id="dispensedTicketStub" class="w-full max-w-xs rounded-2xl border-2 border-amber-400/70 bg-gradient-to-br from-amber-950/80 via-black to-black p-4 shadow-[0_0_25px_rgba(245,158,11,0.3)] font-mono transition-transform duration-500">
+            <div class="flex items-center justify-between border-b border-amber-500/30 pb-2">
+              <span class="text-[10px] text-amber-300 font-bold tracking-wider">PEAK // ADMIT ONE</span>
+              <span id="ticketNumberTag" class="text-[10px] text-amber-400">#140</span>
+            </div>
+            <div class="py-3">
+              <div id="ticketTitleTag" class="text-sm font-bold text-slate-100">FELLINI 8½</div>
+              <div class="text-[10px] text-amber-400/80 mt-1">THEATER 01 • ORCHESTRA • 35MM</div>
+            </div>
+            <div class="flex items-center justify-between border-t border-dashed border-amber-500/40 pt-2 text-[9px] text-amber-500/80">
+              <span>CINEMA VAULT</span>
+              <span>EMBOSSED PASS</span>
+            </div>
+          </div>
+
+          <!-- Physical Plunger Stamp Button -->
+          <button onclick="stampPhysicalTicket()" class="w-full py-3.5 px-4 rounded-xl border border-amber-400/50 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 active:scale-95 shadow-[0_0_15px_rgba(245,158,11,0.25)] cursor-pointer">
+            <i class="fa-solid fa-stamp text-sm"></i>
+            <span>DEPRESS STAMP TO EMBOSS</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM HARDWARE STATUS BAR -->
+  <footer class="relative z-20 px-6 py-3 border-t-2 border-rose-950/80 bg-[#120406]/90 backdrop-blur-md flex items-center justify-between font-mono text-[11px] text-neutral-400">
+    <div class="flex items-center gap-3">
+      <span class="inline-block w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+      <span>CONSOLE READY</span>
+      <span class="text-rose-900 hidden sm:inline">|</span>
+      <span class="hidden sm:inline">WEB AUDIO ENGINE: SYNTHESIZED</span>
+    </div>
+    <div>
+      <a href="index.html" class="text-rose-400 hover:text-white transition-colors font-bold">EXIT APPARATUS &rarr;</a>
+    </div>
+  </footer>
+
+
+  <!-- VISUAL TUTORIAL BLUEPRINT SCHEMATIC OVERLAY -->
+  <div id="tutorialModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md transition-opacity duration-300 hidden opacity-0">
+    <div class="relative w-full max-w-lg rounded-3xl border-2 border-rose-500/50 bg-[#160608] p-6 sm:p-8 shadow-[0_0_60px_rgba(239,68,68,0.35)] flex flex-col gap-6 font-mono text-slate-200">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-rose-950 pb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></div>
+          <span class="text-sm font-bold tracking-widest text-rose-300">STUDIO BLUEPRINT // SCHEMATIC</span>
+        </div>
+        <button onclick="closeTutorialModal()" class="w-7 h-7 rounded-lg border border-rose-500/30 flex items-center justify-center text-rose-400 hover:text-white hover:bg-rose-500/20 transition-all text-xs">
+          ✕
+        </button>
+      </div>
+
+      <!-- 3 Visual Interaction Cue Cards -->
+      <div class="flex flex-col gap-3 text-xs">
+        <!-- Cue 1 -->
+        <div class="p-3.5 rounded-xl border border-rose-950 bg-black/70 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-rose-600/20 border border-rose-500/40 text-rose-300 flex items-center justify-center shrink-0 font-bold">
+            I-V
+          </div>
+          <div>
+            <div class="font-bold text-rose-200 mb-0.5">ROTARY SWITCHBOARD</div>
+            <div class="text-neutral-400 text-[11px] leading-relaxed">
+              Use the heavy knurled selector knob in the top bar to rotate between the 5 physical stations: Flatbed, Turntable, Soundboard, Splicer, and Vault.
+            </div>
+          </div>
+        </div>
+
+        <!-- Cue 2 -->
+        <div class="p-3.5 rounded-xl border border-rose-950 bg-black/70 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-rose-600/20 border border-rose-500/40 text-rose-300 flex items-center justify-center shrink-0 font-bold">
+            👆
+          </div>
+          <div>
+            <div class="font-bold text-rose-200 mb-0.5">DIRECT PHYSICAL CONTROLS</div>
+            <div class="text-neutral-400 text-[11px] leading-relaxed">
+              Turn handwheels to scrub celluloid frames. Click or drag the tonearm onto the vinyl groove. Slide vertical EQ faders. Pull the guillotine blade handle.
+            </div>
+          </div>
+        </div>
+
+        <!-- Cue 3 -->
+        <div class="p-3.5 rounded-xl border border-rose-950 bg-black/70 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-rose-600/20 border border-rose-500/40 text-rose-300 flex items-center justify-center shrink-0 font-bold">
+            🔊
+          </div>
+          <div>
+            <div class="font-bold text-rose-200 mb-0.5">SYNTHESIZED HARMONICS</div>
+            <div class="text-neutral-400 text-[11px] leading-relaxed">
+              Zero external sound dependencies. A real-time Web Audio synthesizer generates authentic mechanical relay clicks, stylus groove crackle, and blade chops.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button onclick="closeTutorialModal()" class="w-full py-3.5 rounded-xl border-2 border-rose-500 bg-rose-600/30 hover:bg-rose-600/50 text-rose-200 font-bold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(239,68,68,0.3)] active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+        <span>INITIALIZE APPARATUS</span>
+        &rarr;
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       JAVASCRIPT ENGINE: PHYSICAL DYNAMICS & WEB AUDIO SYNTHESIZER
+       ========================================================================= -->
+  <script>
+    /* 1. Pure Web Audio Synthesizer Engine */
+    class AnalogAudioSynth {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+        this.vinylNoiseNode = null;
+        this.vinylGainNode = null;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playClick(freq = 1200, dur = 0.04) {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + dur);
+
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + dur);
+      }
+
+      playBladeChop() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(190, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.35);
+
+        gain.gain.setValueAtTime(0.85, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.35);
+
+        this.playClick(3400, 0.08);
+      }
+
+      startVinylCrackle() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx || this.vinylNoiseNode) return;
+
+        const bufferSize = this.ctx.sampleRate * 2;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+
+        for (let i = 0; i < bufferSize; i++) {
+          let pop = Math.random() < 0.0018 ? (Math.random() * 2 - 1) * 0.75 : 0;
+          data[i] = (Math.random() * 2 - 1) * 0.03 + pop;
+        }
+
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+        noise.loop = true;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 1400;
+        filter.Q.value = 1.2;
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        noise.start();
+        this.vinylNoiseNode = noise;
+        this.vinylGainNode = gain;
+      }
+
+      stopVinylCrackle() {
+        if (this.vinylNoiseNode) {
+          try {
+            this.vinylNoiseNode.stop();
+            this.vinylNoiseNode.disconnect();
+          } catch (e) {}
+          this.vinylNoiseNode = null;
+        }
+      }
+
+      playStamp() {
+        if (this.muted) return;
+        this.init();
+        this.playClick(850, 0.05);
+        setTimeout(() => this.playClick(280, 0.09), 40);
+      }
+    }
+
+    const synth = new AnalogAudioSynth();
+
+    function toggleApparatusAudio() {
+      synth.muted = !synth.muted;
+      const icon = document.getElementById('soundMasterIcon');
+      if (synth.muted) {
+        icon.className = 'fa-solid fa-volume-xmark text-xs text-rose-500';
+        synth.stopVinylCrackle();
+      } else {
+        icon.className = 'fa-solid fa-volume-high text-xs text-rose-400';
+        synth.playClick(1100);
+      }
+    }
+
+
+    /* 2. Master Rotary Switchboard Station Control */
+    let activeStation = 1;
+
+    function setApparatusMode(stationNum) {
+      synth.playClick(1400);
+      activeStation = stationNum;
+
+      // Rotate notch
+      const notch = document.getElementById('modeSelectorNotch');
+      if (notch) {
+        const angles = [0, 45, 90, 135, 180];
+        notch.style.transform = `rotate(${angles[stationNum - 1]}deg)`;
+      }
+
+      // Update Badges
+      for (let i = 1; i <= 5; i++) {
+        const mark = document.getElementById('modeMark-' + i);
+        const sec = document.getElementById('module-' + i);
+        if (i === stationNum) {
+          mark.className = 'mode-badge w-8 h-8 rounded-lg flex items-center justify-center border border-rose-500 bg-rose-600/30 text-rose-200 shadow-[0_0_10px_rgba(239,68,68,0.4)] transition-all';
+          sec.classList.remove('hidden');
+          sec.classList.add('flex');
+        } else {
+          mark.className = 'mode-badge w-8 h-8 rounded-lg flex items-center justify-center border border-neutral-800 bg-neutral-900/50 text-neutral-500 hover:text-rose-300 transition-all';
+          sec.classList.add('hidden');
+          sec.classList.remove('flex');
+        }
+      }
+    }
+
+
+    /* 3. 35mm Flatbed Film Interaction */
+    let currentFrameNum = 28;
+    const filmConveyor = document.getElementById('filmStripConveyor');
+    const feedReel = document.getElementById('feedReelWheel');
+    const takeUpReel = document.getElementById('takeUpReelWheel');
+
+    function selectFilmFrame(idx, title, imgUrl) {
+      synth.playClick(1000 + idx * 80);
+      const viewerImg = document.getElementById('activeFilmViewerImg');
+      const viewerTitle = document.getElementById('activeViewerTitle');
+      if (viewerImg) viewerImg.src = imgUrl;
+      if (viewerTitle) viewerTitle.innerText = title;
+
+      // Update frame counter
+      currentFrameNum = (currentFrameNum + 1) % 99;
+      updateOdometer(currentFrameNum);
+    }
+
+    function updateOdometer(num) {
+      const tens = Math.floor(num / 10);
+      const units = num % 10;
+      document.getElementById('odometerTens').innerText = tens;
+      document.getElementById('odometerUnits').innerText = units;
+    }
+
+    function stampWaxCut() {
+      synth.playClick(1800, 0.06);
+      const mark = document.getElementById('waxCutMark');
+      if (mark) {
+        mark.classList.remove('opacity-0');
+        mark.classList.add('opacity-100');
+        setTimeout(() => {
+          mark.classList.remove('opacity-100');
+          mark.classList.add('opacity-0');
+        }, 700);
+      }
+    }
+
+    // Rotary Crank Dial Drag
+    const scrubDial = document.getElementById('rotaryFilmScrubDial');
+    let isDraggingDial = false;
+    let dialAngle = 0;
+    let lastDialX = 0;
+
+    if (scrubDial) {
+      const startDial = (clientX) => {
+        isDraggingDial = true;
+        lastDialX = clientX;
+      };
+      const moveDial = (clientX) => {
+        if (!isDraggingDial) return;
+        const dx = clientX - lastDialX;
+        lastDialX = clientX;
+        dialAngle += dx * 2.5;
+        scrubDial.style.transform = `rotate(${dialAngle}deg)`;
+
+        // Spin reels
+        if (feedReel) feedReel.style.transform = `rotate(${dialAngle * 0.7}deg)`;
+        if (takeUpReel) takeUpReel.style.transform = `rotate(${dialAngle * 0.7}deg)`;
+
+        // Scroll conveyor
+        if (filmConveyor) filmConveyor.scrollLeft += dx * 1.5;
+
+        if (Math.abs(dx) > 5) {
+          synth.playClick(900 + (Math.abs(dialAngle) % 400), 0.02);
+          currentFrameNum = (currentFrameNum + (dx > 0 ? 1 : -1) + 100) % 100;
+          updateOdometer(currentFrameNum);
+        }
+      };
+      const endDial = () => isDraggingDial = false;
+
+      scrubDial.addEventListener('mousedown', (e) => startDial(e.clientX));
+      window.addEventListener('mousemove', (e) => moveDial(e.clientX));
+      window.addEventListener('mouseup', endDial);
+
+      scrubDial.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) startDial(e.touches[0].clientX);
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) moveDial(e.touches[0].clientX);
+      }, { passive: true });
+      window.addEventListener('touchend', endDial);
+    }
+
+
+    /* 4. Master Vinyl Turntable Dynamics */
+    let isNeedleOnDisc = false;
+    let turntableRpm = 33.3;
+    let vuTimer = null;
+
+    function toggleNeedleDrop() {
+      isNeedleOnDisc = !isNeedleOnDisc;
+      const arm = document.getElementById('physicalTonearm');
+      const disc = document.getElementById('vinylRecordDisc');
+      const statusDisp = document.getElementById('needleStateDisplay');
+      const thumb = document.getElementById('cueLeverThumb');
+
+      if (isNeedleOnDisc) {
+        synth.playClick(550, 0.08);
+        setTimeout(() => synth.startVinylCrackle(), 450);
+
+        arm.classList.add('playing');
+        disc.classList.add(turntableRpm === 45 ? 'spinning-45' : 'spinning');
+        statusDisp.innerText = 'PLAYING MICROGROOVE';
+        statusDisp.className = 'text-rose-400 font-bold';
+        thumb.style.transform = 'translateX(24px)';
+
+        startVuMeters();
+      } else {
+        synth.playClick(750, 0.05);
+        synth.stopVinylCrackle();
+
+        arm.classList.remove('playing');
+        disc.classList.remove('spinning', 'spinning-45');
+        statusDisp.innerText = 'TONEARM AT REST';
+        statusDisp.className = 'text-neutral-400';
+        thumb.style.transform = 'translateX(0px)';
+
+        stopVuMeters();
+      }
+    }
+
+    function setVinylSpeed(rpm) {
+      synth.playClick(1100);
+      turntableRpm = rpm;
+      document.getElementById('vinylSpeedDisplay').innerText = rpm === 45 ? '45 RPM' : '33⅓ RPM';
+      const b33 = document.getElementById('rpm33SnapBtn');
+      const b45 = document.getElementById('rpm45SnapBtn');
+      const disc = document.getElementById('vinylRecordDisc');
+
+      if (rpm === 45) {
+        b45.className = 'px-3 py-1 rounded border border-rose-500 bg-rose-600/30 text-rose-200 font-bold';
+        b33.className = 'px-3 py-1 rounded border border-neutral-800 bg-neutral-900 text-neutral-500 font-bold hover:text-rose-300';
+        if (isNeedleOnDisc) {
+          disc.classList.remove('spinning');
+          disc.classList.add('spinning-45');
+        }
+      } else {
+        b33.className = 'px-3 py-1 rounded border border-rose-500 bg-rose-600/30 text-rose-200 font-bold';
+        b45.className = 'px-3 py-1 rounded border border-neutral-800 bg-neutral-900 text-neutral-500 font-bold hover:text-rose-300';
+        if (isNeedleOnDisc) {
+          disc.classList.remove('spinning-45');
+          disc.classList.add('spinning');
+        }
+      }
+    }
+
+    function startVuMeters() {
+      if (vuTimer) clearInterval(vuTimer);
+      const vuL = document.getElementById('vuL');
+      const vuR = document.getElementById('vuR');
+
+      vuTimer = setInterval(() => {
+        const valL = Math.floor(Math.random() * 55) + 30;
+        const valR = Math.floor(Math.random() * 55) + 35;
+        vuL.style.width = valL + '%';
+        vuR.style.width = valR + '%';
+      }, 90);
+    }
+
+    function stopVuMeters() {
+      if (vuTimer) clearInterval(vuTimer);
+      document.getElementById('vuL').style.width = '10%';
+      document.getElementById('vuR').style.width = '12%';
+    }
+
+
+    /* 5. 5-Band Studio Faders & Spectrum LED Matrix */
+    const matrixCanvas = document.getElementById('matrixCanvas');
+    const mCtx = matrixCanvas ? matrixCanvas.getContext('2d') : null;
+    let isMutedConsole = false;
+
+    // Slide Faders
+    document.querySelectorAll('.fader-slot').forEach(slot => {
+      let isDragging = false;
+      const grip = slot.querySelector('.fader-grip');
+
+      const setGripPos = (clientY) => {
+        const rect = slot.getBoundingClientRect();
+        let y = clientY - rect.top;
+        y = Math.max(0, Math.min(rect.height - 24, y));
+        grip.style.top = y + 'px';
+        synth.playClick(450 + Math.floor((1 - y / rect.height) * 1200), 0.02);
+      };
+
+      slot.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        setGripPos(e.clientY);
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) setGripPos(e.clientY);
+      });
+      window.addEventListener('mouseup', () => isDragging = false);
+
+      slot.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) {
+          isDragging = true;
+          setGripPos(e.touches[0].clientY);
+        }
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length > 0) setGripPos(e.touches[0].clientY);
+      }, { passive: true });
+      window.addEventListener('touchend', () => isDragging = false);
+    });
+
+    // Rotary Master Trim
+    const masterTrimKnob = document.getElementById('rotaryMasterTrim');
+    let isDraggingTrim = false;
+    let trimAngle = 40;
+    let lastTrimX = 0;
+
+    if (masterTrimKnob) {
+      const startTrim = (clientX) => {
+        isDraggingTrim = true;
+        lastTrimX = clientX;
+      };
+      const moveTrim = (clientX) => {
+        if (!isDraggingTrim) return;
+        const dx = clientX - lastTrimX;
+        lastTrimX = clientX;
+        trimAngle = Math.max(-120, Math.min(120, trimAngle + dx * 2));
+        masterTrimKnob.style.transform = `rotate(${trimAngle}deg)`;
+
+        const gainVal = (trimAngle / 120 * 12).toFixed(1);
+        const disp = document.getElementById('eqGainDisplay');
+        if (disp) disp.innerText = (gainVal > 0 ? '+' : '') + gainVal + ' dB';
+
+        if (Math.abs(dx) > 3) {
+          synth.playClick(1000 + Math.floor(trimAngle * 4), 0.02);
+        }
+      };
+      const endTrim = () => isDraggingTrim = false;
+
+      masterTrimKnob.addEventListener('mousedown', (e) => startTrim(e.clientX));
+      window.addEventListener('mousemove', (e) => moveTrim(e.clientX));
+      window.addEventListener('mouseup', endTrim);
+
+      masterTrimKnob.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) startTrim(e.touches[0].clientX);
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) moveTrim(e.touches[0].clientX);
+      }, { passive: true });
+      window.addEventListener('touchend', endTrim);
+    }
+
+    function toggleConsoleMute() {
+      isMutedConsole = !isMutedConsole;
+      synth.playClick(900);
+      const thumb = document.getElementById('muteSwitchThumb');
+      const label = document.getElementById('consoleStatusLabel');
+      if (isMutedConsole) {
+        thumb.style.transform = 'translateX(24px)';
+        label.innerText = 'MUTED';
+        label.className = 'text-rose-500 font-bold';
+      } else {
+        thumb.style.transform = 'translateX(0px)';
+        label.innerText = 'ACTIVE';
+        label.className = 'text-emerald-400';
+      }
+    }
+
+    // Spectrum LED Matrix Bar Render Loop
+    const NUM_MATRIX_BARS = 18;
+    function renderMatrixSpectrum() {
+      if (!mCtx || !matrixCanvas) return;
+      mCtx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+      mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+      const barWidth = (matrixCanvas.width / NUM_MATRIX_BARS) - 3;
+      const maxHeight = matrixCanvas.height - 10;
+
+      for (let i = 0; i < NUM_MATRIX_BARS; i++) {
+        const heightMultiplier = isMutedConsole ? 0.05 : (isNeedleOnDisc ? 0.95 : 0.4);
+        const barHeight = (Math.sin(Date.now() * 0.007 + i * 0.35) * 0.4 + 0.5) * maxHeight * heightMultiplier;
+        const x = i * (barWidth + 3) + 2;
+        const y = matrixCanvas.height - barHeight;
+
+        const grad = mCtx.createLinearGradient(0, matrixCanvas.height, 0, 0);
+        grad.addColorStop(0, '#10b981');
+        grad.addColorStop(0.65, '#f59e0b');
+        grad.addColorStop(1, '#ef4444');
+
+        mCtx.fillStyle = grad;
+        mCtx.fillRect(x, y, barWidth, barHeight);
+      }
+
+      requestAnimationFrame(renderMatrixSpectrum);
+    }
+    renderMatrixSpectrum();
+
+
+    /* 6. Guillotine Film Splicer Action */
+    function slamSplicerLever() {
+      synth.playBladeChop();
+      const blade = document.getElementById('guillotineBladeBar');
+      const cardA = document.getElementById('duelCardA');
+      const cardB = document.getElementById('duelCardB');
+
+      blade.style.transform = 'translateY(165px)';
+      blade.style.boxShadow = '0 0 35px #f43f5e, 0 10px 30px rgba(0,0,0,0.95)';
+
+      cardB.style.filter = 'grayscale(100%) opacity(0.35)';
+      cardB.style.transform = 'scale(0.95)';
+      cardA.style.borderColor = '#ef4444';
+      cardA.style.boxShadow = '0 0 35px rgba(239,68,68,0.5)';
+      cardA.style.transform = 'scale(1.05)';
+
+      setTimeout(() => {
+        blade.style.transform = 'translateY(-8px)';
+        blade.style.boxShadow = '';
+      }, 350);
+    }
+
+
+    /* 7. Box Office Ticket Embosser & Criterion Vault */
+    let activeSpineTitle = 'FELLINI 8½';
+    let activeSpineNum = '#140';
+
+    function selectArchiveSpine(title, num) {
+      synth.playClick(1300);
+      activeSpineTitle = title;
+      activeSpineNum = num;
+      document.getElementById('ticketTitleTag').innerText = title;
+      document.getElementById('ticketNumberTag').innerText = num;
+    }
+
+    function stampPhysicalTicket() {
+      synth.playStamp();
+      const stub = document.getElementById('dispensedTicketStub');
+      stub.style.transform = 'scale(0.92) rotate(-2deg)';
+      setTimeout(() => {
+        stub.style.transform = 'scale(1) rotate(0deg)';
+        stub.style.borderColor = '#fbbf24';
+        stub.style.boxShadow = '0 0 35px rgba(251, 191, 36, 0.5)';
+      }, 150);
+    }
+
+
+    /* 8. Blueprint Tutorial Modal */
+    const modal = document.getElementById('tutorialModal');
+
+    function openTutorialModal() {
+      synth.playClick(1000);
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+      }, 10);
+    }
+
+    function closeTutorialModal() {
+      synth.playClick(800);
+      modal.classList.add('opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+      localStorage.setItem('peak_apparatus_core_calibrated', 'true');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!localStorage.getItem('peak_apparatus_core_calibrated')) {
+        setTimeout(openTutorialModal, 600);
+      }
+    });
+  </script>
+</body>
+</html>

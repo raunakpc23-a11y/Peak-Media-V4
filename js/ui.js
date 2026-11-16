@@ -149,8 +149,8 @@
         pane.style.pointerEvents = '';
         if (!isSameTab) {
           pane.classList.remove('portal-glade-in');
-          void pane.offsetWidth;
-          pane.classList.add('portal-glade-in');
+          requestAnimationFrame(() => pane.classList.add('portal-glade-in'));
+          window.scrollTo({ top: 0, behavior: 'instant' });
         }
       } else {
         pane.classList.add('hidden');
@@ -747,16 +747,27 @@
     }
   };
 
-  // Auto-slim bottom station plates dock on scroll
+  // Auto-tuck bottom station plates dock on intentional downward scroll
   let dockScrollTmr;
+  let lastScrollY = window.scrollY;
   window.addEventListener('scroll', () => {
     const dock = $('stationPlatesDock');
     if (dock) {
-      dock.classList.add('dock-slim');
+      const currentScrollY = window.scrollY;
+      const scrollDiff = currentScrollY - lastScrollY;
+      
+      // Only tuck when actively scrolling downward past top fold (100px)
+      if (currentScrollY > 100 && scrollDiff > 8) {
+        dock.classList.add('dock-slim');
+      } else if (scrollDiff < -6 || currentScrollY <= 80) {
+        // Restore immediately when scrolling up or near top
+        dock.classList.remove('dock-slim');
+      }
+      lastScrollY = currentScrollY;
       clearTimeout(dockScrollTmr);
       dockScrollTmr = setTimeout(() => {
         dock.classList.remove('dock-slim');
-      }, 250);
+      }, 300);
     }
   }, { passive: true });
 
@@ -916,7 +927,7 @@
   const AUTO = { 'Sci-Fi': 'space', Drama: 'noir', Crime: 'noir', Thriller: 'neon', Horror: 'blood', Fantasy: 'aurora', Comedy: 'clear', Romance: 'golden', Action: 'neon', Animation: 'aurora', Western: 'golden', War: 'noir', Documentary: 'clear' };
   const SHIFT = { 'Sci-Fi': 'Romance', Drama: 'Comedy', Crime: 'Comedy', Thriller: 'Animation', Horror: 'Comedy', Fantasy: 'Action', Comedy: 'Drama', Romance: 'Sci-Fi', Action: 'Fantasy', Animation: 'Drama', Western: 'Sci-Fi', War: 'Comedy', Documentary: 'Fantasy' };
   let pin = ls.get('cs_theme_v2', 'blood');            // 'auto' or a theme id
-  if (!THEMES[pin] || pin === 'dawn') pin = 'blood';
+  if (!THEMES[pin] || pin === 'dawn' || pin === 'space') pin = 'blood';
   const themeMode = 'dark'; // Strictly dark mode permanent
   let reduce = ls.get('cs_reduce', false); // Calm Mode Off by default, visual effects active
   let current = pin, forecast = null;
@@ -959,8 +970,15 @@
   let lastFrameTime = 0, isScrolling = false, scrollTimeout = null;
   window.addEventListener('scroll', () => {
     isScrolling = true;
+    if (raf && !flightActive) {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    }
     if (scrollTimeout) clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => { isScrolling = false; }, 120);
+    scrollTimeout = setTimeout(() => {
+      isScrolling = false;
+      kick();
+    }, 150);
   }, { passive: true });
 
   function isDiscoverActive() {
@@ -975,9 +993,8 @@
       cx.clearRect(0, 0, W, H);
       return;
     }
-    // Pause canvas updates during active scrolling to guarantee smooth 60fps scrolling
-    if (isScrolling && !flightActive) {
-      raf = requestAnimationFrame(frame);
+    // Pause canvas updates completely during active scrolling or when user has scrolled deep into catalog shelves
+    if (!flightActive && (isScrolling || window.scrollY > 950)) {
       return;
     }
     // Throttle ambient particles to ~30fps when resting to halve GPU/CPU work
@@ -1068,7 +1085,7 @@
   }
 
   function apply(id) {
-    if (!THEMES[id] || id === 'dawn') id = 'blood';
+    if (!THEMES[id] || id === 'dawn' || id === 'space') id = 'blood';
     current = id; const t = THEMES[id];
     
     // Strictly Dark Mode only
@@ -1089,6 +1106,13 @@
     document.body.setAttribute('data-theme', id);
     document.body.classList.toggle('reduce-fx', !!reduce);
 
+    // Apply temporary synchronization class so all surface borders and text colors morph smoothly
+    document.body.classList.add('theme-transit');
+    clearTimeout(window._themeTransitTimer);
+    window._themeTransitTimer = setTimeout(() => {
+      document.body.classList.remove('theme-transit');
+    }, 450);
+
     mode = t.fx;
     if (mode === 'aurora') parts = []; else seed();
     if (mode === 'aurora' && reduce) parts = [];
@@ -1107,10 +1131,10 @@
   function refresh() {
     forecast = makeForecast();
     let paletteToApply = (pin === 'auto' ? forecast.theme : pin);
-    if (!THEMES[paletteToApply] || paletteToApply === 'dawn') paletteToApply = 'blood';
+    if (!THEMES[paletteToApply] || paletteToApply === 'dawn' || paletteToApply === 'space') paletteToApply = 'blood';
     apply(paletteToApply);
     const t = $('wxText'); if (t) t.textContent = forecast.text;
-    const k = $('wxKicker'); if (k) k.textContent = 'Atmosphere · ' + (THEMES[current] ? THEMES[current].n : 'Cosmic');
+    const k = $('wxKicker'); if (k) k.textContent = 'Atmosphere · ' + (THEMES[current] ? THEMES[current].n : 'Cinema');
   }
 
   // Compatibility no-ops (Light mode permanently removed)
@@ -1119,7 +1143,7 @@
   window.toggleDarkModeSwitch = function() {};
 
   // ---------- Palettes & Accents Menu ----------
-  const CORE_THEME_IDS = ['space', 'clear', 'noir', 'neon', 'aurora', 'golden', 'blood', 'velvet'];
+  const CORE_THEME_IDS = ['blood', 'clear', 'noir', 'neon', 'aurora', 'golden', 'velvet'];
   $('swatchRow').innerHTML = CORE_THEME_IDS.map(id => {
     const t = THEMES[id];
     return t ? `<button class="swatch" data-id="${id}" title="${t.n}" style="background:${t.c}"></button>` : '';
@@ -1287,7 +1311,7 @@
       htmlOut += `<div class="px-4 py-2 bg-[#101422] border-b border-white/10 text-[10px] font-extrabold uppercase tracking-wider text-cyan-400 flex items-center justify-between"><span>Songs &amp; Music Videos</span><span class="text-gray-400 font-normal lowercase">${songMatches.length} results</span></div>`;
       htmlOut += songMatches.map(s => `
         <button type="button" data-songid="${s.id}" class="w-full text-left px-4 py-2.5 bg-[#0c101c] hover:bg-[#161c2c] flex items-center gap-3 transition-colors group">
-          <img src="https://i.ytimg.com/vi/${s.id}/default.jpg" class="w-12 h-9 object-cover rounded-md border border-white/10 shrink-0" alt="">
+          <img src="https://i.ytimg.com/vi/${s.id}/default.jpg" onerror="if(window.handleSongThumbFallback)window.handleSongThumbFallback(this)" class="w-12 h-9 object-cover rounded-md border border-white/10 shrink-0" alt="">
           <span class="min-w-0 flex-1"><span class="block text-sm font-bold text-white truncate group-hover:text-cyan-300">${s.t.replace(/</g, '&lt;')}</span><span class="block text-[11px] text-gray-400">${s.a.replace(/</g, '&lt;')} · ${s.l === 'hi' ? 'Hindi' : 'English'} · ${s.m}</span></span>
           <span class="text-cyan-300 font-bold text-xs shrink-0"><i class="fa-solid fa-play mr-1"></i>Play</span>
         </button>`).join('');
@@ -1295,7 +1319,11 @@
     box.innerHTML = htmlOut;
     attachThumbObservers(box);
   }
-  $('bsInput').addEventListener('input', run);
+  let bsSearchTimer;
+  $('bsInput').addEventListener('input', () => {
+    clearTimeout(bsSearchTimer);
+    bsSearchTimer = setTimeout(run, 160);
+  });
   $('bsInput').addEventListener('focus', () => { if ($('bsInput').value.trim()) run(); });
   $('bsResults').onclick = e => {
     const b = e.target.closest('button');
@@ -1326,6 +1354,11 @@
       const isBrowse = BROWSE.includes(k);
       $('browseSearch').classList.toggle('hidden', !isBrowse);
       $('browseSearch').style.display = isBrowse ? '' : 'none';
+    }
+    if (window.PeakVirtualScroller && (k === 'movies' || k === 'shows' || k === 'music')) {
+      requestAnimationFrame(() => {
+        window.PeakVirtualScroller.update(k);
+      });
     }
   };
   drawChips();
@@ -1380,9 +1413,9 @@
   } catch (e) {}
 
   // -------------------------------------------------------------
-  // Celestial Atmospheric Sync & Discover Helper
+  // Cinema Atmospheric Sync & Discover Helper
   // -------------------------------------------------------------
-  function renderSkyConstellations() {
+  function renderCinemaNetwork() {
     if (!window._discoverRendered && window.renderDiscoverTab) {
       window._discoverRendered = true;
       window.renderDiscoverTab();
@@ -1392,8 +1425,8 @@
     }
   }
 
-  function initObservatorySky() {
-    renderSkyConstellations();
+  function initCinemaStudio() {
+    renderCinemaNetwork();
   }
 
   // -------------------------------------------------------------
@@ -1435,8 +1468,10 @@
   });
 
   if (typeof window !== 'undefined') {
-    window.renderSkyConstellations = renderSkyConstellations;
-    window.initObservatorySky = initObservatorySky;
+    window.renderCinemaNetwork = renderCinemaNetwork;
+    window.initCinemaStudio = initCinemaStudio;
+    window.renderSkyConstellations = renderCinemaNetwork;
+    window.initObservatorySky = initCinemaStudio;
   }
 
   if (typeof document !== 'undefined') {

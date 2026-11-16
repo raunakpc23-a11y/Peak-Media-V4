@@ -1,5 +1,5 @@
   // ==========================================
-  // TASTE CONSTELLATION — force-directed taste web (canvas)
+  // CINEMA TASTE NETWORK — force-directed cinema graph (canvas)
   // ==========================================
   (function () {
     const cv = document.getElementById('cxCanvas');
@@ -7,8 +7,21 @@
     const ctx = cv.getContext('2d');
     const S = { nodes: [], links: [], by: {}, explored: new Set(), k: 1, tx: 0, ty: 0, alpha: 1, sel: null, hover: null, drag: null, pan: null, moved: 0, W: 0, H: 0, dpr: 1, loop: false, type: 'all', wish: true, built: false };
     const GH = 26, MAXSEED = 36;
-    const stars = Array.from({ length: 90 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + .3, p: Math.random() * 6 }));
+    let inViewport = false;
+    const cxWrapEl = document.getElementById('cxWrap') || cv;
+    if (window.IntersectionObserver && cxWrapEl) {
+      const obs = new IntersectionObserver((entries) => {
+        inViewport = entries[0].isIntersecting;
+        if (inViewport && vis()) run();
+        else S.loop = false;
+      }, { threshold: 0.05 });
+      obs.observe(cxWrapEl);
+    } else {
+      inViewport = true;
+    }
+
     const vis = () => {
+      if (!inViewport || document.hidden) return false;
       const prof = document.getElementById('tab-profile');
       if (prof && !prof.classList.contains('hidden')) {
         const tasteStage = document.getElementById('profileStage-taste');
@@ -186,7 +199,6 @@
       if (S.alpha > .004) step();
       const { W, H } = S, t = ts / 1000;
       ctx.setTransform(S.dpr, 0, 0, S.dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      stars.forEach(s => { ctx.globalAlpha = .25 + .35 * Math.sin(t * .8 + s.p) ** 2; ctx.fillStyle = '#cbd5e1'; ctx.fillRect(s.x * W, s.y * H, s.r, s.r); });
       ctx.globalAlpha = 1;
       const focus = S.hover || S.sel;
       for (const l of S.links) {
@@ -233,9 +245,13 @@
           ctx.fillText(name, x, lblY);
         }
       }
+      if (S.alpha <= 0.004 && !S.drag && !S.pan && !S.hover) {
+        S.loop = false;
+        return;
+      }
       requestAnimationFrame(draw);
     }
-    function run() { if (!S.loop) { S.loop = true; requestAnimationFrame(draw); } }
+    function run() { if (!S.loop && vis()) { S.loop = true; requestAnimationFrame(draw); } }
 
     function resize() {
       const w = document.getElementById('cxWrap') || cv.parentElement;
@@ -293,14 +309,15 @@
       return best;
     }
     cv.addEventListener('pointerdown', e => {
+      run();
       cv.setPointerCapture(e.pointerId); const [px, py] = pos(e), n = pick(px, py); S.moved = 0;
       if (n) S.drag = n; else S.pan = { x: e.clientX, y: e.clientY, tx: S.tx, ty: S.ty };
     });
     cv.addEventListener('pointermove', e => {
       const [px, py] = pos(e);
-      if (S.drag) { const [wx, wy] = world(px, py); S.drag.x = wx; S.drag.y = wy; S.moved++; S.alpha = Math.max(S.alpha, .25); }
-      else if (S.pan) { S.tx = S.pan.tx + e.clientX - S.pan.x; S.ty = S.pan.ty + e.clientY - S.pan.y; S.moved += 2; }
-      else { S.hover = pick(px, py); cv.style.cursor = S.hover ? 'pointer' : 'grab'; }
+      if (S.drag) { const [wx, wy] = world(px, py); S.drag.x = wx; S.drag.y = wy; S.moved++; S.alpha = Math.max(S.alpha, .25); run(); }
+      else if (S.pan) { S.tx = S.pan.tx + e.clientX - S.pan.x; S.ty = S.pan.ty + e.clientY - S.pan.y; S.moved += 2; run(); }
+      else { S.hover = pick(px, py); cv.style.cursor = S.hover ? 'pointer' : 'grab'; if (S.hover) run(); }
     });
     cv.addEventListener('pointerup', () => {
       if (S.drag && S.moved < 4) { S.sel = S.drag; panel(); }
@@ -311,6 +328,7 @@
     function zoom(f, px = S.W / 2, py = S.H / 2) {
       const [wx, wy] = world(px, py), k = Math.max(.3, Math.min(3, S.k * f));
       S.k = k; S.tx = px - S.W / 2 - wx * k; S.ty = py - S.H / 2 - wy * k;
+      run();
     }
     cv.addEventListener('wheel', e => { e.preventDefault(); const [px, py] = pos(e); zoom(e.deltaY < 0 ? 1.12 : .89, px, py); }, { passive: false });
     const zin = document.getElementById('cxZin'); if (zin) zin.onclick = () => zoom(1.25);
@@ -347,7 +365,7 @@
           }, 3500);
         }
         if (window.showFullscreenNotice) {
-          window.showFullscreenNotice('Constellation Fullscreen · Exit button is located at top right (or press Esc)');
+          window.showFullscreenNotice('Network Fullscreen · Exit button is located at top right (or press Esc)');
         }
       } else {
         // Exit fullscreen

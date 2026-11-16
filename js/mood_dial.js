@@ -7,17 +7,17 @@
 
   const MOOD_SECTORS = [
     { id: 'adrenaline', name: 'Adrenaline Rush', short: '⚡ Adrenaline', icon: '⚡', color: '#f43f5e', bg: 'rgba(244,63,94,0.18)', border: '#f43f5e', genres: ['Action', 'Thriller', 'Crime'], desc: 'High-octane action, breathless pacing, and edge-of-seat thrills' },
-    { id: 'mindbender', name: 'Mind-Bending & Cosmic', short: '🌌 Mind-Bender', icon: '🌌', color: '#38bdf8', bg: 'rgba(56,189,248,0.18)', border: '#38bdf8', genres: ['Sci-Fi', 'Mystery'], desc: 'Reality-bending paradoxes, space odysseys, and psychological twists' },
+    { id: 'mindbender', name: 'Mind-Bending & Psychological', short: '🧠 Mind-Bender', icon: '🧠', color: '#a855f7', bg: 'rgba(168,85,247,0.18)', border: '#a855f7', genres: ['Thriller', 'Mystery', 'Crime'], desc: 'Psychological twists, labyrinthine noir, unreliable narrators, and cerebral suspense' },
     { id: 'melancholy', name: 'Melancholic & Deep', short: '🌧️ Melancholic', icon: '🌧️', color: '#818cf8', bg: 'rgba(129,140,248,0.18)', border: '#818cf8', genres: ['Drama', 'Romance'], desc: 'Poignant cinema, bittersweet tears, poetic stillness, and deep soul' },
-    { id: 'eerie', name: 'Eerie & Gothic', short: '🕯️ Eerie / Dark', icon: '🕯️', color: '#a855f7', bg: 'rgba(168,85,247,0.18)', border: '#a855f7', genres: ['Horror', 'Mystery', 'Thriller'], desc: 'Atmospheric dread, haunted corridors, psychological shadows, and late-night chills' },
+    { id: 'eerie', name: 'Eerie & Gothic', short: '🕯️ Eerie / Dark', icon: '🕯️', color: '#dc2626', bg: 'rgba(220,38,38,0.18)', border: '#dc2626', genres: ['Horror', 'Mystery', 'Thriller'], desc: 'Atmospheric dread, haunted corridors, psychological shadows, and late-night chills' },
     { id: 'cozy', name: 'Cozy & Wholesome', short: '🛋️ Cozy Vibe', icon: '🛋️', color: '#fbbf24', bg: 'rgba(251,191,36,0.18)', border: '#fbbf24', genres: ['Comedy', 'Animation', 'Romance'], desc: 'Comfort food storytelling, gentle laughs, warm hearths, and feel-good warmth' },
     { id: 'romance', name: 'Romantic Euphoria', short: '💖 Romance', icon: '💖', color: '#ec4899', bg: 'rgba(236,72,153,0.18)', border: '#ec4899', genres: ['Romance', 'Drama'], desc: 'Electric chemistry, sweeping romance, passion, and heartfelt longing' },
     { id: 'laughs', name: 'Pure Laughs & Satire', short: '😂 Pure Comedy', icon: '😂', color: '#34d399', bg: 'rgba(52,211,153,0.18)', border: '#34d399', genres: ['Comedy'], desc: 'Laugh-out-loud comedy, chaotic humor, witty dialogue, and joyous escapism' },
     { id: 'epic', name: 'Grand Epic & Spectacle', short: '⚔️ Grand Epic', icon: '⚔️', color: '#f97316', bg: 'rgba(249,115,22,0.18)', border: '#f97316', genres: ['Fantasy', 'Action', 'War'], desc: 'Mythic lore, massive battles, sprawling empires, and visionary spectacle' }
   ];
 
-  let currentAngle = 45; // starts on Mind-Bending (sector index 1)
-  let activeSectorIdx = 1;
+  let currentAngle = 0; // starts on Adrenaline Rush (sector index 0)
+  let activeSectorIdx = 0;
   let currentIntensity = 50; // Continuous spectrum: 0 to 100%
   let isDragging = false;
   let startAngle = 0;
@@ -27,7 +27,7 @@
   window.initCinemaMoodDial = function() {
     renderMoodDialWheel();
     renderMoodDialShortcuts();
-    setSectorByIndex(1, true);
+    setSectorByIndex(0, true);
     setupDialInteractions();
   };
 

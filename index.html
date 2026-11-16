@@ -13,7 +13,7 @@
         if (rawP) {
           try { p = JSON.parse(rawP); } catch(e) { p = rawP; }
         }
-        if (!p || p === 'dawn') p = 'blood';
+        if (!p || p === 'dawn' || p === 'space') p = 'blood';
         document.documentElement.setAttribute('data-mode', 'dark');
         document.documentElement.className = 'dark';
         document.documentElement.style.backgroundColor = 'var(--bg, #0c0203)';
@@ -36,12 +36,12 @@
   <meta property="og:description" content="Explore 3,400+ movies &amp; series, 22 universes, and 4,447 songs across 68 playlists.">
   <meta property="og:url" content="https://peakmediatests.vercel.app/">
   <meta property="og:image" content="https://peakmediatests.vercel.app/icons/peak-media-logo.jpg">
-  <!-- Preload Initial Decider Roulette Thumbnail (Interstellar) -->
-  <link rel="preload" as="image" href="https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SX300.jpg">
+  <!-- Preload Initial Decider Roulette Thumbnail (Pulp Fiction) -->
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800&auto=format&fit=crop">
   <link rel="icon" type="image/svg+xml" href="icons/peak-media.svg">
   <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20760%20760%22%20width%3D%22512%22%20height%3D%22512%22%20fill%3D%22none%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22favSkyBg%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23071022%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23050811%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23081832%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22favSkyMain%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23F0F9FF%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2230%25%22%20stop-color%3D%22%237DD3FC%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2265%25%22%20stop-color%3D%22%2338BDF8%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230EA5E9%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22favSkySun%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%237DD3FC%22%20stop-opacity%3D%220.42%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230EA5E9%22%20stop-opacity%3D%220.06%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22732%22%20height%3D%22732%22%20rx%3D%22164%22%20fill%3D%22url%28%23favSkyBg%29%22%20stroke%3D%22%2338BDF8%22%20stroke-opacity%3D%220.55%22%20stroke-width%3D%2214%22/%3E%0A%20%20%3Ccircle%20cx%3D%22462%22%20cy%3D%22240%22%20r%3D%22220%22%20fill%3D%22%2338BDF8%22%20fill-opacity%3D%220.14%22/%3E%0A%20%20%3Cg%20transform%3D%22translate%28-25%2C%20150%29%22%3E%0A%20%20%20%20%3Cg%20stroke%3D%22%23FFFFFF%22%20stroke-width%3D%228%22%20stroke-linejoin%3D%22miter%22%20fill%3D%22%23060A14%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M135%20130%20H205%20C230%20130%20245%20144%20245%20168%20C245%20192%20230%20206%20205%20206%20H168%20V250%20H135%20Z%20M168%20156%20V180%20H200%20C210%20180%20215%20175%20215%20168%20C215%20161%20210%20156%20200%20156%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M272%20130%20H365%20V156%20H305%20V177%20H355%20V202%20H305%20V224%20H365%20V250%20H272%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M438%20130%20H468%20L520%20250%20H484%20L473%20222%20H432%20L421%20250%20H385%20Z%20M441%20196%20H464%20L452.5%20164%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M538%20130%20H572%20V182%20L626%20130%20H668%20L608%20186%20L672%20250%20H628%20L572%20194%20V250%20H538%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M135%20282%20H172%20L196.5%20344%20L221%20282%20H258%20V402%20H227%20V334%20L203%20392%20H190%20L166%20334%20V402%20H135%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M278%20282%20H368%20V308%20H311%20V329%20H358%20V354%20H311%20V376%20H368%20V402%20H278%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M388%20282%20H440%20C472%20282%20492%20304%20492%20342%20C492%20380%20472%20402%20440%20402%20H388%20Z%20M421%20308%20V376%20H438%20C453%20376%20461%20364%20461%20342%20C461%20320%20453%20308%20438%20308%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M512%20282%20H552%20V402%20H512%20Z%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M618%20282%20H648%20L698%20402%20H663%20L652%20374%20H612%20L601%20402%20H566%20Z%20M621%20348%20H643%20L632%20316%20Z%22%20fill-rule%3D%22evenodd%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22482%2C56%20385%2C186%20288%2C248%20195%2C304%2078%2C356%20238%2C326%20332%2C294%20424%2C268%20460%2C138%22%20fill%3D%22%23071020%22%20fill-opacity%3D%220.86%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22482%2C56%20516%2C118%20558%2C188%20610%2C256%20674%2C328%20736%2C362%20612%2C332%20518%2C286%20485%2C142%22%20fill%3D%22url%28%23favSkySun%29%22/%3E%0A%20%20%20%20%3Cg%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M78%20356%20L195%20304%20L288%20248%20L385%20186%20L435%20126%20L468%2082%20L482%2056%22%20stroke%3D%22url%28%23favSkyMain%29%22%20stroke-width%3D%2211.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L516%20118%20L558%20188%20L610%20256%20L674%20328%20L736%20362%22%20stroke%3D%22url%28%23favSkyMain%29%22%20stroke-width%3D%2211.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M468%2082%20L476%20112%20L450%20172%20L418%20214%22%20stroke%3D%22%23BAE6FD%22%20stroke-width%3D%227.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L485%20142%20L500%20188%20L522%20232%22%20stroke%3D%22%23E0F2FE%22%20stroke-width%3D%227.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L460%20138%20L428%20210%20L376%20286%20L312%20348%22%20stroke%3D%22%230EA5E9%22%20stroke-width%3D%226.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M482%2056%20L504%20134%20L542%20216%20L588%20296%20L640%20356%22%20stroke%3D%22%230EA5E9%22%20stroke-width%3D%226.5%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M108%20346%20L168%20312%20L208%20318%20L246%20298%20L310%20262%22%20stroke%3D%22%2338BDF8%22%20stroke-width%3D%226.8%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M568%20206%20L608%20242%20L626%20254%20L648%20294%20L678%20330%22%20stroke%3D%22%2338BDF8%22%20stroke-width%3D%226.8%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M150%20366%20L238%20326%20L332%20294%20L424%20268%20L518%20286%20L612%20332%20L706%20368%22%20stroke%3D%22%2360A5FA%22%20stroke-width%3D%225.5%22%20opacity%3D%220.92%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E">
     <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#38bdf8">
+  <meta name="theme-color" content="#0c0203">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -75,9 +75,9 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="css/base.css?v=5.1">
-  <link rel="stylesheet" href="css/widgets.css?v=5.1">
-  <link rel="stylesheet" href="css/responsive.css?v=5.1">
+  <link rel="stylesheet" href="css/base.css?v=5.5">
+  <link rel="stylesheet" href="css/widgets.css?v=5.5">
+  <link rel="stylesheet" href="css/responsive.css?v=5.5">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="if(!window.supabase){var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2';document.head.appendChild(s);}"></script>
 </head>
 <body data-theme="blood" data-mode="dark" class="mode-dark min-h-screen flex flex-col selection:bg-brand-gold selection:text-black antialiased bg-[#0c0203] text-slate-100" style="background-color: #0c0203; color: #f3f4f6;">
@@ -324,21 +324,20 @@
       <path fill="#f3e8ff" d="M75 54l5 15 16 6-16 6-5 15-5-15-16-6 16-6z"/>
     </symbol>
 
-    <!-- Universes: 150x150 Ringed Gas Planet with Orbit Pass & Sparkle Stars -->
+    <!-- Universes: 150x150 Cinema Franchise Reel & Filmstrip -->
     <symbol id="portalUniverses" viewBox="0 0 150 150">
-      <rect fill="#04170f" stroke="#34d399" stroke-width="2.5" width="150" height="150" rx="30"/>
-      <rect fill="none" stroke="#34d399" stroke-opacity="0.25" x="7" y="7" width="136" height="136" rx="24"/>
-      <g transform="rotate(-20 75 75)">
-        <ellipse cx="75" cy="75" rx="64" ry="19" fill="none" stroke="#065f46" stroke-width="6"/>
-      </g>
-      <circle cx="75" cy="75" r="34" fill="#064e3b" stroke="#34d399" stroke-width="3.5"/>
-      <path fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-opacity="0.75" d="M50 64h50M44 76h62M50 88h50"/>
-      <g transform="rotate(-20 75 75)">
-        <path fill="none" stroke="#6ee7b7" stroke-width="6" stroke-linecap="round" d="M11 75a64 19 0 0 0 128 0"/>
-      </g>
-      <path fill="#a7f3d0" d="M28 19l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/>
-      <path fill="#6ee7b7" transform="translate(122 118) scale(0.65)" d="M0-11 3-3 11 0 3 3 0 11-3 3-11 0-3-3z"/>
-      <path fill="#a7f3d0" transform="translate(120 36) scale(0.5)" d="M0-11 3-3 11 0 3 3 0 11-3 3-11 0-3-3z"/>
+      <rect fill="#140608" stroke="#ef4444" stroke-width="2.5" width="150" height="150" rx="30"/>
+      <rect fill="none" stroke="#ef4444" stroke-opacity="0.25" x="7" y="7" width="136" height="136" rx="24"/>
+      <!-- Cinema Film Reel -->
+      <circle cx="75" cy="75" r="42" fill="#1e070a" stroke="#ef4444" stroke-width="3.5"/>
+      <circle cx="75" cy="75" r="14" fill="#0c0203" stroke="#ef4444" stroke-width="2.5"/>
+      <!-- Reel Holes -->
+      <circle cx="75" cy="50" r="7" fill="#ef4444" fill-opacity="0.6"/>
+      <circle cx="75" cy="100" r="7" fill="#ef4444" fill-opacity="0.6"/>
+      <circle cx="50" cy="75" r="7" fill="#ef4444" fill-opacity="0.6"/>
+      <circle cx="100" cy="75" r="7" fill="#ef4444" fill-opacity="0.6"/>
+      <!-- Outer Filmstrip Tangent -->
+      <path d="M42 42 L25 25 M108 42 L125 25" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
     </symbol>
 
     <!-- Library: rich bookshelf collection with thick book spines -->
@@ -433,8 +432,12 @@
         <span id="hdrReelCount"></span>
       </div>
 
-      <!-- Right: Fullscreen & Profile Controls -->
+      <!-- Right: Fullscreen, Apparatus Mode & Profile Controls -->
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 relative">
+        <a href="apparatus.html" title="Enter Cinema Apparatus (Creative Physical Test Mode)" class="header-action-btn px-2.5 sm:px-3 h-10 sm:h-12 rounded-2xl flex items-center justify-center gap-1.5 text-rose-500 hover:text-rose-300 border border-rose-500/30 hover:border-rose-400/60 bg-rose-500/10 hover:bg-rose-500/20 transition-all active:scale-95 shadow-sm cursor-pointer group" aria-label="Apparatus Mode">
+          <i class="fa-solid fa-film text-xs group-hover:rotate-12 transition-transform"></i>
+          <span class="hidden md:inline font-mono text-[11px] font-bold tracking-wider">APPARATUS</span>
+        </a>
         <button type="button" id="appFullscreenBtn" onclick="toggleAppFullscreen()" title="Toggle Fullscreen" class="header-action-btn w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center text-gray-300 hover:text-brand-gold border border-white/10 hover:border-brand-gold/40 bg-white/5 hover:bg-white/10 transition-all active:scale-95 shadow-sm cursor-pointer" aria-label="Toggle Fullscreen">
           <i id="appFsIcon" class="fa-solid fa-expand text-xs sm:text-sm"></i>
         </button>
@@ -672,7 +675,7 @@
                 <div class="vinyl-groove-rings absolute inset-0 rounded-full pointer-events-none"></div>
                 <div class="vinyl-sheen-facet absolute inset-0 rounded-full pointer-events-none"></div>
                 <div class="vinyl-center-label relative w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-purple-400/80 shadow-inner">
-                  <img id="homeVinylThumb" src="https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg" alt="Album Art" class="w-full h-full object-cover" />
+                  <img id="homeVinylThumb" src="https://i.ytimg.com/vi/34Na4j8AVgA/mqdefault.jpg" alt="Album Art" class="w-full h-full object-cover" onerror="if(window.handleSongThumbFallback)window.handleSongThumbFallback(this)" />
                   <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <span class="w-2 h-2 rounded-full bg-brand-gold border border-black shadow"></span>
                   </div>
@@ -1064,10 +1067,10 @@
                 <!-- Active Sector & Intensity Slider Deck -->
                 <div id="moodDialActiveCard" class="flex-1 min-w-0 space-y-3 p-4 rounded-2xl bg-black/40 border border-white/10 w-full backdrop-blur-md">
                   <div class="flex items-center gap-2.5">
-                    <span id="moodDialActiveIcon" class="text-2xl">🌌</span>
+                    <span id="moodDialActiveIcon" class="text-2xl">⚡</span>
                     <div>
-                      <h3 id="moodDialActiveName" class="text-base sm:text-lg font-display font-black text-white">Mind-Bending &amp; Cosmic</h3>
-                      <p id="moodDialActiveDesc" class="text-xs text-gray-300 leading-snug">Reality-bending paradoxes, space odysseys, and psychological twists</p>
+                      <h3 id="moodDialActiveName" class="text-base sm:text-lg font-display font-black text-white">Adrenaline Rush</h3>
+                      <p id="moodDialActiveDesc" class="text-xs text-gray-300 leading-snug">High-octane action, breathless pacing, and edge-of-seat thrills</p>
                     </div>
                   </div>
 
@@ -1075,7 +1078,7 @@
                   <div class="space-y-1.5 pt-2 border-t border-white/10">
                     <div class="flex items-center justify-between text-xs">
                       <span class="text-gray-300 font-bold">Vibe / Genre:</span>
-                      <span id="moodDialSliderSectorLbl" class="font-extrabold text-brand-gold">Mind-Bending</span>
+                      <span id="moodDialSliderSectorLbl" class="font-extrabold text-brand-gold">Adrenaline</span>
                     </div>
                     <input id="moodDialSectorSlider" type="range" min="0" max="7" step="1" value="0" oninput="onMoodDialSliderChange(this.value)" class="w-full accent-brand-gold cursor-grab active:cursor-grabbing h-2 rounded-lg" aria-label="Cinema Roulette vibe selector">
                   </div>
@@ -2137,14 +2140,14 @@
               </div>
             </div>
 
-            <!-- Interactive Taste Constellation Web -->
+            <!-- Interactive Cinema Affinity Network -->
             <div id="constellationSection" class="glass-card rounded-3xl p-6 border border-white/10 space-y-4">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
                 <div class="flex items-center gap-2.5">
                   <i class="fa-solid fa-circle-nodes text-brand-gold text-lg"></i>
                   <div>
-                    <h3 class="text-base sm:text-lg font-display font-extrabold text-white">Taste Constellation Web</h3>
-                    <p class="text-xs text-gray-400">Interactive stellar graph connecting your rated titles with undiscovered cinema stars.</p>
+                    <h3 class="text-base sm:text-lg font-display font-extrabold text-white">Cinema Affinity Network</h3>
+                    <p class="text-xs text-gray-400">Interactive film graph connecting your rated titles with recommended cinema nodes.</p>
                   </div>
                 </div>
                 <!-- Filters & Zoom -->
@@ -2168,8 +2171,8 @@
 
               <div id="cxSub" class="text-xs text-gray-400"></div>
 
-              <!-- Constellation Canvas Viewport -->
-              <div id="cxWrap" class="relative rounded-2xl overflow-hidden border border-white/10 h-72 sm:h-96 w-full" style="background: radial-gradient(ellipse at 50% 45%, #141a2e 0%, #0a0d16 60%, #06080d 100%)">
+              <!-- Cinema Network Canvas Viewport -->
+              <div id="cxWrap" class="relative rounded-2xl overflow-hidden border border-white/10 h-72 sm:h-96 w-full" style="background: radial-gradient(ellipse at 50% 45%, #18080a 0%, #0c0203 60%, #050102 100%)">
                 <canvas id="cxCanvas" class="absolute inset-0 w-full h-full touch-none"></canvas>
                 <div id="cxLegend" class="absolute top-2.5 left-2.5 flex flex-wrap gap-x-2.5 gap-y-1 max-w-[70%] text-[10px] text-gray-400 pointer-events-none"></div>
 
@@ -2177,7 +2180,7 @@
                 <div id="cxFsNotice" class="pointer-events-none fixed sm:absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 px-4 py-2 rounded-full bg-black/90 backdrop-blur-xl border border-brand-gold/50 shadow-2xl text-white text-xs font-semibold transition-all duration-300 opacity-0 -translate-y-4">
                   <span class="w-2 h-2 rounded-full bg-brand-gold animate-ping"></span>
                   <i class="fa-solid fa-expand text-brand-gold"></i>
-                  <span>Constellation Fullscreen · Exit button is located at top right (or press <strong>Esc</strong>)</span>
+                  <span>Network Fullscreen · Exit button is located at top right (or press <strong>Esc</strong>)</span>
                 </div>
                 
                 <!-- Fullscreen Overlay Exit Button (Prominently placed at top-right of panel) -->
@@ -2187,8 +2190,8 @@
 
                 <!-- Zoom Buttons Overlay -->
                 <div class="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
-                  <button id="cxZin" aria-label="Zoom in constellation" title="Zoom in" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus"></i></button>
-                  <button id="cxZout" aria-label="Zoom out constellation" title="Zoom out" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus"></i></button>
+                  <button id="cxZin" aria-label="Zoom in" title="Zoom in" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus"></i></button>
+                  <button id="cxZout" aria-label="Zoom out" title="Zoom out" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus"></i></button>
                   <button onclick="toggleConstellationFullscreen()" aria-label="Toggle Fullscreen" title="Toggle Fullscreen" class="w-8 h-8 rounded-xl bg-black/60 hover:bg-brand-gold hover:text-black border border-white/15 text-white text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-expand"></i></button>
                 </div>
 
@@ -2196,8 +2199,8 @@
 
                 <div id="cxEmpty" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center bg-black/85 backdrop-blur-md">
                   <i class="fa-solid fa-circle-nodes text-3xl text-gray-500 mb-2"></i>
-                  <p class="text-sm text-gray-300 font-bold">Your constellation is forming</p>
-                  <p class="text-xs text-gray-400 mt-1 mb-3">Mark titles watched to link stars across genres.</p>
+                  <p class="text-sm text-gray-300 font-bold">Your cinema network is forming</p>
+                  <p class="text-xs text-gray-400 mt-1 mb-3">Mark titles watched to map connections across genres.</p>
                   <button type="button" onclick="switchTab('movies')" class="px-3.5 py-1.5 rounded-xl bg-brand-gold text-black text-xs font-bold">Explore Films</button>
                 </div>
               </div>
@@ -2450,7 +2453,7 @@
       
       <!-- LEFT: Track Metadata (Thumb, Title, Artist, Time) -->
       <div class="flex items-center gap-3 min-w-0 flex-1 md:w-1/3 max-w-[220px] sm:max-w-xs md:max-w-sm">
-        <img id="mpThumb" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%231f2937'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='16' fill='%239ca3af'>🎵</text></svg>" alt="Peak Music" class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl object-cover border border-white/15 shrink-0 cursor-pointer shadow-lg hover:scale-105 transition-transform" onclick="switchTab('music')" title="View in Music Vault">
+        <img id="mpThumb" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%231f2937'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='16' fill='%239ca3af'>🎵</text></svg>" alt="Peak Music" onerror="if(window.handleSongThumbFallback)window.handleSongThumbFallback(this)" class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl object-cover border border-white/15 shrink-0 cursor-pointer shadow-lg hover:scale-105 transition-transform" onclick="switchTab('music')" title="View in Music Vault">
         <div class="min-w-0 flex-1">
           <div id="mpTitle" class="text-sm md:text-base lg:text-lg font-bold text-white truncate cursor-pointer hover:text-brand-gold transition-colors leading-tight" onclick="switchTab('music')">Select a song</div>
           <div class="flex items-center gap-1.5 text-xs text-gray-300 truncate mt-0.5">
@@ -2754,13 +2757,13 @@
         <span class="text-slate-400">The Film, Series &amp; Song Vault</span>
       </div>
       <div class="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400">
-        <a href="#discover" onclick="switchTab('discover')" class="hover:text-white transition-colors">Films &amp; Series</a>
+        <a href="#discover" onclick="event.preventDefault(); switchTab('discover')" class="hover:text-white transition-colors">Films &amp; Series</a>
         <span>·</span>
-        <a href="#music" onclick="switchTab('music')" class="hover:text-white transition-colors">Music Vault</a>
+        <a href="#music" onclick="event.preventDefault(); switchTab('music')" class="hover:text-white transition-colors">Music Vault</a>
         <span>·</span>
-        <a href="#hub" onclick="switchTab('hub')" class="hover:text-white transition-colors">Library</a>
+        <a href="#hub" onclick="event.preventDefault(); switchTab('hub')" class="hover:text-white transition-colors">Library</a>
         <span>·</span>
-        <a href="#play" onclick="switchTab('play')" class="hover:text-white transition-colors">Deciders</a>
+        <a href="#play" onclick="event.preventDefault(); switchTab('play')" class="hover:text-white transition-colors">Deciders</a>
         <span>·</span>
         <a href="privacy.html" class="hover:text-white transition-colors text-xs text-slate-400">Privacy Policy</a>
         <span>·</span>
@@ -2909,18 +2912,19 @@
     </div>
   </div>
 
-  <script src="supabase-config.js?v=5.4"></script>
-  <script src="js/data.js?v=5.4"></script>
-  <script src="js/constellation.js?v=5.4"></script>
-  <script src="js/hub-duel.js?v=5.4"></script>
-  <script src="js/ui.js?v=5.4"></script>
-  <script src="js/features.js?v=5.4"></script>
-  <script src="js/marathon.js?v=5.4"></script>
-  <script src="js/universes.js?v=5.4"></script>
-  <script src="js/mood_dial.js?v=5.4"></script>
-  <script src="js/motion.js?v=5.4"></script>
-  <script src="js/songs-data.js?v=5.4"></script>
-  <script src="js/main.js?v=5.4"></script>
-  <script src="js/pwa.js?v=5.4"></script>
+  <script src="supabase-config.js?v=5.7"></script>
+  <script src="js/virtual-scroll.js?v=5.7"></script>
+  <script src="js/data.js?v=5.7"></script>
+  <script src="js/constellation.js?v=5.7"></script>
+  <script src="js/hub-duel.js?v=5.7"></script>
+  <script src="js/ui.js?v=5.7"></script>
+  <script src="js/features.js?v=5.7"></script>
+  <script src="js/marathon.js?v=5.7"></script>
+  <script src="js/universes.js?v=5.7"></script>
+  <script src="js/mood_dial.js?v=5.7"></script>
+  <script src="js/motion.js?v=5.7"></script>
+  <script src="js/songs-data.js?v=5.7"></script>
+  <script src="js/main.js?v=5.7"></script>
+  <script src="js/pwa.js?v=5.7"></script>
 </body>
 </html>
