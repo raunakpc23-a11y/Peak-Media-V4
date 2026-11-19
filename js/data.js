@@ -13074,6 +13074,10 @@ Odd Taxi|2021|87
 
     // Offline streaming link interception handler
     window.handleStreamingLinkClick = function(event, url, title, type) {
+      if (window.logUserActivity) {
+        const act = type === 'trailer' ? 'trailer_play' : 'stream_click';
+        window.logUserActivity(act, title, title, { url, stream_type: type });
+      }
       if (!navigator.onLine) {
         if (event) {
           event.preventDefault();
@@ -13839,7 +13843,7 @@ Odd Taxi|2021|87
       'movie:Memento': 'https://upload.wikimedia.org/wikipedia/en/c/c7/Memento_poster.jpg',
       'movie:Django Unchained': 'https://upload.wikimedia.org/wikipedia/en/8/8b/Django_Unchained_Poster.jpg',
       'movie:WALL-E': 'https://upload.wikimedia.org/wikipedia/en/4/4c/WALL-E_poster.jpg',
-      'movie:The Shining': 'https://upload.wikimedia.org/wikipedia/en/1/1d/The_Shining_%281980%29_U.K._release_poster_-_The_tide_of_terror_that_would_not_ebb.jpg',
+      'movie:The Shining': 'https://upload.wikimedia.org/wikipedia/en/1/1d/The_Shining_%281980%29_U.K._release_poster_-_The_tide_of_terror_that_swept_America_IS_HERE.jpg',
       'movie:Inglourious Basterds': 'https://upload.wikimedia.org/wikipedia/en/c/c3/Inglourious_Basterds_poster.jpg',
       'movie:Amelie': 'https://upload.wikimedia.org/wikipedia/en/5/53/Amelie_poster.jpg',
       'movie:Toy Story': 'https://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg',
@@ -13860,18 +13864,18 @@ Odd Taxi|2021|87
       'movie:No Country for Old Men': 'https://upload.wikimedia.org/wikipedia/en/8/8b/No_Country_for_Old_Men_poster.jpg',
       'movie:There Will Be Blood': 'https://upload.wikimedia.org/wikipedia/en/d/da/There_Will_Be_Blood_Poster.jpg',
       'movie:Taxi Driver': 'https://upload.wikimedia.org/wikipedia/en/3/33/Taxi_Driver_%281976_film_poster%29.jpg',
-      'movie:Jurassic Park': 'https://upload.wikimedia.org/wikipedia/en/e/e0/Jurassic_Park_poster.jpg',
+      'movie:Jurassic Park': 'https://upload.wikimedia.org/wikipedia/en/e/e7/Jurassic_Park_poster.jpg',
       'movie:The Truman Show': 'https://upload.wikimedia.org/wikipedia/en/c/cd/Trumanshow.jpg',
       'movie:The Big Lebowski': 'https://upload.wikimedia.org/wikipedia/en/3/35/Biglebowskiposter.jpg',
-      'movie:Cinema Paradiso': 'https://upload.wikimedia.org/wikipedia/en/8/8c/Cinema_Paradiso_poster.jpg',
-      'movie:Grave of the Fireflies': 'https://upload.wikimedia.org/wikipedia/en/a/a5/Grave_of_the_Fireflies_poster.jpg',
-      'movie:City Lights': 'https://upload.wikimedia.org/wikipedia/commons/0/09/City_Lights_poster.jpg',
-      'movie:Modern Times': 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Modern_Times_poster.jpg',
-      'movie:Sunset Boulevard': 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Sunset_Boulevard_%281950_poster%29.jpg',
-      'movie:Paths of Glory': 'https://upload.wikimedia.org/wikipedia/commons/9/9a/PathsOfGloryPoster.jpg',
+      'movie:Cinema Paradiso': 'https://upload.wikimedia.org/wikipedia/en/8/86/CinemaParadiso.jpg',
+      'movie:Grave of the Fireflies': 'https://upload.wikimedia.org/wikipedia/en/a/a5/Grave_of_the_Fireflies_Japanese_poster.jpg',
+      'movie:City Lights': 'https://upload.wikimedia.org/wikipedia/commons/0/09/City_Lights_%281931_theatrical_poster_-_retouched%29.jpg',
+      'movie:Modern Times': 'https://upload.wikimedia.org/wikipedia/commons/3/36/Modern_Times_poster.jpg',
+      'movie:Sunset Boulevard': 'https://upload.wikimedia.org/wikipedia/commons/1/14/Sunset_Boulevard_%281950_poster%29.jpg',
+      'movie:Paths of Glory': 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Paths_of_Glory_%281957_poster%29.jpg',
       'movie:Dr. Strangelove': 'https://upload.wikimedia.org/wikipedia/en/e/e6/Dr._Strangelove_poster.jpg',
       'movie:Princess Mononoke': 'https://upload.wikimedia.org/wikipedia/en/8/8c/Princess_Mononoke_Japanese_poster.png',
-      'movie:Good Will Hunting': 'https://upload.wikimedia.org/wikipedia/en/b/b8/Good_Will_Hunting_theatrical_poster.jpg',
+      'movie:Good Will Hunting': 'https://upload.wikimedia.org/wikipedia/en/5/52/Good_Will_Hunting.png',
       'movie:Apocalypse Now': 'https://upload.wikimedia.org/wikipedia/en/c/c2/Apocalypse_Now_poster.jpg',
       'movie:The Lord of the Rings: The Return of the King': 'https://upload.wikimedia.org/wikipedia/en/4/48/Lord_Rings_Return_King.jpg',
       'movie:The Return of the King': 'https://upload.wikimedia.org/wikipedia/en/4/48/Lord_Rings_Return_King.jpg',
@@ -13883,17 +13887,17 @@ Odd Taxi|2021|87
       'movie:Raiders of the Lost Ark': 'https://upload.wikimedia.org/wikipedia/en/4/4c/Raiders_of_the_Lost_Ark.jpg',
       'movie:Indiana Jones and the Raiders of the Lost Ark': 'https://upload.wikimedia.org/wikipedia/en/4/4c/Raiders_of_the_Lost_Ark.jpg',
       'movie:Eternal Sunshine of the Spotless Mind': 'https://upload.wikimedia.org/wikipedia/en/a/a4/Eternal_Sunshine_of_the_Spotless_Mind.png',
-      'movie:Reservoir Dogs': 'https://upload.wikimedia.org/wikipedia/en/f/f6/Reservoir_dogs_ver1.jpg',
-      'movie:Citizen Kane': 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Citizen_Kane_poster%2C_1941_%28original_theatrical_style_A%29.jpg',
-      'movie:Vertigo': 'https://upload.wikimedia.org/wikipedia/en/7/75/Vertigomovie_450.jpg',
-      'movie:A Clockwork Orange': 'https://upload.wikimedia.org/wikipedia/en/4/48/Clockwork_orange-poster.jpg',
+      'movie:Reservoir Dogs': 'https://upload.wikimedia.org/wikipedia/en/0/01/Reservoir_Dogs.png',
+      'movie:Citizen Kane': 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Citizen_Kane_poster%2C_1941_%28Style_B%2C_unrestored%29.jpg',
+      'movie:Vertigo': 'https://upload.wikimedia.org/wikipedia/commons/7/75/Vertigomovie_restoration.jpg',
+      'movie:A Clockwork Orange': 'https://upload.wikimedia.org/wikipedia/en/7/73/A_Clockwork_Orange_%281971%29.png',
       'movie:Full Metal Jacket': 'https://upload.wikimedia.org/wikipedia/en/9/99/Full_Metal_Jacket_poster.jpg',
-      'movie:Scarface': 'https://upload.wikimedia.org/wikipedia/en/7/79/Scarface_-_1983_film.jpg',
-      'movie:Ran': 'https://upload.wikimedia.org/wikipedia/en/5/58/Ran_poster.jpg',
+      'movie:Scarface': 'https://upload.wikimedia.org/wikipedia/en/7/71/Scarface_-_1983_film.jpg',
+      'movie:Ran': 'https://upload.wikimedia.org/wikipedia/en/f/f2/Kuroran.jpg',
       'movie:Harakiri': 'https://upload.wikimedia.org/wikipedia/en/f/fd/Harakiri_Poster.jpg',
       'movie:Seven Samurai': 'https://upload.wikimedia.org/wikipedia/en/c/c8/Seven_Samurai_Poster.png',
-      'movie:High and Low': 'https://upload.wikimedia.org/wikipedia/en/d/d3/High_and_Low_poster.jpg',
-      'movie:Yojimbo': 'https://upload.wikimedia.org/wikipedia/en/b/bc/Yojimbo_1961.jpg',
+      'movie:High and Low': 'https://upload.wikimedia.org/wikipedia/en/6/6a/HIGH_AND_LOW_JP_.jpg',
+      'movie:Yojimbo': 'https://upload.wikimedia.org/wikipedia/en/7/74/Yojimbo_film_poster.jpg',
       'movie:Yavanika': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Yavanika_poster.jpg',
       'movie:Sonar Kella': 'https://upload.wikimedia.org/wikipedia/en/5/56/Sonar_Kella_book_front_cover.jpg',
       'movie:Anveshana': 'https://upload.wikimedia.org/wikipedia/en/9/98/Anveshana.jpg',
@@ -14436,7 +14440,17 @@ Odd Taxi|2021|87
       'The_Acolyte_Logo',
       'X-Men_The_Animated_Series_logo',
       'The_Suite_Life_of_Zack_%26_Cody_logo',
-      'Dekalog_cover'
+      'Dekalog_cover',
+      'The_Shining_%281980%29_U.K._release_poster_-_The_tide_of_terror_that_would_not_ebb',
+      'Jurassic_Park_poster.jpg',
+      'Cinema_Paradiso_poster.jpg',
+      'Grave_of_the_Fireflies_poster.jpg',
+      'PathsOfGloryPoster.jpg',
+      'Good_Will_Hunting_theatrical_poster.jpg',
+      'Reservoir_dogs_ver1.jpg',
+      'Vertigomovie_450.jpg',
+      'Clockwork_orange-poster.jpg',
+      'Yojimbo_1961.jpg'
     ];
     Object.keys(posterCache).forEach(k => {
       const val = posterCache[k];
@@ -14803,6 +14817,9 @@ Odd Taxi|2021|87
     function toggleFav(title, event) {
       if (event) event.stopPropagation();
       const exists = favTitles.includes(title);
+      if (window.logUserActivity) {
+        window.logUserActivity(exists ? 'fav_remove' : 'fav_add', title, title);
+      }
       if (exists) {
         favTitles = favTitles.filter(t => t !== title);
         try { localStorage.setItem('cs_favs', JSON.stringify(favTitles)); } catch (e) {}
@@ -14951,6 +14968,7 @@ Odd Taxi|2021|87
         const item = globalDatabase[title];
         const name = item ? (item.cleanName || item.title) : title;
         if (tickets.includes(title)) {
+          if (window.logUserActivity) window.logUserActivity('golden_ticket_remove', title, name);
           tickets = tickets.filter(t => t !== title);
           setLocal('cs_golden_tickets', tickets);
           showToast(`Removed "${name}" from Top 3 Golden Tickets`, 'fa-rotate-left', 'text-gray-300');
@@ -14959,6 +14977,7 @@ Odd Taxi|2021|87
             showToast('Top 3 limit reached! Unmint one ticket before minting a new one.', 'fa-triangle-exclamation', 'text-amber-400');
             return;
           }
+          if (window.logUserActivity) window.logUserActivity('golden_ticket_mint', title, name);
           tickets.push(title);
           setLocal('cs_golden_tickets', tickets);
           showToast(`✨ Minted "${name}" into your Top 3 Golden Ticket Hall of Fame!`, 'fa-ticket-simple', 'text-amber-300');

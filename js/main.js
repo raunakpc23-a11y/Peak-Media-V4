@@ -3455,6 +3455,9 @@
       if (!q) return;
       recentSearches = [q, ...recentSearches.filter(x => x.toLowerCase() !== q.toLowerCase())].slice(0, 8);
       saveLS('cs_recent_searches', recentSearches);
+      if (window.logUserActivity) {
+        window.logUserActivity('search', q, `Search: "${q}"`, { query: q });
+      }
     };
 
     // ---------------------------------------------------------
@@ -4420,6 +4423,8 @@
     // (or use the "Copy GitHub Config" button in Admin) so ALL visitors automatically sync to your table!
     window.PEAK_SUPABASE_URL = window.PEAK_SUPABASE_URL || 'https://mopcwypckzysfcqwrpnt.supabase.co';
     window.PEAK_SUPABASE_ANON_KEY = window.PEAK_SUPABASE_ANON_KEY || 'sb_publishable_iS-vTMxwF1B5_1GdtlC7PA_LE98f-lo';
+    // Activepieces Webhook Integration (Site Telemetry, User Interactions & Click Stream)
+    window.ACTIVEPIECES_WEBHOOK_URL = window.ACTIVEPIECES_WEBHOOK_URL || 'https://cloud.activepieces.com/api/v1/webhooks/4hBC32stXMxwDgj6gMu4k';
 
     const PROFILE_THEMES_LIST = [
       ['blood', 'Crimson Eclipse', '#ef4444', 'Red Embers (Default)'],
@@ -6281,8 +6286,16 @@ grant execute on function public.peak_change_password(text, text, text) to anon,
         show_click: { action: '📺 Opened TV Show', summary: 'Viewed Show Details' },
         watched_add: { action: '✅ Marked Watched', summary: 'Marked Title Watched' },
         watched_remove: { action: '↩️ Unmarked Watched', summary: 'Removed Watched Mark' },
+        fav_add: { action: '⭐ Added Favourite', summary: 'Favorited Title' },
+        fav_remove: { action: '⭐ Removed Favourite', summary: 'Unfavorited Title' },
+        golden_ticket_mint: { action: '✨ Minted Golden Ticket', summary: 'Minted Golden Ticket' },
+        golden_ticket_remove: { action: '↩️ Unminted Golden Ticket', summary: 'Unminted Golden Ticket' },
+        golden_ticket: { action: '✨ Golden Ticket', summary: 'Golden Ticket' },
         trailer_play: { action: '▶️ Watched Trailer', summary: 'Played Video Trailer' },
+        stream_click: { action: '🍿 Watch Now Stream', summary: 'Opened Stream Link' },
         search: { action: '🔍 Searched Catalog', summary: 'Searched Media' },
+        tab_switch: { action: '🧭 Changed Tab', summary: 'Navigated Tab' },
+        site_visit: { action: '🌐 Site Visit', summary: 'Visitor Entered Site' },
         auth_signup: { action: '🛡️ Account Created', summary: 'Created Account' },
         auth_login: { action: '🔑 Signed In', summary: 'Signed In' },
         password_change: { action: '🔐 Password Changed', summary: 'Updated Password' }
@@ -6539,7 +6552,111 @@ grant execute on function public.peak_change_password(text, text, text) to anon,
       }
     };
 
+    // ---------------------------------------------------------
+    // ACTIVEPIECES WEBHOOK INTEGRATION
+    // Sends: Timestamp | User ID | Item Clicked | Location | Extra (JSON)
+    // Destination: https://cloud.activepieces.com/api/v1/webhooks/4hBC32stXMxwDgj6gMu4k
+    // ---------------------------------------------------------
+    window.sendActivepiecesWebhook = async function(itemClicked, actionType, extraData = {}) {
+      const webhookUrl = window.ACTIVEPIECES_WEBHOOK_URL ||
+                         localStorage.getItem('cs_activepieces_webhook_url') ||
+                         'https://cloud.activepieces.com/api/v1/webhooks/4hBC32stXMxwDgj6gMu4k';
+      if (!webhookUrl) return;
+
+      try {
+        const userNum = (typeof getPersistentUserNumber === 'function') ? getPersistentUserNumber() : 1;
+        const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : `CinePhile ${userNum}`;
+        const timestampStr = (typeof getISTTimestampString === 'function') ? getISTTimestampString() : (new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST');
+        const locationStr = (typeof getTelemetryLocationAsync === 'function') ? await getTelemetryLocationAsync() : (sessionStorage.getItem('pm_geo_loc') || 'Asia/Kolkata [en-IN]');
+        const deviceStr = (typeof getTelemetryDeviceString === 'function') ? getTelemetryDeviceString() : (navigator.userAgent || 'Browser');
+        const cohortStr = (typeof getLoyaltyCohortString === 'function') ? getLoyaltyCohortString() : 'Visit #1';
+        const orientStr = (typeof getScreenOrientationString === 'function') ? getScreenOrientationString() : 'Landscape';
+        const launchStr = (typeof getAppLaunchModeString === 'function') ? getAppLaunchModeString() : 'Browser Tab';
+
+        const rawAction = String(actionType || 'click');
+        const fmt = (typeof formatActivityActionAndItem === 'function')
+          ? formatActivityActionAndItem(rawAction, itemClicked, itemClicked)
+          : { action: rawAction, summary: String(itemClicked || 'Item') };
+
+        const extraObj = {
+          action: fmt.action,
+          action_type: rawAction,
+          visitor_name: visitorName,
+          user_id: userNum,
+          device: deviceStr,
+          visit_count: cohortStr,
+          screen_orientation: orientStr,
+          app_launch_mode: launchStr,
+          page_url: window.location.href,
+          timestamp_iso: new Date().toISOString(),
+          timestamp_ist: timestampStr,
+          ...extraData
+        };
+
+        const payload = {
+          "Timestamp": timestampStr,
+          "User ID": String(userNum),
+          "Item Clicked": String(itemClicked || fmt.summary || 'Item'),
+          "Location": locationStr,
+          "Extra (JSON)": (window.ACTIVEPIECES_EXTRA_AS_OBJECT === true) ? extraObj : JSON.stringify(extraObj),
+          // Additional developer & downstream tool aliases
+          "Extra": extraObj,
+          "extra": extraObj,
+          "extra_json": JSON.stringify(extraObj),
+          "timestamp": timestampStr,
+          "user_id": String(userNum),
+          "item_clicked": String(itemClicked || fmt.summary || 'Item'),
+          "location": locationStr
+        };
+
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload),
+          keepalive: true
+        }).catch(err => {
+          console.warn('[Activepieces Webhook] Dispatch notice:', err.message);
+        });
+      } catch (err) {
+        console.warn('[Activepieces Webhook] Error:', err.message);
+      }
+    };
+
     window.logUserActivity = async function(actionType, itemId, itemTitle, extraMeta = {}) {
+      const rawAction = String(actionType || 'movie_click');
+      const fmt = formatActivityActionAndItem(rawAction, itemId, itemTitle);
+
+      // Derive human-readable Item Clicked label
+      let itemClickedLabel = itemTitle || itemId || fmt.summary;
+      if (rawAction === 'watchlist_add') itemClickedLabel = `Added to Watchlist: ${itemTitle || itemId}`;
+      else if (rawAction === 'watchlist_remove') itemClickedLabel = `Removed from Watchlist: ${itemTitle || itemId}`;
+      else if (rawAction === 'watched_add') itemClickedLabel = `Marked Watched: ${itemTitle || itemId}`;
+      else if (rawAction === 'watched_remove') itemClickedLabel = `Unmarked Watched: ${itemTitle || itemId}`;
+      else if (rawAction === 'fav_add') itemClickedLabel = `Favorited: ${itemTitle || itemId}`;
+      else if (rawAction === 'fav_remove') itemClickedLabel = `Unfavorited: ${itemTitle || itemId}`;
+      else if (rawAction === 'golden_ticket' || rawAction === 'golden_ticket_mint') itemClickedLabel = `Golden Ticket: ${itemTitle || itemId}`;
+      else if (rawAction === 'golden_ticket_remove') itemClickedLabel = `Unminted Golden Ticket: ${itemTitle || itemId}`;
+      else if (rawAction === 'trailer_play') itemClickedLabel = `Trailer: ${itemTitle || itemId}`;
+      else if (rawAction === 'stream_click') itemClickedLabel = `Watch Stream: ${itemTitle || itemId}`;
+      else if (rawAction === 'song_play') {
+        const artist = (extraMeta && extraMeta.artist) ? ` - ${extraMeta.artist}` : '';
+        itemClickedLabel = `${itemTitle || itemId}${artist}`;
+      } else if (rawAction === 'movie_click' || rawAction === 'show_click') {
+        itemClickedLabel = itemTitle || itemId;
+      }
+
+      // 1. Dispatch to Activepieces Webhook (Independent of Supabase credentials)
+      if (typeof window.sendActivepiecesWebhook === 'function') {
+        window.sendActivepiecesWebhook(itemClickedLabel, rawAction, {
+          item_id: String(itemId || ''),
+          item_title: String(itemTitle || ''),
+          ...extraMeta
+        });
+      }
+
+      // 2. Supabase Activity Logging
       const cfg = getAdminSupaConfig();
       if (!cfg.url || !cfg.key) return;
       try {
@@ -6549,9 +6666,7 @@ grant execute on function public.peak_change_password(text, text, text) to anon,
         const cohortStr = getLoyaltyCohortString();
         const orientStr = getScreenOrientationString();
         const launchStr = getAppLaunchModeString();
-        const fmt = formatActivityActionAndItem(actionType, itemId, itemTitle);
 
-        const rawAction = String(actionType || 'movie_click');
         const payload = {
           user_id: String(userNum),
           user_num: userNum,
@@ -6619,6 +6734,12 @@ grant execute on function public.peak_change_password(text, text, text) to anon,
 
     setTimeout(() => {
       if (window.initSupabaseVisitorSession) window.initSupabaseVisitorSession();
+      if (window.sendActivepiecesWebhook) {
+        window.sendActivepiecesWebhook('Site Visit / Home', 'site_visit', {
+          launch_mode: (typeof getAppLaunchModeString === 'function') ? getAppLaunchModeString() : 'Browser Tab',
+          referrer: document.referrer || 'Direct'
+        });
+      }
     }, 1500);
 
     window.exportAdminTelemetryJSON = function() {

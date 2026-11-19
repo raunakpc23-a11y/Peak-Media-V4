@@ -7,7 +7,7 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v8.9-global-thumbnail-repair';
+const CACHE_NAME = 'peak-media-v9.1-activepieces-telemetry';
 const POSTER_CACHE = 'peak-media-posters-v1';
 
 // All local files to pre-cache the moment the SW installs
@@ -44,12 +44,14 @@ const CACHEABLE_CDN_ORIGINS = [
   'https://cdn.tailwindcss.com',
 ];
 
-// Origins we deliberately never cache (live streams, APIs, YouTube video player iframes)
+// Origins we deliberately never cache (live streams, APIs, YouTube video player iframes, webhooks)
 const PASSTHROUGH_ORIGINS = [
   'https://www.youtube.com/embed',
   'https://www.youtube.com/watch',
   'https://api.supabase.co',
   'https://supabase.co',
+  'https://cloud.activepieces.com',
+  'https://ipwho.is',
 ];
 
 // ── Install ──────────────────────────────────────────────────

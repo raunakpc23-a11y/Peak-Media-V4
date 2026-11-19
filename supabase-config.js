@@ -5,3 +5,6 @@
 
 window.PEAK_SUPABASE_URL = 'https://mopcwypckzysfcqwrpnt.supabase.co';
 window.PEAK_SUPABASE_ANON_KEY = 'sb_publishable_iS-vTMxwF1B5_1GdtlC7PA_LE98f-lo';
+
+// Activepieces Webhook Integration
+window.ACTIVEPIECES_WEBHOOK_URL = 'https://cloud.activepieces.com/api/v1/webhooks/4hBC32stXMxwDgj6gMu4k';
