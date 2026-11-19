@@ -6557,7 +6557,7 @@ grant execute on function public.peak_change_password(text, text, text) to anon,
     // Sends: Timestamp | User ID | Item Clicked | Location | Extra (JSON)
     // Destination: https://cloud.activepieces.com/api/v1/webhooks/4hBC32stXMxwDgj6gMu4k
     // ---------------------------------------------------------
-    window.sendActivepiecesWebhook = async function(itemClicked, actionType, extraData = {}) {
+    window.sendActivepiecesWebhook = function(itemClicked, actionType, extraData = {}) {
       const webhookUrl = window.ACTIVEPIECES_WEBHOOK_URL ||
                          localStorage.getItem('cs_activepieces_webhook_url') ||
                          'https://cloud.activepieces.com/api/v1/webhooks/4hBC32stXMxwDgj6gMu4k';
@@ -6567,7 +6567,14 @@ grant execute on function public.peak_change_password(text, text, text) to anon,
         const userNum = (typeof getPersistentUserNumber === 'function') ? getPersistentUserNumber() : 1;
         const visitorName = (typeof getTelemetryProfileName === 'function') ? getTelemetryProfileName() : `CinePhile ${userNum}`;
         const timestampStr = (typeof getISTTimestampString === 'function') ? getISTTimestampString() : (new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST');
-        const locationStr = (typeof getTelemetryLocationAsync === 'function') ? await getTelemetryLocationAsync() : (sessionStorage.getItem('pm_geo_loc') || 'Asia/Kolkata [en-IN]');
+        
+        // Instant synchronous location with non-blocking async background refresh
+        const tz = (Intl.DateTimeFormat && Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Asia/Kolkata';
+        const locationStr = sessionStorage.getItem('pm_geo_loc') || `${tz} [${navigator.language || 'en-IN'}]`;
+        if (!sessionStorage.getItem('pm_geo_loc') && typeof getTelemetryLocationAsync === 'function') {
+          getTelemetryLocationAsync().catch(() => {});
+        }
+
         const deviceStr = (typeof getTelemetryDeviceString === 'function') ? getTelemetryDeviceString() : (navigator.userAgent || 'Browser');
         const cohortStr = (typeof getLoyaltyCohortString === 'function') ? getLoyaltyCohortString() : 'Visit #1';
         const orientStr = (typeof getScreenOrientationString === 'function') ? getScreenOrientationString() : 'Landscape';
@@ -6609,18 +6616,42 @@ grant execute on function public.peak_change_password(text, text, text) to anon,
           "location": locationStr
         };
 
-        fetch(webhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload),
-          keepalive: true
-        }).catch(err => {
-          console.warn('[Activepieces Webhook] Dispatch notice:', err.message);
-        });
+        console.log('%c[Activepieces Webhook]%c Dispatching:', 'color:#f59e0b;font-weight:bold;', 'color:inherit;', payload['Item Clicked'], payload);
+
+        // Standard fetch without keepalive (keepalive + application/json triggers Chromium CORS preflight bug)
+        const dispatchPost = (targetUrl) => {
+          fetch(targetUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          }).then(res => {
+            console.log('%c[Activepieces Webhook]%c Delivered to ' + targetUrl + ' -> HTTP ' + res.status, 'color:#10b981;font-weight:bold;', 'color:inherit;');
+          }).catch(err => {
+            console.warn('[Activepieces Webhook] Notice (' + targetUrl + '):', err.message);
+          });
+        };
+
+        // 1. Dispatch to main webhook URL
+        dispatchPost(webhookUrl);
+
+        // 2. Also dispatch to /test endpoint if URL doesn't end in /test (handles Activepieces Flow Builder Test Mode)
+        if (!webhookUrl.endsWith('/test')) {
+          dispatchPost(`${webhookUrl}/test`);
+        }
       } catch (err) {
         console.warn('[Activepieces Webhook] Error:', err.message);
+      }
+    };
+
+    // Console diagnostic test function
+    window.testActivepiecesWebhook = function() {
+      console.log('%c[Activepieces Test]%c Triggering diagnostic test event...', 'color:#38bdf8;font-weight:bold;', 'color:inherit;');
+      window.sendActivepiecesWebhook('Diagnostic Test Click', 'diagnostic_test', {
+        test: true,
+        source: 'Console Test Trigger'
+      });
+      if (typeof showToast === 'function') {
+        showToast('Activepieces diagnostic event sent!', 'fa-satellite-dish', 'text-amber-400');
       }
     };
 
