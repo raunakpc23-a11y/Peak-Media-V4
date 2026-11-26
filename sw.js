@@ -7,8 +7,8 @@
 // Bump CACHE_NAME version string when you update the app files.
 // ============================================================
 
-const CACHE_NAME = 'peak-media-v9.2-activepieces-dispatch';
-const POSTER_CACHE = 'peak-media-posters-v1';
+const CACHE_NAME = 'peak-media-v9.5-spiderverse-rt-artwork';
+const POSTER_CACHE = 'peak-media-posters-v3';
 
 // All local files to pre-cache the moment the SW installs
 const PRE_CACHE = [
@@ -42,6 +42,7 @@ const CACHEABLE_CDN_ORIGINS = [
   'https://fonts.gstatic.com',
   'https://cdnjs.cloudflare.com',
   'https://cdn.tailwindcss.com',
+  'https://resizing.flixster.com',
 ];
 
 // Origins we deliberately never cache (live streams, APIs, YouTube video player iframes, webhooks)
@@ -107,6 +108,7 @@ self.addEventListener('fetch', event => {
     url.hostname.includes('unsplash.com') ||
     url.hostname.includes('tmdb.org') ||
     url.hostname.includes('ytimg.com') ||
+    url.hostname.includes('flixster.com') ||
     event.request.destination === 'image'
   ) {
     event.respondWith(

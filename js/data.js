@@ -13835,8 +13835,72 @@ Odd Taxi|2021|87
       'movie:The Prestige': 'https://upload.wikimedia.org/wikipedia/en/d/d2/Prestige_poster.jpg',
       'movie:Rear Window': 'https://upload.wikimedia.org/wikipedia/commons/3/38/Rear_Window_film_poster.jpg',
       'movie:Psycho': 'https://upload.wikimedia.org/wikipedia/commons/7/76/Psycho_%281960%29_theatrical_poster_%28retouched%29.jpg',
-      'movie:Spider-Man: Across the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg',
+      // Spider-Man franchise official posters & colloquial aliases
       'movie:Spider-Man: Into the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'Spider-Man: Into the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'movie:Spider-Man: Across the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg',
+      'Spider-Man: Across the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg',
+      'movie:Spider-Man: Beyond the Spider-Verse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'Spider-Man: Beyond the Spider-Verse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'movie:Spider-Man: Beyond the Spiderverse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'Spider-Man: Beyond the Spiderverse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'movie:Beyond the Spider-Verse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'Beyond the Spider-Verse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'movie:Beyond the Spiderverse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'Beyond the Spiderverse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'movie:Spider-Man: No Way Home': 'https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg',
+      'Spider-Man: No Way Home': 'https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg',
+      'movie:Spider-Man: Far From Home': 'https://upload.wikimedia.org/wikipedia/en/b/bd/Spider-Man_Far_From_Home_poster.jpg',
+      'Spider-Man: Far From Home': 'https://upload.wikimedia.org/wikipedia/en/b/bd/Spider-Man_Far_From_Home_poster.jpg',
+      'movie:Spider-Man: Homecoming': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg',
+      'Spider-Man: Homecoming': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg',
+      'movie:Spider-Man': 'https://upload.wikimedia.org/wikipedia/en/6/6c/Spider-Man_%282002_film%29_poster.jpg',
+      'Spider-Man': 'https://upload.wikimedia.org/wikipedia/en/6/6c/Spider-Man_%282002_film%29_poster.jpg',
+      'movie:Spider-Man 2': 'https://upload.wikimedia.org/wikipedia/en/4/4e/Spider-Man_2_USA_poster.jpg',
+      'Spider-Man 2': 'https://upload.wikimedia.org/wikipedia/en/4/4e/Spider-Man_2_USA_poster.jpg',
+      'movie:Spider-Man 3': 'https://upload.wikimedia.org/wikipedia/en/7/7a/Spider-Man_3%2C_International_Poster.jpg',
+      'Spider-Man 3': 'https://upload.wikimedia.org/wikipedia/en/7/7a/Spider-Man_3%2C_International_Poster.jpg',
+      'movie:The Amazing Spider-Man': 'https://upload.wikimedia.org/wikipedia/en/e/e0/The_Amazing_Spider-Man_%28film%29_poster.jpg',
+      'The Amazing Spider-Man': 'https://upload.wikimedia.org/wikipedia/en/e/e0/The_Amazing_Spider-Man_%28film%29_poster.jpg',
+      'movie:The Amazing Spider-Man 2': 'https://upload.wikimedia.org/wikipedia/en/2/24/The_Amazing_Spider-Man_2_poster.jpg',
+      'The Amazing Spider-Man 2': 'https://upload.wikimedia.org/wikipedia/en/2/24/The_Amazing_Spider-Man_2_poster.jpg',
+      'movie:Spider Man: Spiderverse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'Spider Man: Spiderverse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'movie:Spider-Man: Spiderverse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'Spider-Man: Spiderverse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'movie:Spider-Man: Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'Spider-Man: Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'movie:Spider Man: Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'Spider Man: Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'movie:Spider Man: Into the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'Spider Man: Into the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+      'movie:Spider Man: Across the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg',
+      'Spider Man: Across the Spider-Verse': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg',
+      'movie:Spider Man: Beyond the Spider-Verse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'Spider Man: Beyond the Spider-Verse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'movie:Spider Man: Beyond the Spiderverse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'Spider Man: Beyond the Spiderverse': 'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p24809346_v_v11_aa.jpg',
+      'movie:Spider Man: No Way Home': 'https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg',
+      'Spider Man: No Way Home': 'https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg',
+      'movie:Spider Man: Far From Home': 'https://upload.wikimedia.org/wikipedia/en/b/bd/Spider-Man_Far_From_Home_poster.jpg',
+      'Spider Man: Far From Home': 'https://upload.wikimedia.org/wikipedia/en/b/bd/Spider-Man_Far_From_Home_poster.jpg',
+      'movie:Spider Man: Homecoming': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg',
+      'Spider Man: Homecoming': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg',
+      'movie:Spider Man': 'https://upload.wikimedia.org/wikipedia/en/6/6c/Spider-Man_%282002_film%29_poster.jpg',
+      'Spider Man': 'https://upload.wikimedia.org/wikipedia/en/6/6c/Spider-Man_%282002_film%29_poster.jpg',
+      'movie:Spider Man 2': 'https://upload.wikimedia.org/wikipedia/en/4/4e/Spider-Man_2_USA_poster.jpg',
+      'Spider Man 2': 'https://upload.wikimedia.org/wikipedia/en/4/4e/Spider-Man_2_USA_poster.jpg',
+      'movie:Spider Man 3': 'https://upload.wikimedia.org/wikipedia/en/7/7a/Spider-Man_3%2C_International_Poster.jpg',
+      'Spider Man 3': 'https://upload.wikimedia.org/wikipedia/en/7/7a/Spider-Man_3%2C_International_Poster.jpg',
+      // Blockbuster & Core additions
+      'movie:The Batman: Part II': 'https://image.tmdb.org/t/p/w500/4uaHnYDDpUTj0nCg6YqBKab50YW.jpg',
+      'movie:The Batman': 'https://upload.wikimedia.org/wikipedia/en/f/ff/The_Batman_%28film%29_poster.jpg',
+      'movie:Avengers: Doomsday': 'https://upload.wikimedia.org/wikipedia/en/e/ee/Avengers_Doomsday_poster.jpg',
+      'movie:Superman': 'https://upload.wikimedia.org/wikipedia/en/3/32/Superman_%282025_film%29_poster.jpg',
+      'movie:The Green Mile': 'https://upload.wikimedia.org/wikipedia/en/e/e2/The_Green_Mile_%28movie_poster%29.jpg',
+      'movie:Terminator 2: Judgment Day': 'https://upload.wikimedia.org/wikipedia/en/5/5e/Terminator_2-Judgment_Day.png',
+      'movie:Leon: The Professional': 'https://upload.wikimedia.org/wikipedia/en/0/03/Leon-poster.jpg',
+      'movie:Léon: The Professional': 'https://upload.wikimedia.org/wikipedia/en/0/03/Leon-poster.jpg',
       'movie:Back to the Future': 'https://upload.wikimedia.org/wikipedia/en/d/d2/Back_to_the_Future.jpg',
       'movie:The Lion King': 'https://upload.wikimedia.org/wikipedia/en/3/3d/The_Lion_King_poster.jpg',
       'movie:The Departed': 'https://upload.wikimedia.org/wikipedia/en/5/50/Departed234.jpg',
@@ -14390,13 +14454,19 @@ Odd Taxi|2021|87
       'Vampire Hunter D: Bloodlust': 'https://upload.wikimedia.org/wikipedia/en/4/4b/Vampire-hunter-d-poster.jpg',
     };
 
-    // 1. Bidirectional sync: ensure un-prefixed titles and cross-type queries resolve instantly
+    // 1. Bidirectional sync: ensure un-prefixed titles and cross-type queries resolve instantly without truncating subtitles
     Object.entries(KNOWN_POSTER_OVERRIDES).forEach(([k, v]) => {
-      if (k.includes(':')) {
-        const [t, title] = k.split(':');
-        KNOWN_POSTER_OVERRIDES[title] = v;
+      if (k.startsWith('movie:') || k.startsWith('show:')) {
+        const colonIdx = k.indexOf(':');
+        const t = k.slice(0, colonIdx);
+        const title = k.slice(colonIdx + 1);
+        if (!KNOWN_POSTER_OVERRIDES[title]) {
+          KNOWN_POSTER_OVERRIDES[title] = v;
+        }
         const altType = t === 'show' ? 'movie' : 'show';
-        KNOWN_POSTER_OVERRIDES[altType + ':' + title] = v;
+        if (!KNOWN_POSTER_OVERRIDES[altType + ':' + title]) {
+          KNOWN_POSTER_OVERRIDES[altType + ':' + title] = v;
+        }
       }
     });
 
@@ -14431,6 +14501,9 @@ Odd Taxi|2021|87
       'Cien_a%C3%B1os_de_soledad',
       'FNAF2logo.jpg',
       'Spider-Man_Beyond_the_Spider-Verse_logo',
+      '5cAuJOfd5tuuFBz2yQmBCtVBaj0',
+      'synopsis_poster.jpg',
+      '9KAe39xqyZnv9J4W3DRGdQqX82h',
       'The_Batman_Part_II_logo',
       'Jessica_Jones_%28TV_series%29_logo',
       'Iron_Fist_%28TV_series%29_logo',
@@ -14504,8 +14577,18 @@ Odd Taxi|2021|87
       const cacheKey = item.type + ':' + bareTitle;
       const altKey = (item.type === 'show' ? 'movie:' : 'show:') + bareTitle;
       
-      // 1. Direct verified override check (checks exact type, bare title, and cross-type)
-      const override = KNOWN_POSTER_OVERRIDES[cacheKey] || KNOWN_POSTER_OVERRIDES[bareTitle] || KNOWN_POSTER_OVERRIDES[altKey];
+      // Colloquial & typo normalization (e.g. "Spider Man" without hyphen, or Spiderverse aliases)
+      const hyphenFix = bareTitle.replace(/\bSpider\s+Man\b/gi, 'Spider-Man');
+      const unhyphenFix = bareTitle.replace(/\bSpider-Man\b/gi, 'Spider Man');
+      
+      // 1. Direct verified override check (checks exact type, bare title, cross-type, and normalized aliases)
+      const override = KNOWN_POSTER_OVERRIDES[cacheKey] || 
+                       KNOWN_POSTER_OVERRIDES[bareTitle] || 
+                       KNOWN_POSTER_OVERRIDES[altKey] ||
+                       KNOWN_POSTER_OVERRIDES[item.type + ':' + hyphenFix] ||
+                       KNOWN_POSTER_OVERRIDES[hyphenFix] ||
+                       KNOWN_POSTER_OVERRIDES[item.type + ':' + unhyphenFix] ||
+                       KNOWN_POSTER_OVERRIDES[unhyphenFix];
       if (override) {
         posterCache[cacheKey] = override;
         posterCache[bareTitle] = override;
